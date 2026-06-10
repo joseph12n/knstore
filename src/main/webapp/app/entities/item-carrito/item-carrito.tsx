@@ -1,0 +1,174 @@
+import React, { useEffect, useState } from 'react';
+import { Button, Table } from 'react-bootstrap';
+import { getSortState } from 'react-jhipster';
+import { Link, useLocation, useNavigate } from 'react-router';
+
+import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { overrideSortStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { ASC, DESC } from 'app/shared/util/pagination.constants';
+
+import { getEntities } from './item-carrito.reducer';
+
+export const ItemCarrito = () => {
+  const dispatch = useAppDispatch();
+
+  const pageLocation = useLocation();
+  const navigate = useNavigate();
+
+  const [sortState, setSortState] = useState(overrideSortStateWithQueryParams(getSortState(pageLocation, 'id'), pageLocation.search));
+
+  const itemCarritoList = useAppSelector(state => state.itemCarrito.entities);
+  const loading = useAppSelector(state => state.itemCarrito.loading);
+
+  const getAllEntities = () => {
+    dispatch(
+      getEntities({
+        sort: `${sortState.sort},${sortState.order}`,
+      }),
+    );
+  };
+
+  const sortEntities = () => {
+    getAllEntities();
+    const endURL = `?sort=${sortState.sort},${sortState.order}`;
+    if (pageLocation.search !== endURL) {
+      navigate(`${pageLocation.pathname}${endURL}`);
+    }
+  };
+
+  useEffect(() => {
+    sortEntities();
+  }, [sortState.order, sortState.sort]);
+
+  const sort = p => () => {
+    setSortState({
+      ...sortState,
+      order: sortState.order === ASC ? DESC : ASC,
+      sort: p,
+    });
+  };
+
+  const handleSyncList = () => {
+    sortEntities();
+  };
+
+  const getSortIconByFieldName = (fieldName: string) => {
+    const sortFieldName = sortState.sort;
+    const { order } = sortState;
+    if (sortFieldName !== fieldName) {
+      return faSort;
+    }
+    return order === ASC ? faSortUp : faSortDown;
+  };
+
+  return (
+    <div>
+      <h2 id="item-carrito-heading" data-cy="ItemCarritoHeading">
+        Item Carritos
+        <div className="d-flex justify-content-end">
+          <Button className="me-2" variant="info" onClick={handleSyncList} disabled={loading}>
+            <FontAwesomeIcon icon="sync" spin={loading} /> Refrescar lista
+          </Button>
+          <Link to="/item-carrito/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+            <FontAwesomeIcon icon="plus" />
+            &nbsp; Crear nuevo Item Carrito
+          </Link>
+        </div>
+      </h2>
+      <div className="table-responsive">
+        {itemCarritoList?.length > 0 ? (
+          <Table responsive>
+            <thead>
+              <tr>
+                <th className="hand" onClick={sort('id')}>
+                  ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
+                </th>
+                <th className="hand" onClick={sort('cantidad')}>
+                  Cantidad <FontAwesomeIcon icon={getSortIconByFieldName('cantidad')} />
+                </th>
+                <th className="hand" onClick={sort('precioUnitario')}>
+                  Precio Unitario <FontAwesomeIcon icon={getSortIconByFieldName('precioUnitario')} />
+                </th>
+                <th className="hand" onClick={sort('subtotal')}>
+                  Subtotal <FontAwesomeIcon icon={getSortIconByFieldName('subtotal')} />
+                </th>
+                <th>
+                  Carrito <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Producto <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Variante <FontAwesomeIcon icon="sort" />
+                </th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {itemCarritoList.map(itemCarrito => (
+                <tr key={`entity-${itemCarrito.id}`} data-cy="entityTable">
+                  <td>
+                    <Button as={Link as any} to={`/item-carrito/${itemCarrito.id}`} variant="link" size="sm">
+                      {itemCarrito.id}
+                    </Button>
+                  </td>
+                  <td>{itemCarrito.cantidad}</td>
+                  <td>{itemCarrito.precioUnitario}</td>
+                  <td>{itemCarrito.subtotal}</td>
+                  <td>{itemCarrito.carrito ? <Link to={`/carrito/${itemCarrito.carrito.id}`}>{itemCarrito.carrito.id}</Link> : ''}</td>
+                  <td>
+                    {itemCarrito.producto ? <Link to={`/producto/${itemCarrito.producto.id}`}>{itemCarrito.producto.nombre}</Link> : ''}
+                  </td>
+                  <td>
+                    {itemCarrito.variante ? (
+                      <Link to={`/variante-producto/${itemCarrito.variante.id}`}>{itemCarrito.variante.sku}</Link>
+                    ) : (
+                      ''
+                    )}
+                  </td>
+                  <td className="text-end">
+                    <div className="btn-group flex-btn-group-container">
+                      <Button
+                        as={Link as any}
+                        to={`/item-carrito/${itemCarrito.id}`}
+                        variant="info"
+                        size="sm"
+                        data-cy="entityDetailsButton"
+                      >
+                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">Vista</span>
+                      </Button>
+                      <Button
+                        as={Link as any}
+                        to={`/item-carrito/${itemCarrito.id}/edit`}
+                        variant="primary"
+                        size="sm"
+                        data-cy="entityEditButton"
+                      >
+                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Editar</span>
+                      </Button>
+                      <Button
+                        onClick={() => (globalThis.location.href = `/item-carrito/${itemCarrito.id}/delete`)}
+                        variant="danger"
+                        size="sm"
+                        data-cy="entityDeleteButton"
+                      >
+                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Eliminar</span>
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          !loading && <div className="alert alert-warning">Ningún Item Carritos encontrado</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ItemCarrito;

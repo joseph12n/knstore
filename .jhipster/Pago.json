@@ -1,0 +1,68 @@
+{
+  "annotations": {
+    "changelogDate": "20260609235938"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "metodoPago",
+      "fieldType": "MetodoPago",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "CREDIT_CARD (TarjetaCredito),DEBIT_CARD (TarjetaDebito),PSE (PSE),CASH (Efectivo),NEQUI (Nequi),DAVIPLATA (Daviplata),EFECTY (Efecty),BALOTO (Baloto),CONTRA_ENTREGA (ContraEntrega)"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoPago",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDING (Pendiente),APPROVED (Aprobado),REJECTED (Rechazado),REFUNDED (Reembolsado),EXPIRED (Expirado),CANCELLED (Cancelado)"
+    },
+    {
+      "fieldName": "monto",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "referenciaPasarela",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "codigoAutorizacion",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "descripcionRespuesta",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "300"
+    },
+    {
+      "fieldName": "fechaPago",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "intentos",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "name": "Pago",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "pedido",
+      "relationshipName": "pedido",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

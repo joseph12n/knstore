@@ -1,0 +1,31 @@
+{
+  "annotations": {
+    "changelogDate": "20260609234738"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoTipoDocumento",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "ACTIVO (Activo),INACTIVO (Inactivo)"
+    },
+    {
+      "fieldName": "sigla",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength", "unique"],
+      "fieldValidateRulesMaxlength": "10"
+    },
+    {
+      "fieldName": "nombreTipo",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength", "unique"],
+      "fieldValidateRulesMaxlength": "60"
+    }
+  ],
+  "name": "TipoDocumento",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

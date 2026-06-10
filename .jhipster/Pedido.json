@@ -1,0 +1,104 @@
+{
+  "annotations": {
+    "changelogDate": "20260609235738"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "numeroPedido",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength", "unique"],
+      "fieldValidateRulesMaxlength": "30"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoPedido",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDING (Pendiente),CONFIRMED (Confirmado),PROCESSING (EnProceso),SHIPPED (Enviado),DELIVERED (Entregado),CANCELLED (Cancelado),RETURNED (Devuelto)"
+    },
+    {
+      "fieldName": "subtotal",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "descuento",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "ivaTotal",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "costoEnvio",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "total",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "notasCliente",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    },
+    {
+      "fieldName": "notasInternas",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "500"
+    },
+    {
+      "fieldName": "ipOrigen",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "45"
+    },
+    {
+      "fieldName": "userAgent",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "300"
+    }
+  ],
+  "name": "Pedido",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "direccion",
+      "otherEntityRelationshipName": "pedido",
+      "relationshipName": "direccion",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "envio",
+      "otherEntityRelationshipName": "pedido",
+      "relationshipName": "envio",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "cuenta",
+      "relationshipName": "cuenta",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

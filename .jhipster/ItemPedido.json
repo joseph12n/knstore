@@ -1,0 +1,70 @@
+{
+  "annotations": {
+    "changelogDate": "20260609235838"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "precioUnitario",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "porcentajeIva",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "valorIva",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "descuento",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "subtotal",
+      "fieldType": "BigDecimal"
+    }
+  ],
+  "name": "ItemPedido",
+  "relationships": [
+    {
+      "otherEntityName": "pedido",
+      "relationshipName": "pedido",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "producto",
+      "relationshipName": "producto",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "sku",
+      "otherEntityName": "varianteProducto",
+      "relationshipName": "variante",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

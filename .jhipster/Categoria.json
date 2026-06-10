@@ -1,0 +1,39 @@
+{
+  "annotations": {
+    "changelogDate": "20260609234938"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "slug",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength", "unique"],
+      "fieldValidateRulesMaxlength": "120"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "TextBlob"
+    },
+    {
+      "fieldName": "imagen",
+      "fieldType": "ImageBlob"
+    },
+    {
+      "fieldName": "activo",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Categoria",
+  "pagination": "pagination",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
