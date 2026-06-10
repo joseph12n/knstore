@@ -1,0 +1,312 @@
+application {
+  config {
+    baseName knstore
+    applicationType monolith
+    packageName com.mycompany.knstore
+    authenticationType jwt
+    databaseType mongodb
+    prodDatabaseType mongodb
+    cacheProvider no
+    buildTool maven
+    clientFramework react
+    enableTranslation false
+    nativeLanguage es
+    languages [es]
+    websocket false
+    testFrameworks [cucumber]
+    jhiPrefix project
+    reactive false
+    serverPort 8080
+    searchEngine false
+    clientTheme cyborg
+    clientThemeVariant primary
+  }
+  entities *
+}
+
+enum EstadoPedido {
+  PENDING(Pendiente),
+  CONFIRMED(Confirmado),
+  PROCESSING(EnProceso),
+  SHIPPED(Enviado),
+  DELIVERED(Entregado),
+  CANCELLED(Cancelado),
+  RETURNED(Devuelto)
+}
+
+enum MetodoPago {
+  CREDIT_CARD(TarjetaCredito),
+  DEBIT_CARD(TarjetaDebito),
+  PSE(PSE),
+  CASH(Efectivo),
+  NEQUI(Nequi),
+  DAVIPLATA(Daviplata),
+  EFECTY(Efecty),
+  BALOTO(Baloto),
+  CONTRA_ENTREGA(ContraEntrega)
+}
+
+enum EstadoPago {
+  PENDING(Pendiente),
+  APPROVED(Aprobado),
+  REJECTED(Rechazado),
+  REFUNDED(Reembolsado),
+  EXPIRED(Expirado),
+  CANCELLED(Cancelado)
+}
+
+enum EstadoEnvio {
+  PENDING(Pendiente),
+  DISPATCHED(Despachado),
+  IN_TRANSIT(EnTransito),
+  IN_CITY(EnCiudad),
+  DELIVERED(Entregado),
+  RETURNED(Devuelto),
+  LOST(Perdido)
+}
+
+enum EstadoTipoDocumento {
+  ACTIVO(Activo),
+  INACTIVO(Inactivo)
+}
+
+enum Genero {
+  MASCULINO(Masculino),
+  FEMENINO(Femenino),
+  NO_BINARIO(NoBinario),
+  PREFIERO_NO_DECIR(PrefieroNoDecir)
+}
+
+enum TipoPersona {
+  NATURAL(Natural),
+  JURIDICA(Juridica)
+}
+
+
+enum TipoComplemento {
+  APARTAMENTO(Apartamento),
+  CASA(Casa),
+  TORRE(Torre),
+  BLOQUE(Bloque),
+  OFICINA(Oficina),
+  LOCAL(Local),
+  BODEGA(Bodega),
+  PISO(Piso),
+  INTERIOR(Interior),
+  LOTE(Lote)
+}
+
+enum CategoriaIVA {
+  EXCLUIDO(Excluido),
+  EXENTO(Exento),
+  GRAVADO_5(Gravado5),
+  GRAVADO_19(Gravado19)
+}
+
+enum TipoServicioEnvio {
+  ESTANDAR(Estandar),
+  EXPRESS(Express),
+  MISMO_DIA(MismoDia),
+  PROGRAMADO(Programado),
+  PUNTO_PICKUP(PuntoPickup)
+}
+
+entity TipoDocumento {
+  estado EstadoTipoDocumento required
+  sigla String required maxlength(10) unique
+  nombreTipo String required maxlength(60) unique
+}
+
+entity Cuenta {
+  numDocumento String maxlength(20)
+  tipoPersona TipoPersona required
+  primerNombre String required maxlength(50)
+  segundoNombre String maxlength(50)
+  primerApellido String required maxlength(50)
+  segundoApellido String maxlength(50)
+  celular String maxlength(15)
+  telefono String maxlength(15)
+  fechaNacimiento LocalDate
+  genero Genero
+  fotoPerfil ImageBlob
+  activo Boolean required
+}
+
+entity Categoria {
+  nombre String required maxlength(100)
+  slug String required maxlength(120) unique
+  descripcion TextBlob
+  imagen ImageBlob
+  activo Boolean required
+}
+
+entity Subcategoria {
+  nombre String required maxlength(100)
+  slug String required maxlength(120) unique
+  descripcion TextBlob
+  imagen ImageBlob
+  activo Boolean required
+}
+
+entity Producto {
+  nombre String required maxlength(200)
+  slug String required maxlength(220) unique
+  descripcion TextBlob
+  imagen ImageBlob
+  imagenAlt String maxlength(200)
+  marca String maxlength(100)
+  referencia String maxlength(60)
+  codigoBarras String maxlength(50)
+  unidadMedida String maxlength(20)
+  pesoKg BigDecimal min(0)
+  largoCm BigDecimal min(0)
+  anchoCm BigDecimal min(0)
+  altoCm BigDecimal min(0)
+  categoriaIva CategoriaIVA required
+  precioCompra BigDecimal required min(0)
+  precioVenta BigDecimal required min(0)
+  ganancia BigDecimal
+  margen BigDecimal
+  garantiaMeses Integer min(0)
+  destacado Boolean required
+  activo Boolean required
+}
+
+entity VarianteProducto {
+  sku String maxlength(100) unique
+  color String maxlength(50)
+  talla String maxlength(30)
+  codigoBarras String maxlength(50)
+  stock Integer required min(0)
+  stockMinimo Integer min(0)
+  ubicacionBodega String maxlength(80)
+  precioAdicional BigDecimal min(0)
+  activo Boolean required
+}
+
+entity EtiquetaProducto {
+  etiqueta String required maxlength(80)
+}
+
+entity Direccion {
+  direccion String required maxlength(100)
+  barrio String maxlength(100)
+  localidad String maxlength(100)
+  departamento String required maxlength(100)
+  municipio String required maxlength(100)
+  activo Boolean required
+}
+
+entity Carrito {
+  subtotal BigDecimal min(0)
+  fechaActualizacion Instant
+}
+
+entity ItemCarrito {
+  cantidad Integer required min(1)
+  precioUnitario BigDecimal required min(0)
+  subtotal BigDecimal
+}
+
+entity Pedido {
+  numeroPedido String required maxlength(30) unique
+  estado EstadoPedido required
+  subtotal BigDecimal required min(0)
+  descuento BigDecimal min(0)
+  ivaTotal BigDecimal min(0)
+  costoEnvio BigDecimal min(0)
+  total BigDecimal required min(0)
+  notasCliente String maxlength(500)
+  notasInternas String maxlength(500)
+  ipOrigen String maxlength(45)
+  userAgent String maxlength(300)
+}
+
+entity ItemPedido {
+  cantidad Integer required min(1)
+  precioUnitario BigDecimal required min(0)
+  porcentajeIva BigDecimal min(0)
+  valorIva BigDecimal min(0)
+  descuento BigDecimal min(0)
+  subtotal BigDecimal
+}
+
+entity Pago {
+  metodoPago MetodoPago required
+  estado EstadoPago required
+  monto BigDecimal required min(0)
+  referenciaPasarela String maxlength(200)
+  codigoAutorizacion String maxlength(100)
+  descripcionRespuesta String maxlength(300)
+  fechaPago Instant
+  intentos Integer min(0)
+}
+
+entity Envio {
+  numeroRastreo String maxlength(100)
+  transportadora String maxlength(100)
+  tipoServicio TipoServicioEnvio
+  estado EstadoEnvio required
+  costoEnvio BigDecimal min(0)
+  pesoKg BigDecimal min(0)
+  valorDeclarado BigDecimal min(0)
+  urlRastreo String maxlength(300)
+  observaciones String maxlength(300)
+  fechaDespacho Instant
+  fechaEntregaEstimada Instant
+  fechaEntrega Instant
+}
+
+entity Factura {
+  referencia String required maxlength(50) unique
+  cufe String maxlength(96)
+  resolucionDian String maxlength(50)
+  fechaVigenciaResolucion LocalDate
+  prefijo String maxlength(10)
+  consecutivo Long
+  subtotal BigDecimal required min(0)
+  descuentos BigDecimal min(0)
+  baseGravableIva BigDecimal min(0)
+  valorIva BigDecimal min(0)
+  retefuente BigDecimal min(0)
+  reteIva BigDecimal min(0)
+  reteIca BigDecimal min(0)
+  total BigDecimal required min(0)
+  fechaEmision Instant
+  fechaVencimiento LocalDate
+  notasAdicionales String maxlength(500)
+  codigoQr TextBlob
+  enviada Boolean required
+  fechaEnvioEmail Instant
+}
+
+relationship ManyToOne {
+  Cuenta{tipoDocumento(sigla)} to TipoDocumento
+  Subcategoria{categoria(nombre) required} to Categoria
+  Producto{subcategoria(nombre) required} to Subcategoria
+  VarianteProducto{producto(nombre) required} to Producto
+  EtiquetaProducto{producto(nombre) required} to Producto
+  Direccion{cuenta required} to Cuenta
+  ItemCarrito{carrito required} to Carrito
+  ItemCarrito{producto(nombre) required} to Producto
+  ItemCarrito{variante(sku)} to VarianteProducto
+  Pedido{cuenta required} to Cuenta
+  ItemPedido{pedido required} to Pedido
+  ItemPedido{producto(nombre) required} to Producto
+  ItemPedido{variante(sku)} to VarianteProducto
+  Pago{pedido required} to Pedido
+}
+
+relationship OneToOne {
+  Cuenta{user(login) required} to User with builtInEntity
+  Carrito{cuenta required} to Cuenta
+  Factura{pedido required} to Pedido
+  Pedido{direccion required} to Direccion{pedido}
+  Pedido{envio required} to Envio{pedido}
+}
+
+dto * with mapstruct
+service * with serviceImpl
+paginate Producto, Categoria, Subcategoria with pagination
+paginate Pedido, Pago, Envio, Factura with pagination
+paginate Direccion, VarianteProducto, EtiquetaProducto, Cuenta with pagination

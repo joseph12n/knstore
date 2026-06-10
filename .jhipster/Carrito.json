@@ -1,0 +1,31 @@
+{
+  "annotations": {
+    "changelogDate": "20260609235538"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "subtotal",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "fechaActualizacion",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Carrito",
+  "relationships": [
+    {
+      "otherEntityName": "cuenta",
+      "relationshipName": "cuenta",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

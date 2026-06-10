@@ -1,0 +1,87 @@
+{
+  "annotations": {
+    "changelogDate": "20260610000038"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "numeroRastreo",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "transportadora",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "tipoServicio",
+      "fieldType": "TipoServicioEnvio",
+      "fieldValues": "ESTANDAR (Estandar),EXPRESS (Express),MISMO_DIA (MismoDia),PROGRAMADO (Programado),PUNTO_PICKUP (PuntoPickup)"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoEnvio",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDING (Pendiente),DISPATCHED (Despachado),IN_TRANSIT (EnTransito),IN_CITY (EnCiudad),DELIVERED (Entregado),RETURNED (Devuelto),LOST (Perdido)"
+    },
+    {
+      "fieldName": "costoEnvio",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "pesoKg",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "valorDeclarado",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "urlRastreo",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "300"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "300"
+    },
+    {
+      "fieldName": "fechaDespacho",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "fechaEntregaEstimada",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "fechaEntrega",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Envio",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "pedido",
+      "otherEntityRelationshipName": "envio",
+      "relationshipName": "pedido",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
