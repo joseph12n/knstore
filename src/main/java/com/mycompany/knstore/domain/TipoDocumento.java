@@ -22,10 +22,6 @@ public class TipoDocumento implements Serializable {
     private String id;
 
     @NotNull
-    @Field("estado")
-    private EstadoTipoDocumento estado;
-
-    @NotNull
     @Size(max = 10)
     @Field("sigla")
     private String sigla;
@@ -34,6 +30,10 @@ public class TipoDocumento implements Serializable {
     @Size(max = 60)
     @Field("nombre_tipo")
     private String nombreTipo;
+
+    @NotNull
+    @Field("estado")
+    private EstadoTipoDocumento estado;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -48,19 +48,6 @@ public class TipoDocumento implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public EstadoTipoDocumento getEstado() {
-        return this.estado;
-    }
-
-    public TipoDocumento estado(EstadoTipoDocumento estado) {
-        this.setEstado(estado);
-        return this;
-    }
-
-    public void setEstado(EstadoTipoDocumento estado) {
-        this.estado = estado;
     }
 
     public String getSigla() {
@@ -89,6 +76,19 @@ public class TipoDocumento implements Serializable {
         this.nombreTipo = nombreTipo;
     }
 
+    public EstadoTipoDocumento getEstado() {
+        return this.estado;
+    }
+
+    public TipoDocumento estado(EstadoTipoDocumento estado) {
+        this.setEstado(estado);
+        return this;
+    }
+
+    public void setEstado(EstadoTipoDocumento estado) {
+        this.estado = estado;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -113,9 +113,9 @@ public class TipoDocumento implements Serializable {
     public String toString() {
         return "TipoDocumento{" +
             "id=" + getId() +
-            ", estado='" + getEstado() + "'" +
             ", sigla='" + getSigla() + "'" +
             ", nombreTipo='" + getNombreTipo() + "'" +
+            ", estado='" + getEstado() + "'" +
             "}";
     }
 }

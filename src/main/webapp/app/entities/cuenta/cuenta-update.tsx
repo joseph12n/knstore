@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getTipoDocumentos } from 'app/entities/tipo-documento/tipo-documento.reducer';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import { Genero } from 'app/shared/model/enumerations/genero.model';
-import { TipoPersona } from 'app/shared/model/enumerations/tipo-persona.model';
 
 import { createEntity, getEntity, reset, updateEntity } from './cuenta.reducer';
 
@@ -27,7 +26,6 @@ export const CuentaUpdate = () => {
   const loading = useAppSelector(state => state.cuenta.loading);
   const updating = useAppSelector(state => state.cuenta.updating);
   const updateSuccess = useAppSelector(state => state.cuenta.updateSuccess);
-  const tipoPersonaValues = Object.keys(TipoPersona);
   const generoValues = Object.keys(Genero);
 
   const handleClose = () => {
@@ -70,7 +68,6 @@ export const CuentaUpdate = () => {
     isNew
       ? {}
       : {
-          tipoPersona: 'NATURAL',
           genero: 'MASCULINO',
           ...cuentaEntity,
           user: cuentaEntity?.user?.id,
@@ -103,13 +100,6 @@ export const CuentaUpdate = () => {
                   maxLength: { value: 20, message: 'Este campo no puede superar más de 20 caracteres.' },
                 }}
               />
-              <ValidatedField label="Tipo Persona" id="cuenta-tipoPersona" name="tipoPersona" data-cy="tipoPersona" type="select">
-                {tipoPersonaValues.map(tipoPersona => (
-                  <option value={tipoPersona} key={tipoPersona}>
-                    {tipoPersona}
-                  </option>
-                ))}
-              </ValidatedField>
               <ValidatedField
                 label="Primer Nombre"
                 id="cuenta-primerNombre"
@@ -152,6 +142,20 @@ export const CuentaUpdate = () => {
                   maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
                 }}
               />
+              <ValidatedField label="Genero" id="cuenta-genero" name="genero" data-cy="genero" type="select">
+                {generoValues.map(genero => (
+                  <option value={genero} key={genero}>
+                    {genero}
+                  </option>
+                ))}
+              </ValidatedField>
+              <ValidatedField
+                label="Fecha Nacimiento"
+                id="cuenta-fechaNacimiento"
+                name="fechaNacimiento"
+                data-cy="fechaNacimiento"
+                type="date"
+              />
               <ValidatedField
                 label="Celular"
                 id="cuenta-celular"
@@ -172,20 +176,6 @@ export const CuentaUpdate = () => {
                   maxLength: { value: 15, message: 'Este campo no puede superar más de 15 caracteres.' },
                 }}
               />
-              <ValidatedField
-                label="Fecha Nacimiento"
-                id="cuenta-fechaNacimiento"
-                name="fechaNacimiento"
-                data-cy="fechaNacimiento"
-                type="date"
-              />
-              <ValidatedField label="Genero" id="cuenta-genero" name="genero" data-cy="genero" type="select">
-                {generoValues.map(genero => (
-                  <option value={genero} key={genero}>
-                    {genero}
-                  </option>
-                ))}
-              </ValidatedField>
               <ValidatedBlobField
                 label="Foto Perfil"
                 id="cuenta-fotoPerfil"

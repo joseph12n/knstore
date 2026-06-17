@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, FormText, Row } from 'react-bootstrap';
 import { ValidatedField, ValidatedForm, isNumber } from 'react-jhipster';
 import { Link, useNavigate, useParams } from 'react-router';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { getEntities as getPedidos } from 'app/entities/pedido/pedido.reducer';
 import { EstadoEnvio } from 'app/shared/model/enumerations/estado-envio.model';
 import { TipoServicioEnvio } from 'app/shared/model/enumerations/tipo-servicio-envio.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -20,6 +21,7 @@ export const EnvioUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
+  const pedidos = useAppSelector(state => state.pedido.entities);
   const envioEntity = useAppSelector(state => state.envio.entity);
   const loading = useAppSelector(state => state.envio.loading);
   const updating = useAppSelector(state => state.envio.updating);
@@ -37,6 +39,8 @@ export const EnvioUpdate = () => {
     } else {
       dispatch(getEntity(id));
     }
+
+    dispatch(getPedidos({}));
   }, []);
 
   useEffect(() => {
@@ -62,6 +66,7 @@ export const EnvioUpdate = () => {
     const entity = {
       ...envioEntity,
       ...values,
+      pedido: pedidos.find(it => it.id.toString() === values.pedido?.toString()),
     };
 
     if (isNew) {
@@ -85,6 +90,7 @@ export const EnvioUpdate = () => {
           fechaDespacho: convertDateTimeFromServer(envioEntity.fechaDespacho),
           fechaEntregaEstimada: convertDateTimeFromServer(envioEntity.fechaEntregaEstimada),
           fechaEntrega: convertDateTimeFromServer(envioEntity.fechaEntrega),
+          pedido: envioEntity?.pedido?.id,
         };
 
   return (
@@ -104,20 +110,20 @@ export const EnvioUpdate = () => {
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew && <ValidatedField name="id" required readOnly id="envio-id" label="ID" validate={{ required: true }} />}
               <ValidatedField
-                label="Numero Rastreo"
-                id="envio-numeroRastreo"
-                name="numeroRastreo"
-                data-cy="numeroRastreo"
+                label="Transportadora"
+                id="envio-transportadora"
+                name="transportadora"
+                data-cy="transportadora"
                 type="text"
                 validate={{
                   maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
                 }}
               />
               <ValidatedField
-                label="Transportadora"
-                id="envio-transportadora"
-                name="transportadora"
-                data-cy="transportadora"
+                label="Numero Rastreo"
+                id="envio-numeroRastreo"
+                name="numeroRastreo"
+                data-cy="numeroRastreo"
                 type="text"
                 validate={{
                   maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
@@ -214,6 +220,17 @@ export const EnvioUpdate = () => {
                 type="datetime-local"
                 placeholder="YYYY-MM-DD HH:mm"
               />
+              <ValidatedField id="envio-pedido" name="pedido" data-cy="pedido" label="Pedido" type="select" required>
+                <option value="" key="0" />
+                {pedidos
+                  ? pedidos.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <FormText>Este campo es obligatorio.</FormText>
               <Button as={Link as any} id="cancel-save" data-cy="entityCreateCancelButton" to="/envio" replace variant="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

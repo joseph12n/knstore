@@ -14,9 +14,6 @@ public class TipoDocumentoDTO implements Serializable {
     private String id;
 
     @NotNull
-    private EstadoTipoDocumento estado;
-
-    @NotNull
     @Size(max = 10)
     private String sigla;
 
@@ -24,20 +21,15 @@ public class TipoDocumentoDTO implements Serializable {
     @Size(max = 60)
     private String nombreTipo;
 
+    @NotNull
+    private EstadoTipoDocumento estado;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public EstadoTipoDocumento getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoTipoDocumento estado) {
-        this.estado = estado;
     }
 
     public String getSigla() {
@@ -54,6 +46,14 @@ public class TipoDocumentoDTO implements Serializable {
 
     public void setNombreTipo(String nombreTipo) {
         this.nombreTipo = nombreTipo;
+    }
+
+    public EstadoTipoDocumento getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoTipoDocumento estado) {
+        this.estado = estado;
     }
 
     @Override
@@ -82,9 +82,9 @@ public class TipoDocumentoDTO implements Serializable {
     public String toString() {
         return "TipoDocumentoDTO{" +
             "id='" + getId() + "'" +
-            ", estado='" + getEstado() + "'" +
             ", sigla='" + getSigla() + "'" +
             ", nombreTipo='" + getNombreTipo() + "'" +
+            ", estado='" + getEstado() + "'" +
             "}";
     }
 }

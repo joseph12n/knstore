@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Factura;
-import com.mycompany.knstore.domain.Pedido;
+import com.mycompany.knstore.domain.Pago;
 import com.mycompany.knstore.repository.FacturaRepository;
 import com.mycompany.knstore.service.dto.FacturaDTO;
 import com.mycompany.knstore.service.mapper.FacturaMapper;
@@ -38,23 +38,11 @@ import org.springframework.test.web.servlet.MockMvc;
 @WithMockUser
 class FacturaResourceIT {
 
-    private static final String DEFAULT_REFERENCIA = "AAAAAAAAAA";
-    private static final String UPDATED_REFERENCIA = "BBBBBBBBBB";
-
-    private static final String DEFAULT_CUFE = "AAAAAAAAAA";
-    private static final String UPDATED_CUFE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_RESOLUCION_DIAN = "AAAAAAAAAA";
-    private static final String UPDATED_RESOLUCION_DIAN = "BBBBBBBBBB";
-
-    private static final LocalDate DEFAULT_FECHA_VIGENCIA_RESOLUCION = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_VIGENCIA_RESOLUCION = LocalDate.now(ZoneId.systemDefault());
-
     private static final String DEFAULT_PREFIJO = "AAAAAAAAAA";
     private static final String UPDATED_PREFIJO = "BBBBBBBBBB";
 
-    private static final Long DEFAULT_CONSECUTIVO = 1L;
-    private static final Long UPDATED_CONSECUTIVO = 2L;
+    private static final String DEFAULT_CUFE = "AAAAAAAAAA";
+    private static final String UPDATED_CUFE = "BBBBBBBBBB";
 
     private static final BigDecimal DEFAULT_SUBTOTAL = new BigDecimal(0);
     private static final BigDecimal UPDATED_SUBTOTAL = new BigDecimal(1);
@@ -68,23 +56,8 @@ class FacturaResourceIT {
     private static final BigDecimal DEFAULT_VALOR_IVA = new BigDecimal(0);
     private static final BigDecimal UPDATED_VALOR_IVA = new BigDecimal(1);
 
-    private static final BigDecimal DEFAULT_RETEFUENTE = new BigDecimal(0);
-    private static final BigDecimal UPDATED_RETEFUENTE = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_RETE_IVA = new BigDecimal(0);
-    private static final BigDecimal UPDATED_RETE_IVA = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_RETE_ICA = new BigDecimal(0);
-    private static final BigDecimal UPDATED_RETE_ICA = new BigDecimal(1);
-
     private static final BigDecimal DEFAULT_TOTAL = new BigDecimal(0);
     private static final BigDecimal UPDATED_TOTAL = new BigDecimal(1);
-
-    private static final Instant DEFAULT_FECHA_EMISION = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_FECHA_EMISION = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final LocalDate DEFAULT_FECHA_VENCIMIENTO = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_VENCIMIENTO = LocalDate.now(ZoneId.systemDefault());
 
     private static final String DEFAULT_NOTAS_ADICIONALES = "AAAAAAAAAA";
     private static final String UPDATED_NOTAS_ADICIONALES = "BBBBBBBBBB";
@@ -94,6 +67,12 @@ class FacturaResourceIT {
 
     private static final Boolean DEFAULT_ENVIADA = false;
     private static final Boolean UPDATED_ENVIADA = true;
+
+    private static final Instant DEFAULT_FECHA_EMISION = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_FECHA_EMISION = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final LocalDate DEFAULT_FECHA_VENCIMIENTO = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_FECHA_VENCIMIENTO = LocalDate.now(ZoneId.systemDefault());
 
     private static final Instant DEFAULT_FECHA_ENVIO_EMAIL = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_FECHA_ENVIO_EMAIL = Instant.now().truncatedTo(ChronoUnit.MILLIS);
@@ -125,31 +104,24 @@ class FacturaResourceIT {
      */
     public static Factura createEntity() {
         Factura factura = new Factura()
-            .referencia(DEFAULT_REFERENCIA)
-            .cufe(DEFAULT_CUFE)
-            .resolucionDian(DEFAULT_RESOLUCION_DIAN)
-            .fechaVigenciaResolucion(DEFAULT_FECHA_VIGENCIA_RESOLUCION)
             .prefijo(DEFAULT_PREFIJO)
-            .consecutivo(DEFAULT_CONSECUTIVO)
+            .cufe(DEFAULT_CUFE)
             .subtotal(DEFAULT_SUBTOTAL)
             .descuentos(DEFAULT_DESCUENTOS)
             .baseGravableIva(DEFAULT_BASE_GRAVABLE_IVA)
             .valorIva(DEFAULT_VALOR_IVA)
-            .retefuente(DEFAULT_RETEFUENTE)
-            .reteIva(DEFAULT_RETE_IVA)
-            .reteIca(DEFAULT_RETE_ICA)
             .total(DEFAULT_TOTAL)
-            .fechaEmision(DEFAULT_FECHA_EMISION)
-            .fechaVencimiento(DEFAULT_FECHA_VENCIMIENTO)
             .notasAdicionales(DEFAULT_NOTAS_ADICIONALES)
             .codigoQr(DEFAULT_CODIGO_QR)
             .enviada(DEFAULT_ENVIADA)
+            .fechaEmision(DEFAULT_FECHA_EMISION)
+            .fechaVencimiento(DEFAULT_FECHA_VENCIMIENTO)
             .fechaEnvioEmail(DEFAULT_FECHA_ENVIO_EMAIL);
         // Add required entity
-        Pedido pedido;
-        pedido = PedidoResourceIT.createEntity();
-        pedido.setId("fixed-id-for-tests");
-        factura.setPedido(pedido);
+        Pago pago;
+        pago = PagoResourceIT.createEntity();
+        pago.setId("fixed-id-for-tests");
+        factura.setPago(pago);
         return factura;
     }
 
@@ -161,31 +133,24 @@ class FacturaResourceIT {
      */
     public static Factura createUpdatedEntity() {
         Factura updatedFactura = new Factura()
-            .referencia(UPDATED_REFERENCIA)
-            .cufe(UPDATED_CUFE)
-            .resolucionDian(UPDATED_RESOLUCION_DIAN)
-            .fechaVigenciaResolucion(UPDATED_FECHA_VIGENCIA_RESOLUCION)
             .prefijo(UPDATED_PREFIJO)
-            .consecutivo(UPDATED_CONSECUTIVO)
+            .cufe(UPDATED_CUFE)
             .subtotal(UPDATED_SUBTOTAL)
             .descuentos(UPDATED_DESCUENTOS)
             .baseGravableIva(UPDATED_BASE_GRAVABLE_IVA)
             .valorIva(UPDATED_VALOR_IVA)
-            .retefuente(UPDATED_RETEFUENTE)
-            .reteIva(UPDATED_RETE_IVA)
-            .reteIca(UPDATED_RETE_ICA)
             .total(UPDATED_TOTAL)
-            .fechaEmision(UPDATED_FECHA_EMISION)
-            .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO)
             .notasAdicionales(UPDATED_NOTAS_ADICIONALES)
             .codigoQr(UPDATED_CODIGO_QR)
             .enviada(UPDATED_ENVIADA)
+            .fechaEmision(UPDATED_FECHA_EMISION)
+            .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO)
             .fechaEnvioEmail(UPDATED_FECHA_ENVIO_EMAIL);
         // Add required entity
-        Pedido pedido;
-        pedido = PedidoResourceIT.createUpdatedEntity();
-        pedido.setId("fixed-id-for-tests");
-        updatedFactura.setPedido(pedido);
+        Pago pago;
+        pago = PagoResourceIT.createUpdatedEntity();
+        pago.setId("fixed-id-for-tests");
+        updatedFactura.setPago(pago);
         return updatedFactura;
     }
 
@@ -240,22 +205,6 @@ class FacturaResourceIT {
 
         // Validate the Factura in the database
         assertSameRepositoryCount(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    void checkReferenciaIsRequired() throws Exception {
-        long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
-        factura.setReferencia(null);
-
-        // Create the Factura, which fails.
-        FacturaDTO facturaDTO = facturaMapper.toDto(factura);
-
-        restFacturaMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(facturaDTO)))
-            .andExpect(status().isBadRequest());
-
-        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
@@ -317,25 +266,18 @@ class FacturaResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(factura.getId())))
-            .andExpect(jsonPath("$.[*].referencia").value(hasItem(DEFAULT_REFERENCIA)))
-            .andExpect(jsonPath("$.[*].cufe").value(hasItem(DEFAULT_CUFE)))
-            .andExpect(jsonPath("$.[*].resolucionDian").value(hasItem(DEFAULT_RESOLUCION_DIAN)))
-            .andExpect(jsonPath("$.[*].fechaVigenciaResolucion").value(hasItem(DEFAULT_FECHA_VIGENCIA_RESOLUCION.toString())))
             .andExpect(jsonPath("$.[*].prefijo").value(hasItem(DEFAULT_PREFIJO)))
-            .andExpect(jsonPath("$.[*].consecutivo").value(hasItem(DEFAULT_CONSECUTIVO.intValue())))
+            .andExpect(jsonPath("$.[*].cufe").value(hasItem(DEFAULT_CUFE)))
             .andExpect(jsonPath("$.[*].subtotal").value(hasItem(sameNumber(DEFAULT_SUBTOTAL))))
             .andExpect(jsonPath("$.[*].descuentos").value(hasItem(sameNumber(DEFAULT_DESCUENTOS))))
             .andExpect(jsonPath("$.[*].baseGravableIva").value(hasItem(sameNumber(DEFAULT_BASE_GRAVABLE_IVA))))
             .andExpect(jsonPath("$.[*].valorIva").value(hasItem(sameNumber(DEFAULT_VALOR_IVA))))
-            .andExpect(jsonPath("$.[*].retefuente").value(hasItem(sameNumber(DEFAULT_RETEFUENTE))))
-            .andExpect(jsonPath("$.[*].reteIva").value(hasItem(sameNumber(DEFAULT_RETE_IVA))))
-            .andExpect(jsonPath("$.[*].reteIca").value(hasItem(sameNumber(DEFAULT_RETE_ICA))))
             .andExpect(jsonPath("$.[*].total").value(hasItem(sameNumber(DEFAULT_TOTAL))))
-            .andExpect(jsonPath("$.[*].fechaEmision").value(hasItem(DEFAULT_FECHA_EMISION.toString())))
-            .andExpect(jsonPath("$.[*].fechaVencimiento").value(hasItem(DEFAULT_FECHA_VENCIMIENTO.toString())))
             .andExpect(jsonPath("$.[*].notasAdicionales").value(hasItem(DEFAULT_NOTAS_ADICIONALES)))
             .andExpect(jsonPath("$.[*].codigoQr").value(hasItem(DEFAULT_CODIGO_QR)))
             .andExpect(jsonPath("$.[*].enviada").value(hasItem(DEFAULT_ENVIADA)))
+            .andExpect(jsonPath("$.[*].fechaEmision").value(hasItem(DEFAULT_FECHA_EMISION.toString())))
+            .andExpect(jsonPath("$.[*].fechaVencimiento").value(hasItem(DEFAULT_FECHA_VENCIMIENTO.toString())))
             .andExpect(jsonPath("$.[*].fechaEnvioEmail").value(hasItem(DEFAULT_FECHA_ENVIO_EMAIL.toString())));
     }
 
@@ -350,25 +292,18 @@ class FacturaResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(factura.getId()))
-            .andExpect(jsonPath("$.referencia").value(DEFAULT_REFERENCIA))
-            .andExpect(jsonPath("$.cufe").value(DEFAULT_CUFE))
-            .andExpect(jsonPath("$.resolucionDian").value(DEFAULT_RESOLUCION_DIAN))
-            .andExpect(jsonPath("$.fechaVigenciaResolucion").value(DEFAULT_FECHA_VIGENCIA_RESOLUCION.toString()))
             .andExpect(jsonPath("$.prefijo").value(DEFAULT_PREFIJO))
-            .andExpect(jsonPath("$.consecutivo").value(DEFAULT_CONSECUTIVO.intValue()))
+            .andExpect(jsonPath("$.cufe").value(DEFAULT_CUFE))
             .andExpect(jsonPath("$.subtotal").value(sameNumber(DEFAULT_SUBTOTAL)))
             .andExpect(jsonPath("$.descuentos").value(sameNumber(DEFAULT_DESCUENTOS)))
             .andExpect(jsonPath("$.baseGravableIva").value(sameNumber(DEFAULT_BASE_GRAVABLE_IVA)))
             .andExpect(jsonPath("$.valorIva").value(sameNumber(DEFAULT_VALOR_IVA)))
-            .andExpect(jsonPath("$.retefuente").value(sameNumber(DEFAULT_RETEFUENTE)))
-            .andExpect(jsonPath("$.reteIva").value(sameNumber(DEFAULT_RETE_IVA)))
-            .andExpect(jsonPath("$.reteIca").value(sameNumber(DEFAULT_RETE_ICA)))
             .andExpect(jsonPath("$.total").value(sameNumber(DEFAULT_TOTAL)))
-            .andExpect(jsonPath("$.fechaEmision").value(DEFAULT_FECHA_EMISION.toString()))
-            .andExpect(jsonPath("$.fechaVencimiento").value(DEFAULT_FECHA_VENCIMIENTO.toString()))
             .andExpect(jsonPath("$.notasAdicionales").value(DEFAULT_NOTAS_ADICIONALES))
             .andExpect(jsonPath("$.codigoQr").value(DEFAULT_CODIGO_QR))
             .andExpect(jsonPath("$.enviada").value(DEFAULT_ENVIADA))
+            .andExpect(jsonPath("$.fechaEmision").value(DEFAULT_FECHA_EMISION.toString()))
+            .andExpect(jsonPath("$.fechaVencimiento").value(DEFAULT_FECHA_VENCIMIENTO.toString()))
             .andExpect(jsonPath("$.fechaEnvioEmail").value(DEFAULT_FECHA_ENVIO_EMAIL.toString()));
     }
 
@@ -388,25 +323,18 @@ class FacturaResourceIT {
         // Update the factura
         Factura updatedFactura = facturaRepository.findById(factura.getId()).orElseThrow();
         updatedFactura
-            .referencia(UPDATED_REFERENCIA)
-            .cufe(UPDATED_CUFE)
-            .resolucionDian(UPDATED_RESOLUCION_DIAN)
-            .fechaVigenciaResolucion(UPDATED_FECHA_VIGENCIA_RESOLUCION)
             .prefijo(UPDATED_PREFIJO)
-            .consecutivo(UPDATED_CONSECUTIVO)
+            .cufe(UPDATED_CUFE)
             .subtotal(UPDATED_SUBTOTAL)
             .descuentos(UPDATED_DESCUENTOS)
             .baseGravableIva(UPDATED_BASE_GRAVABLE_IVA)
             .valorIva(UPDATED_VALOR_IVA)
-            .retefuente(UPDATED_RETEFUENTE)
-            .reteIva(UPDATED_RETE_IVA)
-            .reteIca(UPDATED_RETE_ICA)
             .total(UPDATED_TOTAL)
-            .fechaEmision(UPDATED_FECHA_EMISION)
-            .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO)
             .notasAdicionales(UPDATED_NOTAS_ADICIONALES)
             .codigoQr(UPDATED_CODIGO_QR)
             .enviada(UPDATED_ENVIADA)
+            .fechaEmision(UPDATED_FECHA_EMISION)
+            .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO)
             .fechaEnvioEmail(UPDATED_FECHA_ENVIO_EMAIL);
         FacturaDTO facturaDTO = facturaMapper.toDto(updatedFactura);
 
@@ -491,15 +419,12 @@ class FacturaResourceIT {
 
         partialUpdatedFactura
             .cufe(UPDATED_CUFE)
-            .prefijo(UPDATED_PREFIJO)
-            .subtotal(UPDATED_SUBTOTAL)
-            .descuentos(UPDATED_DESCUENTOS)
-            .valorIva(UPDATED_VALOR_IVA)
-            .retefuente(UPDATED_RETEFUENTE)
-            .reteIva(UPDATED_RETE_IVA)
+            .baseGravableIva(UPDATED_BASE_GRAVABLE_IVA)
             .total(UPDATED_TOTAL)
-            .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO)
-            .enviada(UPDATED_ENVIADA);
+            .notasAdicionales(UPDATED_NOTAS_ADICIONALES)
+            .enviada(UPDATED_ENVIADA)
+            .fechaEmision(UPDATED_FECHA_EMISION)
+            .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO);
 
         restFacturaMockMvc
             .perform(
@@ -527,25 +452,18 @@ class FacturaResourceIT {
         partialUpdatedFactura.setId(factura.getId());
 
         partialUpdatedFactura
-            .referencia(UPDATED_REFERENCIA)
-            .cufe(UPDATED_CUFE)
-            .resolucionDian(UPDATED_RESOLUCION_DIAN)
-            .fechaVigenciaResolucion(UPDATED_FECHA_VIGENCIA_RESOLUCION)
             .prefijo(UPDATED_PREFIJO)
-            .consecutivo(UPDATED_CONSECUTIVO)
+            .cufe(UPDATED_CUFE)
             .subtotal(UPDATED_SUBTOTAL)
             .descuentos(UPDATED_DESCUENTOS)
             .baseGravableIva(UPDATED_BASE_GRAVABLE_IVA)
             .valorIva(UPDATED_VALOR_IVA)
-            .retefuente(UPDATED_RETEFUENTE)
-            .reteIva(UPDATED_RETE_IVA)
-            .reteIca(UPDATED_RETE_ICA)
             .total(UPDATED_TOTAL)
-            .fechaEmision(UPDATED_FECHA_EMISION)
-            .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO)
             .notasAdicionales(UPDATED_NOTAS_ADICIONALES)
             .codigoQr(UPDATED_CODIGO_QR)
             .enviada(UPDATED_ENVIADA)
+            .fechaEmision(UPDATED_FECHA_EMISION)
+            .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO)
             .fechaEnvioEmail(UPDATED_FECHA_ENVIO_EMAIL);
 
         restFacturaMockMvc

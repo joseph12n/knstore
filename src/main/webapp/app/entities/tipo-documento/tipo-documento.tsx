@@ -86,14 +86,14 @@ export const TipoDocumento = () => {
                 <th className="hand" onClick={sort('id')}>
                   ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
-                <th className="hand" onClick={sort('estado')}>
-                  Estado <FontAwesomeIcon icon={getSortIconByFieldName('estado')} />
-                </th>
                 <th className="hand" onClick={sort('sigla')}>
                   Sigla <FontAwesomeIcon icon={getSortIconByFieldName('sigla')} />
                 </th>
                 <th className="hand" onClick={sort('nombreTipo')}>
                   Nombre Tipo <FontAwesomeIcon icon={getSortIconByFieldName('nombreTipo')} />
+                </th>
+                <th className="hand" onClick={sort('estado')}>
+                  Estado <FontAwesomeIcon icon={getSortIconByFieldName('estado')} />
                 </th>
                 <th />
               </tr>
@@ -106,9 +106,9 @@ export const TipoDocumento = () => {
                       {tipoDocumento.id}
                     </Button>
                   </td>
-                  <td>{tipoDocumento.estado}</td>
                   <td>{tipoDocumento.sigla}</td>
                   <td>{tipoDocumento.nombreTipo}</td>
+                  <td>{tipoDocumento.estado}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button

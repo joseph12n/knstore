@@ -60,8 +60,8 @@ public class PagoAsserts {
             .satisfies(a ->
                 assertThat(a.getDescripcionRespuesta()).as("check descripcionRespuesta").isEqualTo(expected.getDescripcionRespuesta())
             )
-            .satisfies(a -> assertThat(a.getFechaPago()).as("check fechaPago").isEqualTo(expected.getFechaPago()))
-            .satisfies(a -> assertThat(a.getIntentos()).as("check intentos").isEqualTo(expected.getIntentos()));
+            .satisfies(a -> assertThat(a.getIntentos()).as("check intentos").isEqualTo(expected.getIntentos()))
+            .satisfies(a -> assertThat(a.getFechaPago()).as("check fechaPago").isEqualTo(expected.getFechaPago()));
     }
 
     /**

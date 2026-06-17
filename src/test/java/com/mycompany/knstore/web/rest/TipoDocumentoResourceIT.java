@@ -32,14 +32,14 @@ import org.springframework.test.web.servlet.MockMvc;
 @WithMockUser
 class TipoDocumentoResourceIT {
 
-    private static final EstadoTipoDocumento DEFAULT_ESTADO = EstadoTipoDocumento.ACTIVO;
-    private static final EstadoTipoDocumento UPDATED_ESTADO = EstadoTipoDocumento.INACTIVO;
-
     private static final String DEFAULT_SIGLA = "AAAAAAAAAA";
     private static final String UPDATED_SIGLA = "BBBBBBBBBB";
 
     private static final String DEFAULT_NOMBRE_TIPO = "AAAAAAAAAA";
     private static final String UPDATED_NOMBRE_TIPO = "BBBBBBBBBB";
+
+    private static final EstadoTipoDocumento DEFAULT_ESTADO = EstadoTipoDocumento.ACTIVO;
+    private static final EstadoTipoDocumento UPDATED_ESTADO = EstadoTipoDocumento.INACTIVO;
 
     private static final String ENTITY_API_URL = "/api/tipo-documentos";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -67,7 +67,7 @@ class TipoDocumentoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TipoDocumento createEntity() {
-        return new TipoDocumento().estado(DEFAULT_ESTADO).sigla(DEFAULT_SIGLA).nombreTipo(DEFAULT_NOMBRE_TIPO);
+        return new TipoDocumento().sigla(DEFAULT_SIGLA).nombreTipo(DEFAULT_NOMBRE_TIPO).estado(DEFAULT_ESTADO);
     }
 
     /**
@@ -77,7 +77,7 @@ class TipoDocumentoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static TipoDocumento createUpdatedEntity() {
-        return new TipoDocumento().estado(UPDATED_ESTADO).sigla(UPDATED_SIGLA).nombreTipo(UPDATED_NOMBRE_TIPO);
+        return new TipoDocumento().sigla(UPDATED_SIGLA).nombreTipo(UPDATED_NOMBRE_TIPO).estado(UPDATED_ESTADO);
     }
 
     @BeforeEach
@@ -134,22 +134,6 @@ class TipoDocumentoResourceIT {
     }
 
     @Test
-    void checkEstadoIsRequired() throws Exception {
-        long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
-        tipoDocumento.setEstado(null);
-
-        // Create the TipoDocumento, which fails.
-        TipoDocumentoDTO tipoDocumentoDTO = tipoDocumentoMapper.toDto(tipoDocumento);
-
-        restTipoDocumentoMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tipoDocumentoDTO)))
-            .andExpect(status().isBadRequest());
-
-        assertSameRepositoryCount(databaseSizeBeforeTest);
-    }
-
-    @Test
     void checkSiglaIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
@@ -182,6 +166,22 @@ class TipoDocumentoResourceIT {
     }
 
     @Test
+    void checkEstadoIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        tipoDocumento.setEstado(null);
+
+        // Create the TipoDocumento, which fails.
+        TipoDocumentoDTO tipoDocumentoDTO = tipoDocumentoMapper.toDto(tipoDocumento);
+
+        restTipoDocumentoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(tipoDocumentoDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
     void getAllTipoDocumentos() throws Exception {
         // Initialize the database
         insertedTipoDocumento = tipoDocumentoRepository.save(tipoDocumento);
@@ -192,9 +192,9 @@ class TipoDocumentoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(tipoDocumento.getId())))
-            .andExpect(jsonPath("$.[*].estado").value(hasItem(DEFAULT_ESTADO.toString())))
             .andExpect(jsonPath("$.[*].sigla").value(hasItem(DEFAULT_SIGLA)))
-            .andExpect(jsonPath("$.[*].nombreTipo").value(hasItem(DEFAULT_NOMBRE_TIPO)));
+            .andExpect(jsonPath("$.[*].nombreTipo").value(hasItem(DEFAULT_NOMBRE_TIPO)))
+            .andExpect(jsonPath("$.[*].estado").value(hasItem(DEFAULT_ESTADO.toString())));
     }
 
     @Test
@@ -208,9 +208,9 @@ class TipoDocumentoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(tipoDocumento.getId()))
-            .andExpect(jsonPath("$.estado").value(DEFAULT_ESTADO.toString()))
             .andExpect(jsonPath("$.sigla").value(DEFAULT_SIGLA))
-            .andExpect(jsonPath("$.nombreTipo").value(DEFAULT_NOMBRE_TIPO));
+            .andExpect(jsonPath("$.nombreTipo").value(DEFAULT_NOMBRE_TIPO))
+            .andExpect(jsonPath("$.estado").value(DEFAULT_ESTADO.toString()));
     }
 
     @Test
@@ -228,7 +228,7 @@ class TipoDocumentoResourceIT {
 
         // Update the tipoDocumento
         TipoDocumento updatedTipoDocumento = tipoDocumentoRepository.findById(tipoDocumento.getId()).orElseThrow();
-        updatedTipoDocumento.estado(UPDATED_ESTADO).sigla(UPDATED_SIGLA).nombreTipo(UPDATED_NOMBRE_TIPO);
+        updatedTipoDocumento.sigla(UPDATED_SIGLA).nombreTipo(UPDATED_NOMBRE_TIPO).estado(UPDATED_ESTADO);
         TipoDocumentoDTO tipoDocumentoDTO = tipoDocumentoMapper.toDto(updatedTipoDocumento);
 
         restTipoDocumentoMockMvc
@@ -314,7 +314,7 @@ class TipoDocumentoResourceIT {
         TipoDocumento partialUpdatedTipoDocumento = new TipoDocumento();
         partialUpdatedTipoDocumento.setId(tipoDocumento.getId());
 
-        partialUpdatedTipoDocumento.estado(UPDATED_ESTADO);
+        partialUpdatedTipoDocumento.sigla(UPDATED_SIGLA);
 
         restTipoDocumentoMockMvc
             .perform(
@@ -344,7 +344,7 @@ class TipoDocumentoResourceIT {
         TipoDocumento partialUpdatedTipoDocumento = new TipoDocumento();
         partialUpdatedTipoDocumento.setId(tipoDocumento.getId());
 
-        partialUpdatedTipoDocumento.estado(UPDATED_ESTADO).sigla(UPDATED_SIGLA).nombreTipo(UPDATED_NOMBRE_TIPO);
+        partialUpdatedTipoDocumento.sigla(UPDATED_SIGLA).nombreTipo(UPDATED_NOMBRE_TIPO).estado(UPDATED_ESTADO);
 
         restTipoDocumentoMockMvc
             .perform(

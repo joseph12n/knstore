@@ -30,13 +30,13 @@ export const EnvioDetail = () => {
           </dt>
           <dd>{envioEntity.id}</dd>
           <dt>
-            <span id="numeroRastreo">Numero Rastreo</span>
-          </dt>
-          <dd>{envioEntity.numeroRastreo}</dd>
-          <dt>
             <span id="transportadora">Transportadora</span>
           </dt>
           <dd>{envioEntity.transportadora}</dd>
+          <dt>
+            <span id="numeroRastreo">Numero Rastreo</span>
+          </dt>
+          <dd>{envioEntity.numeroRastreo}</dd>
           <dt>
             <span id="tipoServicio">Tipo Servicio</span>
           </dt>
@@ -83,6 +83,8 @@ export const EnvioDetail = () => {
             <span id="fechaEntrega">Fecha Entrega</span>
           </dt>
           <dd>{envioEntity.fechaEntrega ? <TextFormat value={envioEntity.fechaEntrega} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
+          <dt>Pedido</dt>
+          <dd>{envioEntity.pedido ? envioEntity.pedido.id : ''}</dd>
         </dl>
         <Button as={Link as any} to="/envio" replace variant="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Volver</span>

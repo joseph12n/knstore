@@ -2,7 +2,6 @@ package com.mycompany.knstore.web.rest;
 
 import static com.mycompany.knstore.domain.ProductoAsserts.*;
 import static com.mycompany.knstore.web.rest.TestUtil.createUpdateProxyForBean;
-import static com.mycompany.knstore.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
@@ -11,16 +10,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.IntegrationTest;
+import com.mycompany.knstore.domain.Categoria;
 import com.mycompany.knstore.domain.Producto;
 import com.mycompany.knstore.domain.Subcategoria;
-import com.mycompany.knstore.domain.enumeration.CategoriaIVA;
 import com.mycompany.knstore.repository.ProductoRepository;
 import com.mycompany.knstore.service.ProductoService;
 import com.mycompany.knstore.service.dto.ProductoDTO;
 import com.mycompany.knstore.service.mapper.ProductoMapper;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,22 +48,17 @@ class ProductoResourceIT {
     private static final String DEFAULT_SLUG = "AAAAAAAAAA";
     private static final String UPDATED_SLUG = "BBBBBBBBBB";
 
-    private static final String DEFAULT_DESCRIPCION = "AAAAAAAAAA";
-    private static final String UPDATED_DESCRIPCION = "BBBBBBBBBB";
-
-    private static final byte[] DEFAULT_IMAGEN = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_IMAGEN = TestUtil.createByteArray(1, "1");
-    private static final String DEFAULT_IMAGEN_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_IMAGEN_CONTENT_TYPE = "image/png";
-
-    private static final String DEFAULT_IMAGEN_ALT = "AAAAAAAAAA";
-    private static final String UPDATED_IMAGEN_ALT = "BBBBBBBBBB";
-
-    private static final String DEFAULT_MARCA = "AAAAAAAAAA";
-    private static final String UPDATED_MARCA = "BBBBBBBBBB";
-
     private static final String DEFAULT_REFERENCIA = "AAAAAAAAAA";
     private static final String UPDATED_REFERENCIA = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SKU = "AAAAAAAAAA";
+    private static final String UPDATED_SKU = "BBBBBBBBBB";
+
+    private static final String DEFAULT_COLOR = "AAAAAAAAAA";
+    private static final String UPDATED_COLOR = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TALLA = "AAAAAAAAAA";
+    private static final String UPDATED_TALLA = "BBBBBBBBBB";
 
     private static final String DEFAULT_CODIGO_BARRAS = "AAAAAAAAAA";
     private static final String UPDATED_CODIGO_BARRAS = "BBBBBBBBBB";
@@ -74,35 +66,8 @@ class ProductoResourceIT {
     private static final String DEFAULT_UNIDAD_MEDIDA = "AAAAAAAAAA";
     private static final String UPDATED_UNIDAD_MEDIDA = "BBBBBBBBBB";
 
-    private static final BigDecimal DEFAULT_PESO_KG = new BigDecimal(0);
-    private static final BigDecimal UPDATED_PESO_KG = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_LARGO_CM = new BigDecimal(0);
-    private static final BigDecimal UPDATED_LARGO_CM = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_ANCHO_CM = new BigDecimal(0);
-    private static final BigDecimal UPDATED_ANCHO_CM = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_ALTO_CM = new BigDecimal(0);
-    private static final BigDecimal UPDATED_ALTO_CM = new BigDecimal(1);
-
-    private static final CategoriaIVA DEFAULT_CATEGORIA_IVA = CategoriaIVA.EXCLUIDO;
-    private static final CategoriaIVA UPDATED_CATEGORIA_IVA = CategoriaIVA.EXENTO;
-
-    private static final BigDecimal DEFAULT_PRECIO_COMPRA = new BigDecimal(0);
-    private static final BigDecimal UPDATED_PRECIO_COMPRA = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_PRECIO_VENTA = new BigDecimal(0);
-    private static final BigDecimal UPDATED_PRECIO_VENTA = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_GANANCIA = new BigDecimal(1);
-    private static final BigDecimal UPDATED_GANANCIA = new BigDecimal(2);
-
-    private static final BigDecimal DEFAULT_MARGEN = new BigDecimal(1);
-    private static final BigDecimal UPDATED_MARGEN = new BigDecimal(2);
-
-    private static final Integer DEFAULT_GARANTIA_MESES = 0;
-    private static final Integer UPDATED_GARANTIA_MESES = 1;
+    private static final String DEFAULT_DESCRIPCION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPCION = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_DESTACADO = false;
     private static final Boolean UPDATED_DESTACADO = true;
@@ -145,26 +110,20 @@ class ProductoResourceIT {
         Producto producto = new Producto()
             .nombre(DEFAULT_NOMBRE)
             .slug(DEFAULT_SLUG)
-            .descripcion(DEFAULT_DESCRIPCION)
-            .imagen(DEFAULT_IMAGEN)
-            .imagenContentType(DEFAULT_IMAGEN_CONTENT_TYPE)
-            .imagenAlt(DEFAULT_IMAGEN_ALT)
-            .marca(DEFAULT_MARCA)
             .referencia(DEFAULT_REFERENCIA)
+            .sku(DEFAULT_SKU)
+            .color(DEFAULT_COLOR)
+            .talla(DEFAULT_TALLA)
             .codigoBarras(DEFAULT_CODIGO_BARRAS)
             .unidadMedida(DEFAULT_UNIDAD_MEDIDA)
-            .pesoKg(DEFAULT_PESO_KG)
-            .largoCm(DEFAULT_LARGO_CM)
-            .anchoCm(DEFAULT_ANCHO_CM)
-            .altoCm(DEFAULT_ALTO_CM)
-            .categoriaIva(DEFAULT_CATEGORIA_IVA)
-            .precioCompra(DEFAULT_PRECIO_COMPRA)
-            .precioVenta(DEFAULT_PRECIO_VENTA)
-            .ganancia(DEFAULT_GANANCIA)
-            .margen(DEFAULT_MARGEN)
-            .garantiaMeses(DEFAULT_GARANTIA_MESES)
+            .descripcion(DEFAULT_DESCRIPCION)
             .destacado(DEFAULT_DESTACADO)
             .activo(DEFAULT_ACTIVO);
+        // Add required entity
+        Categoria categoria;
+        categoria = CategoriaResourceIT.createEntity();
+        categoria.setId("fixed-id-for-tests");
+        producto.setCategoria(categoria);
         // Add required entity
         Subcategoria subcategoria;
         subcategoria = SubcategoriaResourceIT.createEntity();
@@ -183,26 +142,20 @@ class ProductoResourceIT {
         Producto updatedProducto = new Producto()
             .nombre(UPDATED_NOMBRE)
             .slug(UPDATED_SLUG)
-            .descripcion(UPDATED_DESCRIPCION)
-            .imagen(UPDATED_IMAGEN)
-            .imagenContentType(UPDATED_IMAGEN_CONTENT_TYPE)
-            .imagenAlt(UPDATED_IMAGEN_ALT)
-            .marca(UPDATED_MARCA)
             .referencia(UPDATED_REFERENCIA)
+            .sku(UPDATED_SKU)
+            .color(UPDATED_COLOR)
+            .talla(UPDATED_TALLA)
             .codigoBarras(UPDATED_CODIGO_BARRAS)
             .unidadMedida(UPDATED_UNIDAD_MEDIDA)
-            .pesoKg(UPDATED_PESO_KG)
-            .largoCm(UPDATED_LARGO_CM)
-            .anchoCm(UPDATED_ANCHO_CM)
-            .altoCm(UPDATED_ALTO_CM)
-            .categoriaIva(UPDATED_CATEGORIA_IVA)
-            .precioCompra(UPDATED_PRECIO_COMPRA)
-            .precioVenta(UPDATED_PRECIO_VENTA)
-            .ganancia(UPDATED_GANANCIA)
-            .margen(UPDATED_MARGEN)
-            .garantiaMeses(UPDATED_GARANTIA_MESES)
+            .descripcion(UPDATED_DESCRIPCION)
             .destacado(UPDATED_DESTACADO)
             .activo(UPDATED_ACTIVO);
+        // Add required entity
+        Categoria categoria;
+        categoria = CategoriaResourceIT.createUpdatedEntity();
+        categoria.setId("fixed-id-for-tests");
+        updatedProducto.setCategoria(categoria);
         // Add required entity
         Subcategoria subcategoria;
         subcategoria = SubcategoriaResourceIT.createUpdatedEntity();
@@ -297,42 +250,10 @@ class ProductoResourceIT {
     }
 
     @Test
-    void checkCategoriaIvaIsRequired() throws Exception {
+    void checkSkuIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
-        producto.setCategoriaIva(null);
-
-        // Create the Producto, which fails.
-        ProductoDTO productoDTO = productoMapper.toDto(producto);
-
-        restProductoMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productoDTO)))
-            .andExpect(status().isBadRequest());
-
-        assertSameRepositoryCount(databaseSizeBeforeTest);
-    }
-
-    @Test
-    void checkPrecioCompraIsRequired() throws Exception {
-        long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
-        producto.setPrecioCompra(null);
-
-        // Create the Producto, which fails.
-        ProductoDTO productoDTO = productoMapper.toDto(producto);
-
-        restProductoMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(productoDTO)))
-            .andExpect(status().isBadRequest());
-
-        assertSameRepositoryCount(databaseSizeBeforeTest);
-    }
-
-    @Test
-    void checkPrecioVentaIsRequired() throws Exception {
-        long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
-        producto.setPrecioVenta(null);
+        producto.setSku(null);
 
         // Create the Producto, which fails.
         ProductoDTO productoDTO = productoMapper.toDto(producto);
@@ -389,24 +310,13 @@ class ProductoResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(producto.getId())))
             .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE)))
             .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG)))
-            .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION)))
-            .andExpect(jsonPath("$.[*].imagenContentType").value(hasItem(DEFAULT_IMAGEN_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].imagen").value(hasItem(Base64.getEncoder().encodeToString(DEFAULT_IMAGEN))))
-            .andExpect(jsonPath("$.[*].imagenAlt").value(hasItem(DEFAULT_IMAGEN_ALT)))
-            .andExpect(jsonPath("$.[*].marca").value(hasItem(DEFAULT_MARCA)))
             .andExpect(jsonPath("$.[*].referencia").value(hasItem(DEFAULT_REFERENCIA)))
+            .andExpect(jsonPath("$.[*].sku").value(hasItem(DEFAULT_SKU)))
+            .andExpect(jsonPath("$.[*].color").value(hasItem(DEFAULT_COLOR)))
+            .andExpect(jsonPath("$.[*].talla").value(hasItem(DEFAULT_TALLA)))
             .andExpect(jsonPath("$.[*].codigoBarras").value(hasItem(DEFAULT_CODIGO_BARRAS)))
             .andExpect(jsonPath("$.[*].unidadMedida").value(hasItem(DEFAULT_UNIDAD_MEDIDA)))
-            .andExpect(jsonPath("$.[*].pesoKg").value(hasItem(sameNumber(DEFAULT_PESO_KG))))
-            .andExpect(jsonPath("$.[*].largoCm").value(hasItem(sameNumber(DEFAULT_LARGO_CM))))
-            .andExpect(jsonPath("$.[*].anchoCm").value(hasItem(sameNumber(DEFAULT_ANCHO_CM))))
-            .andExpect(jsonPath("$.[*].altoCm").value(hasItem(sameNumber(DEFAULT_ALTO_CM))))
-            .andExpect(jsonPath("$.[*].categoriaIva").value(hasItem(DEFAULT_CATEGORIA_IVA.toString())))
-            .andExpect(jsonPath("$.[*].precioCompra").value(hasItem(sameNumber(DEFAULT_PRECIO_COMPRA))))
-            .andExpect(jsonPath("$.[*].precioVenta").value(hasItem(sameNumber(DEFAULT_PRECIO_VENTA))))
-            .andExpect(jsonPath("$.[*].ganancia").value(hasItem(sameNumber(DEFAULT_GANANCIA))))
-            .andExpect(jsonPath("$.[*].margen").value(hasItem(sameNumber(DEFAULT_MARGEN))))
-            .andExpect(jsonPath("$.[*].garantiaMeses").value(hasItem(DEFAULT_GARANTIA_MESES)))
+            .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION)))
             .andExpect(jsonPath("$.[*].destacado").value(hasItem(DEFAULT_DESTACADO)))
             .andExpect(jsonPath("$.[*].activo").value(hasItem(DEFAULT_ACTIVO)));
     }
@@ -441,24 +351,13 @@ class ProductoResourceIT {
             .andExpect(jsonPath("$.id").value(producto.getId()))
             .andExpect(jsonPath("$.nombre").value(DEFAULT_NOMBRE))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG))
-            .andExpect(jsonPath("$.descripcion").value(DEFAULT_DESCRIPCION))
-            .andExpect(jsonPath("$.imagenContentType").value(DEFAULT_IMAGEN_CONTENT_TYPE))
-            .andExpect(jsonPath("$.imagen").value(Base64.getEncoder().encodeToString(DEFAULT_IMAGEN)))
-            .andExpect(jsonPath("$.imagenAlt").value(DEFAULT_IMAGEN_ALT))
-            .andExpect(jsonPath("$.marca").value(DEFAULT_MARCA))
             .andExpect(jsonPath("$.referencia").value(DEFAULT_REFERENCIA))
+            .andExpect(jsonPath("$.sku").value(DEFAULT_SKU))
+            .andExpect(jsonPath("$.color").value(DEFAULT_COLOR))
+            .andExpect(jsonPath("$.talla").value(DEFAULT_TALLA))
             .andExpect(jsonPath("$.codigoBarras").value(DEFAULT_CODIGO_BARRAS))
             .andExpect(jsonPath("$.unidadMedida").value(DEFAULT_UNIDAD_MEDIDA))
-            .andExpect(jsonPath("$.pesoKg").value(sameNumber(DEFAULT_PESO_KG)))
-            .andExpect(jsonPath("$.largoCm").value(sameNumber(DEFAULT_LARGO_CM)))
-            .andExpect(jsonPath("$.anchoCm").value(sameNumber(DEFAULT_ANCHO_CM)))
-            .andExpect(jsonPath("$.altoCm").value(sameNumber(DEFAULT_ALTO_CM)))
-            .andExpect(jsonPath("$.categoriaIva").value(DEFAULT_CATEGORIA_IVA.toString()))
-            .andExpect(jsonPath("$.precioCompra").value(sameNumber(DEFAULT_PRECIO_COMPRA)))
-            .andExpect(jsonPath("$.precioVenta").value(sameNumber(DEFAULT_PRECIO_VENTA)))
-            .andExpect(jsonPath("$.ganancia").value(sameNumber(DEFAULT_GANANCIA)))
-            .andExpect(jsonPath("$.margen").value(sameNumber(DEFAULT_MARGEN)))
-            .andExpect(jsonPath("$.garantiaMeses").value(DEFAULT_GARANTIA_MESES))
+            .andExpect(jsonPath("$.descripcion").value(DEFAULT_DESCRIPCION))
             .andExpect(jsonPath("$.destacado").value(DEFAULT_DESTACADO))
             .andExpect(jsonPath("$.activo").value(DEFAULT_ACTIVO));
     }
@@ -481,24 +380,13 @@ class ProductoResourceIT {
         updatedProducto
             .nombre(UPDATED_NOMBRE)
             .slug(UPDATED_SLUG)
-            .descripcion(UPDATED_DESCRIPCION)
-            .imagen(UPDATED_IMAGEN)
-            .imagenContentType(UPDATED_IMAGEN_CONTENT_TYPE)
-            .imagenAlt(UPDATED_IMAGEN_ALT)
-            .marca(UPDATED_MARCA)
             .referencia(UPDATED_REFERENCIA)
+            .sku(UPDATED_SKU)
+            .color(UPDATED_COLOR)
+            .talla(UPDATED_TALLA)
             .codigoBarras(UPDATED_CODIGO_BARRAS)
             .unidadMedida(UPDATED_UNIDAD_MEDIDA)
-            .pesoKg(UPDATED_PESO_KG)
-            .largoCm(UPDATED_LARGO_CM)
-            .anchoCm(UPDATED_ANCHO_CM)
-            .altoCm(UPDATED_ALTO_CM)
-            .categoriaIva(UPDATED_CATEGORIA_IVA)
-            .precioCompra(UPDATED_PRECIO_COMPRA)
-            .precioVenta(UPDATED_PRECIO_VENTA)
-            .ganancia(UPDATED_GANANCIA)
-            .margen(UPDATED_MARGEN)
-            .garantiaMeses(UPDATED_GARANTIA_MESES)
+            .descripcion(UPDATED_DESCRIPCION)
             .destacado(UPDATED_DESTACADO)
             .activo(UPDATED_ACTIVO);
         ProductoDTO productoDTO = productoMapper.toDto(updatedProducto);
@@ -588,22 +476,14 @@ class ProductoResourceIT {
 
         partialUpdatedProducto
             .slug(UPDATED_SLUG)
-            .descripcion(UPDATED_DESCRIPCION)
-            .imagen(UPDATED_IMAGEN)
-            .imagenContentType(UPDATED_IMAGEN_CONTENT_TYPE)
-            .imagenAlt(UPDATED_IMAGEN_ALT)
-            .marca(UPDATED_MARCA)
             .referencia(UPDATED_REFERENCIA)
+            .sku(UPDATED_SKU)
+            .color(UPDATED_COLOR)
+            .talla(UPDATED_TALLA)
             .codigoBarras(UPDATED_CODIGO_BARRAS)
             .unidadMedida(UPDATED_UNIDAD_MEDIDA)
-            .pesoKg(UPDATED_PESO_KG)
-            .altoCm(UPDATED_ALTO_CM)
-            .precioCompra(UPDATED_PRECIO_COMPRA)
-            .precioVenta(UPDATED_PRECIO_VENTA)
-            .ganancia(UPDATED_GANANCIA)
-            .garantiaMeses(UPDATED_GARANTIA_MESES)
-            .destacado(UPDATED_DESTACADO)
-            .activo(UPDATED_ACTIVO);
+            .descripcion(UPDATED_DESCRIPCION)
+            .destacado(UPDATED_DESTACADO);
 
         restProductoMockMvc
             .perform(
@@ -633,24 +513,13 @@ class ProductoResourceIT {
         partialUpdatedProducto
             .nombre(UPDATED_NOMBRE)
             .slug(UPDATED_SLUG)
-            .descripcion(UPDATED_DESCRIPCION)
-            .imagen(UPDATED_IMAGEN)
-            .imagenContentType(UPDATED_IMAGEN_CONTENT_TYPE)
-            .imagenAlt(UPDATED_IMAGEN_ALT)
-            .marca(UPDATED_MARCA)
             .referencia(UPDATED_REFERENCIA)
+            .sku(UPDATED_SKU)
+            .color(UPDATED_COLOR)
+            .talla(UPDATED_TALLA)
             .codigoBarras(UPDATED_CODIGO_BARRAS)
             .unidadMedida(UPDATED_UNIDAD_MEDIDA)
-            .pesoKg(UPDATED_PESO_KG)
-            .largoCm(UPDATED_LARGO_CM)
-            .anchoCm(UPDATED_ANCHO_CM)
-            .altoCm(UPDATED_ALTO_CM)
-            .categoriaIva(UPDATED_CATEGORIA_IVA)
-            .precioCompra(UPDATED_PRECIO_COMPRA)
-            .precioVenta(UPDATED_PRECIO_VENTA)
-            .ganancia(UPDATED_GANANCIA)
-            .margen(UPDATED_MARGEN)
-            .garantiaMeses(UPDATED_GARANTIA_MESES)
+            .descripcion(UPDATED_DESCRIPCION)
             .destacado(UPDATED_DESTACADO)
             .activo(UPDATED_ACTIVO);
 

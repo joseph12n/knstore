@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { byteSize, openFile } from 'react-jhipster';
 import { Link, useParams } from 'react-router';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -37,38 +36,21 @@ export const ProductoDetail = () => {
           </dt>
           <dd>{productoEntity.slug}</dd>
           <dt>
-            <span id="descripcion">Descripcion</span>
-          </dt>
-          <dd>{productoEntity.descripcion}</dd>
-          <dt>
-            <span id="imagen">Imagen</span>
-          </dt>
-          <dd>
-            {productoEntity.imagen ? (
-              <div>
-                {productoEntity.imagenContentType ? (
-                  <a onClick={openFile(productoEntity.imagenContentType, productoEntity.imagen)}>
-                    <img src={`data:${productoEntity.imagenContentType};base64,${productoEntity.imagen}`} style={{ maxHeight: '30px' }} />
-                  </a>
-                ) : null}
-                <span>
-                  {productoEntity.imagenContentType}, {byteSize(productoEntity.imagen)}
-                </span>
-              </div>
-            ) : null}
-          </dd>
-          <dt>
-            <span id="imagenAlt">Imagen Alt</span>
-          </dt>
-          <dd>{productoEntity.imagenAlt}</dd>
-          <dt>
-            <span id="marca">Marca</span>
-          </dt>
-          <dd>{productoEntity.marca}</dd>
-          <dt>
             <span id="referencia">Referencia</span>
           </dt>
           <dd>{productoEntity.referencia}</dd>
+          <dt>
+            <span id="sku">Sku</span>
+          </dt>
+          <dd>{productoEntity.sku}</dd>
+          <dt>
+            <span id="color">Color</span>
+          </dt>
+          <dd>{productoEntity.color}</dd>
+          <dt>
+            <span id="talla">Talla</span>
+          </dt>
+          <dd>{productoEntity.talla}</dd>
           <dt>
             <span id="codigoBarras">Codigo Barras</span>
           </dt>
@@ -78,45 +60,9 @@ export const ProductoDetail = () => {
           </dt>
           <dd>{productoEntity.unidadMedida}</dd>
           <dt>
-            <span id="pesoKg">Peso Kg</span>
+            <span id="descripcion">Descripcion</span>
           </dt>
-          <dd>{productoEntity.pesoKg}</dd>
-          <dt>
-            <span id="largoCm">Largo Cm</span>
-          </dt>
-          <dd>{productoEntity.largoCm}</dd>
-          <dt>
-            <span id="anchoCm">Ancho Cm</span>
-          </dt>
-          <dd>{productoEntity.anchoCm}</dd>
-          <dt>
-            <span id="altoCm">Alto Cm</span>
-          </dt>
-          <dd>{productoEntity.altoCm}</dd>
-          <dt>
-            <span id="categoriaIva">Categoria Iva</span>
-          </dt>
-          <dd>{productoEntity.categoriaIva}</dd>
-          <dt>
-            <span id="precioCompra">Precio Compra</span>
-          </dt>
-          <dd>{productoEntity.precioCompra}</dd>
-          <dt>
-            <span id="precioVenta">Precio Venta</span>
-          </dt>
-          <dd>{productoEntity.precioVenta}</dd>
-          <dt>
-            <span id="ganancia">Ganancia</span>
-          </dt>
-          <dd>{productoEntity.ganancia}</dd>
-          <dt>
-            <span id="margen">Margen</span>
-          </dt>
-          <dd>{productoEntity.margen}</dd>
-          <dt>
-            <span id="garantiaMeses">Garantia Meses</span>
-          </dt>
-          <dd>{productoEntity.garantiaMeses}</dd>
+          <dd>{productoEntity.descripcion}</dd>
           <dt>
             <span id="destacado">Destacado</span>
           </dt>
@@ -125,8 +71,18 @@ export const ProductoDetail = () => {
             <span id="activo">Activo</span>
           </dt>
           <dd>{productoEntity.activo ? 'true' : 'false'}</dd>
+          <dt>Precio</dt>
+          <dd>{productoEntity.precio ? productoEntity.precio.id : ''}</dd>
+          <dt>Inventario</dt>
+          <dd>{productoEntity.inventario ? productoEntity.inventario.id : ''}</dd>
+          <dt>Categoria</dt>
+          <dd>{productoEntity.categoria ? productoEntity.categoria.nombre : ''}</dd>
           <dt>Subcategoria</dt>
           <dd>{productoEntity.subcategoria ? productoEntity.subcategoria.nombre : ''}</dd>
+          <dt>Marca</dt>
+          <dd>{productoEntity.marca ? productoEntity.marca.id : ''}</dd>
+          <dt>Categoria Iva</dt>
+          <dd>{productoEntity.categoriaIva ? productoEntity.categoriaIva.id : ''}</dd>
         </dl>
         <Button as={Link as any} to="/producto" replace variant="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Volver</span>

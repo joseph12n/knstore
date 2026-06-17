@@ -114,10 +114,10 @@ export const DireccionUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Departamento"
-                id="direccion-departamento"
-                name="departamento"
-                data-cy="departamento"
+                label="Municipio"
+                id="direccion-municipio"
+                name="municipio"
+                data-cy="municipio"
                 type="text"
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
@@ -125,10 +125,10 @@ export const DireccionUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Municipio"
-                id="direccion-municipio"
-                name="municipio"
-                data-cy="municipio"
+                label="Departamento"
+                id="direccion-departamento"
+                name="departamento"
+                data-cy="departamento"
                 type="text"
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },

@@ -51,16 +51,16 @@ public class Pago implements Serializable {
     @Field("descripcion_respuesta")
     private String descripcionRespuesta;
 
-    @Field("fecha_pago")
-    private Instant fechaPago;
-
     @Min(value = 0)
     @Field("intentos")
     private Integer intentos;
 
+    @Field("fecha_pago")
+    private Instant fechaPago;
+
     @DBRef
     @Field("pedido")
-    @JsonIgnoreProperties(value = { "direccion", "envio", "cuenta" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "direccion", "cuenta", "envio" }, allowSetters = true)
     private Pedido pedido;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -156,19 +156,6 @@ public class Pago implements Serializable {
         this.descripcionRespuesta = descripcionRespuesta;
     }
 
-    public Instant getFechaPago() {
-        return this.fechaPago;
-    }
-
-    public Pago fechaPago(Instant fechaPago) {
-        this.setFechaPago(fechaPago);
-        return this;
-    }
-
-    public void setFechaPago(Instant fechaPago) {
-        this.fechaPago = fechaPago;
-    }
-
     public Integer getIntentos() {
         return this.intentos;
     }
@@ -180,6 +167,19 @@ public class Pago implements Serializable {
 
     public void setIntentos(Integer intentos) {
         this.intentos = intentos;
+    }
+
+    public Instant getFechaPago() {
+        return this.fechaPago;
+    }
+
+    public Pago fechaPago(Instant fechaPago) {
+        this.setFechaPago(fechaPago);
+        return this;
+    }
+
+    public void setFechaPago(Instant fechaPago) {
+        this.fechaPago = fechaPago;
     }
 
     public Pedido getPedido() {
@@ -225,8 +225,8 @@ public class Pago implements Serializable {
             ", referenciaPasarela='" + getReferenciaPasarela() + "'" +
             ", codigoAutorizacion='" + getCodigoAutorizacion() + "'" +
             ", descripcionRespuesta='" + getDescripcionRespuesta() + "'" +
-            ", fechaPago='" + getFechaPago() + "'" +
             ", intentos=" + getIntentos() +
+            ", fechaPago='" + getFechaPago() + "'" +
             "}";
     }
 }

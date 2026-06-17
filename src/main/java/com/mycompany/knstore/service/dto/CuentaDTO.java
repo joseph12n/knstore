@@ -1,7 +1,6 @@
 package com.mycompany.knstore.service.dto;
 
 import com.mycompany.knstore.domain.enumeration.Genero;
-import com.mycompany.knstore.domain.enumeration.TipoPersona;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,9 +18,6 @@ public class CuentaDTO implements Serializable {
     private String numDocumento;
 
     @NotNull
-    private TipoPersona tipoPersona;
-
-    @NotNull
     @Size(max = 50)
     private String primerNombre;
 
@@ -35,15 +31,15 @@ public class CuentaDTO implements Serializable {
     @Size(max = 50)
     private String segundoApellido;
 
+    private Genero genero;
+
+    private LocalDate fechaNacimiento;
+
     @Size(max = 15)
     private String celular;
 
     @Size(max = 15)
     private String telefono;
-
-    private LocalDate fechaNacimiento;
-
-    private Genero genero;
 
     private byte[] fotoPerfil;
 
@@ -71,14 +67,6 @@ public class CuentaDTO implements Serializable {
 
     public void setNumDocumento(String numDocumento) {
         this.numDocumento = numDocumento;
-    }
-
-    public TipoPersona getTipoPersona() {
-        return tipoPersona;
-    }
-
-    public void setTipoPersona(TipoPersona tipoPersona) {
-        this.tipoPersona = tipoPersona;
     }
 
     public String getPrimerNombre() {
@@ -113,6 +101,22 @@ public class CuentaDTO implements Serializable {
         this.segundoApellido = segundoApellido;
     }
 
+    public Genero getGenero() {
+        return genero;
+    }
+
+    public void setGenero(Genero genero) {
+        this.genero = genero;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
     public String getCelular() {
         return celular;
     }
@@ -127,22 +131,6 @@ public class CuentaDTO implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public Genero getGenero() {
-        return genero;
-    }
-
-    public void setGenero(Genero genero) {
-        this.genero = genero;
     }
 
     public byte[] getFotoPerfil() {
@@ -212,15 +200,14 @@ public class CuentaDTO implements Serializable {
         return "CuentaDTO{" +
             "id='" + getId() + "'" +
             ", numDocumento='" + getNumDocumento() + "'" +
-            ", tipoPersona='" + getTipoPersona() + "'" +
             ", primerNombre='" + getPrimerNombre() + "'" +
             ", segundoNombre='" + getSegundoNombre() + "'" +
             ", primerApellido='" + getPrimerApellido() + "'" +
             ", segundoApellido='" + getSegundoApellido() + "'" +
+            ", genero='" + getGenero() + "'" +
+            ", fechaNacimiento='" + getFechaNacimiento() + "'" +
             ", celular='" + getCelular() + "'" +
             ", telefono='" + getTelefono() + "'" +
-            ", fechaNacimiento='" + getFechaNacimiento() + "'" +
-            ", genero='" + getGenero() + "'" +
             ", fotoPerfil='" + getFotoPerfil() + "'" +
             ", activo='" + getActivo() + "'" +
             ", user=" + getUser() +

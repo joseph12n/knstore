@@ -18,11 +18,23 @@ const EntitiesMenu = () => {
       <MenuItem icon="asterisk" to="/subcategoria">
         Subcategoria
       </MenuItem>
+      <MenuItem icon="asterisk" to="/marca">
+        Marca
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/categoria-iva">
+        Categoria IVA
+      </MenuItem>
       <MenuItem icon="asterisk" to="/producto">
         Producto
       </MenuItem>
-      <MenuItem icon="asterisk" to="/variante-producto">
-        Variante Producto
+      <MenuItem icon="asterisk" to="/producto-precio">
+        Producto Precio
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/producto-inventario">
+        Producto Inventario
+      </MenuItem>
+      <MenuItem icon="asterisk" to="/producto-imagen">
+        Producto Imagen
       </MenuItem>
       <MenuItem icon="asterisk" to="/etiqueta-producto">
         Etiqueta Producto

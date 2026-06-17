@@ -53,10 +53,10 @@ export const PagoUpdate = () => {
     if (values.monto !== undefined && typeof values.monto !== 'number') {
       values.monto = Number(values.monto);
     }
-    values.fechaPago = convertDateTimeToServer(values.fechaPago);
     if (values.intentos !== undefined && typeof values.intentos !== 'number') {
       values.intentos = Number(values.intentos);
     }
+    values.fechaPago = convertDateTimeToServer(values.fechaPago);
 
     const entity = {
       ...pagoEntity,
@@ -157,14 +157,6 @@ export const PagoUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Fecha Pago"
-                id="pago-fechaPago"
-                name="fechaPago"
-                data-cy="fechaPago"
-                type="datetime-local"
-                placeholder="YYYY-MM-DD HH:mm"
-              />
-              <ValidatedField
                 label="Intentos"
                 id="pago-intentos"
                 name="intentos"
@@ -174,6 +166,14 @@ export const PagoUpdate = () => {
                   min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
                   validate: v => isNumber(v) || 'Este campo debe ser un número.',
                 }}
+              />
+              <ValidatedField
+                label="Fecha Pago"
+                id="pago-fechaPago"
+                name="fechaPago"
+                data-cy="fechaPago"
+                type="datetime-local"
+                placeholder="YYYY-MM-DD HH:mm"
               />
               <ValidatedField id="pago-pedido" name="pedido" data-cy="pedido" label="Pedido" type="select" required>
                 <option value="" key="0" />

@@ -6,7 +6,6 @@ package com.mycompany.knstore.domain.enumeration;
 public enum Genero {
     MASCULINO("Masculino"),
     FEMENINO("Femenino"),
-    NO_BINARIO("NoBinario"),
     PREFIERO_NO_DECIR("PrefieroNoDecir");
 
     private final String value;

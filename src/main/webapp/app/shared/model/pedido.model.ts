@@ -1,7 +1,6 @@
 import { ICuenta } from 'app/shared/model/cuenta.model';
 import { IDireccion } from 'app/shared/model/direccion.model';
 import { EstadoPedido } from 'app/shared/model/enumerations/estado-pedido.model';
-import { IEnvio } from 'app/shared/model/envio.model';
 
 export interface IPedido {
   id?: string;
@@ -17,7 +16,6 @@ export interface IPedido {
   ipOrigen?: string | null;
   userAgent?: string | null;
   direccion?: IDireccion;
-  envio?: IEnvio;
   cuenta?: ICuenta;
 }
 

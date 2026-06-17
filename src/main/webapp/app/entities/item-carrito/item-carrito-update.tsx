@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getCarritos } from 'app/entities/carrito/carrito.reducer';
 import { getEntities as getProductos } from 'app/entities/producto/producto.reducer';
-import { getEntities as getVarianteProductos } from 'app/entities/variante-producto/variante-producto.reducer';
 
 import { createEntity, getEntity, reset, updateEntity } from './item-carrito.reducer';
 
@@ -22,7 +21,6 @@ export const ItemCarritoUpdate = () => {
 
   const carritos = useAppSelector(state => state.carrito.entities);
   const productos = useAppSelector(state => state.producto.entities);
-  const varianteProductos = useAppSelector(state => state.varianteProducto.entities);
   const itemCarritoEntity = useAppSelector(state => state.itemCarrito.entity);
   const loading = useAppSelector(state => state.itemCarrito.loading);
   const updating = useAppSelector(state => state.itemCarrito.updating);
@@ -41,7 +39,6 @@ export const ItemCarritoUpdate = () => {
 
     dispatch(getCarritos({}));
     dispatch(getProductos({}));
-    dispatch(getVarianteProductos({}));
   }, []);
 
   useEffect(() => {
@@ -66,7 +63,6 @@ export const ItemCarritoUpdate = () => {
       ...values,
       carrito: carritos.find(it => it.id.toString() === values.carrito?.toString()),
       producto: productos.find(it => it.id.toString() === values.producto?.toString()),
-      variante: varianteProductos.find(it => it.id.toString() === values.variante?.toString()),
     };
 
     if (isNew) {
@@ -83,7 +79,6 @@ export const ItemCarritoUpdate = () => {
           ...itemCarritoEntity,
           carrito: itemCarritoEntity?.carrito?.id,
           producto: itemCarritoEntity?.producto?.id,
-          variante: itemCarritoEntity?.variante?.id,
         };
 
   return (
@@ -149,16 +144,6 @@ export const ItemCarritoUpdate = () => {
                   : null}
               </ValidatedField>
               <FormText>Este campo es obligatorio.</FormText>
-              <ValidatedField id="item-carrito-variante" name="variante" data-cy="variante" label="Variante" type="select">
-                <option value="" key="0" />
-                {varianteProductos
-                  ? varianteProductos.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.sku}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
               <Button as={Link as any} id="cancel-save" data-cy="entityCreateCancelButton" to="/item-carrito" replace variant="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

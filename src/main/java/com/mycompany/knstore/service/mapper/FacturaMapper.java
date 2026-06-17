@@ -1,9 +1,9 @@
 package com.mycompany.knstore.service.mapper;
 
 import com.mycompany.knstore.domain.Factura;
-import com.mycompany.knstore.domain.Pedido;
+import com.mycompany.knstore.domain.Pago;
 import com.mycompany.knstore.service.dto.FacturaDTO;
-import com.mycompany.knstore.service.dto.PedidoDTO;
+import com.mycompany.knstore.service.dto.PagoDTO;
 import org.mapstruct.*;
 
 /**
@@ -11,11 +11,11 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface FacturaMapper extends EntityMapper<FacturaDTO, Factura> {
-    @Mapping(target = "pedido", source = "pedido", qualifiedByName = "pedidoId")
+    @Mapping(target = "pago", source = "pago", qualifiedByName = "pagoId")
     FacturaDTO toDto(Factura s);
 
-    @Named("pedidoId")
+    @Named("pagoId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    PedidoDTO toDtoPedidoId(Pedido pedido);
+    PagoDTO toDtoPagoId(Pago pago);
 }

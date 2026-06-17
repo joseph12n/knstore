@@ -47,9 +47,9 @@ public class TipoDocumentoAsserts {
     public static void assertTipoDocumentoUpdatableFieldsEquals(TipoDocumento expected, TipoDocumento actual) {
         assertThat(actual)
             .as("Verify TipoDocumento relevant properties")
-            .satisfies(a -> assertThat(a.getEstado()).as("check estado").isEqualTo(expected.getEstado()))
             .satisfies(a -> assertThat(a.getSigla()).as("check sigla").isEqualTo(expected.getSigla()))
-            .satisfies(a -> assertThat(a.getNombreTipo()).as("check nombreTipo").isEqualTo(expected.getNombreTipo()));
+            .satisfies(a -> assertThat(a.getNombreTipo()).as("check nombreTipo").isEqualTo(expected.getNombreTipo()))
+            .satisfies(a -> assertThat(a.getEstado()).as("check estado").isEqualTo(expected.getEstado()));
     }
 
     /**

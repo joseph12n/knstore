@@ -28,10 +28,6 @@ export const TipoDocumentoDetail = () => {
           </dt>
           <dd>{tipoDocumentoEntity.id}</dd>
           <dt>
-            <span id="estado">Estado</span>
-          </dt>
-          <dd>{tipoDocumentoEntity.estado}</dd>
-          <dt>
             <span id="sigla">Sigla</span>
           </dt>
           <dd>{tipoDocumentoEntity.sigla}</dd>
@@ -39,6 +35,10 @@ export const TipoDocumentoDetail = () => {
             <span id="nombreTipo">Nombre Tipo</span>
           </dt>
           <dd>{tipoDocumentoEntity.nombreTipo}</dd>
+          <dt>
+            <span id="estado">Estado</span>
+          </dt>
+          <dd>{tipoDocumentoEntity.estado}</dd>
         </dl>
         <Button as={Link as any} to="/tipo-documento" replace variant="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Volver</span>

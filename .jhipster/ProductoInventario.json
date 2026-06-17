@@ -1,0 +1,44 @@
+{
+  "annotations": {
+    "changelogDate": "20260616211655"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "stock",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "stockMinimo",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "ubicacionBodega",
+      "fieldType": "UbicacionBodega",
+      "fieldValues": "BODEGA_PRINCIPAL,BODEGA_SECUNDARIA,BODEGA_NORTE,BODEGA_SUR,EXHIBICION,CONSIGNACION"
+    },
+    {
+      "fieldName": "garantiaMeses",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["min"],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
+  "name": "ProductoInventario",
+  "relationships": [
+    {
+      "otherEntityName": "producto",
+      "otherEntityRelationshipName": "inventario",
+      "relationshipName": "producto",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

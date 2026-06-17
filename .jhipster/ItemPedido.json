@@ -1,10 +1,46 @@
 {
   "annotations": {
-    "changelogDate": "20260609235838"
+    "changelogDate": "20260616212355"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
   "fields": [
+    {
+      "fieldName": "nombreProducto",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "200"
+    },
+    {
+      "fieldName": "slugProducto",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "220"
+    },
+    {
+      "fieldName": "marcaProducto",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "skuProducto",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "colorProducto",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "tallaProducto",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "30"
+    },
     {
       "fieldName": "cantidad",
       "fieldType": "Integer",
@@ -56,13 +92,6 @@
       "relationshipSide": "left",
       "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
-    },
-    {
-      "otherEntityField": "sku",
-      "otherEntityName": "varianteProducto",
-      "relationshipName": "variante",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
     }
   ],
   "searchEngine": "no",

@@ -1,7 +1,6 @@
 package com.mycompany.knstore.domain;
 
 import com.mycompany.knstore.domain.enumeration.Genero;
-import com.mycompany.knstore.domain.enumeration.TipoPersona;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -29,10 +28,6 @@ public class Cuenta implements Serializable {
     private String numDocumento;
 
     @NotNull
-    @Field("tipo_persona")
-    private TipoPersona tipoPersona;
-
-    @NotNull
     @Size(max = 50)
     @Field("primer_nombre")
     private String primerNombre;
@@ -50,6 +45,12 @@ public class Cuenta implements Serializable {
     @Field("segundo_apellido")
     private String segundoApellido;
 
+    @Field("genero")
+    private Genero genero;
+
+    @Field("fecha_nacimiento")
+    private LocalDate fechaNacimiento;
+
     @Size(max = 15)
     @Field("celular")
     private String celular;
@@ -57,12 +58,6 @@ public class Cuenta implements Serializable {
     @Size(max = 15)
     @Field("telefono")
     private String telefono;
-
-    @Field("fecha_nacimiento")
-    private LocalDate fechaNacimiento;
-
-    @Field("genero")
-    private Genero genero;
 
     @Field("foto_perfil")
     private byte[] fotoPerfil;
@@ -108,19 +103,6 @@ public class Cuenta implements Serializable {
 
     public void setNumDocumento(String numDocumento) {
         this.numDocumento = numDocumento;
-    }
-
-    public TipoPersona getTipoPersona() {
-        return this.tipoPersona;
-    }
-
-    public Cuenta tipoPersona(TipoPersona tipoPersona) {
-        this.setTipoPersona(tipoPersona);
-        return this;
-    }
-
-    public void setTipoPersona(TipoPersona tipoPersona) {
-        this.tipoPersona = tipoPersona;
     }
 
     public String getPrimerNombre() {
@@ -175,6 +157,32 @@ public class Cuenta implements Serializable {
         this.segundoApellido = segundoApellido;
     }
 
+    public Genero getGenero() {
+        return this.genero;
+    }
+
+    public Cuenta genero(Genero genero) {
+        this.setGenero(genero);
+        return this;
+    }
+
+    public void setGenero(Genero genero) {
+        this.genero = genero;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return this.fechaNacimiento;
+    }
+
+    public Cuenta fechaNacimiento(LocalDate fechaNacimiento) {
+        this.setFechaNacimiento(fechaNacimiento);
+        return this;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
     public String getCelular() {
         return this.celular;
     }
@@ -199,32 +207,6 @@ public class Cuenta implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    public LocalDate getFechaNacimiento() {
-        return this.fechaNacimiento;
-    }
-
-    public Cuenta fechaNacimiento(LocalDate fechaNacimiento) {
-        this.setFechaNacimiento(fechaNacimiento);
-        return this;
-    }
-
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public Genero getGenero() {
-        return this.genero;
-    }
-
-    public Cuenta genero(Genero genero) {
-        this.setGenero(genero);
-        return this;
-    }
-
-    public void setGenero(Genero genero) {
-        this.genero = genero;
     }
 
     public byte[] getFotoPerfil() {
@@ -317,15 +299,14 @@ public class Cuenta implements Serializable {
         return "Cuenta{" +
             "id=" + getId() +
             ", numDocumento='" + getNumDocumento() + "'" +
-            ", tipoPersona='" + getTipoPersona() + "'" +
             ", primerNombre='" + getPrimerNombre() + "'" +
             ", segundoNombre='" + getSegundoNombre() + "'" +
             ", primerApellido='" + getPrimerApellido() + "'" +
             ", segundoApellido='" + getSegundoApellido() + "'" +
+            ", genero='" + getGenero() + "'" +
+            ", fechaNacimiento='" + getFechaNacimiento() + "'" +
             ", celular='" + getCelular() + "'" +
             ", telefono='" + getTelefono() + "'" +
-            ", fechaNacimiento='" + getFechaNacimiento() + "'" +
-            ", genero='" + getGenero() + "'" +
             ", fotoPerfil='" + getFotoPerfil() + "'" +
             ", fotoPerfilContentType='" + getFotoPerfilContentType() + "'" +
             ", activo='" + getActivo() + "'" +

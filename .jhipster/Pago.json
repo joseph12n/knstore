@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260609235938"
+    "changelogDate": "20260616212455"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
@@ -9,7 +9,7 @@
       "fieldName": "metodoPago",
       "fieldType": "MetodoPago",
       "fieldValidateRules": ["required"],
-      "fieldValues": "CREDIT_CARD (TarjetaCredito),DEBIT_CARD (TarjetaDebito),PSE (PSE),CASH (Efectivo),NEQUI (Nequi),DAVIPLATA (Daviplata),EFECTY (Efecty),BALOTO (Baloto),CONTRA_ENTREGA (ContraEntrega)"
+      "fieldValues": "CREDIT_CARD (TarjetaCredito),DEBIT_CARD (TarjetaDebito),PSE (PSE),CASH (Efectivo),NEQUI (Nequi),DAVIPLATA (Daviplata),EFECTY (Efecty),CONTRA_ENTREGA (ContraEntrega)"
     },
     {
       "fieldName": "estado",
@@ -42,14 +42,14 @@
       "fieldValidateRulesMaxlength": "300"
     },
     {
-      "fieldName": "fechaPago",
-      "fieldType": "Instant"
-    },
-    {
       "fieldName": "intentos",
       "fieldType": "Integer",
       "fieldValidateRules": ["min"],
       "fieldValidateRulesMin": "0"
+    },
+    {
+      "fieldName": "fechaPago",
+      "fieldType": "Instant"
     }
   ],
   "name": "Pago",

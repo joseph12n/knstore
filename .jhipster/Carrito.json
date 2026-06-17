@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260609235538"
+    "changelogDate": "20260616212055"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",

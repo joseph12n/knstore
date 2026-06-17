@@ -12,8 +12,8 @@ export interface IPago {
   referenciaPasarela?: string | null;
   codigoAutorizacion?: string | null;
   descripcionRespuesta?: string | null;
-  fechaPago?: dayjs.Dayjs | null;
   intentos?: number | null;
+  fechaPago?: dayjs.Dayjs | null;
   pedido?: IPedido;
 }
 

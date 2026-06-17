@@ -1,32 +1,10 @@
 {
   "annotations": {
-    "changelogDate": "20260610000138"
+    "changelogDate": "20260616212655"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
   "fields": [
-    {
-      "fieldName": "referencia",
-      "fieldType": "String",
-      "fieldValidateRules": ["required", "maxlength", "unique"],
-      "fieldValidateRulesMaxlength": "50"
-    },
-    {
-      "fieldName": "cufe",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "96"
-    },
-    {
-      "fieldName": "resolucionDian",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "50"
-    },
-    {
-      "fieldName": "fechaVigenciaResolucion",
-      "fieldType": "LocalDate"
-    },
     {
       "fieldName": "prefijo",
       "fieldType": "String",
@@ -34,8 +12,10 @@
       "fieldValidateRulesMaxlength": "10"
     },
     {
-      "fieldName": "consecutivo",
-      "fieldType": "Long"
+      "fieldName": "cufe",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "96"
     },
     {
       "fieldName": "subtotal",
@@ -62,36 +42,10 @@
       "fieldValidateRulesMin": "0"
     },
     {
-      "fieldName": "retefuente",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "reteIva",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "reteIca",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
       "fieldName": "total",
       "fieldType": "BigDecimal",
       "fieldValidateRules": ["required", "min"],
       "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "fechaEmision",
-      "fieldType": "Instant"
-    },
-    {
-      "fieldName": "fechaVencimiento",
-      "fieldType": "LocalDate"
     },
     {
       "fieldName": "notasAdicionales",
@@ -109,6 +63,14 @@
       "fieldValidateRules": ["required"]
     },
     {
+      "fieldName": "fechaEmision",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "fechaVencimiento",
+      "fieldType": "LocalDate"
+    },
+    {
       "fieldName": "fechaEnvioEmail",
       "fieldType": "Instant"
     }
@@ -117,10 +79,10 @@
   "pagination": "pagination",
   "relationships": [
     {
-      "otherEntityName": "pedido",
-      "relationshipName": "pedido",
+      "otherEntityName": "pago",
+      "relationshipName": "pago",
       "relationshipSide": "left",
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
     }
   ],

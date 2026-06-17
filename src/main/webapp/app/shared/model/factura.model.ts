@@ -1,30 +1,23 @@
 import dayjs from 'dayjs';
 
-import { IPedido } from 'app/shared/model/pedido.model';
+import { IPago } from 'app/shared/model/pago.model';
 
 export interface IFactura {
   id?: string;
-  referencia?: string;
-  cufe?: string | null;
-  resolucionDian?: string | null;
-  fechaVigenciaResolucion?: dayjs.Dayjs | null;
   prefijo?: string | null;
-  consecutivo?: number | null;
+  cufe?: string | null;
   subtotal?: number;
   descuentos?: number | null;
   baseGravableIva?: number | null;
   valorIva?: number | null;
-  retefuente?: number | null;
-  reteIva?: number | null;
-  reteIca?: number | null;
   total?: number;
-  fechaEmision?: dayjs.Dayjs | null;
-  fechaVencimiento?: dayjs.Dayjs | null;
   notasAdicionales?: string | null;
   codigoQr?: string | null;
   enviada?: boolean;
+  fechaEmision?: dayjs.Dayjs | null;
+  fechaVencimiento?: dayjs.Dayjs | null;
   fechaEnvioEmail?: dayjs.Dayjs | null;
-  pedido?: IPedido;
+  pago?: IPago;
 }
 
 export const defaultValue: Readonly<IFactura> = {

@@ -3,7 +3,6 @@ package com.mycompany.knstore.domain;
 import static com.mycompany.knstore.domain.CarritoTestSamples.*;
 import static com.mycompany.knstore.domain.ItemCarritoTestSamples.*;
 import static com.mycompany.knstore.domain.ProductoTestSamples.*;
-import static com.mycompany.knstore.domain.VarianteProductoTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mycompany.knstore.web.rest.TestUtil;
@@ -47,17 +46,5 @@ class ItemCarritoTest {
 
         itemCarrito.producto(null);
         assertThat(itemCarrito.getProducto()).isNull();
-    }
-
-    @Test
-    void varianteTest() {
-        ItemCarrito itemCarrito = getItemCarritoRandomSampleGenerator();
-        VarianteProducto varianteProductoBack = getVarianteProductoRandomSampleGenerator();
-
-        itemCarrito.setVariante(varianteProductoBack);
-        assertThat(itemCarrito.getVariante()).isEqualTo(varianteProductoBack);
-
-        itemCarrito.variante(null);
-        assertThat(itemCarrito.getVariante()).isNull();
     }
 }

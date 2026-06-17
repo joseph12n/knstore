@@ -3,7 +3,6 @@ package com.mycompany.knstore.domain;
 import static com.mycompany.knstore.domain.ItemPedidoTestSamples.*;
 import static com.mycompany.knstore.domain.PedidoTestSamples.*;
 import static com.mycompany.knstore.domain.ProductoTestSamples.*;
-import static com.mycompany.knstore.domain.VarianteProductoTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mycompany.knstore.web.rest.TestUtil;
@@ -47,17 +46,5 @@ class ItemPedidoTest {
 
         itemPedido.producto(null);
         assertThat(itemPedido.getProducto()).isNull();
-    }
-
-    @Test
-    void varianteTest() {
-        ItemPedido itemPedido = getItemPedidoRandomSampleGenerator();
-        VarianteProducto varianteProductoBack = getVarianteProductoRandomSampleGenerator();
-
-        itemPedido.setVariante(varianteProductoBack);
-        assertThat(itemPedido.getVariante()).isEqualTo(varianteProductoBack);
-
-        itemPedido.variante(null);
-        assertThat(itemPedido.getVariante()).isNull();
     }
 }

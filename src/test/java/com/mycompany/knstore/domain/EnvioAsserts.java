@@ -48,8 +48,8 @@ public class EnvioAsserts {
     public static void assertEnvioUpdatableFieldsEquals(Envio expected, Envio actual) {
         assertThat(actual)
             .as("Verify Envio relevant properties")
-            .satisfies(a -> assertThat(a.getNumeroRastreo()).as("check numeroRastreo").isEqualTo(expected.getNumeroRastreo()))
             .satisfies(a -> assertThat(a.getTransportadora()).as("check transportadora").isEqualTo(expected.getTransportadora()))
+            .satisfies(a -> assertThat(a.getNumeroRastreo()).as("check numeroRastreo").isEqualTo(expected.getNumeroRastreo()))
             .satisfies(a -> assertThat(a.getTipoServicio()).as("check tipoServicio").isEqualTo(expected.getTipoServicio()))
             .satisfies(a -> assertThat(a.getEstado()).as("check estado").isEqualTo(expected.getEstado()))
             .satisfies(a ->
@@ -83,6 +83,8 @@ public class EnvioAsserts {
      * @param actual the actual entity
      */
     public static void assertEnvioUpdatableRelationshipsEquals(Envio expected, Envio actual) {
-        // empty method
+        assertThat(actual)
+            .as("Verify Envio relationships")
+            .satisfies(a -> assertThat(a.getPedido()).as("check pedido").isEqualTo(expected.getPedido()));
     }
 }

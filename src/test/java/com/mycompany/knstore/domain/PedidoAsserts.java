@@ -82,7 +82,6 @@ public class PedidoAsserts {
         assertThat(actual)
             .as("Verify Pedido relationships")
             .satisfies(a -> assertThat(a.getDireccion()).as("check direccion").isEqualTo(expected.getDireccion()))
-            .satisfies(a -> assertThat(a.getEnvio()).as("check envio").isEqualTo(expected.getEnvio()))
             .satisfies(a -> assertThat(a.getCuenta()).as("check cuenta").isEqualTo(expected.getCuenta()));
     }
 }

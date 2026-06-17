@@ -113,11 +113,11 @@ export const Envio = () => {
                 <th className="hand" onClick={sort('id')}>
                   ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
-                <th className="hand" onClick={sort('numeroRastreo')}>
-                  Numero Rastreo <FontAwesomeIcon icon={getSortIconByFieldName('numeroRastreo')} />
-                </th>
                 <th className="hand" onClick={sort('transportadora')}>
                   Transportadora <FontAwesomeIcon icon={getSortIconByFieldName('transportadora')} />
+                </th>
+                <th className="hand" onClick={sort('numeroRastreo')}>
+                  Numero Rastreo <FontAwesomeIcon icon={getSortIconByFieldName('numeroRastreo')} />
                 </th>
                 <th className="hand" onClick={sort('tipoServicio')}>
                   Tipo Servicio <FontAwesomeIcon icon={getSortIconByFieldName('tipoServicio')} />
@@ -149,6 +149,9 @@ export const Envio = () => {
                 <th className="hand" onClick={sort('fechaEntrega')}>
                   Fecha Entrega <FontAwesomeIcon icon={getSortIconByFieldName('fechaEntrega')} />
                 </th>
+                <th>
+                  Pedido <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -160,8 +163,8 @@ export const Envio = () => {
                       {envio.id}
                     </Button>
                   </td>
-                  <td>{envio.numeroRastreo}</td>
                   <td>{envio.transportadora}</td>
+                  <td>{envio.numeroRastreo}</td>
                   <td>{envio.tipoServicio}</td>
                   <td>{envio.estado}</td>
                   <td>{envio.costoEnvio}</td>
@@ -176,6 +179,7 @@ export const Envio = () => {
                     ) : null}
                   </td>
                   <td>{envio.fechaEntrega ? <TextFormat type="date" value={envio.fechaEntrega} format={APP_DATE_FORMAT} /> : null}</td>
+                  <td>{envio.pedido ? <Link to={`/pedido/${envio.pedido.id}`}>{envio.pedido.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button as={Link as any} to={`/envio/${envio.id}`} variant="info" size="sm" data-cy="entityDetailsButton">

@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260609235138"
+    "changelogDate": "20260616211455"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
@@ -18,30 +18,28 @@
       "fieldValidateRulesMaxlength": "220"
     },
     {
-      "fieldName": "descripcion",
-      "fieldType": "TextBlob"
-    },
-    {
-      "fieldName": "imagen",
-      "fieldType": "ImageBlob"
-    },
-    {
-      "fieldName": "imagenAlt",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "200"
-    },
-    {
-      "fieldName": "marca",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "100"
-    },
-    {
       "fieldName": "referencia",
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
       "fieldValidateRulesMaxlength": "60"
+    },
+    {
+      "fieldName": "sku",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength", "unique"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "color",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "talla",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "30"
     },
     {
       "fieldName": "codigoBarras",
@@ -56,60 +54,8 @@
       "fieldValidateRulesMaxlength": "20"
     },
     {
-      "fieldName": "pesoKg",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "largoCm",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "anchoCm",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "altoCm",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "categoriaIva",
-      "fieldType": "CategoriaIVA",
-      "fieldValidateRules": ["required"],
-      "fieldValues": "EXCLUIDO (Excluido),EXENTO (Exento),GRAVADO_5 (Gravado5),GRAVADO_19 (Gravado19)"
-    },
-    {
-      "fieldName": "precioCompra",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["required", "min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "precioVenta",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["required", "min"],
-      "fieldValidateRulesMin": "0"
-    },
-    {
-      "fieldName": "ganancia",
-      "fieldType": "BigDecimal"
-    },
-    {
-      "fieldName": "margen",
-      "fieldType": "BigDecimal"
-    },
-    {
-      "fieldName": "garantiaMeses",
-      "fieldType": "Integer",
-      "fieldValidateRules": ["min"],
-      "fieldValidateRulesMin": "0"
+      "fieldName": "descripcion",
+      "fieldType": "TextBlob"
     },
     {
       "fieldName": "destacado",
@@ -126,12 +72,53 @@
   "pagination": "pagination",
   "relationships": [
     {
+      "otherEntityName": "productoPrecio",
+      "otherEntityRelationshipName": "producto",
+      "relationshipName": "precio",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "productoInventario",
+      "otherEntityRelationshipName": "producto",
+      "relationshipName": "inventario",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "productoImagen",
+      "otherEntityRelationshipName": "producto",
+      "relationshipName": "imagenes",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "categoria",
+      "relationshipName": "categoria",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
       "otherEntityField": "nombre",
       "otherEntityName": "subcategoria",
       "relationshipName": "subcategoria",
       "relationshipSide": "left",
       "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "marca",
+      "relationshipName": "marca",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "categoriaIVA",
+      "relationshipName": "categoriaIva",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
     }
   ],
   "searchEngine": "no",

@@ -5,11 +5,7 @@ import com.mycompany.knstore.repository.EnvioRepository;
 import com.mycompany.knstore.service.EnvioService;
 import com.mycompany.knstore.service.dto.EnvioDTO;
 import com.mycompany.knstore.service.mapper.EnvioMapper;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -68,19 +64,6 @@ public class EnvioServiceImpl implements EnvioService {
     public Page<EnvioDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Envios");
         return envioRepository.findAll(pageable).map(envioMapper::toDto);
-    }
-
-    /**
-     *  Get all the envios where Pedido is {@code null}.
-     *  @return the list of entities.
-     */
-
-    public List<EnvioDTO> findAllWherePedidoIsNull() {
-        LOG.debug("Request to get all envios where Pedido is null");
-        return StreamSupport.stream(envioRepository.findAll().spliterator(), false)
-            .filter(envio -> envio.getPedido() == null)
-            .map(envioMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override

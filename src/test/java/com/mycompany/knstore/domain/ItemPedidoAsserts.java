@@ -48,6 +48,12 @@ public class ItemPedidoAsserts {
     public static void assertItemPedidoUpdatableFieldsEquals(ItemPedido expected, ItemPedido actual) {
         assertThat(actual)
             .as("Verify ItemPedido relevant properties")
+            .satisfies(a -> assertThat(a.getNombreProducto()).as("check nombreProducto").isEqualTo(expected.getNombreProducto()))
+            .satisfies(a -> assertThat(a.getSlugProducto()).as("check slugProducto").isEqualTo(expected.getSlugProducto()))
+            .satisfies(a -> assertThat(a.getMarcaProducto()).as("check marcaProducto").isEqualTo(expected.getMarcaProducto()))
+            .satisfies(a -> assertThat(a.getSkuProducto()).as("check skuProducto").isEqualTo(expected.getSkuProducto()))
+            .satisfies(a -> assertThat(a.getColorProducto()).as("check colorProducto").isEqualTo(expected.getColorProducto()))
+            .satisfies(a -> assertThat(a.getTallaProducto()).as("check tallaProducto").isEqualTo(expected.getTallaProducto()))
             .satisfies(a -> assertThat(a.getCantidad()).as("check cantidad").isEqualTo(expected.getCantidad()))
             .satisfies(a ->
                 assertThat(a.getPrecioUnitario())
@@ -82,7 +88,6 @@ public class ItemPedidoAsserts {
         assertThat(actual)
             .as("Verify ItemPedido relationships")
             .satisfies(a -> assertThat(a.getPedido()).as("check pedido").isEqualTo(expected.getPedido()))
-            .satisfies(a -> assertThat(a.getProducto()).as("check producto").isEqualTo(expected.getProducto()))
-            .satisfies(a -> assertThat(a.getVariante()).as("check variante").isEqualTo(expected.getVariante()));
+            .satisfies(a -> assertThat(a.getProducto()).as("check producto").isEqualTo(expected.getProducto()));
     }
 }

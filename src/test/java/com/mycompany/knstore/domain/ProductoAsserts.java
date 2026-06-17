@@ -1,6 +1,5 @@
 package com.mycompany.knstore.domain;
 
-import static com.mycompany.knstore.domain.AssertUtils.bigDecimalCompareTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductoAsserts {
@@ -50,46 +49,13 @@ public class ProductoAsserts {
             .as("Verify Producto relevant properties")
             .satisfies(a -> assertThat(a.getNombre()).as("check nombre").isEqualTo(expected.getNombre()))
             .satisfies(a -> assertThat(a.getSlug()).as("check slug").isEqualTo(expected.getSlug()))
-            .satisfies(a -> assertThat(a.getDescripcion()).as("check descripcion").isEqualTo(expected.getDescripcion()))
-            .satisfies(a -> assertThat(a.getImagen()).as("check imagen").isEqualTo(expected.getImagen()))
-            .satisfies(a -> assertThat(a.getImagenContentType()).as("check imagen content type").isEqualTo(expected.getImagenContentType()))
-            .satisfies(a -> assertThat(a.getImagenAlt()).as("check imagenAlt").isEqualTo(expected.getImagenAlt()))
-            .satisfies(a -> assertThat(a.getMarca()).as("check marca").isEqualTo(expected.getMarca()))
             .satisfies(a -> assertThat(a.getReferencia()).as("check referencia").isEqualTo(expected.getReferencia()))
+            .satisfies(a -> assertThat(a.getSku()).as("check sku").isEqualTo(expected.getSku()))
+            .satisfies(a -> assertThat(a.getColor()).as("check color").isEqualTo(expected.getColor()))
+            .satisfies(a -> assertThat(a.getTalla()).as("check talla").isEqualTo(expected.getTalla()))
             .satisfies(a -> assertThat(a.getCodigoBarras()).as("check codigoBarras").isEqualTo(expected.getCodigoBarras()))
             .satisfies(a -> assertThat(a.getUnidadMedida()).as("check unidadMedida").isEqualTo(expected.getUnidadMedida()))
-            .satisfies(a ->
-                assertThat(a.getPesoKg()).as("check pesoKg").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getPesoKg())
-            )
-            .satisfies(a ->
-                assertThat(a.getLargoCm()).as("check largoCm").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getLargoCm())
-            )
-            .satisfies(a ->
-                assertThat(a.getAnchoCm()).as("check anchoCm").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getAnchoCm())
-            )
-            .satisfies(a ->
-                assertThat(a.getAltoCm()).as("check altoCm").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getAltoCm())
-            )
-            .satisfies(a -> assertThat(a.getCategoriaIva()).as("check categoriaIva").isEqualTo(expected.getCategoriaIva()))
-            .satisfies(a ->
-                assertThat(a.getPrecioCompra())
-                    .as("check precioCompra")
-                    .usingComparator(bigDecimalCompareTo)
-                    .isEqualTo(expected.getPrecioCompra())
-            )
-            .satisfies(a ->
-                assertThat(a.getPrecioVenta())
-                    .as("check precioVenta")
-                    .usingComparator(bigDecimalCompareTo)
-                    .isEqualTo(expected.getPrecioVenta())
-            )
-            .satisfies(a ->
-                assertThat(a.getGanancia()).as("check ganancia").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getGanancia())
-            )
-            .satisfies(a ->
-                assertThat(a.getMargen()).as("check margen").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getMargen())
-            )
-            .satisfies(a -> assertThat(a.getGarantiaMeses()).as("check garantiaMeses").isEqualTo(expected.getGarantiaMeses()))
+            .satisfies(a -> assertThat(a.getDescripcion()).as("check descripcion").isEqualTo(expected.getDescripcion()))
             .satisfies(a -> assertThat(a.getDestacado()).as("check destacado").isEqualTo(expected.getDestacado()))
             .satisfies(a -> assertThat(a.getActivo()).as("check activo").isEqualTo(expected.getActivo()));
     }
@@ -103,6 +69,11 @@ public class ProductoAsserts {
     public static void assertProductoUpdatableRelationshipsEquals(Producto expected, Producto actual) {
         assertThat(actual)
             .as("Verify Producto relationships")
-            .satisfies(a -> assertThat(a.getSubcategoria()).as("check subcategoria").isEqualTo(expected.getSubcategoria()));
+            .satisfies(a -> assertThat(a.getPrecio()).as("check precio").isEqualTo(expected.getPrecio()))
+            .satisfies(a -> assertThat(a.getInventario()).as("check inventario").isEqualTo(expected.getInventario()))
+            .satisfies(a -> assertThat(a.getCategoria()).as("check categoria").isEqualTo(expected.getCategoria()))
+            .satisfies(a -> assertThat(a.getSubcategoria()).as("check subcategoria").isEqualTo(expected.getSubcategoria()))
+            .satisfies(a -> assertThat(a.getMarca()).as("check marca").isEqualTo(expected.getMarca()))
+            .satisfies(a -> assertThat(a.getCategoriaIva()).as("check categoriaIva").isEqualTo(expected.getCategoriaIva()));
     }
 }

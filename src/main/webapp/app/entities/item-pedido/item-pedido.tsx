@@ -86,6 +86,24 @@ export const ItemPedido = () => {
                 <th className="hand" onClick={sort('id')}>
                   ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
+                <th className="hand" onClick={sort('nombreProducto')}>
+                  Nombre Producto <FontAwesomeIcon icon={getSortIconByFieldName('nombreProducto')} />
+                </th>
+                <th className="hand" onClick={sort('slugProducto')}>
+                  Slug Producto <FontAwesomeIcon icon={getSortIconByFieldName('slugProducto')} />
+                </th>
+                <th className="hand" onClick={sort('marcaProducto')}>
+                  Marca Producto <FontAwesomeIcon icon={getSortIconByFieldName('marcaProducto')} />
+                </th>
+                <th className="hand" onClick={sort('skuProducto')}>
+                  Sku Producto <FontAwesomeIcon icon={getSortIconByFieldName('skuProducto')} />
+                </th>
+                <th className="hand" onClick={sort('colorProducto')}>
+                  Color Producto <FontAwesomeIcon icon={getSortIconByFieldName('colorProducto')} />
+                </th>
+                <th className="hand" onClick={sort('tallaProducto')}>
+                  Talla Producto <FontAwesomeIcon icon={getSortIconByFieldName('tallaProducto')} />
+                </th>
                 <th className="hand" onClick={sort('cantidad')}>
                   Cantidad <FontAwesomeIcon icon={getSortIconByFieldName('cantidad')} />
                 </th>
@@ -110,9 +128,6 @@ export const ItemPedido = () => {
                 <th>
                   Producto <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  Variante <FontAwesomeIcon icon="sort" />
-                </th>
                 <th />
               </tr>
             </thead>
@@ -124,6 +139,12 @@ export const ItemPedido = () => {
                       {itemPedido.id}
                     </Button>
                   </td>
+                  <td>{itemPedido.nombreProducto}</td>
+                  <td>{itemPedido.slugProducto}</td>
+                  <td>{itemPedido.marcaProducto}</td>
+                  <td>{itemPedido.skuProducto}</td>
+                  <td>{itemPedido.colorProducto}</td>
+                  <td>{itemPedido.tallaProducto}</td>
                   <td>{itemPedido.cantidad}</td>
                   <td>{itemPedido.precioUnitario}</td>
                   <td>{itemPedido.porcentajeIva}</td>
@@ -132,9 +153,6 @@ export const ItemPedido = () => {
                   <td>{itemPedido.subtotal}</td>
                   <td>{itemPedido.pedido ? <Link to={`/pedido/${itemPedido.pedido.id}`}>{itemPedido.pedido.id}</Link> : ''}</td>
                   <td>{itemPedido.producto ? <Link to={`/producto/${itemPedido.producto.id}`}>{itemPedido.producto.nombre}</Link> : ''}</td>
-                  <td>
-                    {itemPedido.variante ? <Link to={`/variante-producto/${itemPedido.variante.id}`}>{itemPedido.variante.sku}</Link> : ''}
-                  </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button as={Link as any} to={`/item-pedido/${itemPedido.id}`} variant="info" size="sm" data-cy="entityDetailsButton">

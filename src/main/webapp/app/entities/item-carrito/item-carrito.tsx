@@ -101,9 +101,6 @@ export const ItemCarrito = () => {
                 <th>
                   Producto <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  Variante <FontAwesomeIcon icon="sort" />
-                </th>
                 <th />
               </tr>
             </thead>
@@ -121,13 +118,6 @@ export const ItemCarrito = () => {
                   <td>{itemCarrito.carrito ? <Link to={`/carrito/${itemCarrito.carrito.id}`}>{itemCarrito.carrito.id}</Link> : ''}</td>
                   <td>
                     {itemCarrito.producto ? <Link to={`/producto/${itemCarrito.producto.id}`}>{itemCarrito.producto.nombre}</Link> : ''}
-                  </td>
-                  <td>
-                    {itemCarrito.variante ? (
-                      <Link to={`/variante-producto/${itemCarrito.variante.id}`}>{itemCarrito.variante.sku}</Link>
-                    ) : (
-                      ''
-                    )}
                   </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

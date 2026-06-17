@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
-import { getEntities as getEnvios } from 'app/entities/envio/envio.reducer';
 import { EstadoPedido } from 'app/shared/model/enumerations/estado-pedido.model';
 
 import { createEntity, getEntity, reset, updateEntity } from './pedido.reducer';
@@ -22,7 +21,6 @@ export const PedidoUpdate = () => {
   const isNew = id === undefined;
 
   const direccions = useAppSelector(state => state.direccion.entities);
-  const envios = useAppSelector(state => state.envio.entities);
   const cuentas = useAppSelector(state => state.cuenta.entities);
   const pedidoEntity = useAppSelector(state => state.pedido.entity);
   const loading = useAppSelector(state => state.pedido.loading);
@@ -42,7 +40,6 @@ export const PedidoUpdate = () => {
     }
 
     dispatch(getDireccions({}));
-    dispatch(getEnvios({}));
     dispatch(getCuentas({}));
   }, []);
 
@@ -73,7 +70,6 @@ export const PedidoUpdate = () => {
       ...pedidoEntity,
       ...values,
       direccion: direccions.find(it => it.id.toString() === values.direccion?.toString()),
-      envio: envios.find(it => it.id.toString() === values.envio?.toString()),
       cuenta: cuentas.find(it => it.id.toString() === values.cuenta?.toString()),
     };
 
@@ -91,7 +87,6 @@ export const PedidoUpdate = () => {
           estado: 'PENDING',
           ...pedidoEntity,
           direccion: pedidoEntity?.direccion?.id,
-          envio: pedidoEntity?.envio?.id,
           cuenta: pedidoEntity?.cuenta?.id,
         };
 
@@ -230,17 +225,6 @@ export const PedidoUpdate = () => {
                 <option value="" key="0" />
                 {direccions
                   ? direccions.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <FormText>Este campo es obligatorio.</FormText>
-              <ValidatedField id="pedido-envio" name="envio" data-cy="envio" label="Envio" type="select" required>
-                <option value="" key="0" />
-                {envios
-                  ? envios.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
                         {otherEntity.id}
                       </option>

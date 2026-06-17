@@ -149,9 +149,6 @@ export const Pedido = () => {
                   Direccion <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
-                  Envio <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
                   Cuenta <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
@@ -177,7 +174,6 @@ export const Pedido = () => {
                   <td>{pedido.ipOrigen}</td>
                   <td>{pedido.userAgent}</td>
                   <td>{pedido.direccion ? <Link to={`/direccion/${pedido.direccion.id}`}>{pedido.direccion.id}</Link> : ''}</td>
-                  <td>{pedido.envio ? <Link to={`/envio/${pedido.envio.id}`}>{pedido.envio.id}</Link> : ''}</td>
                   <td>{pedido.cuenta ? <Link to={`/cuenta/${pedido.cuenta.id}`}>{pedido.cuenta.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

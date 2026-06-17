@@ -40,13 +40,13 @@ export const DireccionDetail = () => {
           </dt>
           <dd>{direccionEntity.localidad}</dd>
           <dt>
-            <span id="departamento">Departamento</span>
-          </dt>
-          <dd>{direccionEntity.departamento}</dd>
-          <dt>
             <span id="municipio">Municipio</span>
           </dt>
           <dd>{direccionEntity.municipio}</dd>
+          <dt>
+            <span id="departamento">Departamento</span>
+          </dt>
+          <dd>{direccionEntity.departamento}</dd>
           <dt>
             <span id="activo">Activo</span>
           </dt>

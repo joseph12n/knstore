@@ -131,11 +131,11 @@ export const Pago = () => {
                 <th className="hand" onClick={sort('descripcionRespuesta')}>
                   Descripcion Respuesta <FontAwesomeIcon icon={getSortIconByFieldName('descripcionRespuesta')} />
                 </th>
-                <th className="hand" onClick={sort('fechaPago')}>
-                  Fecha Pago <FontAwesomeIcon icon={getSortIconByFieldName('fechaPago')} />
-                </th>
                 <th className="hand" onClick={sort('intentos')}>
                   Intentos <FontAwesomeIcon icon={getSortIconByFieldName('intentos')} />
+                </th>
+                <th className="hand" onClick={sort('fechaPago')}>
+                  Fecha Pago <FontAwesomeIcon icon={getSortIconByFieldName('fechaPago')} />
                 </th>
                 <th>
                   Pedido <FontAwesomeIcon icon="sort" />
@@ -157,8 +157,8 @@ export const Pago = () => {
                   <td>{pago.referenciaPasarela}</td>
                   <td>{pago.codigoAutorizacion}</td>
                   <td>{pago.descripcionRespuesta}</td>
-                  <td>{pago.fechaPago ? <TextFormat type="date" value={pago.fechaPago} format={APP_DATE_FORMAT} /> : null}</td>
                   <td>{pago.intentos}</td>
+                  <td>{pago.fechaPago ? <TextFormat type="date" value={pago.fechaPago} format={APP_DATE_FORMAT} /> : null}</td>
                   <td>{pago.pedido ? <Link to={`/pedido/${pago.pedido.id}`}>{pago.pedido.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

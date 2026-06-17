@@ -43,13 +43,11 @@ public class ItemCarrito implements Serializable {
 
     @DBRef
     @Field("producto")
-    @JsonIgnoreProperties(value = { "subcategoria" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "precio", "inventario", "imageneses", "categoria", "subcategoria", "marca", "categoriaIva" },
+        allowSetters = true
+    )
     private Producto producto;
-
-    @DBRef
-    @Field("variante")
-    @JsonIgnoreProperties(value = { "producto" }, allowSetters = true)
-    private VarianteProducto variante;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -128,19 +126,6 @@ public class ItemCarrito implements Serializable {
 
     public ItemCarrito producto(Producto producto) {
         this.setProducto(producto);
-        return this;
-    }
-
-    public VarianteProducto getVariante() {
-        return this.variante;
-    }
-
-    public void setVariante(VarianteProducto varianteProducto) {
-        this.variante = varianteProducto;
-    }
-
-    public ItemCarrito variante(VarianteProducto varianteProducto) {
-        this.setVariante(varianteProducto);
         return this;
     }
 
