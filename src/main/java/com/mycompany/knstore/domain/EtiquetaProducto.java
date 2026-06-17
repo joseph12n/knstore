@@ -29,7 +29,10 @@ public class EtiquetaProducto implements Serializable {
 
     @DBRef
     @Field("producto")
-    @JsonIgnoreProperties(value = { "subcategoria" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "precio", "inventario", "imageneses", "categoria", "subcategoria", "marca", "categoriaIva" },
+        allowSetters = true
+    )
     private Producto producto;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

@@ -11,7 +11,6 @@ public enum MetodoPago {
     NEQUI("Nequi"),
     DAVIPLATA("Daviplata"),
     EFECTY("Efecty"),
-    BALOTO("Baloto"),
     CONTRA_ENTREGA("ContraEntrega");
 
     private String value;

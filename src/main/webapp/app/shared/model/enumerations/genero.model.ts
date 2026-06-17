@@ -3,7 +3,5 @@ export enum Genero {
 
   FEMENINO = 'Femenino',
 
-  NO_BINARIO = 'NoBinario',
-
   PREFIERO_NO_DECIR = 'PrefieroNoDecir',
 }

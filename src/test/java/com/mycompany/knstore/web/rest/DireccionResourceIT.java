@@ -41,11 +41,11 @@ class DireccionResourceIT {
     private static final String DEFAULT_LOCALIDAD = "AAAAAAAAAA";
     private static final String UPDATED_LOCALIDAD = "BBBBBBBBBB";
 
-    private static final String DEFAULT_DEPARTAMENTO = "AAAAAAAAAA";
-    private static final String UPDATED_DEPARTAMENTO = "BBBBBBBBBB";
-
     private static final String DEFAULT_MUNICIPIO = "AAAAAAAAAA";
     private static final String UPDATED_MUNICIPIO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DEPARTAMENTO = "AAAAAAAAAA";
+    private static final String UPDATED_DEPARTAMENTO = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_ACTIVO = false;
     private static final Boolean UPDATED_ACTIVO = true;
@@ -80,8 +80,8 @@ class DireccionResourceIT {
             .direccion(DEFAULT_DIRECCION)
             .barrio(DEFAULT_BARRIO)
             .localidad(DEFAULT_LOCALIDAD)
-            .departamento(DEFAULT_DEPARTAMENTO)
             .municipio(DEFAULT_MUNICIPIO)
+            .departamento(DEFAULT_DEPARTAMENTO)
             .activo(DEFAULT_ACTIVO);
         // Add required entity
         Cuenta cuenta;
@@ -102,8 +102,8 @@ class DireccionResourceIT {
             .direccion(UPDATED_DIRECCION)
             .barrio(UPDATED_BARRIO)
             .localidad(UPDATED_LOCALIDAD)
-            .departamento(UPDATED_DEPARTAMENTO)
             .municipio(UPDATED_MUNICIPIO)
+            .departamento(UPDATED_DEPARTAMENTO)
             .activo(UPDATED_ACTIVO);
         // Add required entity
         Cuenta cuenta;
@@ -183,10 +183,10 @@ class DireccionResourceIT {
     }
 
     @Test
-    void checkDepartamentoIsRequired() throws Exception {
+    void checkMunicipioIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
-        direccion.setDepartamento(null);
+        direccion.setMunicipio(null);
 
         // Create the Direccion, which fails.
         DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
@@ -199,10 +199,10 @@ class DireccionResourceIT {
     }
 
     @Test
-    void checkMunicipioIsRequired() throws Exception {
+    void checkDepartamentoIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
-        direccion.setMunicipio(null);
+        direccion.setDepartamento(null);
 
         // Create the Direccion, which fails.
         DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
@@ -244,8 +244,8 @@ class DireccionResourceIT {
             .andExpect(jsonPath("$.[*].direccion").value(hasItem(DEFAULT_DIRECCION)))
             .andExpect(jsonPath("$.[*].barrio").value(hasItem(DEFAULT_BARRIO)))
             .andExpect(jsonPath("$.[*].localidad").value(hasItem(DEFAULT_LOCALIDAD)))
-            .andExpect(jsonPath("$.[*].departamento").value(hasItem(DEFAULT_DEPARTAMENTO)))
             .andExpect(jsonPath("$.[*].municipio").value(hasItem(DEFAULT_MUNICIPIO)))
+            .andExpect(jsonPath("$.[*].departamento").value(hasItem(DEFAULT_DEPARTAMENTO)))
             .andExpect(jsonPath("$.[*].activo").value(hasItem(DEFAULT_ACTIVO)));
     }
 
@@ -263,8 +263,8 @@ class DireccionResourceIT {
             .andExpect(jsonPath("$.direccion").value(DEFAULT_DIRECCION))
             .andExpect(jsonPath("$.barrio").value(DEFAULT_BARRIO))
             .andExpect(jsonPath("$.localidad").value(DEFAULT_LOCALIDAD))
-            .andExpect(jsonPath("$.departamento").value(DEFAULT_DEPARTAMENTO))
             .andExpect(jsonPath("$.municipio").value(DEFAULT_MUNICIPIO))
+            .andExpect(jsonPath("$.departamento").value(DEFAULT_DEPARTAMENTO))
             .andExpect(jsonPath("$.activo").value(DEFAULT_ACTIVO));
     }
 
@@ -287,8 +287,8 @@ class DireccionResourceIT {
             .direccion(UPDATED_DIRECCION)
             .barrio(UPDATED_BARRIO)
             .localidad(UPDATED_LOCALIDAD)
-            .departamento(UPDATED_DEPARTAMENTO)
             .municipio(UPDATED_MUNICIPIO)
+            .departamento(UPDATED_DEPARTAMENTO)
             .activo(UPDATED_ACTIVO);
         DireccionDTO direccionDTO = direccionMapper.toDto(updatedDireccion);
 
@@ -409,8 +409,8 @@ class DireccionResourceIT {
             .direccion(UPDATED_DIRECCION)
             .barrio(UPDATED_BARRIO)
             .localidad(UPDATED_LOCALIDAD)
-            .departamento(UPDATED_DEPARTAMENTO)
             .municipio(UPDATED_MUNICIPIO)
+            .departamento(UPDATED_DEPARTAMENTO)
             .activo(UPDATED_ACTIVO);
 
         restDireccionMockMvc

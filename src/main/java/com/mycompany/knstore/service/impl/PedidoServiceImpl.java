@@ -5,7 +5,11 @@ import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.service.PedidoService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.service.mapper.PedidoMapper;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -64,6 +68,19 @@ public class PedidoServiceImpl implements PedidoService {
     public Page<PedidoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Pedidos");
         return pedidoRepository.findAll(pageable).map(pedidoMapper::toDto);
+    }
+
+    /**
+     *  Get all the pedidos where Envio is {@code null}.
+     *  @return the list of entities.
+     */
+
+    public List<PedidoDTO> findAllWhereEnvioIsNull() {
+        LOG.debug("Request to get all pedidos where Envio is null");
+        return StreamSupport.stream(pedidoRepository.findAll().spliterator(), false)
+            .filter(pedido -> pedido.getEnvio() == null)
+            .map(pedidoMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -140,18 +139,10 @@ public class EnvioResource {
      * {@code GET  /envios} : get all the Envios.
      *
      * @param pageable the pagination information.
-     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Envios in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<EnvioDTO>> getAllEnvios(
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
-        @RequestParam(name = "filter", required = false) String filter
-    ) {
-        if ("pedido-is-null".equals(filter)) {
-            LOG.debug("REST request to get all Envios where pedido is null");
-            return new ResponseEntity<>(envioService.findAllWherePedidoIsNull(), HttpStatus.OK);
-        }
+    public ResponseEntity<List<EnvioDTO>> getAllEnvios(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         LOG.debug("REST request to get a page of Envios");
         Page<EnvioDTO> page = envioService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

@@ -2,9 +2,9 @@ import { EstadoTipoDocumento } from 'app/shared/model/enumerations/estado-tipo-d
 
 export interface ITipoDocumento {
   id?: string;
-  estado?: keyof typeof EstadoTipoDocumento;
   sigla?: string;
   nombreTipo?: string;
+  estado?: keyof typeof EstadoTipoDocumento;
 }
 
 export const defaultValue: Readonly<ITipoDocumento> = {};

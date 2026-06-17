@@ -13,7 +13,5 @@ export enum MetodoPago {
 
   EFECTY = 'Efecty',
 
-  BALOTO = 'Baloto',
-
   CONTRA_ENTREGA = 'ContraEntrega',
 }

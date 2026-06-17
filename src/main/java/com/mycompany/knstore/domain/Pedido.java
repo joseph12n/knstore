@@ -76,13 +76,12 @@ public class Pedido implements Serializable {
     private Direccion direccion;
 
     @DBRef
-    @Field("envio")
-    private Envio envio;
-
-    @DBRef
     @Field("cuenta")
     @JsonIgnoreProperties(value = { "user", "tipoDocumento" }, allowSetters = true)
     private Cuenta cuenta;
+
+    @DBRef
+    private Envio envio;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -255,19 +254,6 @@ public class Pedido implements Serializable {
         return this;
     }
 
-    public Envio getEnvio() {
-        return this.envio;
-    }
-
-    public void setEnvio(Envio envio) {
-        this.envio = envio;
-    }
-
-    public Pedido envio(Envio envio) {
-        this.setEnvio(envio);
-        return this;
-    }
-
     public Cuenta getCuenta() {
         return this.cuenta;
     }
@@ -278,6 +264,25 @@ public class Pedido implements Serializable {
 
     public Pedido cuenta(Cuenta cuenta) {
         this.setCuenta(cuenta);
+        return this;
+    }
+
+    public Envio getEnvio() {
+        return this.envio;
+    }
+
+    public void setEnvio(Envio envio) {
+        if (this.envio != null) {
+            this.envio.setPedido(null);
+        }
+        if (envio != null) {
+            envio.setPedido(this);
+        }
+        this.envio = envio;
+    }
+
+    public Pedido envio(Envio envio) {
+        this.setEnvio(envio);
         return this;
     }
 

@@ -43,8 +43,6 @@ export const ItemCarritoDetail = () => {
           <dd>{itemCarritoEntity.carrito ? itemCarritoEntity.carrito.id : ''}</dd>
           <dt>Producto</dt>
           <dd>{itemCarritoEntity.producto ? itemCarritoEntity.producto.nombre : ''}</dd>
-          <dt>Variante</dt>
-          <dd>{itemCarritoEntity.variante ? itemCarritoEntity.variante.sku : ''}</dd>
         </dl>
         <Button as={Link as any} to="/item-carrito" replace variant="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Volver</span>

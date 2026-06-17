@@ -38,18 +38,6 @@ class PedidoTest {
     }
 
     @Test
-    void envioTest() {
-        Pedido pedido = getPedidoRandomSampleGenerator();
-        Envio envioBack = getEnvioRandomSampleGenerator();
-
-        pedido.setEnvio(envioBack);
-        assertThat(pedido.getEnvio()).isEqualTo(envioBack);
-
-        pedido.envio(null);
-        assertThat(pedido.getEnvio()).isNull();
-    }
-
-    @Test
     void cuentaTest() {
         Pedido pedido = getPedidoRandomSampleGenerator();
         Cuenta cuentaBack = getCuentaRandomSampleGenerator();
@@ -59,5 +47,19 @@ class PedidoTest {
 
         pedido.cuenta(null);
         assertThat(pedido.getCuenta()).isNull();
+    }
+
+    @Test
+    void envioTest() {
+        Pedido pedido = getPedidoRandomSampleGenerator();
+        Envio envioBack = getEnvioRandomSampleGenerator();
+
+        pedido.setEnvio(envioBack);
+        assertThat(pedido.getEnvio()).isEqualTo(envioBack);
+        assertThat(envioBack.getPedido()).isEqualTo(pedido);
+
+        pedido.envio(null);
+        assertThat(pedido.getEnvio()).isNull();
+        assertThat(envioBack.getPedido()).isNull();
     }
 }

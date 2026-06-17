@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260609235638"
+    "changelogDate": "20260616212155"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
@@ -38,13 +38,6 @@
       "relationshipSide": "left",
       "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
-    },
-    {
-      "otherEntityField": "sku",
-      "otherEntityName": "varianteProducto",
-      "relationshipName": "variante",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
     }
   ],
   "searchEngine": "no",

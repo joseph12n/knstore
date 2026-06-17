@@ -121,11 +121,11 @@ export const Direccion = () => {
                 <th className="hand" onClick={sort('localidad')}>
                   Localidad <FontAwesomeIcon icon={getSortIconByFieldName('localidad')} />
                 </th>
-                <th className="hand" onClick={sort('departamento')}>
-                  Departamento <FontAwesomeIcon icon={getSortIconByFieldName('departamento')} />
-                </th>
                 <th className="hand" onClick={sort('municipio')}>
                   Municipio <FontAwesomeIcon icon={getSortIconByFieldName('municipio')} />
+                </th>
+                <th className="hand" onClick={sort('departamento')}>
+                  Departamento <FontAwesomeIcon icon={getSortIconByFieldName('departamento')} />
                 </th>
                 <th className="hand" onClick={sort('activo')}>
                   Activo <FontAwesomeIcon icon={getSortIconByFieldName('activo')} />
@@ -147,8 +147,8 @@ export const Direccion = () => {
                   <td>{direccion.direccion}</td>
                   <td>{direccion.barrio}</td>
                   <td>{direccion.localidad}</td>
-                  <td>{direccion.departamento}</td>
                   <td>{direccion.municipio}</td>
+                  <td>{direccion.departamento}</td>
                   <td>{direccion.activo ? 'true' : 'false'}</td>
                   <td>{direccion.cuenta ? <Link to={`/cuenta/${direccion.cuenta.id}`}>{direccion.cuenta.id}</Link> : ''}</td>
                   <td className="text-end">

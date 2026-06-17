@@ -1,9 +1,7 @@
 package com.mycompany.knstore.service.dto;
 
-import com.mycompany.knstore.domain.enumeration.CategoriaIVA;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -22,20 +20,18 @@ public class ProductoDTO implements Serializable {
     @Size(max = 220)
     private String slug;
 
-    private String descripcion;
-
-    private byte[] imagen;
-
-    private String imagenContentType;
-
-    @Size(max = 200)
-    private String imagenAlt;
-
-    @Size(max = 100)
-    private String marca;
-
     @Size(max = 60)
     private String referencia;
+
+    @NotNull
+    @Size(max = 100)
+    private String sku;
+
+    @Size(max = 50)
+    private String color;
+
+    @Size(max = 30)
+    private String talla;
 
     @Size(max = 50)
     private String codigoBarras;
@@ -43,35 +39,7 @@ public class ProductoDTO implements Serializable {
     @Size(max = 20)
     private String unidadMedida;
 
-    @DecimalMin(value = "0")
-    private BigDecimal pesoKg;
-
-    @DecimalMin(value = "0")
-    private BigDecimal largoCm;
-
-    @DecimalMin(value = "0")
-    private BigDecimal anchoCm;
-
-    @DecimalMin(value = "0")
-    private BigDecimal altoCm;
-
-    @NotNull
-    private CategoriaIVA categoriaIva;
-
-    @NotNull
-    @DecimalMin(value = "0")
-    private BigDecimal precioCompra;
-
-    @NotNull
-    @DecimalMin(value = "0")
-    private BigDecimal precioVenta;
-
-    private BigDecimal ganancia;
-
-    private BigDecimal margen;
-
-    @Min(value = 0)
-    private Integer garantiaMeses;
+    private String descripcion;
 
     @NotNull
     private Boolean destacado;
@@ -79,8 +47,19 @@ public class ProductoDTO implements Serializable {
     @NotNull
     private Boolean activo;
 
+    private ProductoPrecioDTO precio;
+
+    private ProductoInventarioDTO inventario;
+
+    @NotNull
+    private CategoriaDTO categoria;
+
     @NotNull
     private SubcategoriaDTO subcategoria;
+
+    private MarcaDTO marca;
+
+    private CategoriaIVADTO categoriaIva;
 
     public String getId() {
         return id;
@@ -106,52 +85,36 @@ public class ProductoDTO implements Serializable {
         this.slug = slug;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public byte[] getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
-    }
-
-    public String getImagenContentType() {
-        return imagenContentType;
-    }
-
-    public void setImagenContentType(String imagenContentType) {
-        this.imagenContentType = imagenContentType;
-    }
-
-    public String getImagenAlt() {
-        return imagenAlt;
-    }
-
-    public void setImagenAlt(String imagenAlt) {
-        this.imagenAlt = imagenAlt;
-    }
-
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
     public String getReferencia() {
         return referencia;
     }
 
     public void setReferencia(String referencia) {
         this.referencia = referencia;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getTalla() {
+        return talla;
+    }
+
+    public void setTalla(String talla) {
+        this.talla = talla;
     }
 
     public String getCodigoBarras() {
@@ -170,84 +133,12 @@ public class ProductoDTO implements Serializable {
         this.unidadMedida = unidadMedida;
     }
 
-    public BigDecimal getPesoKg() {
-        return pesoKg;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setPesoKg(BigDecimal pesoKg) {
-        this.pesoKg = pesoKg;
-    }
-
-    public BigDecimal getLargoCm() {
-        return largoCm;
-    }
-
-    public void setLargoCm(BigDecimal largoCm) {
-        this.largoCm = largoCm;
-    }
-
-    public BigDecimal getAnchoCm() {
-        return anchoCm;
-    }
-
-    public void setAnchoCm(BigDecimal anchoCm) {
-        this.anchoCm = anchoCm;
-    }
-
-    public BigDecimal getAltoCm() {
-        return altoCm;
-    }
-
-    public void setAltoCm(BigDecimal altoCm) {
-        this.altoCm = altoCm;
-    }
-
-    public CategoriaIVA getCategoriaIva() {
-        return categoriaIva;
-    }
-
-    public void setCategoriaIva(CategoriaIVA categoriaIva) {
-        this.categoriaIva = categoriaIva;
-    }
-
-    public BigDecimal getPrecioCompra() {
-        return precioCompra;
-    }
-
-    public void setPrecioCompra(BigDecimal precioCompra) {
-        this.precioCompra = precioCompra;
-    }
-
-    public BigDecimal getPrecioVenta() {
-        return precioVenta;
-    }
-
-    public void setPrecioVenta(BigDecimal precioVenta) {
-        this.precioVenta = precioVenta;
-    }
-
-    public BigDecimal getGanancia() {
-        return ganancia;
-    }
-
-    public void setGanancia(BigDecimal ganancia) {
-        this.ganancia = ganancia;
-    }
-
-    public BigDecimal getMargen() {
-        return margen;
-    }
-
-    public void setMargen(BigDecimal margen) {
-        this.margen = margen;
-    }
-
-    public Integer getGarantiaMeses() {
-        return garantiaMeses;
-    }
-
-    public void setGarantiaMeses(Integer garantiaMeses) {
-        this.garantiaMeses = garantiaMeses;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Boolean getDestacado() {
@@ -266,12 +157,52 @@ public class ProductoDTO implements Serializable {
         this.activo = activo;
     }
 
+    public ProductoPrecioDTO getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(ProductoPrecioDTO precio) {
+        this.precio = precio;
+    }
+
+    public ProductoInventarioDTO getInventario() {
+        return inventario;
+    }
+
+    public void setInventario(ProductoInventarioDTO inventario) {
+        this.inventario = inventario;
+    }
+
+    public CategoriaDTO getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaDTO categoria) {
+        this.categoria = categoria;
+    }
+
     public SubcategoriaDTO getSubcategoria() {
         return subcategoria;
     }
 
     public void setSubcategoria(SubcategoriaDTO subcategoria) {
         this.subcategoria = subcategoria;
+    }
+
+    public MarcaDTO getMarca() {
+        return marca;
+    }
+
+    public void setMarca(MarcaDTO marca) {
+        this.marca = marca;
+    }
+
+    public CategoriaIVADTO getCategoriaIva() {
+        return categoriaIva;
+    }
+
+    public void setCategoriaIva(CategoriaIVADTO categoriaIva) {
+        this.categoriaIva = categoriaIva;
     }
 
     @Override
@@ -302,26 +233,21 @@ public class ProductoDTO implements Serializable {
             "id='" + getId() + "'" +
             ", nombre='" + getNombre() + "'" +
             ", slug='" + getSlug() + "'" +
-            ", descripcion='" + getDescripcion() + "'" +
-            ", imagen='" + getImagen() + "'" +
-            ", imagenAlt='" + getImagenAlt() + "'" +
-            ", marca='" + getMarca() + "'" +
             ", referencia='" + getReferencia() + "'" +
+            ", sku='" + getSku() + "'" +
+            ", color='" + getColor() + "'" +
+            ", talla='" + getTalla() + "'" +
             ", codigoBarras='" + getCodigoBarras() + "'" +
             ", unidadMedida='" + getUnidadMedida() + "'" +
-            ", pesoKg=" + getPesoKg() +
-            ", largoCm=" + getLargoCm() +
-            ", anchoCm=" + getAnchoCm() +
-            ", altoCm=" + getAltoCm() +
-            ", categoriaIva='" + getCategoriaIva() + "'" +
-            ", precioCompra=" + getPrecioCompra() +
-            ", precioVenta=" + getPrecioVenta() +
-            ", ganancia=" + getGanancia() +
-            ", margen=" + getMargen() +
-            ", garantiaMeses=" + getGarantiaMeses() +
+            ", descripcion='" + getDescripcion() + "'" +
             ", destacado='" + getDestacado() + "'" +
             ", activo='" + getActivo() + "'" +
+            ", precio=" + getPrecio() +
+            ", inventario=" + getInventario() +
+            ", categoria=" + getCategoria() +
             ", subcategoria=" + getSubcategoria() +
+            ", marca=" + getMarca() +
+            ", categoriaIva=" + getCategoriaIva() +
             "}";
     }
 }

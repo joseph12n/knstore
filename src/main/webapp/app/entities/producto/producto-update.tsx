@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
 import { Button, Col, FormText, Row } from 'react-bootstrap';
-import { ValidatedBlobField, ValidatedField, ValidatedForm, isNumber } from 'react-jhipster';
+import { ValidatedField, ValidatedForm } from 'react-jhipster';
 import { Link, useNavigate, useParams } from 'react-router';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { getEntities as getCategorias } from 'app/entities/categoria/categoria.reducer';
+import { getEntities as getCategoriaIVAS } from 'app/entities/categoria-iva/categoria-iva.reducer';
+import { getEntities as getMarcas } from 'app/entities/marca/marca.reducer';
+import { getEntities as getProductoInventarios } from 'app/entities/producto-inventario/producto-inventario.reducer';
+import { getEntities as getProductoPrecios } from 'app/entities/producto-precio/producto-precio.reducer';
 import { getEntities as getSubcategorias } from 'app/entities/subcategoria/subcategoria.reducer';
-import { CategoriaIVA } from 'app/shared/model/enumerations/categoria-iva.model';
 
 import { createEntity, getEntity, reset, updateEntity } from './producto.reducer';
 
@@ -19,12 +23,16 @@ export const ProductoUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
+  const productoPrecios = useAppSelector(state => state.productoPrecio.entities);
+  const productoInventarios = useAppSelector(state => state.productoInventario.entities);
+  const categorias = useAppSelector(state => state.categoria.entities);
   const subcategorias = useAppSelector(state => state.subcategoria.entities);
+  const marcas = useAppSelector(state => state.marca.entities);
+  const categoriaIVAS = useAppSelector(state => state.categoriaIVA.entities);
   const productoEntity = useAppSelector(state => state.producto.entity);
   const loading = useAppSelector(state => state.producto.loading);
   const updating = useAppSelector(state => state.producto.updating);
   const updateSuccess = useAppSelector(state => state.producto.updateSuccess);
-  const categoriaIVAValues = Object.keys(CategoriaIVA);
 
   const handleClose = () => {
     navigate(`/producto${location.search}`);
@@ -37,7 +45,12 @@ export const ProductoUpdate = () => {
       dispatch(getEntity(id));
     }
 
+    dispatch(getProductoPrecios({}));
+    dispatch(getProductoInventarios({}));
+    dispatch(getCategorias({}));
     dispatch(getSubcategorias({}));
+    dispatch(getMarcas({}));
+    dispatch(getCategoriaIVAS({}));
   }, []);
 
   useEffect(() => {
@@ -47,38 +60,15 @@ export const ProductoUpdate = () => {
   }, [updateSuccess]);
 
   const saveEntity = values => {
-    if (values.pesoKg !== undefined && typeof values.pesoKg !== 'number') {
-      values.pesoKg = Number(values.pesoKg);
-    }
-    if (values.largoCm !== undefined && typeof values.largoCm !== 'number') {
-      values.largoCm = Number(values.largoCm);
-    }
-    if (values.anchoCm !== undefined && typeof values.anchoCm !== 'number') {
-      values.anchoCm = Number(values.anchoCm);
-    }
-    if (values.altoCm !== undefined && typeof values.altoCm !== 'number') {
-      values.altoCm = Number(values.altoCm);
-    }
-    if (values.precioCompra !== undefined && typeof values.precioCompra !== 'number') {
-      values.precioCompra = Number(values.precioCompra);
-    }
-    if (values.precioVenta !== undefined && typeof values.precioVenta !== 'number') {
-      values.precioVenta = Number(values.precioVenta);
-    }
-    if (values.ganancia !== undefined && typeof values.ganancia !== 'number') {
-      values.ganancia = Number(values.ganancia);
-    }
-    if (values.margen !== undefined && typeof values.margen !== 'number') {
-      values.margen = Number(values.margen);
-    }
-    if (values.garantiaMeses !== undefined && typeof values.garantiaMeses !== 'number') {
-      values.garantiaMeses = Number(values.garantiaMeses);
-    }
-
     const entity = {
       ...productoEntity,
       ...values,
+      precio: productoPrecios.find(it => it.id.toString() === values.precio?.toString()),
+      inventario: productoInventarios.find(it => it.id.toString() === values.inventario?.toString()),
+      categoria: categorias.find(it => it.id.toString() === values.categoria?.toString()),
       subcategoria: subcategorias.find(it => it.id.toString() === values.subcategoria?.toString()),
+      marca: marcas.find(it => it.id.toString() === values.marca?.toString()),
+      categoriaIva: categoriaIVAS.find(it => it.id.toString() === values.categoriaIva?.toString()),
     };
 
     if (isNew) {
@@ -92,9 +82,13 @@ export const ProductoUpdate = () => {
     isNew
       ? {}
       : {
-          categoriaIva: 'EXCLUIDO',
           ...productoEntity,
+          precio: productoEntity?.precio?.id,
+          inventario: productoEntity?.inventario?.id,
+          categoria: productoEntity?.categoria?.id,
           subcategoria: productoEntity?.subcategoria?.id,
+          marca: productoEntity?.marca?.id,
+          categoriaIva: productoEntity?.categoriaIva?.id,
         };
 
   return (
@@ -135,28 +129,6 @@ export const ProductoUpdate = () => {
                   maxLength: { value: 220, message: 'Este campo no puede superar más de 220 caracteres.' },
                 }}
               />
-              <ValidatedField label="Descripcion" id="producto-descripcion" name="descripcion" data-cy="descripcion" type="textarea" />
-              <ValidatedBlobField label="Imagen" id="producto-imagen" name="imagen" data-cy="imagen" isImage accept="image/*" />
-              <ValidatedField
-                label="Imagen Alt"
-                id="producto-imagenAlt"
-                name="imagenAlt"
-                data-cy="imagenAlt"
-                type="text"
-                validate={{
-                  maxLength: { value: 200, message: 'Este campo no puede superar más de 200 caracteres.' },
-                }}
-              />
-              <ValidatedField
-                label="Marca"
-                id="producto-marca"
-                name="marca"
-                data-cy="marca"
-                type="text"
-                validate={{
-                  maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
-                }}
-              />
               <ValidatedField
                 label="Referencia"
                 id="producto-referencia"
@@ -165,6 +137,37 @@ export const ProductoUpdate = () => {
                 type="text"
                 validate={{
                   maxLength: { value: 60, message: 'Este campo no puede superar más de 60 caracteres.' },
+                }}
+              />
+              <ValidatedField
+                label="Sku"
+                id="producto-sku"
+                name="sku"
+                data-cy="sku"
+                type="text"
+                validate={{
+                  required: { value: true, message: 'Este campo es obligatorio.' },
+                  maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
+                }}
+              />
+              <ValidatedField
+                label="Color"
+                id="producto-color"
+                name="color"
+                data-cy="color"
+                type="text"
+                validate={{
+                  maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
+                }}
+              />
+              <ValidatedField
+                label="Talla"
+                id="producto-talla"
+                name="talla"
+                data-cy="talla"
+                type="text"
+                validate={{
+                  maxLength: { value: 30, message: 'Este campo no puede superar más de 30 caracteres.' },
                 }}
               />
               <ValidatedField
@@ -187,96 +190,40 @@ export const ProductoUpdate = () => {
                   maxLength: { value: 20, message: 'Este campo no puede superar más de 20 caracteres.' },
                 }}
               />
-              <ValidatedField
-                label="Peso Kg"
-                id="producto-pesoKg"
-                name="pesoKg"
-                data-cy="pesoKg"
-                type="text"
-                validate={{
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField
-                label="Largo Cm"
-                id="producto-largoCm"
-                name="largoCm"
-                data-cy="largoCm"
-                type="text"
-                validate={{
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField
-                label="Ancho Cm"
-                id="producto-anchoCm"
-                name="anchoCm"
-                data-cy="anchoCm"
-                type="text"
-                validate={{
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField
-                label="Alto Cm"
-                id="producto-altoCm"
-                name="altoCm"
-                data-cy="altoCm"
-                type="text"
-                validate={{
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField label="Categoria Iva" id="producto-categoriaIva" name="categoriaIva" data-cy="categoriaIva" type="select">
-                {categoriaIVAValues.map(categoriaIVA => (
-                  <option value={categoriaIVA} key={categoriaIVA}>
-                    {categoriaIVA}
-                  </option>
-                ))}
-              </ValidatedField>
-              <ValidatedField
-                label="Precio Compra"
-                id="producto-precioCompra"
-                name="precioCompra"
-                data-cy="precioCompra"
-                type="text"
-                validate={{
-                  required: { value: true, message: 'Este campo es obligatorio.' },
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField
-                label="Precio Venta"
-                id="producto-precioVenta"
-                name="precioVenta"
-                data-cy="precioVenta"
-                type="text"
-                validate={{
-                  required: { value: true, message: 'Este campo es obligatorio.' },
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField label="Ganancia" id="producto-ganancia" name="ganancia" data-cy="ganancia" type="text" />
-              <ValidatedField label="Margen" id="producto-margen" name="margen" data-cy="margen" type="text" />
-              <ValidatedField
-                label="Garantia Meses"
-                id="producto-garantiaMeses"
-                name="garantiaMeses"
-                data-cy="garantiaMeses"
-                type="text"
-                validate={{
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
+              <ValidatedField label="Descripcion" id="producto-descripcion" name="descripcion" data-cy="descripcion" type="textarea" />
               <ValidatedField label="Destacado" id="producto-destacado" name="destacado" data-cy="destacado" check type="checkbox" />
               <ValidatedField label="Activo" id="producto-activo" name="activo" data-cy="activo" check type="checkbox" />
+              <ValidatedField id="producto-precio" name="precio" data-cy="precio" label="Precio" type="select">
+                <option value="" key="0" />
+                {productoPrecios
+                  ? productoPrecios.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField id="producto-inventario" name="inventario" data-cy="inventario" label="Inventario" type="select">
+                <option value="" key="0" />
+                {productoInventarios
+                  ? productoInventarios.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField id="producto-categoria" name="categoria" data-cy="categoria" label="Categoria" type="select" required>
+                <option value="" key="0" />
+                {categorias
+                  ? categorias.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.nombre}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <FormText>Este campo es obligatorio.</FormText>
               <ValidatedField
                 id="producto-subcategoria"
                 name="subcategoria"
@@ -295,6 +242,26 @@ export const ProductoUpdate = () => {
                   : null}
               </ValidatedField>
               <FormText>Este campo es obligatorio.</FormText>
+              <ValidatedField id="producto-marca" name="marca" data-cy="marca" label="Marca" type="select">
+                <option value="" key="0" />
+                {marcas
+                  ? marcas.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField id="producto-categoriaIva" name="categoriaIva" data-cy="categoriaIva" label="Categoria Iva" type="select">
+                <option value="" key="0" />
+                {categoriaIVAS
+                  ? categoriaIVAS.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
               <Button as={Link as any} id="cancel-save" data-cy="entityCreateCancelButton" to="/producto" replace variant="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

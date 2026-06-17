@@ -26,12 +26,12 @@ public class Envio implements Serializable {
     private String id;
 
     @Size(max = 100)
-    @Field("numero_rastreo")
-    private String numeroRastreo;
-
-    @Size(max = 100)
     @Field("transportadora")
     private String transportadora;
+
+    @Size(max = 100)
+    @Field("numero_rastreo")
+    private String numeroRastreo;
 
     @Field("tipo_servicio")
     private TipoServicioEnvio tipoServicio;
@@ -70,6 +70,7 @@ public class Envio implements Serializable {
     private Instant fechaEntrega;
 
     @DBRef
+    @Field("pedido")
     private Pedido pedido;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -87,19 +88,6 @@ public class Envio implements Serializable {
         this.id = id;
     }
 
-    public String getNumeroRastreo() {
-        return this.numeroRastreo;
-    }
-
-    public Envio numeroRastreo(String numeroRastreo) {
-        this.setNumeroRastreo(numeroRastreo);
-        return this;
-    }
-
-    public void setNumeroRastreo(String numeroRastreo) {
-        this.numeroRastreo = numeroRastreo;
-    }
-
     public String getTransportadora() {
         return this.transportadora;
     }
@@ -111,6 +99,19 @@ public class Envio implements Serializable {
 
     public void setTransportadora(String transportadora) {
         this.transportadora = transportadora;
+    }
+
+    public String getNumeroRastreo() {
+        return this.numeroRastreo;
+    }
+
+    public Envio numeroRastreo(String numeroRastreo) {
+        this.setNumeroRastreo(numeroRastreo);
+        return this;
+    }
+
+    public void setNumeroRastreo(String numeroRastreo) {
+        this.numeroRastreo = numeroRastreo;
     }
 
     public TipoServicioEnvio getTipoServicio() {
@@ -248,12 +249,6 @@ public class Envio implements Serializable {
     }
 
     public void setPedido(Pedido pedido) {
-        if (this.pedido != null) {
-            this.pedido.setEnvio(null);
-        }
-        if (pedido != null) {
-            pedido.setEnvio(this);
-        }
         this.pedido = pedido;
     }
 
@@ -286,8 +281,8 @@ public class Envio implements Serializable {
     public String toString() {
         return "Envio{" +
             "id=" + getId() +
-            ", numeroRastreo='" + getNumeroRastreo() + "'" +
             ", transportadora='" + getTransportadora() + "'" +
+            ", numeroRastreo='" + getNumeroRastreo() + "'" +
             ", tipoServicio='" + getTipoServicio() + "'" +
             ", estado='" + getEstado() + "'" +
             ", costoEnvio=" + getCostoEnvio() +

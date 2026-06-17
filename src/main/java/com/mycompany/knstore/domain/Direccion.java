@@ -37,13 +37,13 @@ public class Direccion implements Serializable {
 
     @NotNull
     @Size(max = 100)
-    @Field("departamento")
-    private String departamento;
+    @Field("municipio")
+    private String municipio;
 
     @NotNull
     @Size(max = 100)
-    @Field("municipio")
-    private String municipio;
+    @Field("departamento")
+    private String departamento;
 
     @NotNull
     @Field("activo")
@@ -111,19 +111,6 @@ public class Direccion implements Serializable {
         this.localidad = localidad;
     }
 
-    public String getDepartamento() {
-        return this.departamento;
-    }
-
-    public Direccion departamento(String departamento) {
-        this.setDepartamento(departamento);
-        return this;
-    }
-
-    public void setDepartamento(String departamento) {
-        this.departamento = departamento;
-    }
-
     public String getMunicipio() {
         return this.municipio;
     }
@@ -135,6 +122,19 @@ public class Direccion implements Serializable {
 
     public void setMunicipio(String municipio) {
         this.municipio = municipio;
+    }
+
+    public String getDepartamento() {
+        return this.departamento;
+    }
+
+    public Direccion departamento(String departamento) {
+        this.setDepartamento(departamento);
+        return this;
+    }
+
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 
     public Boolean getActivo() {
@@ -209,8 +209,8 @@ public class Direccion implements Serializable {
             ", direccion='" + getDireccion() + "'" +
             ", barrio='" + getBarrio() + "'" +
             ", localidad='" + getLocalidad() + "'" +
-            ", departamento='" + getDepartamento() + "'" +
             ", municipio='" + getMunicipio() + "'" +
+            ", departamento='" + getDepartamento() + "'" +
             ", activo='" + getActivo() + "'" +
             "}";
     }

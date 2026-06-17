@@ -50,8 +50,8 @@ public class DireccionAsserts {
             .satisfies(a -> assertThat(a.getDireccion()).as("check direccion").isEqualTo(expected.getDireccion()))
             .satisfies(a -> assertThat(a.getBarrio()).as("check barrio").isEqualTo(expected.getBarrio()))
             .satisfies(a -> assertThat(a.getLocalidad()).as("check localidad").isEqualTo(expected.getLocalidad()))
-            .satisfies(a -> assertThat(a.getDepartamento()).as("check departamento").isEqualTo(expected.getDepartamento()))
             .satisfies(a -> assertThat(a.getMunicipio()).as("check municipio").isEqualTo(expected.getMunicipio()))
+            .satisfies(a -> assertThat(a.getDepartamento()).as("check departamento").isEqualTo(expected.getDepartamento()))
             .satisfies(a -> assertThat(a.getActivo()).as("check activo").isEqualTo(expected.getActivo()));
     }
 

@@ -44,6 +44,24 @@ import org.springframework.test.web.servlet.MockMvc;
 @WithMockUser
 class ItemPedidoResourceIT {
 
+    private static final String DEFAULT_NOMBRE_PRODUCTO = "AAAAAAAAAA";
+    private static final String UPDATED_NOMBRE_PRODUCTO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SLUG_PRODUCTO = "AAAAAAAAAA";
+    private static final String UPDATED_SLUG_PRODUCTO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_MARCA_PRODUCTO = "AAAAAAAAAA";
+    private static final String UPDATED_MARCA_PRODUCTO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SKU_PRODUCTO = "AAAAAAAAAA";
+    private static final String UPDATED_SKU_PRODUCTO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_COLOR_PRODUCTO = "AAAAAAAAAA";
+    private static final String UPDATED_COLOR_PRODUCTO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TALLA_PRODUCTO = "AAAAAAAAAA";
+    private static final String UPDATED_TALLA_PRODUCTO = "BBBBBBBBBB";
+
     private static final Integer DEFAULT_CANTIDAD = 1;
     private static final Integer UPDATED_CANTIDAD = 2;
 
@@ -95,6 +113,12 @@ class ItemPedidoResourceIT {
      */
     public static ItemPedido createEntity() {
         ItemPedido itemPedido = new ItemPedido()
+            .nombreProducto(DEFAULT_NOMBRE_PRODUCTO)
+            .slugProducto(DEFAULT_SLUG_PRODUCTO)
+            .marcaProducto(DEFAULT_MARCA_PRODUCTO)
+            .skuProducto(DEFAULT_SKU_PRODUCTO)
+            .colorProducto(DEFAULT_COLOR_PRODUCTO)
+            .tallaProducto(DEFAULT_TALLA_PRODUCTO)
             .cantidad(DEFAULT_CANTIDAD)
             .precioUnitario(DEFAULT_PRECIO_UNITARIO)
             .porcentajeIva(DEFAULT_PORCENTAJE_IVA)
@@ -122,6 +146,12 @@ class ItemPedidoResourceIT {
      */
     public static ItemPedido createUpdatedEntity() {
         ItemPedido updatedItemPedido = new ItemPedido()
+            .nombreProducto(UPDATED_NOMBRE_PRODUCTO)
+            .slugProducto(UPDATED_SLUG_PRODUCTO)
+            .marcaProducto(UPDATED_MARCA_PRODUCTO)
+            .skuProducto(UPDATED_SKU_PRODUCTO)
+            .colorProducto(UPDATED_COLOR_PRODUCTO)
+            .tallaProducto(UPDATED_TALLA_PRODUCTO)
             .cantidad(UPDATED_CANTIDAD)
             .precioUnitario(UPDATED_PRECIO_UNITARIO)
             .porcentajeIva(UPDATED_PORCENTAJE_IVA)
@@ -195,6 +225,22 @@ class ItemPedidoResourceIT {
     }
 
     @Test
+    void checkNombreProductoIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        itemPedido.setNombreProducto(null);
+
+        // Create the ItemPedido, which fails.
+        ItemPedidoDTO itemPedidoDTO = itemPedidoMapper.toDto(itemPedido);
+
+        restItemPedidoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(itemPedidoDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
     void checkCantidadIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
@@ -237,6 +283,12 @@ class ItemPedidoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(itemPedido.getId())))
+            .andExpect(jsonPath("$.[*].nombreProducto").value(hasItem(DEFAULT_NOMBRE_PRODUCTO)))
+            .andExpect(jsonPath("$.[*].slugProducto").value(hasItem(DEFAULT_SLUG_PRODUCTO)))
+            .andExpect(jsonPath("$.[*].marcaProducto").value(hasItem(DEFAULT_MARCA_PRODUCTO)))
+            .andExpect(jsonPath("$.[*].skuProducto").value(hasItem(DEFAULT_SKU_PRODUCTO)))
+            .andExpect(jsonPath("$.[*].colorProducto").value(hasItem(DEFAULT_COLOR_PRODUCTO)))
+            .andExpect(jsonPath("$.[*].tallaProducto").value(hasItem(DEFAULT_TALLA_PRODUCTO)))
             .andExpect(jsonPath("$.[*].cantidad").value(hasItem(DEFAULT_CANTIDAD)))
             .andExpect(jsonPath("$.[*].precioUnitario").value(hasItem(sameNumber(DEFAULT_PRECIO_UNITARIO))))
             .andExpect(jsonPath("$.[*].porcentajeIva").value(hasItem(sameNumber(DEFAULT_PORCENTAJE_IVA))))
@@ -273,6 +325,12 @@ class ItemPedidoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(itemPedido.getId()))
+            .andExpect(jsonPath("$.nombreProducto").value(DEFAULT_NOMBRE_PRODUCTO))
+            .andExpect(jsonPath("$.slugProducto").value(DEFAULT_SLUG_PRODUCTO))
+            .andExpect(jsonPath("$.marcaProducto").value(DEFAULT_MARCA_PRODUCTO))
+            .andExpect(jsonPath("$.skuProducto").value(DEFAULT_SKU_PRODUCTO))
+            .andExpect(jsonPath("$.colorProducto").value(DEFAULT_COLOR_PRODUCTO))
+            .andExpect(jsonPath("$.tallaProducto").value(DEFAULT_TALLA_PRODUCTO))
             .andExpect(jsonPath("$.cantidad").value(DEFAULT_CANTIDAD))
             .andExpect(jsonPath("$.precioUnitario").value(sameNumber(DEFAULT_PRECIO_UNITARIO)))
             .andExpect(jsonPath("$.porcentajeIva").value(sameNumber(DEFAULT_PORCENTAJE_IVA)))
@@ -297,6 +355,12 @@ class ItemPedidoResourceIT {
         // Update the itemPedido
         ItemPedido updatedItemPedido = itemPedidoRepository.findById(itemPedido.getId()).orElseThrow();
         updatedItemPedido
+            .nombreProducto(UPDATED_NOMBRE_PRODUCTO)
+            .slugProducto(UPDATED_SLUG_PRODUCTO)
+            .marcaProducto(UPDATED_MARCA_PRODUCTO)
+            .skuProducto(UPDATED_SKU_PRODUCTO)
+            .colorProducto(UPDATED_COLOR_PRODUCTO)
+            .tallaProducto(UPDATED_TALLA_PRODUCTO)
             .cantidad(UPDATED_CANTIDAD)
             .precioUnitario(UPDATED_PRECIO_UNITARIO)
             .porcentajeIva(UPDATED_PORCENTAJE_IVA)
@@ -388,7 +452,11 @@ class ItemPedidoResourceIT {
         ItemPedido partialUpdatedItemPedido = new ItemPedido();
         partialUpdatedItemPedido.setId(itemPedido.getId());
 
-        partialUpdatedItemPedido.cantidad(UPDATED_CANTIDAD).porcentajeIva(UPDATED_PORCENTAJE_IVA).valorIva(UPDATED_VALOR_IVA);
+        partialUpdatedItemPedido
+            .nombreProducto(UPDATED_NOMBRE_PRODUCTO)
+            .marcaProducto(UPDATED_MARCA_PRODUCTO)
+            .skuProducto(UPDATED_SKU_PRODUCTO)
+            .descuento(UPDATED_DESCUENTO);
 
         restItemPedidoMockMvc
             .perform(
@@ -419,6 +487,12 @@ class ItemPedidoResourceIT {
         partialUpdatedItemPedido.setId(itemPedido.getId());
 
         partialUpdatedItemPedido
+            .nombreProducto(UPDATED_NOMBRE_PRODUCTO)
+            .slugProducto(UPDATED_SLUG_PRODUCTO)
+            .marcaProducto(UPDATED_MARCA_PRODUCTO)
+            .skuProducto(UPDATED_SKU_PRODUCTO)
+            .colorProducto(UPDATED_COLOR_PRODUCTO)
+            .tallaProducto(UPDATED_TALLA_PRODUCTO)
             .cantidad(UPDATED_CANTIDAD)
             .precioUnitario(UPDATED_PRECIO_UNITARIO)
             .porcentajeIva(UPDATED_PORCENTAJE_IVA)

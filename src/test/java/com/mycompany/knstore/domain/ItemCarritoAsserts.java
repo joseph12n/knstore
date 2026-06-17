@@ -70,7 +70,6 @@ public class ItemCarritoAsserts {
         assertThat(actual)
             .as("Verify ItemCarrito relationships")
             .satisfies(a -> assertThat(a.getCarrito()).as("check carrito").isEqualTo(expected.getCarrito()))
-            .satisfies(a -> assertThat(a.getProducto()).as("check producto").isEqualTo(expected.getProducto()))
-            .satisfies(a -> assertThat(a.getVariante()).as("check variante").isEqualTo(expected.getVariante()));
+            .satisfies(a -> assertThat(a.getProducto()).as("check producto").isEqualTo(expected.getProducto()));
     }
 }

@@ -1,5 +1,6 @@
 package com.mycompany.knstore.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -24,28 +25,13 @@ public class Factura implements Serializable {
     @Id
     private String id;
 
-    @NotNull
-    @Size(max = 50)
-    @Field("referencia")
-    private String referencia;
-
-    @Size(max = 96)
-    @Field("cufe")
-    private String cufe;
-
-    @Size(max = 50)
-    @Field("resolucion_dian")
-    private String resolucionDian;
-
-    @Field("fecha_vigencia_resolucion")
-    private LocalDate fechaVigenciaResolucion;
-
     @Size(max = 10)
     @Field("prefijo")
     private String prefijo;
 
-    @Field("consecutivo")
-    private Long consecutivo;
+    @Size(max = 96)
+    @Field("cufe")
+    private String cufe;
 
     @NotNull
     @DecimalMin(value = "0")
@@ -64,28 +50,10 @@ public class Factura implements Serializable {
     @Field("valor_iva")
     private BigDecimal valorIva;
 
-    @DecimalMin(value = "0")
-    @Field("retefuente")
-    private BigDecimal retefuente;
-
-    @DecimalMin(value = "0")
-    @Field("rete_iva")
-    private BigDecimal reteIva;
-
-    @DecimalMin(value = "0")
-    @Field("rete_ica")
-    private BigDecimal reteIca;
-
     @NotNull
     @DecimalMin(value = "0")
     @Field("total")
     private BigDecimal total;
-
-    @Field("fecha_emision")
-    private Instant fechaEmision;
-
-    @Field("fecha_vencimiento")
-    private LocalDate fechaVencimiento;
 
     @Size(max = 500)
     @Field("notas_adicionales")
@@ -98,12 +66,19 @@ public class Factura implements Serializable {
     @Field("enviada")
     private Boolean enviada;
 
+    @Field("fecha_emision")
+    private Instant fechaEmision;
+
+    @Field("fecha_vencimiento")
+    private LocalDate fechaVencimiento;
+
     @Field("fecha_envio_email")
     private Instant fechaEnvioEmail;
 
     @DBRef
-    @Field("pedido")
-    private Pedido pedido;
+    @Field("pago")
+    @JsonIgnoreProperties(value = { "pedido" }, allowSetters = true)
+    private Pago pago;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -120,58 +95,6 @@ public class Factura implements Serializable {
         this.id = id;
     }
 
-    public String getReferencia() {
-        return this.referencia;
-    }
-
-    public Factura referencia(String referencia) {
-        this.setReferencia(referencia);
-        return this;
-    }
-
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
-    }
-
-    public String getCufe() {
-        return this.cufe;
-    }
-
-    public Factura cufe(String cufe) {
-        this.setCufe(cufe);
-        return this;
-    }
-
-    public void setCufe(String cufe) {
-        this.cufe = cufe;
-    }
-
-    public String getResolucionDian() {
-        return this.resolucionDian;
-    }
-
-    public Factura resolucionDian(String resolucionDian) {
-        this.setResolucionDian(resolucionDian);
-        return this;
-    }
-
-    public void setResolucionDian(String resolucionDian) {
-        this.resolucionDian = resolucionDian;
-    }
-
-    public LocalDate getFechaVigenciaResolucion() {
-        return this.fechaVigenciaResolucion;
-    }
-
-    public Factura fechaVigenciaResolucion(LocalDate fechaVigenciaResolucion) {
-        this.setFechaVigenciaResolucion(fechaVigenciaResolucion);
-        return this;
-    }
-
-    public void setFechaVigenciaResolucion(LocalDate fechaVigenciaResolucion) {
-        this.fechaVigenciaResolucion = fechaVigenciaResolucion;
-    }
-
     public String getPrefijo() {
         return this.prefijo;
     }
@@ -185,17 +108,17 @@ public class Factura implements Serializable {
         this.prefijo = prefijo;
     }
 
-    public Long getConsecutivo() {
-        return this.consecutivo;
+    public String getCufe() {
+        return this.cufe;
     }
 
-    public Factura consecutivo(Long consecutivo) {
-        this.setConsecutivo(consecutivo);
+    public Factura cufe(String cufe) {
+        this.setCufe(cufe);
         return this;
     }
 
-    public void setConsecutivo(Long consecutivo) {
-        this.consecutivo = consecutivo;
+    public void setCufe(String cufe) {
+        this.cufe = cufe;
     }
 
     public BigDecimal getSubtotal() {
@@ -250,45 +173,6 @@ public class Factura implements Serializable {
         this.valorIva = valorIva;
     }
 
-    public BigDecimal getRetefuente() {
-        return this.retefuente;
-    }
-
-    public Factura retefuente(BigDecimal retefuente) {
-        this.setRetefuente(retefuente);
-        return this;
-    }
-
-    public void setRetefuente(BigDecimal retefuente) {
-        this.retefuente = retefuente;
-    }
-
-    public BigDecimal getReteIva() {
-        return this.reteIva;
-    }
-
-    public Factura reteIva(BigDecimal reteIva) {
-        this.setReteIva(reteIva);
-        return this;
-    }
-
-    public void setReteIva(BigDecimal reteIva) {
-        this.reteIva = reteIva;
-    }
-
-    public BigDecimal getReteIca() {
-        return this.reteIca;
-    }
-
-    public Factura reteIca(BigDecimal reteIca) {
-        this.setReteIca(reteIca);
-        return this;
-    }
-
-    public void setReteIca(BigDecimal reteIca) {
-        this.reteIca = reteIca;
-    }
-
     public BigDecimal getTotal() {
         return this.total;
     }
@@ -300,32 +184,6 @@ public class Factura implements Serializable {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
-    }
-
-    public Instant getFechaEmision() {
-        return this.fechaEmision;
-    }
-
-    public Factura fechaEmision(Instant fechaEmision) {
-        this.setFechaEmision(fechaEmision);
-        return this;
-    }
-
-    public void setFechaEmision(Instant fechaEmision) {
-        this.fechaEmision = fechaEmision;
-    }
-
-    public LocalDate getFechaVencimiento() {
-        return this.fechaVencimiento;
-    }
-
-    public Factura fechaVencimiento(LocalDate fechaVencimiento) {
-        this.setFechaVencimiento(fechaVencimiento);
-        return this;
-    }
-
-    public void setFechaVencimiento(LocalDate fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
     }
 
     public String getNotasAdicionales() {
@@ -367,6 +225,32 @@ public class Factura implements Serializable {
         this.enviada = enviada;
     }
 
+    public Instant getFechaEmision() {
+        return this.fechaEmision;
+    }
+
+    public Factura fechaEmision(Instant fechaEmision) {
+        this.setFechaEmision(fechaEmision);
+        return this;
+    }
+
+    public void setFechaEmision(Instant fechaEmision) {
+        this.fechaEmision = fechaEmision;
+    }
+
+    public LocalDate getFechaVencimiento() {
+        return this.fechaVencimiento;
+    }
+
+    public Factura fechaVencimiento(LocalDate fechaVencimiento) {
+        this.setFechaVencimiento(fechaVencimiento);
+        return this;
+    }
+
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
     public Instant getFechaEnvioEmail() {
         return this.fechaEnvioEmail;
     }
@@ -380,16 +264,16 @@ public class Factura implements Serializable {
         this.fechaEnvioEmail = fechaEnvioEmail;
     }
 
-    public Pedido getPedido() {
-        return this.pedido;
+    public Pago getPago() {
+        return this.pago;
     }
 
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
+    public void setPago(Pago pago) {
+        this.pago = pago;
     }
 
-    public Factura pedido(Pedido pedido) {
-        this.setPedido(pedido);
+    public Factura pago(Pago pago) {
+        this.setPago(pago);
         return this;
     }
 
@@ -417,25 +301,18 @@ public class Factura implements Serializable {
     public String toString() {
         return "Factura{" +
             "id=" + getId() +
-            ", referencia='" + getReferencia() + "'" +
-            ", cufe='" + getCufe() + "'" +
-            ", resolucionDian='" + getResolucionDian() + "'" +
-            ", fechaVigenciaResolucion='" + getFechaVigenciaResolucion() + "'" +
             ", prefijo='" + getPrefijo() + "'" +
-            ", consecutivo=" + getConsecutivo() +
+            ", cufe='" + getCufe() + "'" +
             ", subtotal=" + getSubtotal() +
             ", descuentos=" + getDescuentos() +
             ", baseGravableIva=" + getBaseGravableIva() +
             ", valorIva=" + getValorIva() +
-            ", retefuente=" + getRetefuente() +
-            ", reteIva=" + getReteIva() +
-            ", reteIca=" + getReteIca() +
             ", total=" + getTotal() +
-            ", fechaEmision='" + getFechaEmision() + "'" +
-            ", fechaVencimiento='" + getFechaVencimiento() + "'" +
             ", notasAdicionales='" + getNotasAdicionales() + "'" +
             ", codigoQr='" + getCodigoQr() + "'" +
             ", enviada='" + getEnviada() + "'" +
+            ", fechaEmision='" + getFechaEmision() + "'" +
+            ", fechaVencimiento='" + getFechaVencimiento() + "'" +
             ", fechaEnvioEmail='" + getFechaEnvioEmail() + "'" +
             "}";
     }

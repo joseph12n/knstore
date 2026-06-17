@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260609235438"
+    "changelogDate": "20260616211955"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
@@ -24,13 +24,13 @@
       "fieldValidateRulesMaxlength": "100"
     },
     {
-      "fieldName": "departamento",
+      "fieldName": "municipio",
       "fieldType": "String",
       "fieldValidateRules": ["required", "maxlength"],
       "fieldValidateRulesMaxlength": "100"
     },
     {
-      "fieldName": "municipio",
+      "fieldName": "departamento",
       "fieldType": "String",
       "fieldValidateRules": ["required", "maxlength"],
       "fieldValidateRulesMaxlength": "100"

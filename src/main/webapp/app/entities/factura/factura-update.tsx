@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getEntities as getPedidos } from 'app/entities/pedido/pedido.reducer';
+import { getEntities as getPagos } from 'app/entities/pago/pago.reducer';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 
 import { createEntity, getEntity, reset, updateEntity } from './factura.reducer';
@@ -19,7 +19,7 @@ export const FacturaUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const pedidos = useAppSelector(state => state.pedido.entities);
+  const pagos = useAppSelector(state => state.pago.entities);
   const facturaEntity = useAppSelector(state => state.factura.entity);
   const loading = useAppSelector(state => state.factura.loading);
   const updating = useAppSelector(state => state.factura.updating);
@@ -36,7 +36,7 @@ export const FacturaUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getPedidos({}));
+    dispatch(getPagos({}));
   }, []);
 
   useEffect(() => {
@@ -46,9 +46,6 @@ export const FacturaUpdate = () => {
   }, [updateSuccess]);
 
   const saveEntity = values => {
-    if (values.consecutivo !== undefined && typeof values.consecutivo !== 'number') {
-      values.consecutivo = Number(values.consecutivo);
-    }
     if (values.subtotal !== undefined && typeof values.subtotal !== 'number') {
       values.subtotal = Number(values.subtotal);
     }
@@ -61,15 +58,6 @@ export const FacturaUpdate = () => {
     if (values.valorIva !== undefined && typeof values.valorIva !== 'number') {
       values.valorIva = Number(values.valorIva);
     }
-    if (values.retefuente !== undefined && typeof values.retefuente !== 'number') {
-      values.retefuente = Number(values.retefuente);
-    }
-    if (values.reteIva !== undefined && typeof values.reteIva !== 'number') {
-      values.reteIva = Number(values.reteIva);
-    }
-    if (values.reteIca !== undefined && typeof values.reteIca !== 'number') {
-      values.reteIca = Number(values.reteIca);
-    }
     if (values.total !== undefined && typeof values.total !== 'number') {
       values.total = Number(values.total);
     }
@@ -79,7 +67,7 @@ export const FacturaUpdate = () => {
     const entity = {
       ...facturaEntity,
       ...values,
-      pedido: pedidos.find(it => it.id.toString() === values.pedido?.toString()),
+      pago: pagos.find(it => it.id.toString() === values.pago?.toString()),
     };
 
     if (isNew) {
@@ -99,7 +87,7 @@ export const FacturaUpdate = () => {
           ...facturaEntity,
           fechaEmision: convertDateTimeFromServer(facturaEntity.fechaEmision),
           fechaEnvioEmail: convertDateTimeFromServer(facturaEntity.fechaEnvioEmail),
-          pedido: facturaEntity?.pedido?.id,
+          pago: facturaEntity?.pago?.id,
         };
 
   return (
@@ -119,14 +107,13 @@ export const FacturaUpdate = () => {
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew && <ValidatedField name="id" required readOnly id="factura-id" label="ID" validate={{ required: true }} />}
               <ValidatedField
-                label="Referencia"
-                id="factura-referencia"
-                name="referencia"
-                data-cy="referencia"
+                label="Prefijo"
+                id="factura-prefijo"
+                name="prefijo"
+                data-cy="prefijo"
                 type="text"
                 validate={{
-                  required: { value: true, message: 'Este campo es obligatorio.' },
-                  maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
+                  maxLength: { value: 10, message: 'Este campo no puede superar más de 10 caracteres.' },
                 }}
               />
               <ValidatedField
@@ -139,34 +126,6 @@ export const FacturaUpdate = () => {
                   maxLength: { value: 96, message: 'Este campo no puede superar más de 96 caracteres.' },
                 }}
               />
-              <ValidatedField
-                label="Resolucion Dian"
-                id="factura-resolucionDian"
-                name="resolucionDian"
-                data-cy="resolucionDian"
-                type="text"
-                validate={{
-                  maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
-                }}
-              />
-              <ValidatedField
-                label="Fecha Vigencia Resolucion"
-                id="factura-fechaVigenciaResolucion"
-                name="fechaVigenciaResolucion"
-                data-cy="fechaVigenciaResolucion"
-                type="date"
-              />
-              <ValidatedField
-                label="Prefijo"
-                id="factura-prefijo"
-                name="prefijo"
-                data-cy="prefijo"
-                type="text"
-                validate={{
-                  maxLength: { value: 10, message: 'Este campo no puede superar más de 10 caracteres.' },
-                }}
-              />
-              <ValidatedField label="Consecutivo" id="factura-consecutivo" name="consecutivo" data-cy="consecutivo" type="text" />
               <ValidatedField
                 label="Subtotal"
                 id="factura-subtotal"
@@ -213,39 +172,6 @@ export const FacturaUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Retefuente"
-                id="factura-retefuente"
-                name="retefuente"
-                data-cy="retefuente"
-                type="text"
-                validate={{
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField
-                label="Rete Iva"
-                id="factura-reteIva"
-                name="reteIva"
-                data-cy="reteIva"
-                type="text"
-                validate={{
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField
-                label="Rete Ica"
-                id="factura-reteIca"
-                name="reteIca"
-                data-cy="reteIca"
-                type="text"
-                validate={{
-                  min: { value: 0, message: 'Este campo debe ser mayor que 0.' },
-                  validate: v => isNumber(v) || 'Este campo debe ser un número.',
-                }}
-              />
-              <ValidatedField
                 label="Total"
                 id="factura-total"
                 name="total"
@@ -257,6 +183,18 @@ export const FacturaUpdate = () => {
                   validate: v => isNumber(v) || 'Este campo debe ser un número.',
                 }}
               />
+              <ValidatedField
+                label="Notas Adicionales"
+                id="factura-notasAdicionales"
+                name="notasAdicionales"
+                data-cy="notasAdicionales"
+                type="text"
+                validate={{
+                  maxLength: { value: 500, message: 'Este campo no puede superar más de 500 caracteres.' },
+                }}
+              />
+              <ValidatedField label="Codigo Qr" id="factura-codigoQr" name="codigoQr" data-cy="codigoQr" type="textarea" />
+              <ValidatedField label="Enviada" id="factura-enviada" name="enviada" data-cy="enviada" check type="checkbox" />
               <ValidatedField
                 label="Fecha Emision"
                 id="factura-fechaEmision"
@@ -273,18 +211,6 @@ export const FacturaUpdate = () => {
                 type="date"
               />
               <ValidatedField
-                label="Notas Adicionales"
-                id="factura-notasAdicionales"
-                name="notasAdicionales"
-                data-cy="notasAdicionales"
-                type="text"
-                validate={{
-                  maxLength: { value: 500, message: 'Este campo no puede superar más de 500 caracteres.' },
-                }}
-              />
-              <ValidatedField label="Codigo Qr" id="factura-codigoQr" name="codigoQr" data-cy="codigoQr" type="textarea" />
-              <ValidatedField label="Enviada" id="factura-enviada" name="enviada" data-cy="enviada" check type="checkbox" />
-              <ValidatedField
                 label="Fecha Envio Email"
                 id="factura-fechaEnvioEmail"
                 name="fechaEnvioEmail"
@@ -292,10 +218,10 @@ export const FacturaUpdate = () => {
                 type="datetime-local"
                 placeholder="YYYY-MM-DD HH:mm"
               />
-              <ValidatedField id="factura-pedido" name="pedido" data-cy="pedido" label="Pedido" type="select" required>
+              <ValidatedField id="factura-pago" name="pago" data-cy="pago" label="Pago" type="select" required>
                 <option value="" key="0" />
-                {pedidos
-                  ? pedidos.map(otherEntity => (
+                {pagos
+                  ? pagos.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
                         {otherEntity.id}
                       </option>

@@ -24,6 +24,31 @@ public class ItemPedido implements Serializable {
     private String id;
 
     @NotNull
+    @Size(max = 200)
+    @Field("nombre_producto")
+    private String nombreProducto;
+
+    @Size(max = 220)
+    @Field("slug_producto")
+    private String slugProducto;
+
+    @Size(max = 100)
+    @Field("marca_producto")
+    private String marcaProducto;
+
+    @Size(max = 100)
+    @Field("sku_producto")
+    private String skuProducto;
+
+    @Size(max = 50)
+    @Field("color_producto")
+    private String colorProducto;
+
+    @Size(max = 30)
+    @Field("talla_producto")
+    private String tallaProducto;
+
+    @NotNull
     @Min(value = 1)
     @Field("cantidad")
     private Integer cantidad;
@@ -50,18 +75,16 @@ public class ItemPedido implements Serializable {
 
     @DBRef
     @Field("pedido")
-    @JsonIgnoreProperties(value = { "direccion", "envio", "cuenta" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "direccion", "cuenta", "envio" }, allowSetters = true)
     private Pedido pedido;
 
     @DBRef
     @Field("producto")
-    @JsonIgnoreProperties(value = { "subcategoria" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "precio", "inventario", "imageneses", "categoria", "subcategoria", "marca", "categoriaIva" },
+        allowSetters = true
+    )
     private Producto producto;
-
-    @DBRef
-    @Field("variante")
-    @JsonIgnoreProperties(value = { "producto" }, allowSetters = true)
-    private VarianteProducto variante;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -76,6 +99,84 @@ public class ItemPedido implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getNombreProducto() {
+        return this.nombreProducto;
+    }
+
+    public ItemPedido nombreProducto(String nombreProducto) {
+        this.setNombreProducto(nombreProducto);
+        return this;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
+    public String getSlugProducto() {
+        return this.slugProducto;
+    }
+
+    public ItemPedido slugProducto(String slugProducto) {
+        this.setSlugProducto(slugProducto);
+        return this;
+    }
+
+    public void setSlugProducto(String slugProducto) {
+        this.slugProducto = slugProducto;
+    }
+
+    public String getMarcaProducto() {
+        return this.marcaProducto;
+    }
+
+    public ItemPedido marcaProducto(String marcaProducto) {
+        this.setMarcaProducto(marcaProducto);
+        return this;
+    }
+
+    public void setMarcaProducto(String marcaProducto) {
+        this.marcaProducto = marcaProducto;
+    }
+
+    public String getSkuProducto() {
+        return this.skuProducto;
+    }
+
+    public ItemPedido skuProducto(String skuProducto) {
+        this.setSkuProducto(skuProducto);
+        return this;
+    }
+
+    public void setSkuProducto(String skuProducto) {
+        this.skuProducto = skuProducto;
+    }
+
+    public String getColorProducto() {
+        return this.colorProducto;
+    }
+
+    public ItemPedido colorProducto(String colorProducto) {
+        this.setColorProducto(colorProducto);
+        return this;
+    }
+
+    public void setColorProducto(String colorProducto) {
+        this.colorProducto = colorProducto;
+    }
+
+    public String getTallaProducto() {
+        return this.tallaProducto;
+    }
+
+    public ItemPedido tallaProducto(String tallaProducto) {
+        this.setTallaProducto(tallaProducto);
+        return this;
+    }
+
+    public void setTallaProducto(String tallaProducto) {
+        this.tallaProducto = tallaProducto;
     }
 
     public Integer getCantidad() {
@@ -182,19 +283,6 @@ public class ItemPedido implements Serializable {
         return this;
     }
 
-    public VarianteProducto getVariante() {
-        return this.variante;
-    }
-
-    public void setVariante(VarianteProducto varianteProducto) {
-        this.variante = varianteProducto;
-    }
-
-    public ItemPedido variante(VarianteProducto varianteProducto) {
-        this.setVariante(varianteProducto);
-        return this;
-    }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -219,6 +307,12 @@ public class ItemPedido implements Serializable {
     public String toString() {
         return "ItemPedido{" +
             "id=" + getId() +
+            ", nombreProducto='" + getNombreProducto() + "'" +
+            ", slugProducto='" + getSlugProducto() + "'" +
+            ", marcaProducto='" + getMarcaProducto() + "'" +
+            ", skuProducto='" + getSkuProducto() + "'" +
+            ", colorProducto='" + getColorProducto() + "'" +
+            ", tallaProducto='" + getTallaProducto() + "'" +
             ", cantidad=" + getCantidad() +
             ", precioUnitario=" + getPrecioUnitario() +
             ", porcentajeIva=" + getPorcentajeIva() +

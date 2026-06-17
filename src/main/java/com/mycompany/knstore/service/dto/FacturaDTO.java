@@ -15,22 +15,11 @@ public class FacturaDTO implements Serializable {
 
     private String id;
 
-    @NotNull
-    @Size(max = 50)
-    private String referencia;
-
-    @Size(max = 96)
-    private String cufe;
-
-    @Size(max = 50)
-    private String resolucionDian;
-
-    private LocalDate fechaVigenciaResolucion;
-
     @Size(max = 10)
     private String prefijo;
 
-    private Long consecutivo;
+    @Size(max = 96)
+    private String cufe;
 
     @NotNull
     @DecimalMin(value = "0")
@@ -45,22 +34,9 @@ public class FacturaDTO implements Serializable {
     @DecimalMin(value = "0")
     private BigDecimal valorIva;
 
-    @DecimalMin(value = "0")
-    private BigDecimal retefuente;
-
-    @DecimalMin(value = "0")
-    private BigDecimal reteIva;
-
-    @DecimalMin(value = "0")
-    private BigDecimal reteIca;
-
     @NotNull
     @DecimalMin(value = "0")
     private BigDecimal total;
-
-    private Instant fechaEmision;
-
-    private LocalDate fechaVencimiento;
 
     @Size(max = 500)
     private String notasAdicionales;
@@ -70,10 +46,14 @@ public class FacturaDTO implements Serializable {
     @NotNull
     private Boolean enviada;
 
+    private Instant fechaEmision;
+
+    private LocalDate fechaVencimiento;
+
     private Instant fechaEnvioEmail;
 
     @NotNull
-    private PedidoDTO pedido;
+    private PagoDTO pago;
 
     public String getId() {
         return id;
@@ -81,38 +61,6 @@ public class FacturaDTO implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getReferencia() {
-        return referencia;
-    }
-
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
-    }
-
-    public String getCufe() {
-        return cufe;
-    }
-
-    public void setCufe(String cufe) {
-        this.cufe = cufe;
-    }
-
-    public String getResolucionDian() {
-        return resolucionDian;
-    }
-
-    public void setResolucionDian(String resolucionDian) {
-        this.resolucionDian = resolucionDian;
-    }
-
-    public LocalDate getFechaVigenciaResolucion() {
-        return fechaVigenciaResolucion;
-    }
-
-    public void setFechaVigenciaResolucion(LocalDate fechaVigenciaResolucion) {
-        this.fechaVigenciaResolucion = fechaVigenciaResolucion;
     }
 
     public String getPrefijo() {
@@ -123,12 +71,12 @@ public class FacturaDTO implements Serializable {
         this.prefijo = prefijo;
     }
 
-    public Long getConsecutivo() {
-        return consecutivo;
+    public String getCufe() {
+        return cufe;
     }
 
-    public void setConsecutivo(Long consecutivo) {
-        this.consecutivo = consecutivo;
+    public void setCufe(String cufe) {
+        this.cufe = cufe;
     }
 
     public BigDecimal getSubtotal() {
@@ -163,52 +111,12 @@ public class FacturaDTO implements Serializable {
         this.valorIva = valorIva;
     }
 
-    public BigDecimal getRetefuente() {
-        return retefuente;
-    }
-
-    public void setRetefuente(BigDecimal retefuente) {
-        this.retefuente = retefuente;
-    }
-
-    public BigDecimal getReteIva() {
-        return reteIva;
-    }
-
-    public void setReteIva(BigDecimal reteIva) {
-        this.reteIva = reteIva;
-    }
-
-    public BigDecimal getReteIca() {
-        return reteIca;
-    }
-
-    public void setReteIca(BigDecimal reteIca) {
-        this.reteIca = reteIca;
-    }
-
     public BigDecimal getTotal() {
         return total;
     }
 
     public void setTotal(BigDecimal total) {
         this.total = total;
-    }
-
-    public Instant getFechaEmision() {
-        return fechaEmision;
-    }
-
-    public void setFechaEmision(Instant fechaEmision) {
-        this.fechaEmision = fechaEmision;
-    }
-
-    public LocalDate getFechaVencimiento() {
-        return fechaVencimiento;
-    }
-
-    public void setFechaVencimiento(LocalDate fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
     }
 
     public String getNotasAdicionales() {
@@ -235,6 +143,22 @@ public class FacturaDTO implements Serializable {
         this.enviada = enviada;
     }
 
+    public Instant getFechaEmision() {
+        return fechaEmision;
+    }
+
+    public void setFechaEmision(Instant fechaEmision) {
+        this.fechaEmision = fechaEmision;
+    }
+
+    public LocalDate getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
     public Instant getFechaEnvioEmail() {
         return fechaEnvioEmail;
     }
@@ -243,12 +167,12 @@ public class FacturaDTO implements Serializable {
         this.fechaEnvioEmail = fechaEnvioEmail;
     }
 
-    public PedidoDTO getPedido() {
-        return pedido;
+    public PagoDTO getPago() {
+        return pago;
     }
 
-    public void setPedido(PedidoDTO pedido) {
-        this.pedido = pedido;
+    public void setPago(PagoDTO pago) {
+        this.pago = pago;
     }
 
     @Override
@@ -277,27 +201,20 @@ public class FacturaDTO implements Serializable {
     public String toString() {
         return "FacturaDTO{" +
             "id='" + getId() + "'" +
-            ", referencia='" + getReferencia() + "'" +
-            ", cufe='" + getCufe() + "'" +
-            ", resolucionDian='" + getResolucionDian() + "'" +
-            ", fechaVigenciaResolucion='" + getFechaVigenciaResolucion() + "'" +
             ", prefijo='" + getPrefijo() + "'" +
-            ", consecutivo=" + getConsecutivo() +
+            ", cufe='" + getCufe() + "'" +
             ", subtotal=" + getSubtotal() +
             ", descuentos=" + getDescuentos() +
             ", baseGravableIva=" + getBaseGravableIva() +
             ", valorIva=" + getValorIva() +
-            ", retefuente=" + getRetefuente() +
-            ", reteIva=" + getReteIva() +
-            ", reteIca=" + getReteIca() +
             ", total=" + getTotal() +
-            ", fechaEmision='" + getFechaEmision() + "'" +
-            ", fechaVencimiento='" + getFechaVencimiento() + "'" +
             ", notasAdicionales='" + getNotasAdicionales() + "'" +
             ", codigoQr='" + getCodigoQr() + "'" +
             ", enviada='" + getEnviada() + "'" +
+            ", fechaEmision='" + getFechaEmision() + "'" +
+            ", fechaVencimiento='" + getFechaVencimiento() + "'" +
             ", fechaEnvioEmail='" + getFechaEnvioEmail() + "'" +
-            ", pedido=" + getPedido() +
+            ", pago=" + getPago() +
             "}";
     }
 }

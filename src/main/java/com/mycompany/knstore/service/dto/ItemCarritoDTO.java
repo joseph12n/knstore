@@ -29,8 +29,6 @@ public class ItemCarritoDTO implements Serializable {
     @NotNull
     private ProductoDTO producto;
 
-    private VarianteProductoDTO variante;
-
     public String getId() {
         return id;
     }
@@ -79,14 +77,6 @@ public class ItemCarritoDTO implements Serializable {
         this.producto = producto;
     }
 
-    public VarianteProductoDTO getVariante() {
-        return variante;
-    }
-
-    public void setVariante(VarianteProductoDTO variante) {
-        this.variante = variante;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -118,7 +108,6 @@ public class ItemCarritoDTO implements Serializable {
             ", subtotal=" + getSubtotal() +
             ", carrito=" + getCarrito() +
             ", producto=" + getProducto() +
-            ", variante=" + getVariante() +
             "}";
     }
 }

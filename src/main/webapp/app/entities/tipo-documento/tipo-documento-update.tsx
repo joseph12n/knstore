@@ -79,13 +79,6 @@ export const TipoDocumentoUpdate = () => {
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew && <ValidatedField name="id" required readOnly id="tipo-documento-id" label="ID" validate={{ required: true }} />}
-              <ValidatedField label="Estado" id="tipo-documento-estado" name="estado" data-cy="estado" type="select">
-                {estadoTipoDocumentoValues.map(estadoTipoDocumento => (
-                  <option value={estadoTipoDocumento} key={estadoTipoDocumento}>
-                    {estadoTipoDocumento}
-                  </option>
-                ))}
-              </ValidatedField>
               <ValidatedField
                 label="Sigla"
                 id="tipo-documento-sigla"
@@ -108,6 +101,13 @@ export const TipoDocumentoUpdate = () => {
                   maxLength: { value: 60, message: 'Este campo no puede superar más de 60 caracteres.' },
                 }}
               />
+              <ValidatedField label="Estado" id="tipo-documento-estado" name="estado" data-cy="estado" type="select">
+                {estadoTipoDocumentoValues.map(estadoTipoDocumento => (
+                  <option value={estadoTipoDocumento} key={estadoTipoDocumento}>
+                    {estadoTipoDocumento}
+                  </option>
+                ))}
+              </ValidatedField>
               <Button as={Link as any} id="cancel-save" data-cy="entityCreateCancelButton" to="/tipo-documento" replace variant="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

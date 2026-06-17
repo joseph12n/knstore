@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260609235738"
+    "changelogDate": "20260616212255"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
@@ -84,19 +84,18 @@
       "relationshipValidateRules": "required"
     },
     {
-      "otherEntityName": "envio",
-      "otherEntityRelationshipName": "pedido",
-      "relationshipName": "envio",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-one",
-      "relationshipValidateRules": "required"
-    },
-    {
       "otherEntityName": "cuenta",
       "relationshipName": "cuenta",
       "relationshipSide": "left",
       "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "envio",
+      "otherEntityRelationshipName": "pedido",
+      "relationshipName": "envio",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
     }
   ],
   "searchEngine": "no",

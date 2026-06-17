@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Envio;
+import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.domain.enumeration.EstadoEnvio;
 import com.mycompany.knstore.domain.enumeration.TipoServicioEnvio;
 import com.mycompany.knstore.repository.EnvioRepository;
@@ -37,11 +38,11 @@ import org.springframework.test.web.servlet.MockMvc;
 @WithMockUser
 class EnvioResourceIT {
 
-    private static final String DEFAULT_NUMERO_RASTREO = "AAAAAAAAAA";
-    private static final String UPDATED_NUMERO_RASTREO = "BBBBBBBBBB";
-
     private static final String DEFAULT_TRANSPORTADORA = "AAAAAAAAAA";
     private static final String UPDATED_TRANSPORTADORA = "BBBBBBBBBB";
+
+    private static final String DEFAULT_NUMERO_RASTREO = "AAAAAAAAAA";
+    private static final String UPDATED_NUMERO_RASTREO = "BBBBBBBBBB";
 
     private static final TipoServicioEnvio DEFAULT_TIPO_SERVICIO = TipoServicioEnvio.ESTANDAR;
     private static final TipoServicioEnvio UPDATED_TIPO_SERVICIO = TipoServicioEnvio.EXPRESS;
@@ -99,9 +100,9 @@ class EnvioResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Envio createEntity() {
-        return new Envio()
-            .numeroRastreo(DEFAULT_NUMERO_RASTREO)
+        Envio envio = new Envio()
             .transportadora(DEFAULT_TRANSPORTADORA)
+            .numeroRastreo(DEFAULT_NUMERO_RASTREO)
             .tipoServicio(DEFAULT_TIPO_SERVICIO)
             .estado(DEFAULT_ESTADO)
             .costoEnvio(DEFAULT_COSTO_ENVIO)
@@ -112,6 +113,12 @@ class EnvioResourceIT {
             .fechaDespacho(DEFAULT_FECHA_DESPACHO)
             .fechaEntregaEstimada(DEFAULT_FECHA_ENTREGA_ESTIMADA)
             .fechaEntrega(DEFAULT_FECHA_ENTREGA);
+        // Add required entity
+        Pedido pedido;
+        pedido = PedidoResourceIT.createEntity();
+        pedido.setId("fixed-id-for-tests");
+        envio.setPedido(pedido);
+        return envio;
     }
 
     /**
@@ -121,9 +128,9 @@ class EnvioResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Envio createUpdatedEntity() {
-        return new Envio()
-            .numeroRastreo(UPDATED_NUMERO_RASTREO)
+        Envio updatedEnvio = new Envio()
             .transportadora(UPDATED_TRANSPORTADORA)
+            .numeroRastreo(UPDATED_NUMERO_RASTREO)
             .tipoServicio(UPDATED_TIPO_SERVICIO)
             .estado(UPDATED_ESTADO)
             .costoEnvio(UPDATED_COSTO_ENVIO)
@@ -134,6 +141,12 @@ class EnvioResourceIT {
             .fechaDespacho(UPDATED_FECHA_DESPACHO)
             .fechaEntregaEstimada(UPDATED_FECHA_ENTREGA_ESTIMADA)
             .fechaEntrega(UPDATED_FECHA_ENTREGA);
+        // Add required entity
+        Pedido pedido;
+        pedido = PedidoResourceIT.createUpdatedEntity();
+        pedido.setId("fixed-id-for-tests");
+        updatedEnvio.setPedido(pedido);
+        return updatedEnvio;
     }
 
     @BeforeEach
@@ -216,8 +229,8 @@ class EnvioResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(envio.getId())))
-            .andExpect(jsonPath("$.[*].numeroRastreo").value(hasItem(DEFAULT_NUMERO_RASTREO)))
             .andExpect(jsonPath("$.[*].transportadora").value(hasItem(DEFAULT_TRANSPORTADORA)))
+            .andExpect(jsonPath("$.[*].numeroRastreo").value(hasItem(DEFAULT_NUMERO_RASTREO)))
             .andExpect(jsonPath("$.[*].tipoServicio").value(hasItem(DEFAULT_TIPO_SERVICIO.toString())))
             .andExpect(jsonPath("$.[*].estado").value(hasItem(DEFAULT_ESTADO.toString())))
             .andExpect(jsonPath("$.[*].costoEnvio").value(hasItem(sameNumber(DEFAULT_COSTO_ENVIO))))
@@ -241,8 +254,8 @@ class EnvioResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(envio.getId()))
-            .andExpect(jsonPath("$.numeroRastreo").value(DEFAULT_NUMERO_RASTREO))
             .andExpect(jsonPath("$.transportadora").value(DEFAULT_TRANSPORTADORA))
+            .andExpect(jsonPath("$.numeroRastreo").value(DEFAULT_NUMERO_RASTREO))
             .andExpect(jsonPath("$.tipoServicio").value(DEFAULT_TIPO_SERVICIO.toString()))
             .andExpect(jsonPath("$.estado").value(DEFAULT_ESTADO.toString()))
             .andExpect(jsonPath("$.costoEnvio").value(sameNumber(DEFAULT_COSTO_ENVIO)))
@@ -271,8 +284,8 @@ class EnvioResourceIT {
         // Update the envio
         Envio updatedEnvio = envioRepository.findById(envio.getId()).orElseThrow();
         updatedEnvio
-            .numeroRastreo(UPDATED_NUMERO_RASTREO)
             .transportadora(UPDATED_TRANSPORTADORA)
+            .numeroRastreo(UPDATED_NUMERO_RASTREO)
             .tipoServicio(UPDATED_TIPO_SERVICIO)
             .estado(UPDATED_ESTADO)
             .costoEnvio(UPDATED_COSTO_ENVIO)
@@ -365,7 +378,7 @@ class EnvioResourceIT {
         partialUpdatedEnvio.setId(envio.getId());
 
         partialUpdatedEnvio
-            .transportadora(UPDATED_TRANSPORTADORA)
+            .numeroRastreo(UPDATED_NUMERO_RASTREO)
             .tipoServicio(UPDATED_TIPO_SERVICIO)
             .costoEnvio(UPDATED_COSTO_ENVIO)
             .pesoKg(UPDATED_PESO_KG)
@@ -400,8 +413,8 @@ class EnvioResourceIT {
         partialUpdatedEnvio.setId(envio.getId());
 
         partialUpdatedEnvio
-            .numeroRastreo(UPDATED_NUMERO_RASTREO)
             .transportadora(UPDATED_TRANSPORTADORA)
+            .numeroRastreo(UPDATED_NUMERO_RASTREO)
             .tipoServicio(UPDATED_TIPO_SERVICIO)
             .estado(UPDATED_ESTADO)
             .costoEnvio(UPDATED_COSTO_ENVIO)

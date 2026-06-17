@@ -116,9 +116,6 @@ export const Cuenta = () => {
                 <th className="hand" onClick={sort('numDocumento')}>
                   Num Documento <FontAwesomeIcon icon={getSortIconByFieldName('numDocumento')} />
                 </th>
-                <th className="hand" onClick={sort('tipoPersona')}>
-                  Tipo Persona <FontAwesomeIcon icon={getSortIconByFieldName('tipoPersona')} />
-                </th>
                 <th className="hand" onClick={sort('primerNombre')}>
                   Primer Nombre <FontAwesomeIcon icon={getSortIconByFieldName('primerNombre')} />
                 </th>
@@ -131,17 +128,17 @@ export const Cuenta = () => {
                 <th className="hand" onClick={sort('segundoApellido')}>
                   Segundo Apellido <FontAwesomeIcon icon={getSortIconByFieldName('segundoApellido')} />
                 </th>
+                <th className="hand" onClick={sort('genero')}>
+                  Genero <FontAwesomeIcon icon={getSortIconByFieldName('genero')} />
+                </th>
+                <th className="hand" onClick={sort('fechaNacimiento')}>
+                  Fecha Nacimiento <FontAwesomeIcon icon={getSortIconByFieldName('fechaNacimiento')} />
+                </th>
                 <th className="hand" onClick={sort('celular')}>
                   Celular <FontAwesomeIcon icon={getSortIconByFieldName('celular')} />
                 </th>
                 <th className="hand" onClick={sort('telefono')}>
                   Telefono <FontAwesomeIcon icon={getSortIconByFieldName('telefono')} />
-                </th>
-                <th className="hand" onClick={sort('fechaNacimiento')}>
-                  Fecha Nacimiento <FontAwesomeIcon icon={getSortIconByFieldName('fechaNacimiento')} />
-                </th>
-                <th className="hand" onClick={sort('genero')}>
-                  Genero <FontAwesomeIcon icon={getSortIconByFieldName('genero')} />
                 </th>
                 <th className="hand" onClick={sort('fotoPerfil')}>
                   Foto Perfil <FontAwesomeIcon icon={getSortIconByFieldName('fotoPerfil')} />
@@ -167,19 +164,18 @@ export const Cuenta = () => {
                     </Button>
                   </td>
                   <td>{cuenta.numDocumento}</td>
-                  <td>{cuenta.tipoPersona}</td>
                   <td>{cuenta.primerNombre}</td>
                   <td>{cuenta.segundoNombre}</td>
                   <td>{cuenta.primerApellido}</td>
                   <td>{cuenta.segundoApellido}</td>
-                  <td>{cuenta.celular}</td>
-                  <td>{cuenta.telefono}</td>
+                  <td>{cuenta.genero}</td>
                   <td>
                     {cuenta.fechaNacimiento ? (
                       <TextFormat type="date" value={cuenta.fechaNacimiento} format={APP_LOCAL_DATE_FORMAT} />
                     ) : null}
                   </td>
-                  <td>{cuenta.genero}</td>
+                  <td>{cuenta.celular}</td>
+                  <td>{cuenta.telefono}</td>
                   <td>
                     {cuenta.fotoPerfil ? (
                       <div>

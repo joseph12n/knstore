@@ -24,11 +24,11 @@ public class DireccionDTO implements Serializable {
 
     @NotNull
     @Size(max = 100)
-    private String departamento;
+    private String municipio;
 
     @NotNull
     @Size(max = 100)
-    private String municipio;
+    private String departamento;
 
     @NotNull
     private Boolean activo;
@@ -68,20 +68,20 @@ public class DireccionDTO implements Serializable {
         this.localidad = localidad;
     }
 
-    public String getDepartamento() {
-        return departamento;
-    }
-
-    public void setDepartamento(String departamento) {
-        this.departamento = departamento;
-    }
-
     public String getMunicipio() {
         return municipio;
     }
 
     public void setMunicipio(String municipio) {
         this.municipio = municipio;
+    }
+
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 
     public Boolean getActivo() {
@@ -129,8 +129,8 @@ public class DireccionDTO implements Serializable {
             ", direccion='" + getDireccion() + "'" +
             ", barrio='" + getBarrio() + "'" +
             ", localidad='" + getLocalidad() + "'" +
-            ", departamento='" + getDepartamento() + "'" +
             ", municipio='" + getMunicipio() + "'" +
+            ", departamento='" + getDepartamento() + "'" +
             ", activo='" + getActivo() + "'" +
             ", cuenta=" + getCuenta() +
             "}";

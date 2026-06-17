@@ -73,8 +73,6 @@ export const PedidoDetail = () => {
           <dd>{pedidoEntity.userAgent}</dd>
           <dt>Direccion</dt>
           <dd>{pedidoEntity.direccion ? pedidoEntity.direccion.id : ''}</dd>
-          <dt>Envio</dt>
-          <dd>{pedidoEntity.envio ? pedidoEntity.envio.id : ''}</dd>
           <dt>Cuenta</dt>
           <dd>{pedidoEntity.cuenta ? pedidoEntity.cuenta.id : ''}</dd>
         </dl>

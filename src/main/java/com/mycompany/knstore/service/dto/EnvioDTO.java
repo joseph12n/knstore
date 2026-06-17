@@ -17,10 +17,10 @@ public class EnvioDTO implements Serializable {
     private String id;
 
     @Size(max = 100)
-    private String numeroRastreo;
+    private String transportadora;
 
     @Size(max = 100)
-    private String transportadora;
+    private String numeroRastreo;
 
     private TipoServicioEnvio tipoServicio;
 
@@ -48,6 +48,9 @@ public class EnvioDTO implements Serializable {
 
     private Instant fechaEntrega;
 
+    @NotNull
+    private PedidoDTO pedido;
+
     public String getId() {
         return id;
     }
@@ -56,20 +59,20 @@ public class EnvioDTO implements Serializable {
         this.id = id;
     }
 
-    public String getNumeroRastreo() {
-        return numeroRastreo;
-    }
-
-    public void setNumeroRastreo(String numeroRastreo) {
-        this.numeroRastreo = numeroRastreo;
-    }
-
     public String getTransportadora() {
         return transportadora;
     }
 
     public void setTransportadora(String transportadora) {
         this.transportadora = transportadora;
+    }
+
+    public String getNumeroRastreo() {
+        return numeroRastreo;
+    }
+
+    public void setNumeroRastreo(String numeroRastreo) {
+        this.numeroRastreo = numeroRastreo;
     }
 
     public TipoServicioEnvio getTipoServicio() {
@@ -152,6 +155,14 @@ public class EnvioDTO implements Serializable {
         this.fechaEntrega = fechaEntrega;
     }
 
+    public PedidoDTO getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(PedidoDTO pedido) {
+        this.pedido = pedido;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -178,8 +189,8 @@ public class EnvioDTO implements Serializable {
     public String toString() {
         return "EnvioDTO{" +
             "id='" + getId() + "'" +
-            ", numeroRastreo='" + getNumeroRastreo() + "'" +
             ", transportadora='" + getTransportadora() + "'" +
+            ", numeroRastreo='" + getNumeroRastreo() + "'" +
             ", tipoServicio='" + getTipoServicio() + "'" +
             ", estado='" + getEstado() + "'" +
             ", costoEnvio=" + getCostoEnvio() +
@@ -190,6 +201,7 @@ public class EnvioDTO implements Serializable {
             ", fechaDespacho='" + getFechaDespacho() + "'" +
             ", fechaEntregaEstimada='" + getFechaEntregaEstimada() + "'" +
             ", fechaEntrega='" + getFechaEntrega() + "'" +
+            ", pedido=" + getPedido() +
             "}";
     }
 }

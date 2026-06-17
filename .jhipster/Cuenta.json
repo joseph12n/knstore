@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260609234838"
+    "changelogDate": "20260616210955"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
@@ -10,12 +10,6 @@
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
       "fieldValidateRulesMaxlength": "20"
-    },
-    {
-      "fieldName": "tipoPersona",
-      "fieldType": "TipoPersona",
-      "fieldValidateRules": ["required"],
-      "fieldValues": "NATURAL (Natural),JURIDICA (Juridica)"
     },
     {
       "fieldName": "primerNombre",
@@ -42,6 +36,15 @@
       "fieldValidateRulesMaxlength": "50"
     },
     {
+      "fieldName": "genero",
+      "fieldType": "Genero",
+      "fieldValues": "MASCULINO (Masculino),FEMENINO (Femenino),PREFIERO_NO_DECIR (PrefieroNoDecir)"
+    },
+    {
+      "fieldName": "fechaNacimiento",
+      "fieldType": "LocalDate"
+    },
+    {
       "fieldName": "celular",
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
@@ -52,15 +55,6 @@
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
       "fieldValidateRulesMaxlength": "15"
-    },
-    {
-      "fieldName": "fechaNacimiento",
-      "fieldType": "LocalDate"
-    },
-    {
-      "fieldName": "genero",
-      "fieldType": "Genero",
-      "fieldValues": "MASCULINO (Masculino),FEMENINO (Femenino),NO_BINARIO (NoBinario),PREFIERO_NO_DECIR (PrefieroNoDecir)"
     },
     {
       "fieldName": "fotoPerfil",

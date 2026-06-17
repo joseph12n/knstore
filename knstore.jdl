@@ -42,7 +42,6 @@ enum MetodoPago {
   NEQUI(Nequi),
   DAVIPLATA(Daviplata),
   EFECTY(Efecty),
-  BALOTO(Baloto),
   CONTRA_ENTREGA(ContraEntrega)
 }
 
@@ -73,15 +72,8 @@ enum EstadoTipoDocumento {
 enum Genero {
   MASCULINO(Masculino),
   FEMENINO(Femenino),
-  NO_BINARIO(NoBinario),
   PREFIERO_NO_DECIR(PrefieroNoDecir)
 }
-
-enum TipoPersona {
-  NATURAL(Natural),
-  JURIDICA(Juridica)
-}
-
 
 enum TipoComplemento {
   APARTAMENTO(Apartamento),
@@ -112,22 +104,21 @@ enum TipoServicioEnvio {
 }
 
 entity TipoDocumento {
-  estado EstadoTipoDocumento required
   sigla String required maxlength(10) unique
   nombreTipo String required maxlength(60) unique
+  estado EstadoTipoDocumento required
 }
 
 entity Cuenta {
   numDocumento String maxlength(20)
-  tipoPersona TipoPersona required
   primerNombre String required maxlength(50)
   segundoNombre String maxlength(50)
   primerApellido String required maxlength(50)
   segundoApellido String maxlength(50)
+  genero Genero
+  fechaNacimiento LocalDate
   celular String maxlength(15)
   telefono String maxlength(15)
-  fechaNacimiento LocalDate
-  genero Genero
   fotoPerfil ImageBlob
   activo Boolean required
 }
@@ -148,40 +139,58 @@ entity Subcategoria {
   activo Boolean required
 }
 
-entity Producto {
-  nombre String required maxlength(200)
-  slug String required maxlength(220) unique
-  descripcion TextBlob
-  imagen ImageBlob
-  imagenAlt String maxlength(200)
-  marca String maxlength(100)
-  referencia String maxlength(60)
-  codigoBarras String maxlength(50)
-  unidadMedida String maxlength(20)
-  pesoKg BigDecimal min(0)
-  largoCm BigDecimal min(0)
-  anchoCm BigDecimal min(0)
-  altoCm BigDecimal min(0)
-  categoriaIva CategoriaIVA required
-  precioCompra BigDecimal required min(0)
-  precioVenta BigDecimal required min(0)
-  ganancia BigDecimal
-  margen BigDecimal
-  garantiaMeses Integer min(0)
-  destacado Boolean required
-  activo Boolean required
+entity Marca {
+  nombre String required maxlength(100)
+  slug   String required maxlength(120) unique
 }
 
-entity VarianteProducto {
-  sku String maxlength(100) unique
-  color String maxlength(50)
-  talla String maxlength(30)
-  codigoBarras String maxlength(50)
-  stock Integer required min(0)
-  stockMinimo Integer min(0)
-  ubicacionBodega String maxlength(80)
+enum EstadoIVA { ACTIVO, INACTIVO }
+
+entity CategoriaIVA {
+  nombre     String     required maxlength(60)
+  porcentaje BigDecimal required min(0) max(100)
+  estado     EstadoIVA  required
+}
+
+entity Producto {
+  nombre        String   required maxlength(200)
+  slug          String   required maxlength(220) unique
+  referencia    String   maxlength(60)
+  sku           String   required maxlength(100) unique
+  color         String   maxlength(50)
+  talla         String   maxlength(30)
+  codigoBarras  String   maxlength(50)
+  unidadMedida  String   maxlength(20)
+  descripcion   TextBlob
+  destacado     Boolean  required
+  activo        Boolean  required
+}
+
+entity ProductoPrecio {
+  precioCompra    BigDecimal required min(0)
+  precioVenta     BigDecimal required min(0)
   precioAdicional BigDecimal min(0)
-  activo Boolean required
+  ganancia        BigDecimal
+}
+enum UbicacionBodega {
+  BODEGA_PRINCIPAL,
+  BODEGA_SECUNDARIA,
+  BODEGA_NORTE,
+  BODEGA_SUR,
+  EXHIBICION,
+  CONSIGNACION
+}
+
+entity ProductoInventario {
+  stock            Integer         required min(0)
+  stockMinimo      Integer         min(0)
+  ubicacionBodega  UbicacionBodega
+  garantiaMeses    Integer         min(0)
+}
+entity ProductoImagen {
+  imagen     ImageBlob required
+  imagenAlt  String    maxlength(200)
+  esPrincipal Boolean  required
 }
 
 entity EtiquetaProducto {
@@ -192,8 +201,8 @@ entity Direccion {
   direccion String required maxlength(100)
   barrio String maxlength(100)
   localidad String maxlength(100)
-  departamento String required maxlength(100)
   municipio String required maxlength(100)
+  departamento String required maxlength(100)
   activo Boolean required
 }
 
@@ -223,6 +232,12 @@ entity Pedido {
 }
 
 entity ItemPedido {
+  nombreProducto String required maxlength(200)
+  slugProducto String maxlength(220)
+  marcaProducto String maxlength(100)
+  skuProducto String maxlength(100)
+  colorProducto String maxlength(50)
+  tallaProducto String maxlength(30)
   cantidad Integer required min(1)
   precioUnitario BigDecimal required min(0)
   porcentajeIva BigDecimal min(0)
@@ -238,13 +253,13 @@ entity Pago {
   referenciaPasarela String maxlength(200)
   codigoAutorizacion String maxlength(100)
   descripcionRespuesta String maxlength(300)
-  fechaPago Instant
   intentos Integer min(0)
+  fechaPago Instant
 }
 
 entity Envio {
-  numeroRastreo String maxlength(100)
   transportadora String maxlength(100)
+  numeroRastreo String maxlength(100)
   tipoServicio TipoServicioEnvio
   estado EstadoEnvio required
   costoEnvio BigDecimal min(0)
@@ -258,55 +273,54 @@ entity Envio {
 }
 
 entity Factura {
-  referencia String required maxlength(50) unique
-  cufe String maxlength(96)
-  resolucionDian String maxlength(50)
-  fechaVigenciaResolucion LocalDate
-  prefijo String maxlength(10)
-  consecutivo Long
+  prefijo String maxlength(10) //FE-12345
+  cufe String maxlength(96) //cadena alfanumérica de 96 caracteres
   subtotal BigDecimal required min(0)
   descuentos BigDecimal min(0)
   baseGravableIva BigDecimal min(0)
   valorIva BigDecimal min(0)
-  retefuente BigDecimal min(0)
-  reteIva BigDecimal min(0)
-  reteIca BigDecimal min(0)
   total BigDecimal required min(0)
-  fechaEmision Instant
-  fechaVencimiento LocalDate
   notasAdicionales String maxlength(500)
   codigoQr TextBlob
   enviada Boolean required
+  fechaEmision Instant
+  fechaVencimiento LocalDate
   fechaEnvioEmail Instant
 }
 
 relationship ManyToOne {
   Cuenta{tipoDocumento(sigla)} to TipoDocumento
   Subcategoria{categoria(nombre) required} to Categoria
-  Producto{subcategoria(nombre) required} to Subcategoria
-  VarianteProducto{producto(nombre) required} to Producto
+  Producto{categoria(nombre) required} to Categoria //campos agregados
+  Producto{subcategoria(nombre) required} to Subcategoria // campos agregados
   EtiquetaProducto{producto(nombre) required} to Producto
   Direccion{cuenta required} to Cuenta
   ItemCarrito{carrito required} to Carrito
   ItemCarrito{producto(nombre) required} to Producto
-  ItemCarrito{variante(sku)} to VarianteProducto
   Pedido{cuenta required} to Cuenta
   ItemPedido{pedido required} to Pedido
   ItemPedido{producto(nombre) required} to Producto
-  ItemPedido{variante(sku)} to VarianteProducto
   Pago{pedido required} to Pedido
+  Factura{pago required} to Pago
+  Producto{marca}       to Marca
+  Producto{categoriaIva} to CategoriaIVA
+
 }
 
 relationship OneToOne {
   Cuenta{user(login) required} to User with builtInEntity
   Carrito{cuenta required} to Cuenta
-  Factura{pedido required} to Pedido
   Pedido{direccion required} to Direccion{pedido}
-  Pedido{envio required} to Envio{pedido}
+  Envio{pedido required} to Pedido{envio}
+  Producto{precio} to ProductoPrecio{producto}
+  Producto{inventario} to ProductoInventario{producto}
+}
+relationship OneToMany {
+  Producto{imagenes} to ProductoImagen{producto}
 }
 
 dto * with mapstruct
 service * with serviceImpl
 paginate Producto, Categoria, Subcategoria with pagination
 paginate Pedido, Pago, Envio, Factura with pagination
-paginate Direccion, VarianteProducto, EtiquetaProducto, Cuenta with pagination
+paginate Direccion, EtiquetaProducto, Cuenta with pagination

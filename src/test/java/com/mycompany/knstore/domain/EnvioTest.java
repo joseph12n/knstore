@@ -30,10 +30,8 @@ class EnvioTest {
 
         envio.setPedido(pedidoBack);
         assertThat(envio.getPedido()).isEqualTo(pedidoBack);
-        assertThat(pedidoBack.getEnvio()).isEqualTo(envio);
 
         envio.pedido(null);
         assertThat(envio.getPedido()).isNull();
-        assertThat(pedidoBack.getEnvio()).isNull();
     }
 }

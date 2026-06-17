@@ -54,9 +54,6 @@ public class PedidoDTO implements Serializable {
     private DireccionDTO direccion;
 
     @NotNull
-    private EnvioDTO envio;
-
-    @NotNull
     private CuentaDTO cuenta;
 
     public String getId() {
@@ -163,14 +160,6 @@ public class PedidoDTO implements Serializable {
         this.direccion = direccion;
     }
 
-    public EnvioDTO getEnvio() {
-        return envio;
-    }
-
-    public void setEnvio(EnvioDTO envio) {
-        this.envio = envio;
-    }
-
     public CuentaDTO getCuenta() {
         return cuenta;
     }
@@ -217,7 +206,6 @@ public class PedidoDTO implements Serializable {
             ", ipOrigen='" + getIpOrigen() + "'" +
             ", userAgent='" + getUserAgent() + "'" +
             ", direccion=" + getDireccion() +
-            ", envio=" + getEnvio() +
             ", cuenta=" + getCuenta() +
             "}";
     }

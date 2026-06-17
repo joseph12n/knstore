@@ -35,10 +35,10 @@ public class PagoDTO implements Serializable {
     @Size(max = 300)
     private String descripcionRespuesta;
 
-    private Instant fechaPago;
-
     @Min(value = 0)
     private Integer intentos;
+
+    private Instant fechaPago;
 
     @NotNull
     private PedidoDTO pedido;
@@ -99,20 +99,20 @@ public class PagoDTO implements Serializable {
         this.descripcionRespuesta = descripcionRespuesta;
     }
 
-    public Instant getFechaPago() {
-        return fechaPago;
-    }
-
-    public void setFechaPago(Instant fechaPago) {
-        this.fechaPago = fechaPago;
-    }
-
     public Integer getIntentos() {
         return intentos;
     }
 
     public void setIntentos(Integer intentos) {
         this.intentos = intentos;
+    }
+
+    public Instant getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(Instant fechaPago) {
+        this.fechaPago = fechaPago;
     }
 
     public PedidoDTO getPedido() {
@@ -155,8 +155,8 @@ public class PagoDTO implements Serializable {
             ", referenciaPasarela='" + getReferenciaPasarela() + "'" +
             ", codigoAutorizacion='" + getCodigoAutorizacion() + "'" +
             ", descripcionRespuesta='" + getDescripcionRespuesta() + "'" +
-            ", fechaPago='" + getFechaPago() + "'" +
             ", intentos=" + getIntentos() +
+            ", fechaPago='" + getFechaPago() + "'" +
             ", pedido=" + getPedido() +
             "}";
     }

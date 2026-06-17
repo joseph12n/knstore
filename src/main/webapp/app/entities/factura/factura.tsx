@@ -113,23 +113,11 @@ export const Factura = () => {
                 <th className="hand" onClick={sort('id')}>
                   ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
-                <th className="hand" onClick={sort('referencia')}>
-                  Referencia <FontAwesomeIcon icon={getSortIconByFieldName('referencia')} />
-                </th>
-                <th className="hand" onClick={sort('cufe')}>
-                  Cufe <FontAwesomeIcon icon={getSortIconByFieldName('cufe')} />
-                </th>
-                <th className="hand" onClick={sort('resolucionDian')}>
-                  Resolucion Dian <FontAwesomeIcon icon={getSortIconByFieldName('resolucionDian')} />
-                </th>
-                <th className="hand" onClick={sort('fechaVigenciaResolucion')}>
-                  Fecha Vigencia Resolucion <FontAwesomeIcon icon={getSortIconByFieldName('fechaVigenciaResolucion')} />
-                </th>
                 <th className="hand" onClick={sort('prefijo')}>
                   Prefijo <FontAwesomeIcon icon={getSortIconByFieldName('prefijo')} />
                 </th>
-                <th className="hand" onClick={sort('consecutivo')}>
-                  Consecutivo <FontAwesomeIcon icon={getSortIconByFieldName('consecutivo')} />
+                <th className="hand" onClick={sort('cufe')}>
+                  Cufe <FontAwesomeIcon icon={getSortIconByFieldName('cufe')} />
                 </th>
                 <th className="hand" onClick={sort('subtotal')}>
                   Subtotal <FontAwesomeIcon icon={getSortIconByFieldName('subtotal')} />
@@ -143,23 +131,8 @@ export const Factura = () => {
                 <th className="hand" onClick={sort('valorIva')}>
                   Valor Iva <FontAwesomeIcon icon={getSortIconByFieldName('valorIva')} />
                 </th>
-                <th className="hand" onClick={sort('retefuente')}>
-                  Retefuente <FontAwesomeIcon icon={getSortIconByFieldName('retefuente')} />
-                </th>
-                <th className="hand" onClick={sort('reteIva')}>
-                  Rete Iva <FontAwesomeIcon icon={getSortIconByFieldName('reteIva')} />
-                </th>
-                <th className="hand" onClick={sort('reteIca')}>
-                  Rete Ica <FontAwesomeIcon icon={getSortIconByFieldName('reteIca')} />
-                </th>
                 <th className="hand" onClick={sort('total')}>
                   Total <FontAwesomeIcon icon={getSortIconByFieldName('total')} />
-                </th>
-                <th className="hand" onClick={sort('fechaEmision')}>
-                  Fecha Emision <FontAwesomeIcon icon={getSortIconByFieldName('fechaEmision')} />
-                </th>
-                <th className="hand" onClick={sort('fechaVencimiento')}>
-                  Fecha Vencimiento <FontAwesomeIcon icon={getSortIconByFieldName('fechaVencimiento')} />
                 </th>
                 <th className="hand" onClick={sort('notasAdicionales')}>
                   Notas Adicionales <FontAwesomeIcon icon={getSortIconByFieldName('notasAdicionales')} />
@@ -170,11 +143,17 @@ export const Factura = () => {
                 <th className="hand" onClick={sort('enviada')}>
                   Enviada <FontAwesomeIcon icon={getSortIconByFieldName('enviada')} />
                 </th>
+                <th className="hand" onClick={sort('fechaEmision')}>
+                  Fecha Emision <FontAwesomeIcon icon={getSortIconByFieldName('fechaEmision')} />
+                </th>
+                <th className="hand" onClick={sort('fechaVencimiento')}>
+                  Fecha Vencimiento <FontAwesomeIcon icon={getSortIconByFieldName('fechaVencimiento')} />
+                </th>
                 <th className="hand" onClick={sort('fechaEnvioEmail')}>
                   Fecha Envio Email <FontAwesomeIcon icon={getSortIconByFieldName('fechaEnvioEmail')} />
                 </th>
                 <th>
-                  Pedido <FontAwesomeIcon icon="sort" />
+                  Pago <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -187,37 +166,26 @@ export const Factura = () => {
                       {factura.id}
                     </Button>
                   </td>
-                  <td>{factura.referencia}</td>
-                  <td>{factura.cufe}</td>
-                  <td>{factura.resolucionDian}</td>
-                  <td>
-                    {factura.fechaVigenciaResolucion ? (
-                      <TextFormat type="date" value={factura.fechaVigenciaResolucion} format={APP_LOCAL_DATE_FORMAT} />
-                    ) : null}
-                  </td>
                   <td>{factura.prefijo}</td>
-                  <td>{factura.consecutivo}</td>
+                  <td>{factura.cufe}</td>
                   <td>{factura.subtotal}</td>
                   <td>{factura.descuentos}</td>
                   <td>{factura.baseGravableIva}</td>
                   <td>{factura.valorIva}</td>
-                  <td>{factura.retefuente}</td>
-                  <td>{factura.reteIva}</td>
-                  <td>{factura.reteIca}</td>
                   <td>{factura.total}</td>
+                  <td>{factura.notasAdicionales}</td>
+                  <td>{factura.codigoQr}</td>
+                  <td>{factura.enviada ? 'true' : 'false'}</td>
                   <td>{factura.fechaEmision ? <TextFormat type="date" value={factura.fechaEmision} format={APP_DATE_FORMAT} /> : null}</td>
                   <td>
                     {factura.fechaVencimiento ? (
                       <TextFormat type="date" value={factura.fechaVencimiento} format={APP_LOCAL_DATE_FORMAT} />
                     ) : null}
                   </td>
-                  <td>{factura.notasAdicionales}</td>
-                  <td>{factura.codigoQr}</td>
-                  <td>{factura.enviada ? 'true' : 'false'}</td>
                   <td>
                     {factura.fechaEnvioEmail ? <TextFormat type="date" value={factura.fechaEnvioEmail} format={APP_DATE_FORMAT} /> : null}
                   </td>
-                  <td>{factura.pedido ? <Link to={`/pedido/${factura.pedido.id}`}>{factura.pedido.id}</Link> : ''}</td>
+                  <td>{factura.pago ? <Link to={`/pago/${factura.pago.id}`}>{factura.pago.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button as={Link as any} to={`/factura/${factura.id}`} variant="info" size="sm" data-cy="entityDetailsButton">

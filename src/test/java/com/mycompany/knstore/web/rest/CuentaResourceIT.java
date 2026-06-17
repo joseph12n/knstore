@@ -13,7 +13,6 @@ import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.domain.User;
 import com.mycompany.knstore.domain.enumeration.Genero;
-import com.mycompany.knstore.domain.enumeration.TipoPersona;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.UserRepository;
 import com.mycompany.knstore.service.CuentaService;
@@ -50,9 +49,6 @@ class CuentaResourceIT {
     private static final String DEFAULT_NUM_DOCUMENTO = "AAAAAAAAAA";
     private static final String UPDATED_NUM_DOCUMENTO = "BBBBBBBBBB";
 
-    private static final TipoPersona DEFAULT_TIPO_PERSONA = TipoPersona.NATURAL;
-    private static final TipoPersona UPDATED_TIPO_PERSONA = TipoPersona.JURIDICA;
-
     private static final String DEFAULT_PRIMER_NOMBRE = "AAAAAAAAAA";
     private static final String UPDATED_PRIMER_NOMBRE = "BBBBBBBBBB";
 
@@ -65,17 +61,17 @@ class CuentaResourceIT {
     private static final String DEFAULT_SEGUNDO_APELLIDO = "AAAAAAAAAA";
     private static final String UPDATED_SEGUNDO_APELLIDO = "BBBBBBBBBB";
 
+    private static final Genero DEFAULT_GENERO = Genero.MASCULINO;
+    private static final Genero UPDATED_GENERO = Genero.FEMENINO;
+
+    private static final LocalDate DEFAULT_FECHA_NACIMIENTO = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_FECHA_NACIMIENTO = LocalDate.now(ZoneId.systemDefault());
+
     private static final String DEFAULT_CELULAR = "AAAAAAAAAA";
     private static final String UPDATED_CELULAR = "BBBBBBBBBB";
 
     private static final String DEFAULT_TELEFONO = "AAAAAAAAAA";
     private static final String UPDATED_TELEFONO = "BBBBBBBBBB";
-
-    private static final LocalDate DEFAULT_FECHA_NACIMIENTO = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_FECHA_NACIMIENTO = LocalDate.now(ZoneId.systemDefault());
-
-    private static final Genero DEFAULT_GENERO = Genero.MASCULINO;
-    private static final Genero UPDATED_GENERO = Genero.FEMENINO;
 
     private static final byte[] DEFAULT_FOTO_PERFIL = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_FOTO_PERFIL = TestUtil.createByteArray(1, "1");
@@ -122,15 +118,14 @@ class CuentaResourceIT {
     public static Cuenta createEntity() {
         Cuenta cuenta = new Cuenta()
             .numDocumento(DEFAULT_NUM_DOCUMENTO)
-            .tipoPersona(DEFAULT_TIPO_PERSONA)
             .primerNombre(DEFAULT_PRIMER_NOMBRE)
             .segundoNombre(DEFAULT_SEGUNDO_NOMBRE)
             .primerApellido(DEFAULT_PRIMER_APELLIDO)
             .segundoApellido(DEFAULT_SEGUNDO_APELLIDO)
+            .genero(DEFAULT_GENERO)
+            .fechaNacimiento(DEFAULT_FECHA_NACIMIENTO)
             .celular(DEFAULT_CELULAR)
             .telefono(DEFAULT_TELEFONO)
-            .fechaNacimiento(DEFAULT_FECHA_NACIMIENTO)
-            .genero(DEFAULT_GENERO)
             .fotoPerfil(DEFAULT_FOTO_PERFIL)
             .fotoPerfilContentType(DEFAULT_FOTO_PERFIL_CONTENT_TYPE)
             .activo(DEFAULT_ACTIVO);
@@ -150,15 +145,14 @@ class CuentaResourceIT {
     public static Cuenta createUpdatedEntity() {
         Cuenta updatedCuenta = new Cuenta()
             .numDocumento(UPDATED_NUM_DOCUMENTO)
-            .tipoPersona(UPDATED_TIPO_PERSONA)
             .primerNombre(UPDATED_PRIMER_NOMBRE)
             .segundoNombre(UPDATED_SEGUNDO_NOMBRE)
             .primerApellido(UPDATED_PRIMER_APELLIDO)
             .segundoApellido(UPDATED_SEGUNDO_APELLIDO)
+            .genero(UPDATED_GENERO)
+            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
             .celular(UPDATED_CELULAR)
             .telefono(UPDATED_TELEFONO)
-            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
-            .genero(UPDATED_GENERO)
             .fotoPerfil(UPDATED_FOTO_PERFIL)
             .fotoPerfilContentType(UPDATED_FOTO_PERFIL_CONTENT_TYPE)
             .activo(UPDATED_ACTIVO);
@@ -224,22 +218,6 @@ class CuentaResourceIT {
     }
 
     @Test
-    void checkTipoPersonaIsRequired() throws Exception {
-        long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
-        cuenta.setTipoPersona(null);
-
-        // Create the Cuenta, which fails.
-        CuentaDTO cuentaDTO = cuentaMapper.toDto(cuenta);
-
-        restCuentaMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cuentaDTO)))
-            .andExpect(status().isBadRequest());
-
-        assertSameRepositoryCount(databaseSizeBeforeTest);
-    }
-
-    @Test
     void checkPrimerNombreIsRequired() throws Exception {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
@@ -299,15 +277,14 @@ class CuentaResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(cuenta.getId())))
             .andExpect(jsonPath("$.[*].numDocumento").value(hasItem(DEFAULT_NUM_DOCUMENTO)))
-            .andExpect(jsonPath("$.[*].tipoPersona").value(hasItem(DEFAULT_TIPO_PERSONA.toString())))
             .andExpect(jsonPath("$.[*].primerNombre").value(hasItem(DEFAULT_PRIMER_NOMBRE)))
             .andExpect(jsonPath("$.[*].segundoNombre").value(hasItem(DEFAULT_SEGUNDO_NOMBRE)))
             .andExpect(jsonPath("$.[*].primerApellido").value(hasItem(DEFAULT_PRIMER_APELLIDO)))
             .andExpect(jsonPath("$.[*].segundoApellido").value(hasItem(DEFAULT_SEGUNDO_APELLIDO)))
+            .andExpect(jsonPath("$.[*].genero").value(hasItem(DEFAULT_GENERO.toString())))
+            .andExpect(jsonPath("$.[*].fechaNacimiento").value(hasItem(DEFAULT_FECHA_NACIMIENTO.toString())))
             .andExpect(jsonPath("$.[*].celular").value(hasItem(DEFAULT_CELULAR)))
             .andExpect(jsonPath("$.[*].telefono").value(hasItem(DEFAULT_TELEFONO)))
-            .andExpect(jsonPath("$.[*].fechaNacimiento").value(hasItem(DEFAULT_FECHA_NACIMIENTO.toString())))
-            .andExpect(jsonPath("$.[*].genero").value(hasItem(DEFAULT_GENERO.toString())))
             .andExpect(jsonPath("$.[*].fotoPerfilContentType").value(hasItem(DEFAULT_FOTO_PERFIL_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].fotoPerfil").value(hasItem(Base64.getEncoder().encodeToString(DEFAULT_FOTO_PERFIL))))
             .andExpect(jsonPath("$.[*].activo").value(hasItem(DEFAULT_ACTIVO)));
@@ -342,15 +319,14 @@ class CuentaResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(cuenta.getId()))
             .andExpect(jsonPath("$.numDocumento").value(DEFAULT_NUM_DOCUMENTO))
-            .andExpect(jsonPath("$.tipoPersona").value(DEFAULT_TIPO_PERSONA.toString()))
             .andExpect(jsonPath("$.primerNombre").value(DEFAULT_PRIMER_NOMBRE))
             .andExpect(jsonPath("$.segundoNombre").value(DEFAULT_SEGUNDO_NOMBRE))
             .andExpect(jsonPath("$.primerApellido").value(DEFAULT_PRIMER_APELLIDO))
             .andExpect(jsonPath("$.segundoApellido").value(DEFAULT_SEGUNDO_APELLIDO))
+            .andExpect(jsonPath("$.genero").value(DEFAULT_GENERO.toString()))
+            .andExpect(jsonPath("$.fechaNacimiento").value(DEFAULT_FECHA_NACIMIENTO.toString()))
             .andExpect(jsonPath("$.celular").value(DEFAULT_CELULAR))
             .andExpect(jsonPath("$.telefono").value(DEFAULT_TELEFONO))
-            .andExpect(jsonPath("$.fechaNacimiento").value(DEFAULT_FECHA_NACIMIENTO.toString()))
-            .andExpect(jsonPath("$.genero").value(DEFAULT_GENERO.toString()))
             .andExpect(jsonPath("$.fotoPerfilContentType").value(DEFAULT_FOTO_PERFIL_CONTENT_TYPE))
             .andExpect(jsonPath("$.fotoPerfil").value(Base64.getEncoder().encodeToString(DEFAULT_FOTO_PERFIL)))
             .andExpect(jsonPath("$.activo").value(DEFAULT_ACTIVO));
@@ -373,15 +349,14 @@ class CuentaResourceIT {
         Cuenta updatedCuenta = cuentaRepository.findById(cuenta.getId()).orElseThrow();
         updatedCuenta
             .numDocumento(UPDATED_NUM_DOCUMENTO)
-            .tipoPersona(UPDATED_TIPO_PERSONA)
             .primerNombre(UPDATED_PRIMER_NOMBRE)
             .segundoNombre(UPDATED_SEGUNDO_NOMBRE)
             .primerApellido(UPDATED_PRIMER_APELLIDO)
             .segundoApellido(UPDATED_SEGUNDO_APELLIDO)
+            .genero(UPDATED_GENERO)
+            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
             .celular(UPDATED_CELULAR)
             .telefono(UPDATED_TELEFONO)
-            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
-            .genero(UPDATED_GENERO)
             .fotoPerfil(UPDATED_FOTO_PERFIL)
             .fotoPerfilContentType(UPDATED_FOTO_PERFIL_CONTENT_TYPE)
             .activo(UPDATED_ACTIVO);
@@ -467,9 +442,8 @@ class CuentaResourceIT {
         partialUpdatedCuenta.setId(cuenta.getId());
 
         partialUpdatedCuenta
-            .segundoApellido(UPDATED_SEGUNDO_APELLIDO)
-            .celular(UPDATED_CELULAR)
             .genero(UPDATED_GENERO)
+            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
             .fotoPerfil(UPDATED_FOTO_PERFIL)
             .fotoPerfilContentType(UPDATED_FOTO_PERFIL_CONTENT_TYPE)
             .activo(UPDATED_ACTIVO);
@@ -501,15 +475,14 @@ class CuentaResourceIT {
 
         partialUpdatedCuenta
             .numDocumento(UPDATED_NUM_DOCUMENTO)
-            .tipoPersona(UPDATED_TIPO_PERSONA)
             .primerNombre(UPDATED_PRIMER_NOMBRE)
             .segundoNombre(UPDATED_SEGUNDO_NOMBRE)
             .primerApellido(UPDATED_PRIMER_APELLIDO)
             .segundoApellido(UPDATED_SEGUNDO_APELLIDO)
+            .genero(UPDATED_GENERO)
+            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
             .celular(UPDATED_CELULAR)
             .telefono(UPDATED_TELEFONO)
-            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
-            .genero(UPDATED_GENERO)
             .fotoPerfil(UPDATED_FOTO_PERFIL)
             .fotoPerfilContentType(UPDATED_FOTO_PERFIL_CONTENT_TYPE)
             .activo(UPDATED_ACTIVO);

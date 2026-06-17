@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getPedidos } from 'app/entities/pedido/pedido.reducer';
 import { getEntities as getProductos } from 'app/entities/producto/producto.reducer';
-import { getEntities as getVarianteProductos } from 'app/entities/variante-producto/variante-producto.reducer';
 
 import { createEntity, getEntity, reset, updateEntity } from './item-pedido.reducer';
 
@@ -22,7 +21,6 @@ export const ItemPedidoUpdate = () => {
 
   const pedidos = useAppSelector(state => state.pedido.entities);
   const productos = useAppSelector(state => state.producto.entities);
-  const varianteProductos = useAppSelector(state => state.varianteProducto.entities);
   const itemPedidoEntity = useAppSelector(state => state.itemPedido.entity);
   const loading = useAppSelector(state => state.itemPedido.loading);
   const updating = useAppSelector(state => state.itemPedido.updating);
@@ -41,7 +39,6 @@ export const ItemPedidoUpdate = () => {
 
     dispatch(getPedidos({}));
     dispatch(getProductos({}));
-    dispatch(getVarianteProductos({}));
   }, []);
 
   useEffect(() => {
@@ -75,7 +72,6 @@ export const ItemPedidoUpdate = () => {
       ...values,
       pedido: pedidos.find(it => it.id.toString() === values.pedido?.toString()),
       producto: productos.find(it => it.id.toString() === values.producto?.toString()),
-      variante: varianteProductos.find(it => it.id.toString() === values.variante?.toString()),
     };
 
     if (isNew) {
@@ -92,7 +88,6 @@ export const ItemPedidoUpdate = () => {
           ...itemPedidoEntity,
           pedido: itemPedidoEntity?.pedido?.id,
           producto: itemPedidoEntity?.producto?.id,
-          variante: itemPedidoEntity?.variante?.id,
         };
 
   return (
@@ -111,6 +106,67 @@ export const ItemPedidoUpdate = () => {
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew && <ValidatedField name="id" required readOnly id="item-pedido-id" label="ID" validate={{ required: true }} />}
+              <ValidatedField
+                label="Nombre Producto"
+                id="item-pedido-nombreProducto"
+                name="nombreProducto"
+                data-cy="nombreProducto"
+                type="text"
+                validate={{
+                  required: { value: true, message: 'Este campo es obligatorio.' },
+                  maxLength: { value: 200, message: 'Este campo no puede superar más de 200 caracteres.' },
+                }}
+              />
+              <ValidatedField
+                label="Slug Producto"
+                id="item-pedido-slugProducto"
+                name="slugProducto"
+                data-cy="slugProducto"
+                type="text"
+                validate={{
+                  maxLength: { value: 220, message: 'Este campo no puede superar más de 220 caracteres.' },
+                }}
+              />
+              <ValidatedField
+                label="Marca Producto"
+                id="item-pedido-marcaProducto"
+                name="marcaProducto"
+                data-cy="marcaProducto"
+                type="text"
+                validate={{
+                  maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
+                }}
+              />
+              <ValidatedField
+                label="Sku Producto"
+                id="item-pedido-skuProducto"
+                name="skuProducto"
+                data-cy="skuProducto"
+                type="text"
+                validate={{
+                  maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
+                }}
+              />
+              <ValidatedField
+                label="Color Producto"
+                id="item-pedido-colorProducto"
+                name="colorProducto"
+                data-cy="colorProducto"
+                type="text"
+                validate={{
+                  maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
+                }}
+              />
+              <ValidatedField
+                label="Talla Producto"
+                id="item-pedido-tallaProducto"
+                name="tallaProducto"
+                data-cy="tallaProducto"
+                type="text"
+                validate={{
+                  maxLength: { value: 30, message: 'Este campo no puede superar más de 30 caracteres.' },
+                }}
+              />
               <ValidatedField
                 label="Cantidad"
                 id="item-pedido-cantidad"
@@ -191,16 +247,6 @@ export const ItemPedidoUpdate = () => {
                   : null}
               </ValidatedField>
               <FormText>Este campo es obligatorio.</FormText>
-              <ValidatedField id="item-pedido-variante" name="variante" data-cy="variante" label="Variante" type="select">
-                <option value="" key="0" />
-                {varianteProductos
-                  ? varianteProductos.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.sku}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
               <Button as={Link as any} id="cancel-save" data-cy="entityCreateCancelButton" to="/item-pedido" replace variant="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

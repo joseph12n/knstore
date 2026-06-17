@@ -5,8 +5,8 @@ export interface IDireccion {
   direccion?: string;
   barrio?: string | null;
   localidad?: string | null;
-  departamento?: string;
   municipio?: string;
+  departamento?: string;
   activo?: boolean;
   cuenta?: ICuenta;
 }

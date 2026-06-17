@@ -56,11 +56,11 @@ class PagoResourceIT {
     private static final String DEFAULT_DESCRIPCION_RESPUESTA = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPCION_RESPUESTA = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_FECHA_PAGO = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_FECHA_PAGO = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
     private static final Integer DEFAULT_INTENTOS = 0;
     private static final Integer UPDATED_INTENTOS = 1;
+
+    private static final Instant DEFAULT_FECHA_PAGO = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_FECHA_PAGO = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String ENTITY_API_URL = "/api/pagos";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -95,8 +95,8 @@ class PagoResourceIT {
             .referenciaPasarela(DEFAULT_REFERENCIA_PASARELA)
             .codigoAutorizacion(DEFAULT_CODIGO_AUTORIZACION)
             .descripcionRespuesta(DEFAULT_DESCRIPCION_RESPUESTA)
-            .fechaPago(DEFAULT_FECHA_PAGO)
-            .intentos(DEFAULT_INTENTOS);
+            .intentos(DEFAULT_INTENTOS)
+            .fechaPago(DEFAULT_FECHA_PAGO);
         // Add required entity
         Pedido pedido;
         pedido = PedidoResourceIT.createEntity();
@@ -119,8 +119,8 @@ class PagoResourceIT {
             .referenciaPasarela(UPDATED_REFERENCIA_PASARELA)
             .codigoAutorizacion(UPDATED_CODIGO_AUTORIZACION)
             .descripcionRespuesta(UPDATED_DESCRIPCION_RESPUESTA)
-            .fechaPago(UPDATED_FECHA_PAGO)
-            .intentos(UPDATED_INTENTOS);
+            .intentos(UPDATED_INTENTOS)
+            .fechaPago(UPDATED_FECHA_PAGO);
         // Add required entity
         Pedido pedido;
         pedido = PedidoResourceIT.createUpdatedEntity();
@@ -247,8 +247,8 @@ class PagoResourceIT {
             .andExpect(jsonPath("$.[*].referenciaPasarela").value(hasItem(DEFAULT_REFERENCIA_PASARELA)))
             .andExpect(jsonPath("$.[*].codigoAutorizacion").value(hasItem(DEFAULT_CODIGO_AUTORIZACION)))
             .andExpect(jsonPath("$.[*].descripcionRespuesta").value(hasItem(DEFAULT_DESCRIPCION_RESPUESTA)))
-            .andExpect(jsonPath("$.[*].fechaPago").value(hasItem(DEFAULT_FECHA_PAGO.toString())))
-            .andExpect(jsonPath("$.[*].intentos").value(hasItem(DEFAULT_INTENTOS)));
+            .andExpect(jsonPath("$.[*].intentos").value(hasItem(DEFAULT_INTENTOS)))
+            .andExpect(jsonPath("$.[*].fechaPago").value(hasItem(DEFAULT_FECHA_PAGO.toString())));
     }
 
     @Test
@@ -268,8 +268,8 @@ class PagoResourceIT {
             .andExpect(jsonPath("$.referenciaPasarela").value(DEFAULT_REFERENCIA_PASARELA))
             .andExpect(jsonPath("$.codigoAutorizacion").value(DEFAULT_CODIGO_AUTORIZACION))
             .andExpect(jsonPath("$.descripcionRespuesta").value(DEFAULT_DESCRIPCION_RESPUESTA))
-            .andExpect(jsonPath("$.fechaPago").value(DEFAULT_FECHA_PAGO.toString()))
-            .andExpect(jsonPath("$.intentos").value(DEFAULT_INTENTOS));
+            .andExpect(jsonPath("$.intentos").value(DEFAULT_INTENTOS))
+            .andExpect(jsonPath("$.fechaPago").value(DEFAULT_FECHA_PAGO.toString()));
     }
 
     @Test
@@ -294,8 +294,8 @@ class PagoResourceIT {
             .referenciaPasarela(UPDATED_REFERENCIA_PASARELA)
             .codigoAutorizacion(UPDATED_CODIGO_AUTORIZACION)
             .descripcionRespuesta(UPDATED_DESCRIPCION_RESPUESTA)
-            .fechaPago(UPDATED_FECHA_PAGO)
-            .intentos(UPDATED_INTENTOS);
+            .intentos(UPDATED_INTENTOS)
+            .fechaPago(UPDATED_FECHA_PAGO);
         PagoDTO pagoDTO = pagoMapper.toDto(updatedPago);
 
         restPagoMockMvc
@@ -378,7 +378,7 @@ class PagoResourceIT {
             .referenciaPasarela(UPDATED_REFERENCIA_PASARELA)
             .codigoAutorizacion(UPDATED_CODIGO_AUTORIZACION)
             .descripcionRespuesta(UPDATED_DESCRIPCION_RESPUESTA)
-            .fechaPago(UPDATED_FECHA_PAGO);
+            .intentos(UPDATED_INTENTOS);
 
         restPagoMockMvc
             .perform(
@@ -412,8 +412,8 @@ class PagoResourceIT {
             .referenciaPasarela(UPDATED_REFERENCIA_PASARELA)
             .codigoAutorizacion(UPDATED_CODIGO_AUTORIZACION)
             .descripcionRespuesta(UPDATED_DESCRIPCION_RESPUESTA)
-            .fechaPago(UPDATED_FECHA_PAGO)
-            .intentos(UPDATED_INTENTOS);
+            .intentos(UPDATED_INTENTOS)
+            .fechaPago(UPDATED_FECHA_PAGO);
 
         restPagoMockMvc
             .perform(

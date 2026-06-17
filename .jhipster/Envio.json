@@ -1,18 +1,18 @@
 {
   "annotations": {
-    "changelogDate": "20260610000038"
+    "changelogDate": "20260616212555"
   },
   "applications": ["knstore"],
   "dto": "mapstruct",
   "fields": [
     {
-      "fieldName": "numeroRastreo",
+      "fieldName": "transportadora",
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
       "fieldValidateRulesMaxlength": "100"
     },
     {
-      "fieldName": "transportadora",
+      "fieldName": "numeroRastreo",
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
       "fieldValidateRulesMaxlength": "100"
@@ -78,8 +78,9 @@
       "otherEntityName": "pedido",
       "otherEntityRelationshipName": "envio",
       "relationshipName": "pedido",
-      "relationshipSide": "right",
-      "relationshipType": "one-to-one"
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "searchEngine": "no",

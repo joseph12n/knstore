@@ -1,7 +1,7 @@
 package com.mycompany.knstore.domain;
 
 import static com.mycompany.knstore.domain.FacturaTestSamples.*;
-import static com.mycompany.knstore.domain.PedidoTestSamples.*;
+import static com.mycompany.knstore.domain.PagoTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mycompany.knstore.web.rest.TestUtil;
@@ -24,14 +24,14 @@ class FacturaTest {
     }
 
     @Test
-    void pedidoTest() {
+    void pagoTest() {
         Factura factura = getFacturaRandomSampleGenerator();
-        Pedido pedidoBack = getPedidoRandomSampleGenerator();
+        Pago pagoBack = getPagoRandomSampleGenerator();
 
-        factura.setPedido(pedidoBack);
-        assertThat(factura.getPedido()).isEqualTo(pedidoBack);
+        factura.setPago(pagoBack);
+        assertThat(factura.getPago()).isEqualTo(pagoBack);
 
-        factura.pedido(null);
-        assertThat(factura.getPedido()).isNull();
+        factura.pago(null);
+        assertThat(factura.getPago()).isNull();
     }
 }

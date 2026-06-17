@@ -54,13 +54,13 @@ export const PagoDetail = () => {
           </dt>
           <dd>{pagoEntity.descripcionRespuesta}</dd>
           <dt>
-            <span id="fechaPago">Fecha Pago</span>
-          </dt>
-          <dd>{pagoEntity.fechaPago ? <TextFormat value={pagoEntity.fechaPago} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
-          <dt>
             <span id="intentos">Intentos</span>
           </dt>
           <dd>{pagoEntity.intentos}</dd>
+          <dt>
+            <span id="fechaPago">Fecha Pago</span>
+          </dt>
+          <dd>{pagoEntity.fechaPago ? <TextFormat value={pagoEntity.fechaPago} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
           <dt>Pedido</dt>
           <dd>{pagoEntity.pedido ? pagoEntity.pedido.id : ''}</dd>
         </dl>

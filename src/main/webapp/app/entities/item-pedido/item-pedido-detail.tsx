@@ -28,6 +28,30 @@ export const ItemPedidoDetail = () => {
           </dt>
           <dd>{itemPedidoEntity.id}</dd>
           <dt>
+            <span id="nombreProducto">Nombre Producto</span>
+          </dt>
+          <dd>{itemPedidoEntity.nombreProducto}</dd>
+          <dt>
+            <span id="slugProducto">Slug Producto</span>
+          </dt>
+          <dd>{itemPedidoEntity.slugProducto}</dd>
+          <dt>
+            <span id="marcaProducto">Marca Producto</span>
+          </dt>
+          <dd>{itemPedidoEntity.marcaProducto}</dd>
+          <dt>
+            <span id="skuProducto">Sku Producto</span>
+          </dt>
+          <dd>{itemPedidoEntity.skuProducto}</dd>
+          <dt>
+            <span id="colorProducto">Color Producto</span>
+          </dt>
+          <dd>{itemPedidoEntity.colorProducto}</dd>
+          <dt>
+            <span id="tallaProducto">Talla Producto</span>
+          </dt>
+          <dd>{itemPedidoEntity.tallaProducto}</dd>
+          <dt>
             <span id="cantidad">Cantidad</span>
           </dt>
           <dd>{itemPedidoEntity.cantidad}</dd>
@@ -55,8 +79,6 @@ export const ItemPedidoDetail = () => {
           <dd>{itemPedidoEntity.pedido ? itemPedidoEntity.pedido.id : ''}</dd>
           <dt>Producto</dt>
           <dd>{itemPedidoEntity.producto ? itemPedidoEntity.producto.nombre : ''}</dd>
-          <dt>Variante</dt>
-          <dd>{itemPedidoEntity.variante ? itemPedidoEntity.variante.sku : ''}</dd>
         </dl>
         <Button as={Link as any} to="/item-pedido" replace variant="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Volver</span>

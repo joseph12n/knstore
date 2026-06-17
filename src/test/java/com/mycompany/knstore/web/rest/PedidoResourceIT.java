@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.domain.Direccion;
-import com.mycompany.knstore.domain.Envio;
 import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.PedidoRepository;
@@ -114,11 +113,6 @@ class PedidoResourceIT {
         direccion.setId("fixed-id-for-tests");
         pedido.setDireccion(direccion);
         // Add required entity
-        Envio envio;
-        envio = EnvioResourceIT.createEntity();
-        envio.setId("fixed-id-for-tests");
-        pedido.setEnvio(envio);
-        // Add required entity
         Cuenta cuenta;
         cuenta = CuentaResourceIT.createEntity();
         cuenta.setId("fixed-id-for-tests");
@@ -150,11 +144,6 @@ class PedidoResourceIT {
         direccion = DireccionResourceIT.createUpdatedEntity();
         direccion.setId("fixed-id-for-tests");
         updatedPedido.setDireccion(direccion);
-        // Add required entity
-        Envio envio;
-        envio = EnvioResourceIT.createUpdatedEntity();
-        envio.setId("fixed-id-for-tests");
-        updatedPedido.setEnvio(envio);
         // Add required entity
         Cuenta cuenta;
         cuenta = CuentaResourceIT.createUpdatedEntity();

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
-import { JhiItemCount, JhiPagination, byteSize, getPaginationState, openFile } from 'react-jhipster';
+import { JhiItemCount, JhiPagination, getPaginationState } from 'react-jhipster';
 import { Link, useLocation, useNavigate } from 'react-router';
 
 import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
@@ -118,20 +118,17 @@ export const Producto = () => {
                 <th className="hand" onClick={sort('slug')}>
                   Slug <FontAwesomeIcon icon={getSortIconByFieldName('slug')} />
                 </th>
-                <th className="hand" onClick={sort('descripcion')}>
-                  Descripcion <FontAwesomeIcon icon={getSortIconByFieldName('descripcion')} />
-                </th>
-                <th className="hand" onClick={sort('imagen')}>
-                  Imagen <FontAwesomeIcon icon={getSortIconByFieldName('imagen')} />
-                </th>
-                <th className="hand" onClick={sort('imagenAlt')}>
-                  Imagen Alt <FontAwesomeIcon icon={getSortIconByFieldName('imagenAlt')} />
-                </th>
-                <th className="hand" onClick={sort('marca')}>
-                  Marca <FontAwesomeIcon icon={getSortIconByFieldName('marca')} />
-                </th>
                 <th className="hand" onClick={sort('referencia')}>
                   Referencia <FontAwesomeIcon icon={getSortIconByFieldName('referencia')} />
+                </th>
+                <th className="hand" onClick={sort('sku')}>
+                  Sku <FontAwesomeIcon icon={getSortIconByFieldName('sku')} />
+                </th>
+                <th className="hand" onClick={sort('color')}>
+                  Color <FontAwesomeIcon icon={getSortIconByFieldName('color')} />
+                </th>
+                <th className="hand" onClick={sort('talla')}>
+                  Talla <FontAwesomeIcon icon={getSortIconByFieldName('talla')} />
                 </th>
                 <th className="hand" onClick={sort('codigoBarras')}>
                   Codigo Barras <FontAwesomeIcon icon={getSortIconByFieldName('codigoBarras')} />
@@ -139,35 +136,8 @@ export const Producto = () => {
                 <th className="hand" onClick={sort('unidadMedida')}>
                   Unidad Medida <FontAwesomeIcon icon={getSortIconByFieldName('unidadMedida')} />
                 </th>
-                <th className="hand" onClick={sort('pesoKg')}>
-                  Peso Kg <FontAwesomeIcon icon={getSortIconByFieldName('pesoKg')} />
-                </th>
-                <th className="hand" onClick={sort('largoCm')}>
-                  Largo Cm <FontAwesomeIcon icon={getSortIconByFieldName('largoCm')} />
-                </th>
-                <th className="hand" onClick={sort('anchoCm')}>
-                  Ancho Cm <FontAwesomeIcon icon={getSortIconByFieldName('anchoCm')} />
-                </th>
-                <th className="hand" onClick={sort('altoCm')}>
-                  Alto Cm <FontAwesomeIcon icon={getSortIconByFieldName('altoCm')} />
-                </th>
-                <th className="hand" onClick={sort('categoriaIva')}>
-                  Categoria Iva <FontAwesomeIcon icon={getSortIconByFieldName('categoriaIva')} />
-                </th>
-                <th className="hand" onClick={sort('precioCompra')}>
-                  Precio Compra <FontAwesomeIcon icon={getSortIconByFieldName('precioCompra')} />
-                </th>
-                <th className="hand" onClick={sort('precioVenta')}>
-                  Precio Venta <FontAwesomeIcon icon={getSortIconByFieldName('precioVenta')} />
-                </th>
-                <th className="hand" onClick={sort('ganancia')}>
-                  Ganancia <FontAwesomeIcon icon={getSortIconByFieldName('ganancia')} />
-                </th>
-                <th className="hand" onClick={sort('margen')}>
-                  Margen <FontAwesomeIcon icon={getSortIconByFieldName('margen')} />
-                </th>
-                <th className="hand" onClick={sort('garantiaMeses')}>
-                  Garantia Meses <FontAwesomeIcon icon={getSortIconByFieldName('garantiaMeses')} />
+                <th className="hand" onClick={sort('descripcion')}>
+                  Descripcion <FontAwesomeIcon icon={getSortIconByFieldName('descripcion')} />
                 </th>
                 <th className="hand" onClick={sort('destacado')}>
                   Destacado <FontAwesomeIcon icon={getSortIconByFieldName('destacado')} />
@@ -176,7 +146,22 @@ export const Producto = () => {
                   Activo <FontAwesomeIcon icon={getSortIconByFieldName('activo')} />
                 </th>
                 <th>
+                  Precio <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Inventario <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Categoria <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
                   Subcategoria <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Marca <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Categoria Iva <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -191,45 +176,30 @@ export const Producto = () => {
                   </td>
                   <td>{producto.nombre}</td>
                   <td>{producto.slug}</td>
-                  <td>{producto.descripcion}</td>
-                  <td>
-                    {producto.imagen ? (
-                      <div>
-                        {producto.imagenContentType ? (
-                          <a onClick={openFile(producto.imagenContentType, producto.imagen)}>
-                            <img src={`data:${producto.imagenContentType};base64,${producto.imagen}`} style={{ maxHeight: '30px' }} />
-                            &nbsp;
-                          </a>
-                        ) : null}
-                        <span>
-                          {producto.imagenContentType}, {byteSize(producto.imagen)}
-                        </span>
-                      </div>
-                    ) : null}
-                  </td>
-                  <td>{producto.imagenAlt}</td>
-                  <td>{producto.marca}</td>
                   <td>{producto.referencia}</td>
+                  <td>{producto.sku}</td>
+                  <td>{producto.color}</td>
+                  <td>{producto.talla}</td>
                   <td>{producto.codigoBarras}</td>
                   <td>{producto.unidadMedida}</td>
-                  <td>{producto.pesoKg}</td>
-                  <td>{producto.largoCm}</td>
-                  <td>{producto.anchoCm}</td>
-                  <td>{producto.altoCm}</td>
-                  <td>{producto.categoriaIva}</td>
-                  <td>{producto.precioCompra}</td>
-                  <td>{producto.precioVenta}</td>
-                  <td>{producto.ganancia}</td>
-                  <td>{producto.margen}</td>
-                  <td>{producto.garantiaMeses}</td>
+                  <td>{producto.descripcion}</td>
                   <td>{producto.destacado ? 'true' : 'false'}</td>
                   <td>{producto.activo ? 'true' : 'false'}</td>
+                  <td>{producto.precio ? <Link to={`/producto-precio/${producto.precio.id}`}>{producto.precio.id}</Link> : ''}</td>
+                  <td>
+                    {producto.inventario ? <Link to={`/producto-inventario/${producto.inventario.id}`}>{producto.inventario.id}</Link> : ''}
+                  </td>
+                  <td>{producto.categoria ? <Link to={`/categoria/${producto.categoria.id}`}>{producto.categoria.nombre}</Link> : ''}</td>
                   <td>
                     {producto.subcategoria ? (
                       <Link to={`/subcategoria/${producto.subcategoria.id}`}>{producto.subcategoria.nombre}</Link>
                     ) : (
                       ''
                     )}
+                  </td>
+                  <td>{producto.marca ? <Link to={`/marca/${producto.marca.id}`}>{producto.marca.id}</Link> : ''}</td>
+                  <td>
+                    {producto.categoriaIva ? <Link to={`/categoria-iva/${producto.categoriaIva.id}`}>{producto.categoriaIva.id}</Link> : ''}
                   </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

@@ -34,10 +34,6 @@ export const CuentaDetail = () => {
           </dt>
           <dd>{cuentaEntity.numDocumento}</dd>
           <dt>
-            <span id="tipoPersona">Tipo Persona</span>
-          </dt>
-          <dd>{cuentaEntity.tipoPersona}</dd>
-          <dt>
             <span id="primerNombre">Primer Nombre</span>
           </dt>
           <dd>{cuentaEntity.primerNombre}</dd>
@@ -54,13 +50,9 @@ export const CuentaDetail = () => {
           </dt>
           <dd>{cuentaEntity.segundoApellido}</dd>
           <dt>
-            <span id="celular">Celular</span>
+            <span id="genero">Genero</span>
           </dt>
-          <dd>{cuentaEntity.celular}</dd>
-          <dt>
-            <span id="telefono">Telefono</span>
-          </dt>
-          <dd>{cuentaEntity.telefono}</dd>
+          <dd>{cuentaEntity.genero}</dd>
           <dt>
             <span id="fechaNacimiento">Fecha Nacimiento</span>
           </dt>
@@ -70,9 +62,13 @@ export const CuentaDetail = () => {
             ) : null}
           </dd>
           <dt>
-            <span id="genero">Genero</span>
+            <span id="celular">Celular</span>
           </dt>
-          <dd>{cuentaEntity.genero}</dd>
+          <dd>{cuentaEntity.celular}</dd>
+          <dt>
+            <span id="telefono">Telefono</span>
+          </dt>
+          <dd>{cuentaEntity.telefono}</dd>
           <dt>
             <span id="fotoPerfil">Foto Perfil</span>
           </dt>

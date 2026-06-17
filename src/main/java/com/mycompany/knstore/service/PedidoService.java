@@ -1,6 +1,7 @@
 package com.mycompany.knstore.service;
 
 import com.mycompany.knstore.service.dto.PedidoDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,13 @@ public interface PedidoService {
      * @return the list of entities.
      */
     Page<PedidoDTO> findAll(Pageable pageable);
+
+    /**
+     * Get all the PedidoDTO where Envio is {@code null}.
+     *
+     * @return the {@link List} of entities.
+     */
+    List<PedidoDTO> findAllWhereEnvioIsNull();
 
     /**
      * Get the "id" pedido.

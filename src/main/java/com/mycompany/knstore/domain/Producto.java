@@ -1,11 +1,11 @@
 package com.mycompany.knstore.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.mycompany.knstore.domain.enumeration.CategoriaIVA;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,26 +34,22 @@ public class Producto implements Serializable {
     @Field("slug")
     private String slug;
 
-    @Field("descripcion")
-    private String descripcion;
-
-    @Field("imagen")
-    private byte[] imagen;
-
-    @Field("imagen_content_type")
-    private String imagenContentType;
-
-    @Size(max = 200)
-    @Field("imagen_alt")
-    private String imagenAlt;
-
-    @Size(max = 100)
-    @Field("marca")
-    private String marca;
-
     @Size(max = 60)
     @Field("referencia")
     private String referencia;
+
+    @NotNull
+    @Size(max = 100)
+    @Field("sku")
+    private String sku;
+
+    @Size(max = 50)
+    @Field("color")
+    private String color;
+
+    @Size(max = 30)
+    @Field("talla")
+    private String talla;
 
     @Size(max = 50)
     @Field("codigo_barras")
@@ -63,45 +59,8 @@ public class Producto implements Serializable {
     @Field("unidad_medida")
     private String unidadMedida;
 
-    @DecimalMin(value = "0")
-    @Field("peso_kg")
-    private BigDecimal pesoKg;
-
-    @DecimalMin(value = "0")
-    @Field("largo_cm")
-    private BigDecimal largoCm;
-
-    @DecimalMin(value = "0")
-    @Field("ancho_cm")
-    private BigDecimal anchoCm;
-
-    @DecimalMin(value = "0")
-    @Field("alto_cm")
-    private BigDecimal altoCm;
-
-    @NotNull
-    @Field("categoria_iva")
-    private CategoriaIVA categoriaIva;
-
-    @NotNull
-    @DecimalMin(value = "0")
-    @Field("precio_compra")
-    private BigDecimal precioCompra;
-
-    @NotNull
-    @DecimalMin(value = "0")
-    @Field("precio_venta")
-    private BigDecimal precioVenta;
-
-    @Field("ganancia")
-    private BigDecimal ganancia;
-
-    @Field("margen")
-    private BigDecimal margen;
-
-    @Min(value = 0)
-    @Field("garantia_meses")
-    private Integer garantiaMeses;
+    @Field("descripcion")
+    private String descripcion;
 
     @NotNull
     @Field("destacado")
@@ -112,9 +71,34 @@ public class Producto implements Serializable {
     private Boolean activo;
 
     @DBRef
+    @Field("precio")
+    private ProductoPrecio precio;
+
+    @DBRef
+    @Field("inventario")
+    private ProductoInventario inventario;
+
+    @DBRef
+    @Field("imagenes")
+    @JsonIgnoreProperties(value = { "producto" }, allowSetters = true)
+    private Set<ProductoImagen> imageneses = new HashSet<>();
+
+    @DBRef
+    @Field("categoria")
+    private Categoria categoria;
+
+    @DBRef
     @Field("subcategoria")
     @JsonIgnoreProperties(value = { "categoria" }, allowSetters = true)
     private Subcategoria subcategoria;
+
+    @DBRef
+    @Field("marca")
+    private Marca marca;
+
+    @DBRef
+    @Field("categoriaIva")
+    private CategoriaIVA categoriaIva;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -157,71 +141,6 @@ public class Producto implements Serializable {
         this.slug = slug;
     }
 
-    public String getDescripcion() {
-        return this.descripcion;
-    }
-
-    public Producto descripcion(String descripcion) {
-        this.setDescripcion(descripcion);
-        return this;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public byte[] getImagen() {
-        return this.imagen;
-    }
-
-    public Producto imagen(byte[] imagen) {
-        this.setImagen(imagen);
-        return this;
-    }
-
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
-    }
-
-    public String getImagenContentType() {
-        return this.imagenContentType;
-    }
-
-    public Producto imagenContentType(String imagenContentType) {
-        this.imagenContentType = imagenContentType;
-        return this;
-    }
-
-    public void setImagenContentType(String imagenContentType) {
-        this.imagenContentType = imagenContentType;
-    }
-
-    public String getImagenAlt() {
-        return this.imagenAlt;
-    }
-
-    public Producto imagenAlt(String imagenAlt) {
-        this.setImagenAlt(imagenAlt);
-        return this;
-    }
-
-    public void setImagenAlt(String imagenAlt) {
-        this.imagenAlt = imagenAlt;
-    }
-
-    public String getMarca() {
-        return this.marca;
-    }
-
-    public Producto marca(String marca) {
-        this.setMarca(marca);
-        return this;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
     public String getReferencia() {
         return this.referencia;
     }
@@ -233,6 +152,45 @@ public class Producto implements Serializable {
 
     public void setReferencia(String referencia) {
         this.referencia = referencia;
+    }
+
+    public String getSku() {
+        return this.sku;
+    }
+
+    public Producto sku(String sku) {
+        this.setSku(sku);
+        return this;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public String getColor() {
+        return this.color;
+    }
+
+    public Producto color(String color) {
+        this.setColor(color);
+        return this;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getTalla() {
+        return this.talla;
+    }
+
+    public Producto talla(String talla) {
+        this.setTalla(talla);
+        return this;
+    }
+
+    public void setTalla(String talla) {
+        this.talla = talla;
     }
 
     public String getCodigoBarras() {
@@ -261,134 +219,17 @@ public class Producto implements Serializable {
         this.unidadMedida = unidadMedida;
     }
 
-    public BigDecimal getPesoKg() {
-        return this.pesoKg;
+    public String getDescripcion() {
+        return this.descripcion;
     }
 
-    public Producto pesoKg(BigDecimal pesoKg) {
-        this.setPesoKg(pesoKg);
+    public Producto descripcion(String descripcion) {
+        this.setDescripcion(descripcion);
         return this;
     }
 
-    public void setPesoKg(BigDecimal pesoKg) {
-        this.pesoKg = pesoKg;
-    }
-
-    public BigDecimal getLargoCm() {
-        return this.largoCm;
-    }
-
-    public Producto largoCm(BigDecimal largoCm) {
-        this.setLargoCm(largoCm);
-        return this;
-    }
-
-    public void setLargoCm(BigDecimal largoCm) {
-        this.largoCm = largoCm;
-    }
-
-    public BigDecimal getAnchoCm() {
-        return this.anchoCm;
-    }
-
-    public Producto anchoCm(BigDecimal anchoCm) {
-        this.setAnchoCm(anchoCm);
-        return this;
-    }
-
-    public void setAnchoCm(BigDecimal anchoCm) {
-        this.anchoCm = anchoCm;
-    }
-
-    public BigDecimal getAltoCm() {
-        return this.altoCm;
-    }
-
-    public Producto altoCm(BigDecimal altoCm) {
-        this.setAltoCm(altoCm);
-        return this;
-    }
-
-    public void setAltoCm(BigDecimal altoCm) {
-        this.altoCm = altoCm;
-    }
-
-    public CategoriaIVA getCategoriaIva() {
-        return this.categoriaIva;
-    }
-
-    public Producto categoriaIva(CategoriaIVA categoriaIva) {
-        this.setCategoriaIva(categoriaIva);
-        return this;
-    }
-
-    public void setCategoriaIva(CategoriaIVA categoriaIva) {
-        this.categoriaIva = categoriaIva;
-    }
-
-    public BigDecimal getPrecioCompra() {
-        return this.precioCompra;
-    }
-
-    public Producto precioCompra(BigDecimal precioCompra) {
-        this.setPrecioCompra(precioCompra);
-        return this;
-    }
-
-    public void setPrecioCompra(BigDecimal precioCompra) {
-        this.precioCompra = precioCompra;
-    }
-
-    public BigDecimal getPrecioVenta() {
-        return this.precioVenta;
-    }
-
-    public Producto precioVenta(BigDecimal precioVenta) {
-        this.setPrecioVenta(precioVenta);
-        return this;
-    }
-
-    public void setPrecioVenta(BigDecimal precioVenta) {
-        this.precioVenta = precioVenta;
-    }
-
-    public BigDecimal getGanancia() {
-        return this.ganancia;
-    }
-
-    public Producto ganancia(BigDecimal ganancia) {
-        this.setGanancia(ganancia);
-        return this;
-    }
-
-    public void setGanancia(BigDecimal ganancia) {
-        this.ganancia = ganancia;
-    }
-
-    public BigDecimal getMargen() {
-        return this.margen;
-    }
-
-    public Producto margen(BigDecimal margen) {
-        this.setMargen(margen);
-        return this;
-    }
-
-    public void setMargen(BigDecimal margen) {
-        this.margen = margen;
-    }
-
-    public Integer getGarantiaMeses() {
-        return this.garantiaMeses;
-    }
-
-    public Producto garantiaMeses(Integer garantiaMeses) {
-        this.setGarantiaMeses(garantiaMeses);
-        return this;
-    }
-
-    public void setGarantiaMeses(Integer garantiaMeses) {
-        this.garantiaMeses = garantiaMeses;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Boolean getDestacado() {
@@ -417,6 +258,76 @@ public class Producto implements Serializable {
         this.activo = activo;
     }
 
+    public ProductoPrecio getPrecio() {
+        return this.precio;
+    }
+
+    public void setPrecio(ProductoPrecio productoPrecio) {
+        this.precio = productoPrecio;
+    }
+
+    public Producto precio(ProductoPrecio productoPrecio) {
+        this.setPrecio(productoPrecio);
+        return this;
+    }
+
+    public ProductoInventario getInventario() {
+        return this.inventario;
+    }
+
+    public void setInventario(ProductoInventario productoInventario) {
+        this.inventario = productoInventario;
+    }
+
+    public Producto inventario(ProductoInventario productoInventario) {
+        this.setInventario(productoInventario);
+        return this;
+    }
+
+    public Set<ProductoImagen> getImageneses() {
+        return this.imageneses;
+    }
+
+    public void setImageneses(Set<ProductoImagen> productoImagens) {
+        if (this.imageneses != null) {
+            this.imageneses.forEach(i -> i.setProducto(null));
+        }
+        if (productoImagens != null) {
+            productoImagens.forEach(i -> i.setProducto(this));
+        }
+        this.imageneses = productoImagens;
+    }
+
+    public Producto imageneses(Set<ProductoImagen> productoImagens) {
+        this.setImageneses(productoImagens);
+        return this;
+    }
+
+    public Producto addImagenes(ProductoImagen productoImagen) {
+        this.imageneses.add(productoImagen);
+        productoImagen.setProducto(this);
+        return this;
+    }
+
+    public Producto removeImagenes(ProductoImagen productoImagen) {
+        this.imageneses.remove(productoImagen);
+        productoImagen.setProducto(null);
+        return this;
+    }
+
+    public Categoria getCategoria() {
+        return this.categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public Producto categoria(Categoria categoria) {
+        this.setCategoria(categoria);
+        return this;
+    }
+
     public Subcategoria getSubcategoria() {
         return this.subcategoria;
     }
@@ -427,6 +338,32 @@ public class Producto implements Serializable {
 
     public Producto subcategoria(Subcategoria subcategoria) {
         this.setSubcategoria(subcategoria);
+        return this;
+    }
+
+    public Marca getMarca() {
+        return this.marca;
+    }
+
+    public void setMarca(Marca marca) {
+        this.marca = marca;
+    }
+
+    public Producto marca(Marca marca) {
+        this.setMarca(marca);
+        return this;
+    }
+
+    public CategoriaIVA getCategoriaIva() {
+        return this.categoriaIva;
+    }
+
+    public void setCategoriaIva(CategoriaIVA categoriaIVA) {
+        this.categoriaIva = categoriaIVA;
+    }
+
+    public Producto categoriaIva(CategoriaIVA categoriaIVA) {
+        this.setCategoriaIva(categoriaIVA);
         return this;
     }
 
@@ -456,24 +393,13 @@ public class Producto implements Serializable {
             "id=" + getId() +
             ", nombre='" + getNombre() + "'" +
             ", slug='" + getSlug() + "'" +
-            ", descripcion='" + getDescripcion() + "'" +
-            ", imagen='" + getImagen() + "'" +
-            ", imagenContentType='" + getImagenContentType() + "'" +
-            ", imagenAlt='" + getImagenAlt() + "'" +
-            ", marca='" + getMarca() + "'" +
             ", referencia='" + getReferencia() + "'" +
+            ", sku='" + getSku() + "'" +
+            ", color='" + getColor() + "'" +
+            ", talla='" + getTalla() + "'" +
             ", codigoBarras='" + getCodigoBarras() + "'" +
             ", unidadMedida='" + getUnidadMedida() + "'" +
-            ", pesoKg=" + getPesoKg() +
-            ", largoCm=" + getLargoCm() +
-            ", anchoCm=" + getAnchoCm() +
-            ", altoCm=" + getAltoCm() +
-            ", categoriaIva='" + getCategoriaIva() + "'" +
-            ", precioCompra=" + getPrecioCompra() +
-            ", precioVenta=" + getPrecioVenta() +
-            ", ganancia=" + getGanancia() +
-            ", margen=" + getMargen() +
-            ", garantiaMeses=" + getGarantiaMeses() +
+            ", descripcion='" + getDescripcion() + "'" +
             ", destacado='" + getDestacado() + "'" +
             ", activo='" + getActivo() + "'" +
             "}";

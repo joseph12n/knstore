@@ -48,16 +48,8 @@ public class FacturaAsserts {
     public static void assertFacturaUpdatableFieldsEquals(Factura expected, Factura actual) {
         assertThat(actual)
             .as("Verify Factura relevant properties")
-            .satisfies(a -> assertThat(a.getReferencia()).as("check referencia").isEqualTo(expected.getReferencia()))
-            .satisfies(a -> assertThat(a.getCufe()).as("check cufe").isEqualTo(expected.getCufe()))
-            .satisfies(a -> assertThat(a.getResolucionDian()).as("check resolucionDian").isEqualTo(expected.getResolucionDian()))
-            .satisfies(a ->
-                assertThat(a.getFechaVigenciaResolucion())
-                    .as("check fechaVigenciaResolucion")
-                    .isEqualTo(expected.getFechaVigenciaResolucion())
-            )
             .satisfies(a -> assertThat(a.getPrefijo()).as("check prefijo").isEqualTo(expected.getPrefijo()))
-            .satisfies(a -> assertThat(a.getConsecutivo()).as("check consecutivo").isEqualTo(expected.getConsecutivo()))
+            .satisfies(a -> assertThat(a.getCufe()).as("check cufe").isEqualTo(expected.getCufe()))
             .satisfies(a ->
                 assertThat(a.getSubtotal()).as("check subtotal").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getSubtotal())
             )
@@ -76,24 +68,12 @@ public class FacturaAsserts {
             .satisfies(a ->
                 assertThat(a.getValorIva()).as("check valorIva").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getValorIva())
             )
-            .satisfies(a ->
-                assertThat(a.getRetefuente())
-                    .as("check retefuente")
-                    .usingComparator(bigDecimalCompareTo)
-                    .isEqualTo(expected.getRetefuente())
-            )
-            .satisfies(a ->
-                assertThat(a.getReteIva()).as("check reteIva").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getReteIva())
-            )
-            .satisfies(a ->
-                assertThat(a.getReteIca()).as("check reteIca").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getReteIca())
-            )
             .satisfies(a -> assertThat(a.getTotal()).as("check total").usingComparator(bigDecimalCompareTo).isEqualTo(expected.getTotal()))
-            .satisfies(a -> assertThat(a.getFechaEmision()).as("check fechaEmision").isEqualTo(expected.getFechaEmision()))
-            .satisfies(a -> assertThat(a.getFechaVencimiento()).as("check fechaVencimiento").isEqualTo(expected.getFechaVencimiento()))
             .satisfies(a -> assertThat(a.getNotasAdicionales()).as("check notasAdicionales").isEqualTo(expected.getNotasAdicionales()))
             .satisfies(a -> assertThat(a.getCodigoQr()).as("check codigoQr").isEqualTo(expected.getCodigoQr()))
             .satisfies(a -> assertThat(a.getEnviada()).as("check enviada").isEqualTo(expected.getEnviada()))
+            .satisfies(a -> assertThat(a.getFechaEmision()).as("check fechaEmision").isEqualTo(expected.getFechaEmision()))
+            .satisfies(a -> assertThat(a.getFechaVencimiento()).as("check fechaVencimiento").isEqualTo(expected.getFechaVencimiento()))
             .satisfies(a -> assertThat(a.getFechaEnvioEmail()).as("check fechaEnvioEmail").isEqualTo(expected.getFechaEnvioEmail()));
     }
 
@@ -106,6 +86,6 @@ public class FacturaAsserts {
     public static void assertFacturaUpdatableRelationshipsEquals(Factura expected, Factura actual) {
         assertThat(actual)
             .as("Verify Factura relationships")
-            .satisfies(a -> assertThat(a.getPedido()).as("check pedido").isEqualTo(expected.getPedido()));
+            .satisfies(a -> assertThat(a.getPago()).as("check pago").isEqualTo(expected.getPago()));
     }
 }
