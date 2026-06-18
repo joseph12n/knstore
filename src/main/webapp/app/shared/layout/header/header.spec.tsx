@@ -14,6 +14,8 @@ describe('Header', () => {
   const devProps = {
     isAuthenticated: true,
     isAdmin: true,
+    isManager: false,
+    isCliente: false,
     ribbonEnv: 'dev',
     isInProduction: false,
     isOpenAPIEnabled: true,
@@ -27,10 +29,14 @@ describe('Header', () => {
   const userProps = {
     ...prodProps,
     isAdmin: false,
+    isManager: false,
+    isCliente: true,
   };
   const guestProps = {
     ...prodProps,
     isAdmin: false,
+    isManager: false,
+    isCliente: false,
     isAuthenticated: false,
   };
 

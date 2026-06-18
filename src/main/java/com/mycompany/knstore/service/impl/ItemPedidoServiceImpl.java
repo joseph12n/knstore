@@ -2,6 +2,8 @@ package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.ItemPedido;
 import com.mycompany.knstore.repository.ItemPedidoRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
+import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.ItemPedidoService;
 import com.mycompany.knstore.service.dto.ItemPedidoDTO;
 import com.mycompany.knstore.service.mapper.ItemPedidoMapper;
@@ -66,6 +68,17 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     @Override
     public List<ItemPedidoDTO> findAll() {
         LOG.debug("Request to get all ItemPedidos");
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login ->
+                    itemPedidoRepository
+                        .findByPedidoCuentaUserLogin(login)
+                        .stream()
+                        .map(itemPedidoMapper::toDto)
+                        .collect(Collectors.toCollection(LinkedList::new))
+                )
+                .orElseGet(LinkedList::new);
+        }
         return itemPedidoRepository.findAll().stream().map(itemPedidoMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
@@ -76,6 +89,11 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     @Override
     public Optional<ItemPedidoDTO> findOne(String id) {
         LOG.debug("Request to get ItemPedido : {}", id);
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .flatMap(login -> itemPedidoRepository.findByIdAndPedidoCuentaUserLogin(id, login))
+                .map(itemPedidoMapper::toDto);
+        }
         return itemPedidoRepository.findOneWithEagerRelationships(id).map(itemPedidoMapper::toDto);
     }
 

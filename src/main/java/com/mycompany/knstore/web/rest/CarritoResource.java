@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -24,6 +25,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/carritos")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
 public class CarritoResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(CarritoResource.class);
@@ -50,6 +52,7 @@ public class CarritoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessCarritoDto(#carritoDTO)")
     public ResponseEntity<CarritoDTO> createCarrito(@Valid @RequestBody CarritoDTO carritoDTO) throws URISyntaxException {
         LOG.debug("REST request to save Carrito : {}", carritoDTO);
         if (carritoDTO.getId() != null) {
@@ -72,6 +75,9 @@ public class CarritoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessCarritoId(#id) and @resourceAccessService.canAccessCarritoDto(#carritoDTO))"
+    )
     public ResponseEntity<CarritoDTO> updateCarrito(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody CarritoDTO carritoDTO
@@ -106,6 +112,9 @@ public class CarritoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessCarritoId(#id) and @resourceAccessService.canAccessCarritoDto(#carritoDTO))"
+    )
     public ResponseEntity<CarritoDTO> partialUpdateCarrito(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody CarritoDTO carritoDTO
@@ -148,6 +157,7 @@ public class CarritoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the carritoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessCarritoId(#id)")
     public ResponseEntity<CarritoDTO> getCarrito(@PathVariable("id") String id) {
         LOG.debug("REST request to get Carrito : {}", id);
         Optional<CarritoDTO> carritoDTO = carritoService.findOne(id);
@@ -161,6 +171,7 @@ public class CarritoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessCarritoId(#id)")
     public ResponseEntity<Void> deleteCarrito(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Carrito : {}", id);
         carritoService.delete(id);

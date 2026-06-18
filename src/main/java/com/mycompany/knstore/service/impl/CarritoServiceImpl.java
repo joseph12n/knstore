@@ -2,6 +2,8 @@ package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Carrito;
 import com.mycompany.knstore.repository.CarritoRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
+import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CarritoService;
 import com.mycompany.knstore.service.dto.CarritoDTO;
 import com.mycompany.knstore.service.mapper.CarritoMapper;
@@ -64,12 +66,28 @@ public class CarritoServiceImpl implements CarritoService {
     @Override
     public List<CarritoDTO> findAll() {
         LOG.debug("Request to get all Carritos");
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login ->
+                    carritoRepository
+                        .findByCuentaUserLogin(login)
+                        .stream()
+                        .map(carritoMapper::toDto)
+                        .collect(Collectors.toCollection(LinkedList::new))
+                )
+                .orElseGet(LinkedList::new);
+        }
         return carritoRepository.findAll().stream().map(carritoMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public Optional<CarritoDTO> findOne(String id) {
         LOG.debug("Request to get Carrito : {}", id);
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .flatMap(login -> carritoRepository.findByIdAndCuentaUserLogin(id, login))
+                .map(carritoMapper::toDto);
+        }
         return carritoRepository.findById(id).map(carritoMapper::toDto);
     }
 

@@ -2,6 +2,8 @@ package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Pago;
 import com.mycompany.knstore.repository.PagoRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
+import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.PagoService;
 import com.mycompany.knstore.service.dto.PagoDTO;
 import com.mycompany.knstore.service.mapper.PagoMapper;
@@ -63,12 +65,22 @@ public class PagoServiceImpl implements PagoService {
     @Override
     public Page<PagoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Pagos");
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login -> pagoRepository.findByPedidoCuentaUserLogin(login, pageable).map(pagoMapper::toDto))
+                .orElse(Page.empty(pageable));
+        }
         return pagoRepository.findAll(pageable).map(pagoMapper::toDto);
     }
 
     @Override
     public Optional<PagoDTO> findOne(String id) {
         LOG.debug("Request to get Pago : {}", id);
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .flatMap(login -> pagoRepository.findByIdAndPedidoCuentaUserLogin(id, login))
+                .map(pagoMapper::toDto);
+        }
         return pagoRepository.findById(id).map(pagoMapper::toDto);
     }
 

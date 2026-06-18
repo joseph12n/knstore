@@ -22,4 +22,10 @@ public interface CuentaRepository extends MongoRepository<Cuenta, String> {
 
     @Query("{'id': ?0}")
     Optional<Cuenta> findOneWithEagerRelationships(String id);
+
+    @Query("{'user.login': ?0}")
+    Page<Cuenta> findByUserLogin(String login, Pageable pageable);
+
+    @Query("{'id': ?0, 'user.login': ?1}")
+    Optional<Cuenta> findByIdAndUserLogin(String id, String login);
 }

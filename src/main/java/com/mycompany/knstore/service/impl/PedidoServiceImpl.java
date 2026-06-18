@@ -2,6 +2,8 @@ package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.repository.PedidoRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
+import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.PedidoService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.service.mapper.PedidoMapper;
@@ -67,6 +69,11 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Page<PedidoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Pedidos");
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login -> pedidoRepository.findByCuentaUserLogin(login, pageable).map(pedidoMapper::toDto))
+                .orElse(Page.empty(pageable));
+        }
         return pedidoRepository.findAll(pageable).map(pedidoMapper::toDto);
     }
 
@@ -77,6 +84,17 @@ public class PedidoServiceImpl implements PedidoService {
 
     public List<PedidoDTO> findAllWhereEnvioIsNull() {
         LOG.debug("Request to get all pedidos where Envio is null");
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login ->
+                    pedidoRepository
+                        .findByCuentaUserLoginAndEnvioIsNull(login)
+                        .stream()
+                        .map(pedidoMapper::toDto)
+                        .collect(Collectors.toCollection(LinkedList::new))
+                )
+                .orElseGet(LinkedList::new);
+        }
         return StreamSupport.stream(pedidoRepository.findAll().spliterator(), false)
             .filter(pedido -> pedido.getEnvio() == null)
             .map(pedidoMapper::toDto)
@@ -86,6 +104,11 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<PedidoDTO> findOne(String id) {
         LOG.debug("Request to get Pedido : {}", id);
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .flatMap(login -> pedidoRepository.findByIdAndCuentaUserLogin(id, login))
+                .map(pedidoMapper::toDto);
+        }
         return pedidoRepository.findById(id).map(pedidoMapper::toDto);
     }
 
