@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -29,6 +30,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/envios")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
 public class EnvioResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(EnvioResource.class);
@@ -55,6 +57,7 @@ public class EnvioResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessEnvioDto(#envioDTO)")
     public ResponseEntity<EnvioDTO> createEnvio(@Valid @RequestBody EnvioDTO envioDTO) throws URISyntaxException {
         LOG.debug("REST request to save Envio : {}", envioDTO);
         if (envioDTO.getId() != null) {
@@ -77,6 +80,9 @@ public class EnvioResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessEnvioId(#id) and @resourceAccessService.canAccessEnvioDto(#envioDTO))"
+    )
     public ResponseEntity<EnvioDTO> updateEnvio(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody EnvioDTO envioDTO
@@ -111,6 +117,9 @@ public class EnvioResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessEnvioId(#id) and @resourceAccessService.canAccessEnvioDto(#envioDTO))"
+    )
     public ResponseEntity<EnvioDTO> partialUpdateEnvio(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody EnvioDTO envioDTO
@@ -156,6 +165,7 @@ public class EnvioResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the envioDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessEnvioId(#id)")
     public ResponseEntity<EnvioDTO> getEnvio(@PathVariable("id") String id) {
         LOG.debug("REST request to get Envio : {}", id);
         Optional<EnvioDTO> envioDTO = envioService.findOne(id);
@@ -169,6 +179,7 @@ public class EnvioResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessEnvioId(#id)")
     public ResponseEntity<Void> deleteEnvio(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Envio : {}", id);
         envioService.delete(id);

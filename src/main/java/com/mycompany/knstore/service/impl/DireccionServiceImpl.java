@@ -2,6 +2,8 @@ package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Direccion;
 import com.mycompany.knstore.repository.DireccionRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
+import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.DireccionService;
 import com.mycompany.knstore.service.dto.DireccionDTO;
 import com.mycompany.knstore.service.mapper.DireccionMapper;
@@ -67,6 +69,11 @@ public class DireccionServiceImpl implements DireccionService {
     @Override
     public Page<DireccionDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Direccions");
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login -> direccionRepository.findByCuentaUserLogin(login, pageable).map(direccionMapper::toDto))
+                .orElse(Page.empty(pageable));
+        }
         return direccionRepository.findAll(pageable).map(direccionMapper::toDto);
     }
 
@@ -77,6 +84,17 @@ public class DireccionServiceImpl implements DireccionService {
 
     public List<DireccionDTO> findAllWherePedidoIsNull() {
         LOG.debug("Request to get all direccions where Pedido is null");
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login ->
+                    direccionRepository
+                        .findByCuentaUserLoginAndPedidoIsNull(login)
+                        .stream()
+                        .map(direccionMapper::toDto)
+                        .collect(Collectors.toCollection(LinkedList::new))
+                )
+                .orElseGet(LinkedList::new);
+        }
         return StreamSupport.stream(direccionRepository.findAll().spliterator(), false)
             .filter(direccion -> direccion.getPedido() == null)
             .map(direccionMapper::toDto)
@@ -86,6 +104,11 @@ public class DireccionServiceImpl implements DireccionService {
     @Override
     public Optional<DireccionDTO> findOne(String id) {
         LOG.debug("Request to get Direccion : {}", id);
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .flatMap(login -> direccionRepository.findByIdAndCuentaUserLogin(id, login))
+                .map(direccionMapper::toDto);
+        }
         return direccionRepository.findById(id).map(direccionMapper::toDto);
     }
 

@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -29,6 +30,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/cuentas")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
 public class CuentaResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(CuentaResource.class);
@@ -55,6 +57,7 @@ public class CuentaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessCuentaDto(#cuentaDTO)")
     public ResponseEntity<CuentaDTO> createCuenta(@Valid @RequestBody CuentaDTO cuentaDTO) throws URISyntaxException {
         LOG.debug("REST request to save Cuenta : {}", cuentaDTO);
         if (cuentaDTO.getId() != null) {
@@ -77,6 +80,9 @@ public class CuentaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessCuentaId(#id) and @resourceAccessService.canAccessCuentaDto(#cuentaDTO))"
+    )
     public ResponseEntity<CuentaDTO> updateCuenta(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody CuentaDTO cuentaDTO
@@ -111,6 +117,9 @@ public class CuentaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessCuentaId(#id) and @resourceAccessService.canAccessCuentaDto(#cuentaDTO))"
+    )
     public ResponseEntity<CuentaDTO> partialUpdateCuenta(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody CuentaDTO cuentaDTO
@@ -165,6 +174,7 @@ public class CuentaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the cuentaDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessCuentaId(#id)")
     public ResponseEntity<CuentaDTO> getCuenta(@PathVariable("id") String id) {
         LOG.debug("REST request to get Cuenta : {}", id);
         Optional<CuentaDTO> cuentaDTO = cuentaService.findOne(id);
@@ -178,6 +188,7 @@ public class CuentaResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessCuentaId(#id)")
     public ResponseEntity<Void> deleteCuenta(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Cuenta : {}", id);
         cuentaService.delete(id);
