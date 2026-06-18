@@ -2,6 +2,8 @@ package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.repository.CuentaRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
+import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CuentaService;
 import com.mycompany.knstore.service.dto.CuentaDTO;
 import com.mycompany.knstore.service.mapper.CuentaMapper;
@@ -63,16 +65,31 @@ public class CuentaServiceImpl implements CuentaService {
     @Override
     public Page<CuentaDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Cuentas");
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login -> cuentaRepository.findByUserLogin(login, pageable).map(cuentaMapper::toDto))
+                .orElse(Page.empty(pageable));
+        }
         return cuentaRepository.findAll(pageable).map(cuentaMapper::toDto);
     }
 
     public Page<CuentaDTO> findAllWithEagerRelationships(Pageable pageable) {
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .map(login -> cuentaRepository.findByUserLogin(login, pageable).map(cuentaMapper::toDto))
+                .orElse(Page.empty(pageable));
+        }
         return cuentaRepository.findAllWithEagerRelationships(pageable).map(cuentaMapper::toDto);
     }
 
     @Override
     public Optional<CuentaDTO> findOne(String id) {
         LOG.debug("Request to get Cuenta : {}", id);
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return SecurityUtils.getCurrentUserLogin()
+                .flatMap(login -> cuentaRepository.findByIdAndUserLogin(id, login))
+                .map(cuentaMapper::toDto);
+        }
         return cuentaRepository.findOneWithEagerRelationships(id).map(cuentaMapper::toDto);
     }
 

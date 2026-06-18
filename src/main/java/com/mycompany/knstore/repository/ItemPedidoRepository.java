@@ -22,4 +22,8 @@ public interface ItemPedidoRepository extends MongoRepository<ItemPedido, String
 
     @Query("{'id': ?0}")
     Optional<ItemPedido> findOneWithEagerRelationships(String id);
+
+    List<ItemPedido> findByPedidoCuentaUserLogin(String login);
+
+    Optional<ItemPedido> findByIdAndPedidoCuentaUserLogin(String id, String login);
 }

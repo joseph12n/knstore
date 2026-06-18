@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -30,6 +31,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/direccions")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
 public class DireccionResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(DireccionResource.class);
@@ -56,6 +58,7 @@ public class DireccionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessDireccionDto(#direccionDTO)")
     public ResponseEntity<DireccionDTO> createDireccion(@Valid @RequestBody DireccionDTO direccionDTO) throws URISyntaxException {
         LOG.debug("REST request to save Direccion : {}", direccionDTO);
         if (direccionDTO.getId() != null) {
@@ -78,6 +81,9 @@ public class DireccionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessDireccionId(#id) and @resourceAccessService.canAccessDireccionDto(#direccionDTO))"
+    )
     public ResponseEntity<DireccionDTO> updateDireccion(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody DireccionDTO direccionDTO
@@ -112,6 +118,9 @@ public class DireccionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessDireccionId(#id) and @resourceAccessService.canAccessDireccionDto(#direccionDTO))"
+    )
     public ResponseEntity<DireccionDTO> partialUpdateDireccion(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody DireccionDTO direccionDTO
@@ -165,6 +174,7 @@ public class DireccionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the direccionDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessDireccionId(#id)")
     public ResponseEntity<DireccionDTO> getDireccion(@PathVariable("id") String id) {
         LOG.debug("REST request to get Direccion : {}", id);
         Optional<DireccionDTO> direccionDTO = direccionService.findOne(id);
@@ -178,6 +188,7 @@ public class DireccionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessDireccionId(#id)")
     public ResponseEntity<Void> deleteDireccion(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Direccion : {}", id);
         direccionService.delete(id);
