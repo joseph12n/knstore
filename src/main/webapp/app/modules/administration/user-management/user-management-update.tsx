@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Col, FormText, Row } from 'react-bootstrap';
 import { ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
 import { Link, useNavigate, useParams } from 'react-router';
@@ -7,10 +7,12 @@ import { faArrowLeft, faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
 
 import { createUser, getRoles, getUser, reset, updateUser } from './user-management.reducer';
 
 export const UserManagementUpdate = () => {
+  const [password, setPassword] = useState('');
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -35,18 +37,37 @@ export const UserManagementUpdate = () => {
   };
 
   const saveUser = values => {
+    const userEntity = {
+      id: user.id,
+      login: values.login,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      activated: values.activated,
+      langKey: values.langKey?.trim() || user.langKey || 'es',
+      authorities: values.authorities,
+    };
+
     if (isNew) {
-      dispatch(createUser(values));
+      dispatch(
+        createUser({
+          ...userEntity,
+          password,
+        }),
+      );
     } else {
-      dispatch(updateUser(values));
+      dispatch(updateUser(userEntity));
     }
     handleClose();
   };
+
+  const updatePassword = event => setPassword(event.target.value);
 
   const user = useAppSelector(state => state.userManagement.user);
   const loading = useAppSelector(state => state.userManagement.loading);
   const updating = useAppSelector(state => state.userManagement.updating);
   const authorities = useAppSelector(state => state.userManagement.authorities);
+  const defaultValues = useMemo(() => ({ ...user, id: undefined, langKey: user.langKey || 'es' }), [user]);
 
   return (
     <div>
@@ -60,7 +81,7 @@ export const UserManagementUpdate = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <ValidatedForm onSubmit={saveUser} defaultValues={user}>
+            <ValidatedForm onSubmit={saveUser} defaultValues={defaultValues}>
               {user.id && <ValidatedField type="text" name="id" data-cy="id" required readOnly label="ID" validate={{ required: true }} />}
               <ValidatedField
                 type="text"
@@ -86,6 +107,37 @@ export const UserManagementUpdate = () => {
                   },
                 }}
               />
+              {isNew && (
+                <>
+                  <ValidatedField
+                    name="firstPassword"
+                    label="Contraseña"
+                    placeholder="Contraseña"
+                    type="password"
+                    onChange={updatePassword}
+                    validate={{
+                      required: { value: true, message: 'Se requiere una contraseña.' },
+                      minLength: { value: 4, message: 'La contraseña debe tener al menos 4 caracteres.' },
+                      maxLength: { value: 50, message: 'La contraseña no puede tener más de 50 caracteres.' },
+                    }}
+                    data-cy="firstPassword"
+                  />
+                  <PasswordStrengthBar password={password} />
+                  <ValidatedField
+                    name="secondPassword"
+                    label="Confirmación de la contraseña"
+                    placeholder="Confirmación de la contraseña"
+                    type="password"
+                    validate={{
+                      required: { value: true, message: 'Debe confirmar la contraseña.' },
+                      minLength: { value: 4, message: 'La confirmación debe tener al menos 4 caracteres.' },
+                      maxLength: { value: 50, message: 'La confirmación no puede tener más de 50 caracteres.' },
+                      validate: v => v === password || 'La contraseña y la confirmación no coinciden.',
+                    }}
+                    data-cy="secondPassword"
+                  />
+                </>
+              )}
               <ValidatedField
                 type="text"
                 name="firstName"
