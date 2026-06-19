@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { Authority } from 'app/shared/jhipster/constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 
@@ -26,6 +27,8 @@ export const Cuenta = () => {
   const cuentaList = useAppSelector(state => state.cuenta.entities);
   const loading = useAppSelector(state => state.cuenta.loading);
   const totalItems = useAppSelector(state => state.cuenta.totalItems);
+  const authorities = useAppSelector(state => state.authentication.account.authorities || []);
+  const isCliente = authorities.includes(Authority.CLIENTE);
 
   const getAllEntities = () => {
     dispatch(
@@ -99,10 +102,24 @@ export const Cuenta = () => {
           <Button className="me-2" variant="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Refrescar lista
           </Button>
-          <Link to="/cuenta/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Crear nuevo Cuenta
-          </Link>
+          {isCliente ? (
+            cuentaList?.[0] ? (
+              <Link
+                to={`/cuenta/${cuentaList[0].id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                className="btn btn-primary jh-create-entity"
+                id="jh-create-entity"
+                data-cy="entityEditOwnButton"
+              >
+                <FontAwesomeIcon icon="pencil-alt" />
+                &nbsp; Editar mi cuenta
+              </Link>
+            ) : null
+          ) : (
+            <Link to="/cuenta/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+              <FontAwesomeIcon icon="plus" />
+              &nbsp; Crear nuevo Cuenta
+            </Link>
+          )}
         </div>
       </h2>
       <div className="table-responsive">
@@ -214,16 +231,18 @@ export const Cuenta = () => {
                       >
                         <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Editar</span>
                       </Button>
-                      <Button
-                        onClick={() =>
-                          (globalThis.location.href = `/cuenta/${cuenta.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`)
-                        }
-                        variant="danger"
-                        size="sm"
-                        data-cy="entityDeleteButton"
-                      >
-                        <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Eliminar</span>
-                      </Button>
+                      {!isCliente && (
+                        <Button
+                          onClick={() =>
+                            (globalThis.location.href = `/cuenta/${cuenta.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`)
+                          }
+                          variant="danger"
+                          size="sm"
+                          data-cy="entityDeleteButton"
+                        >
+                          <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Eliminar</span>
+                        </Button>
+                      )}
                     </div>
                   </td>
                 </tr>

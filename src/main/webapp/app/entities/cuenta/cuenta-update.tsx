@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getTipoDocumentos } from 'app/entities/tipo-documento/tipo-documento.reducer';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
+import { Authority } from 'app/shared/jhipster/constants';
 import { Genero } from 'app/shared/model/enumerations/genero.model';
 
 import { createEntity, getEntity, reset, updateEntity } from './cuenta.reducer';
@@ -26,6 +27,8 @@ export const CuentaUpdate = () => {
   const loading = useAppSelector(state => state.cuenta.loading);
   const updating = useAppSelector(state => state.cuenta.updating);
   const updateSuccess = useAppSelector(state => state.cuenta.updateSuccess);
+  const authorities = useAppSelector(state => state.authentication.account.authorities || []);
+  const isCliente = authorities.includes(Authority.CLIENTE);
   const generoValues = Object.keys(Genero);
 
   const handleClose = () => {
@@ -53,7 +56,7 @@ export const CuentaUpdate = () => {
     const entity = {
       ...cuentaEntity,
       ...values,
-      user: users.find(it => it.id.toString() === values.user?.toString()),
+      user: isCliente ? cuentaEntity?.user : users.find(it => it.id.toString() === values.user?.toString()),
       tipoDocumento: tipoDocumentos.find(it => it.id.toString() === values.tipoDocumento?.toString()),
     };
 
@@ -185,7 +188,7 @@ export const CuentaUpdate = () => {
                 accept="image/*"
               />
               <ValidatedField label="Activo" id="cuenta-activo" name="activo" data-cy="activo" check type="checkbox" />
-              <ValidatedField id="cuenta-user" name="user" data-cy="user" label="User" type="select" required>
+              <ValidatedField id="cuenta-user" name="user" data-cy="user" label="User" type="select" required disabled={isCliente}>
                 <option value="" key="0" />
                 {users
                   ? users.map(otherEntity => (
