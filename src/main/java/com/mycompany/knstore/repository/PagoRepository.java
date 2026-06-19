@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PagoRepository extends MongoRepository<Pago, String> {
-    Page<Pago> findByPedidoCuentaUserLogin(String login, Pageable pageable);
+    Page<Pago> findByPedidoId(String login, Pageable pageable);
 
-    Optional<Pago> findByIdAndPedidoCuentaUserLogin(String id, String login);
+    Optional<Pago> findByIdAndPedidoId(String id, String login);
 }

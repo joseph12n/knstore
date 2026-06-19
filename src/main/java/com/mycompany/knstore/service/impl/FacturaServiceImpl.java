@@ -66,8 +66,8 @@ public class FacturaServiceImpl implements FacturaService {
     public Page<FacturaDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Facturas");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .map(login -> facturaRepository.findByPagoPedidoCuentaUserLogin(login, pageable).map(facturaMapper::toDto))
+            return SecurityUtils.getCurrentUserId()
+                .map(login -> facturaRepository.findByPagoId(login, pageable).map(facturaMapper::toDto))
                 .orElse(Page.empty(pageable));
         }
         return facturaRepository.findAll(pageable).map(facturaMapper::toDto);
@@ -77,8 +77,8 @@ public class FacturaServiceImpl implements FacturaService {
     public Optional<FacturaDTO> findOne(String id) {
         LOG.debug("Request to get Factura : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .flatMap(login -> facturaRepository.findByIdAndPagoPedidoCuentaUserLogin(id, login))
+            return SecurityUtils.getCurrentUserId()
+                .flatMap(login -> facturaRepository.findByIdAndPagoId(id, login))
                 .map(facturaMapper::toDto);
         }
         return facturaRepository.findById(id).map(facturaMapper::toDto);

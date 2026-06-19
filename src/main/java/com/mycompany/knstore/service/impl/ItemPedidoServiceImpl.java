@@ -69,10 +69,10 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     public List<ItemPedidoDTO> findAll() {
         LOG.debug("Request to get all ItemPedidos");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
+            return SecurityUtils.getCurrentUserId()
                 .map(login ->
                     itemPedidoRepository
-                        .findByPedidoCuentaUserLogin(login)
+                        .findByPedidoId(login)
                         .stream()
                         .map(itemPedidoMapper::toDto)
                         .collect(Collectors.toCollection(LinkedList::new))
@@ -90,8 +90,8 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     public Optional<ItemPedidoDTO> findOne(String id) {
         LOG.debug("Request to get ItemPedido : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .flatMap(login -> itemPedidoRepository.findByIdAndPedidoCuentaUserLogin(id, login))
+            return SecurityUtils.getCurrentUserId()
+                .flatMap(login -> itemPedidoRepository.findByIdAndPedidoId(id, login))
                 .map(itemPedidoMapper::toDto);
         }
         return itemPedidoRepository.findOneWithEagerRelationships(id).map(itemPedidoMapper::toDto);
