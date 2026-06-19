@@ -40,7 +40,7 @@ public class AdminUserDTO implements Serializable {
 
     private boolean activated = false;
 
-    @Size(min = 2, max = 10)
+    @Size(max = 10)
     private String langKey;
 
     private String createdBy;
