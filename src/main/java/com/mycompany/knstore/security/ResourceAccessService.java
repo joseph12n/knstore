@@ -254,8 +254,8 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentLogin()
-            .flatMap(login -> direccionRepository.findByIdAndCuentaId(id, login).map(direccion -> true))
+        return getCurrentAccountId()
+            .flatMap(cuentaId -> direccionRepository.findByIdAndCuentaId(id, cuentaId).map(direccion -> true))
             .orElse(false);
     }
 
@@ -272,5 +272,11 @@ public class ResourceAccessService {
 
     private Optional<String> getCurrentLogin() {
         return SecurityUtils.getCurrentUserId();
+    }
+
+    private Optional<String> getCurrentAccountId() {
+        return SecurityUtils.getCurrentUserId()
+            .flatMap(cuentaRepository::findOneByUserId)
+            .map(cuenta -> cuenta.getId());
     }
 }
