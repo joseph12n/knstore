@@ -25,7 +25,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/tipo-documentos")
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+@PreAuthorize("isAuthenticated()")
 public class TipoDocumentoResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(TipoDocumentoResource.class);
@@ -52,6 +52,7 @@ public class TipoDocumentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<TipoDocumentoDTO> createTipoDocumento(@Valid @RequestBody TipoDocumentoDTO tipoDocumentoDTO)
         throws URISyntaxException {
         LOG.debug("REST request to save TipoDocumento : {}", tipoDocumentoDTO);
@@ -75,6 +76,7 @@ public class TipoDocumentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<TipoDocumentoDTO> updateTipoDocumento(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody TipoDocumentoDTO tipoDocumentoDTO
@@ -109,6 +111,7 @@ public class TipoDocumentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<TipoDocumentoDTO> partialUpdateTipoDocumento(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody TipoDocumentoDTO tipoDocumentoDTO
@@ -164,6 +167,7 @@ public class TipoDocumentoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<Void> deleteTipoDocumento(@PathVariable("id") String id) {
         LOG.debug("REST request to delete TipoDocumento : {}", id);
         tipoDocumentoService.delete(id);

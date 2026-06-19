@@ -79,7 +79,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> cuentaRepository.findByIdAndUserLogin(id, login).map(cuenta -> true))
+            .flatMap(login -> cuentaRepository.findByIdAndUserId(id, login).map(cuenta -> true))
             .orElse(false);
     }
 
@@ -101,7 +101,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> carritoRepository.findByIdAndCuentaUserLogin(id, login).map(carrito -> true))
+            .flatMap(login -> carritoRepository.findByIdAndCuentaId(id, login).map(carrito -> true))
             .orElse(false);
     }
 
@@ -123,7 +123,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> pedidoRepository.findByIdAndCuentaUserLogin(id, login).map(pedido -> true))
+            .flatMap(login -> pedidoRepository.findByIdAndCuentaId(id, login).map(pedido -> true))
             .orElse(false);
     }
 
@@ -145,7 +145,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> itemCarritoRepository.findByIdAndCarritoCuentaUserLogin(id, login).map(itemCarrito -> true))
+            .flatMap(login -> itemCarritoRepository.findByIdAndCarritoId(id, login).map(itemCarrito -> true))
             .orElse(false);
     }
 
@@ -167,7 +167,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> itemPedidoRepository.findByIdAndPedidoCuentaUserLogin(id, login).map(itemPedido -> true))
+            .flatMap(login -> itemPedidoRepository.findByIdAndPedidoId(id, login).map(itemPedido -> true))
             .orElse(false);
     }
 
@@ -189,7 +189,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> pagoRepository.findByIdAndPedidoCuentaUserLogin(id, login).map(pago -> true))
+            .flatMap(login -> pagoRepository.findByIdAndPedidoId(id, login).map(pago -> true))
             .orElse(false);
     }
 
@@ -211,7 +211,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> envioRepository.findByIdAndPedidoCuentaUserLogin(id, login).map(envio -> true))
+            .flatMap(login -> envioRepository.findByIdAndPedidoId(id, login).map(envio -> true))
             .orElse(false);
     }
 
@@ -233,7 +233,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> facturaRepository.findByIdAndPagoPedidoCuentaUserLogin(id, login).map(factura -> true))
+            .flatMap(login -> facturaRepository.findByIdAndPagoId(id, login).map(factura -> true))
             .orElse(false);
     }
 
@@ -255,7 +255,7 @@ public class ResourceAccessService {
             return false;
         }
         return getCurrentLogin()
-            .flatMap(login -> direccionRepository.findByIdAndCuentaUserLogin(id, login).map(direccion -> true))
+            .flatMap(login -> direccionRepository.findByIdAndCuentaId(id, login).map(direccion -> true))
             .orElse(false);
     }
 
@@ -271,6 +271,6 @@ public class ResourceAccessService {
     }
 
     private Optional<String> getCurrentLogin() {
-        return SecurityUtils.getCurrentUserLogin();
+        return SecurityUtils.getCurrentUserId();
     }
 }

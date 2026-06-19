@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface DireccionRepository extends MongoRepository<Direccion, String> {
-    Page<Direccion> findByCuentaUserLogin(String login, Pageable pageable);
+    Page<Direccion> findByCuentaId(String login, Pageable pageable);
 
-    List<Direccion> findByCuentaUserLoginAndPedidoIsNull(String login);
+    List<Direccion> findByCuentaIdAndPedidoIsNull(String login);
 
-    Optional<Direccion> findByIdAndCuentaUserLogin(String id, String login);
+    Optional<Direccion> findByIdAndCuentaId(String id, String login);
 }

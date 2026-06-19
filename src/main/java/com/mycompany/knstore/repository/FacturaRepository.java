@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FacturaRepository extends MongoRepository<Factura, String> {
-    Page<Factura> findByPagoPedidoCuentaUserLogin(String login, Pageable pageable);
+    Page<Factura> findByPagoId(String login, Pageable pageable);
 
-    Optional<Factura> findByIdAndPagoPedidoCuentaUserLogin(String id, String login);
+    Optional<Factura> findByIdAndPagoId(String id, String login);
 }

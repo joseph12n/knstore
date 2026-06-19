@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CarritoRepository extends MongoRepository<Carrito, String> {
-    List<Carrito> findByCuentaUserLogin(String login);
+    List<Carrito> findByCuentaId(String cuentaId);
 
-    Optional<Carrito> findByIdAndCuentaUserLogin(String id, String login);
+    Optional<Carrito> findByIdAndCuentaId(String id, String cuentaId);
 }

@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -39,16 +40,20 @@ public class MailService {
 
     private final SpringTemplateEngine templateEngine;
 
+    private final boolean enabled;
+
     public MailService(
         JHipsterProperties jHipsterProperties,
         JavaMailSender javaMailSender,
         MessageSource messageSource,
-        SpringTemplateEngine templateEngine
+        SpringTemplateEngine templateEngine,
+        @Value("${jhipster.mail.enabled:true}") boolean enabled
     ) {
         this.jHipsterProperties = jHipsterProperties;
         this.javaMailSender = javaMailSender;
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
+        this.enabled = enabled;
     }
 
     @Async
@@ -57,6 +62,10 @@ public class MailService {
     }
 
     private void sendEmailSync(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
+        if (!enabled) {
+            LOG.debug("Email sending is disabled; skipping message to '{}'", to);
+            return;
+        }
         LOG.debug(
             "Send email[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
             isMultipart,
@@ -77,7 +86,7 @@ public class MailService {
             javaMailSender.send(mimeMessage);
             LOG.debug("Sent email to User '{}'", to);
         } catch (MailException | MessagingException e) {
-            LOG.warn("Email could not be sent to user '{}'", to, e);
+            LOG.warn("Email could not be sent to user '{}': {}", to, e.getMessage());
         }
     }
 

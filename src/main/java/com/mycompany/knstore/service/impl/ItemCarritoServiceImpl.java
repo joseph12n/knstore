@@ -69,10 +69,10 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public List<ItemCarritoDTO> findAll() {
         LOG.debug("Request to get all ItemCarritos");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
+            return SecurityUtils.getCurrentUserId()
                 .map(login ->
                     itemCarritoRepository
-                        .findByCarritoCuentaUserLogin(login)
+                        .findByCarritoId(login)
                         .stream()
                         .map(itemCarritoMapper::toDto)
                         .collect(Collectors.toCollection(LinkedList::new))
@@ -90,8 +90,8 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public Optional<ItemCarritoDTO> findOne(String id) {
         LOG.debug("Request to get ItemCarrito : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .flatMap(login -> itemCarritoRepository.findByIdAndCarritoCuentaUserLogin(id, login))
+            return SecurityUtils.getCurrentUserId()
+                .flatMap(login -> itemCarritoRepository.findByIdAndCarritoId(id, login))
                 .map(itemCarritoMapper::toDto);
         }
         return itemCarritoRepository.findOneWithEagerRelationships(id).map(itemCarritoMapper::toDto);

@@ -66,8 +66,8 @@ public class PagoServiceImpl implements PagoService {
     public Page<PagoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Pagos");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .map(login -> pagoRepository.findByPedidoCuentaUserLogin(login, pageable).map(pagoMapper::toDto))
+            return SecurityUtils.getCurrentUserId()
+                .map(login -> pagoRepository.findByPedidoId(login, pageable).map(pagoMapper::toDto))
                 .orElse(Page.empty(pageable));
         }
         return pagoRepository.findAll(pageable).map(pagoMapper::toDto);
@@ -77,8 +77,8 @@ public class PagoServiceImpl implements PagoService {
     public Optional<PagoDTO> findOne(String id) {
         LOG.debug("Request to get Pago : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .flatMap(login -> pagoRepository.findByIdAndPedidoCuentaUserLogin(id, login))
+            return SecurityUtils.getCurrentUserId()
+                .flatMap(login -> pagoRepository.findByIdAndPedidoId(id, login))
                 .map(pagoMapper::toDto);
         }
         return pagoRepository.findById(id).map(pagoMapper::toDto);

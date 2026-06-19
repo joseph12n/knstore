@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface EnvioRepository extends MongoRepository<Envio, String> {
-    Page<Envio> findByPedidoCuentaUserLogin(String login, Pageable pageable);
+    Page<Envio> findByPedidoId(String login, Pageable pageable);
 
-    Optional<Envio> findByIdAndPedidoCuentaUserLogin(String id, String login);
+    Optional<Envio> findByIdAndPedidoId(String id, String login);
 }

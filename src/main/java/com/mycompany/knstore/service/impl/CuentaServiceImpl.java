@@ -66,8 +66,8 @@ public class CuentaServiceImpl implements CuentaService {
     public Page<CuentaDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Cuentas");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .map(login -> cuentaRepository.findByUserLogin(login, pageable).map(cuentaMapper::toDto))
+            return SecurityUtils.getCurrentUserId()
+                .map(userId -> cuentaRepository.findByUserId(userId, pageable).map(cuentaMapper::toDto))
                 .orElse(Page.empty(pageable));
         }
         return cuentaRepository.findAll(pageable).map(cuentaMapper::toDto);
@@ -75,8 +75,8 @@ public class CuentaServiceImpl implements CuentaService {
 
     public Page<CuentaDTO> findAllWithEagerRelationships(Pageable pageable) {
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .map(login -> cuentaRepository.findByUserLogin(login, pageable).map(cuentaMapper::toDto))
+            return SecurityUtils.getCurrentUserId()
+                .map(userId -> cuentaRepository.findByUserId(userId, pageable).map(cuentaMapper::toDto))
                 .orElse(Page.empty(pageable));
         }
         return cuentaRepository.findAllWithEagerRelationships(pageable).map(cuentaMapper::toDto);
@@ -86,8 +86,8 @@ public class CuentaServiceImpl implements CuentaService {
     public Optional<CuentaDTO> findOne(String id) {
         LOG.debug("Request to get Cuenta : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .flatMap(login -> cuentaRepository.findByIdAndUserLogin(id, login))
+            return SecurityUtils.getCurrentUserId()
+                .flatMap(userId -> cuentaRepository.findByIdAndUserId(id, userId))
                 .map(cuentaMapper::toDto);
         }
         return cuentaRepository.findOneWithEagerRelationships(id).map(cuentaMapper::toDto);
