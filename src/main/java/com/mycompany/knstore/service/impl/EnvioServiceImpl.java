@@ -66,8 +66,8 @@ public class EnvioServiceImpl implements EnvioService {
     public Page<EnvioDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Envios");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .map(login -> envioRepository.findByPedidoCuentaUserLogin(login, pageable).map(envioMapper::toDto))
+            return SecurityUtils.getCurrentUserId()
+                .map(login -> envioRepository.findByPedidoId(login, pageable).map(envioMapper::toDto))
                 .orElse(Page.empty(pageable));
         }
         return envioRepository.findAll(pageable).map(envioMapper::toDto);
@@ -77,8 +77,8 @@ public class EnvioServiceImpl implements EnvioService {
     public Optional<EnvioDTO> findOne(String id) {
         LOG.debug("Request to get Envio : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserLogin()
-                .flatMap(login -> envioRepository.findByIdAndPedidoCuentaUserLogin(id, login))
+            return SecurityUtils.getCurrentUserId()
+                .flatMap(login -> envioRepository.findByIdAndPedidoId(id, login))
                 .map(envioMapper::toDto);
         }
         return envioRepository.findById(id).map(envioMapper::toDto);

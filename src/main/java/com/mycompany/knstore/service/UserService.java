@@ -219,7 +219,7 @@ public class UserService {
      * @param imageUrl  image URL of user.
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtils.getCurrentUserId()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
                 user.setFirstName(firstName);
@@ -235,7 +235,7 @@ public class UserService {
     }
 
     public void changePassword(String currentClearTextPassword, String newPassword) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtils.getCurrentUserId()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
                 String currentEncryptedPassword = user.getPassword();
