@@ -55,6 +55,7 @@ local.properties
 *.ipr
 *.ids
 *.orig
+CONTEXT.md
 classes/
 out/
 
