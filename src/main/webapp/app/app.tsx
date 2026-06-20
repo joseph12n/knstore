@@ -1,10 +1,11 @@
 import 'react-toastify/dist/ReactToastify.css';
 import './app.scss';
+import 'app/storefront/styles/storefront.scss';
 import 'app/config/dayjs';
 
 import React, { useEffect } from 'react';
 import { Card } from 'react-bootstrap';
-import { BrowserRouter } from 'react-router';
+import { BrowserRouter, useLocation } from 'react-router';
 
 import { ToastContainer } from 'react-toastify';
 
@@ -20,7 +21,26 @@ import { getSession } from 'app/shared/reducers/authentication';
 
 const baseHref = document.querySelector('base')!.getAttribute('href')!.replace(/\/$/, '');
 
-export const App = () => {
+const AppContent = () => {
+  const location = useLocation();
+  // Rutas que pertenecen al dashboard administrativo generado por JHipster.
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  // Las rutas de entidades CRUD autogeneradas también usan el layout admin.
+  const isEntityCrudRoute =
+    !isAdminRoute &&
+    !location.pathname.startsWith('/cuenta') &&
+    !location.pathname.startsWith('/carrito') &&
+    !location.pathname.startsWith('/checkout') &&
+    !location.pathname.startsWith('/categorias') &&
+    !location.pathname.startsWith('/productos') &&
+    !location.pathname.startsWith('/buscar') &&
+    location.pathname !== '/' &&
+    location.pathname !== '/login' &&
+    location.pathname !== '/logout' &&
+    !location.pathname.startsWith('/account');
+
+  const isStorefrontRoute = !isAdminRoute && !isEntityCrudRoute;
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -36,33 +56,48 @@ export const App = () => {
   const isInProduction = useAppSelector(state => state.applicationProfile.inProduction);
   const isOpenAPIEnabled = useAppSelector(state => state.applicationProfile.isOpenAPIEnabled);
 
+  if (isStorefrontRoute) {
+    return (
+      <div className="app-container storefront-app">
+        <ToastContainer position="top-right" className="toastify-container" toastClassName="toastify-toast" />
+        <ErrorBoundary>
+          <AppRoutes />
+        </ErrorBoundary>
+      </div>
+    );
+  }
+
   const paddingTop = '60px';
   return (
-    <BrowserRouter basename={baseHref}>
-      <div className="app-container" style={{ paddingTop }}>
-        <ToastContainer position="top-left" className="toastify-container" toastClassName="toastify-toast" />
-        <ErrorBoundary>
-          <Header
-            isAuthenticated={isAuthenticated}
-            isAdmin={isAdmin}
-            isManager={isManager}
-            isCliente={isCliente}
-            ribbonEnv={ribbonEnv}
-            isInProduction={isInProduction}
-            isOpenAPIEnabled={isOpenAPIEnabled}
-          />
-        </ErrorBoundary>
-        <div className="container-fluid view-container" id="app-view-container">
-          <Card className="jh-card">
-            <ErrorBoundary>
-              <AppRoutes />
-            </ErrorBoundary>
-          </Card>
-          <Footer />
-        </div>
+    <div className="app-container" style={{ paddingTop }}>
+      <ToastContainer position="top-left" className="toastify-container" toastClassName="toastify-toast" />
+      <ErrorBoundary>
+        <Header
+          isAuthenticated={isAuthenticated}
+          isAdmin={isAdmin}
+          isManager={isManager}
+          isCliente={isCliente}
+          ribbonEnv={ribbonEnv}
+          isInProduction={isInProduction}
+          isOpenAPIEnabled={isOpenAPIEnabled}
+        />
+      </ErrorBoundary>
+      <div className="container-fluid view-container" id="app-view-container">
+        <Card className="jh-card">
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
+        </Card>
+        <Footer />
       </div>
-    </BrowserRouter>
+    </div>
   );
 };
+
+export const App = () => (
+  <BrowserRouter basename={baseHref}>
+    <AppContent />
+  </BrowserRouter>
+);
 
 export default App;
