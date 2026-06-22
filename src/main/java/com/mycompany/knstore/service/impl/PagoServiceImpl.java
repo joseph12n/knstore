@@ -1,16 +1,21 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Pago;
+import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.PagoRepository;
+import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.PagoService;
 import com.mycompany.knstore.service.dto.PagoDTO;
 import com.mycompany.knstore.service.mapper.PagoMapper;
+import java.util.LinkedList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +29,21 @@ public class PagoServiceImpl implements PagoService {
 
     private final PagoRepository pagoRepository;
 
+    private final PedidoRepository pedidoRepository;
+
+    private final CuentaRepository cuentaRepository;
+
     private final PagoMapper pagoMapper;
 
-    public PagoServiceImpl(PagoRepository pagoRepository, PagoMapper pagoMapper) {
+    public PagoServiceImpl(
+        PagoRepository pagoRepository,
+        PedidoRepository pedidoRepository,
+        CuentaRepository cuentaRepository,
+        PagoMapper pagoMapper
+    ) {
         this.pagoRepository = pagoRepository;
+        this.pedidoRepository = pedidoRepository;
+        this.cuentaRepository = cuentaRepository;
         this.pagoMapper = pagoMapper;
     }
 
@@ -66,8 +82,18 @@ public class PagoServiceImpl implements PagoService {
     public Page<PagoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Pagos");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserId()
-                .map(login -> pagoRepository.findByPedidoId(login, pageable).map(pagoMapper::toDto))
+            return getCurrentAccountId()
+                .map(cuentaId -> {
+                    LinkedList<PagoDTO> pagos = pedidoRepository
+                        .findByCuentaId(cuentaId, Pageable.unpaged())
+                        .getContent()
+                        .stream()
+                        .flatMap(pedido -> pagoRepository.findByPedidoId(pedido.getId(), Pageable.unpaged()).getContent().stream())
+                        .map(pagoMapper::toDto)
+                        .collect(Collectors.toCollection(LinkedList::new));
+                    Page<PagoDTO> page = new PageImpl<>(pagos, pageable, pagos.size());
+                    return page;
+                })
                 .orElse(Page.empty(pageable));
         }
         return pagoRepository.findAll(pageable).map(pagoMapper::toDto);
@@ -77,8 +103,17 @@ public class PagoServiceImpl implements PagoService {
     public Optional<PagoDTO> findOne(String id) {
         LOG.debug("Request to get Pago : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserId()
-                .flatMap(login -> pagoRepository.findByIdAndPedidoId(id, login))
+            return getCurrentAccountId()
+                .flatMap(cuentaId ->
+                    pedidoRepository
+                        .findByCuentaId(cuentaId, Pageable.unpaged())
+                        .getContent()
+                        .stream()
+                        .map(pedido -> pagoRepository.findByIdAndPedidoId(id, pedido.getId()))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .findFirst()
+                )
                 .map(pagoMapper::toDto);
         }
         return pagoRepository.findById(id).map(pagoMapper::toDto);
@@ -88,5 +123,11 @@ public class PagoServiceImpl implements PagoService {
     public void delete(String id) {
         LOG.debug("Request to delete Pago : {}", id);
         pagoRepository.deleteById(id);
+    }
+
+    private Optional<String> getCurrentAccountId() {
+        return SecurityUtils.getCurrentUserId()
+            .flatMap(cuentaRepository::findOneByUserId)
+            .map(cuenta -> cuenta.getId());
     }
 }

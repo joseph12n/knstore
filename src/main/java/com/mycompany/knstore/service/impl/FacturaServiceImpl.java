@@ -1,16 +1,22 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Factura;
+import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.FacturaRepository;
+import com.mycompany.knstore.repository.PagoRepository;
+import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.FacturaService;
 import com.mycompany.knstore.service.dto.FacturaDTO;
 import com.mycompany.knstore.service.mapper.FacturaMapper;
+import java.util.LinkedList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +30,25 @@ public class FacturaServiceImpl implements FacturaService {
 
     private final FacturaRepository facturaRepository;
 
+    private final PagoRepository pagoRepository;
+
+    private final PedidoRepository pedidoRepository;
+
+    private final CuentaRepository cuentaRepository;
+
     private final FacturaMapper facturaMapper;
 
-    public FacturaServiceImpl(FacturaRepository facturaRepository, FacturaMapper facturaMapper) {
+    public FacturaServiceImpl(
+        FacturaRepository facturaRepository,
+        PagoRepository pagoRepository,
+        PedidoRepository pedidoRepository,
+        CuentaRepository cuentaRepository,
+        FacturaMapper facturaMapper
+    ) {
         this.facturaRepository = facturaRepository;
+        this.pagoRepository = pagoRepository;
+        this.pedidoRepository = pedidoRepository;
+        this.cuentaRepository = cuentaRepository;
         this.facturaMapper = facturaMapper;
     }
 
@@ -66,8 +87,24 @@ public class FacturaServiceImpl implements FacturaService {
     public Page<FacturaDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Facturas");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserId()
-                .map(login -> facturaRepository.findByPagoId(login, pageable).map(facturaMapper::toDto))
+            return getCurrentAccountId()
+                .map(cuentaId -> {
+                    LinkedList<FacturaDTO> facturas = pedidoRepository
+                        .findByCuentaId(cuentaId, Pageable.unpaged())
+                        .getContent()
+                        .stream()
+                        .flatMap(pedido ->
+                            pagoRepository
+                                .findByPedidoId(pedido.getId(), Pageable.unpaged())
+                                .getContent()
+                                .stream()
+                                .flatMap(pago -> facturaRepository.findByPagoId(pago.getId(), Pageable.unpaged()).getContent().stream())
+                        )
+                        .map(facturaMapper::toDto)
+                        .collect(Collectors.toCollection(LinkedList::new));
+                    Page<FacturaDTO> page = new PageImpl<>(facturas, pageable, facturas.size());
+                    return page;
+                })
                 .orElse(Page.empty(pageable));
         }
         return facturaRepository.findAll(pageable).map(facturaMapper::toDto);
@@ -77,8 +114,23 @@ public class FacturaServiceImpl implements FacturaService {
     public Optional<FacturaDTO> findOne(String id) {
         LOG.debug("Request to get Factura : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserId()
-                .flatMap(login -> facturaRepository.findByIdAndPagoId(id, login))
+            return getCurrentAccountId()
+                .flatMap(cuentaId ->
+                    pedidoRepository
+                        .findByCuentaId(cuentaId, Pageable.unpaged())
+                        .getContent()
+                        .stream()
+                        .flatMap(pedido ->
+                            pagoRepository
+                                .findByPedidoId(pedido.getId(), Pageable.unpaged())
+                                .getContent()
+                                .stream()
+                                .map(pago -> facturaRepository.findByIdAndPagoId(id, pago.getId()))
+                        )
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .findFirst()
+                )
                 .map(facturaMapper::toDto);
         }
         return facturaRepository.findById(id).map(facturaMapper::toDto);
@@ -88,5 +140,11 @@ public class FacturaServiceImpl implements FacturaService {
     public void delete(String id) {
         LOG.debug("Request to delete Factura : {}", id);
         facturaRepository.deleteById(id);
+    }
+
+    private Optional<String> getCurrentAccountId() {
+        return SecurityUtils.getCurrentUserId()
+            .flatMap(cuentaRepository::findOneByUserId)
+            .map(cuenta -> cuenta.getId());
     }
 }

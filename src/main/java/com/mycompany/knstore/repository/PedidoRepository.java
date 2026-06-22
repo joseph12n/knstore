@@ -17,5 +17,7 @@ public interface PedidoRepository extends MongoRepository<Pedido, String> {
 
     List<Pedido> findByCuentaUserLoginAndEnvioIsNull(String login);
 
+    List<Pedido> findByCuentaIdAndEnvioIsNull(String cuentaId);
+
     Optional<Pedido> findByIdAndCuentaId(String id, String login);
 }
