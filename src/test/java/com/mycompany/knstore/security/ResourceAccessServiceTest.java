@@ -95,7 +95,7 @@ class ResourceAccessServiceTest {
     @Test
     void clienteCanAccessOwnCuentaId() {
         authenticate("cliente", AuthoritiesConstants.CLIENTE);
-        when(cuentaRepository.findByIdAndUserLogin("cuenta-1", "cliente")).thenReturn(Optional.of(new Cuenta()));
+        when(cuentaRepository.findByIdAndUserId("cuenta-1", "cliente")).thenReturn(Optional.of(new Cuenta()));
 
         boolean canAccess = resourceAccessService.canAccessCuentaId("cuenta-1");
 
@@ -105,7 +105,7 @@ class ResourceAccessServiceTest {
     @Test
     void clienteCannotAccessAnotherCuentaId() {
         authenticate("cliente", AuthoritiesConstants.CLIENTE);
-        when(cuentaRepository.findByIdAndUserLogin("cuenta-1", "cliente")).thenReturn(Optional.empty());
+        when(cuentaRepository.findByIdAndUserId("cuenta-1", "cliente")).thenReturn(Optional.empty());
 
         boolean canAccess = resourceAccessService.canAccessCuentaId("cuenta-1");
 
@@ -115,7 +115,7 @@ class ResourceAccessServiceTest {
     @Test
     void clienteCanAccessItemCarritoWhenCarritoIsOwn() {
         authenticate("cliente", AuthoritiesConstants.CLIENTE);
-        when(carritoRepository.findByIdAndCuentaUserLogin("carrito-1", "cliente")).thenReturn(Optional.of(new Carrito()));
+        when(carritoRepository.findByIdAndCuentaId("carrito-1", "cliente")).thenReturn(Optional.of(new Carrito()));
 
         ItemCarritoDTO itemCarritoDTO = new ItemCarritoDTO();
         CarritoDTO carritoDTO = new CarritoDTO();
@@ -130,7 +130,7 @@ class ResourceAccessServiceTest {
     @Test
     void clienteCanAccessFacturaWhenPagoBelongsToUser() {
         authenticate("cliente", AuthoritiesConstants.CLIENTE);
-        when(facturaRepository.findByIdAndPagoPedidoCuentaUserLogin("factura-1", "cliente")).thenReturn(Optional.of(new Factura()));
+        when(facturaRepository.findByIdAndPagoId("factura-1", "cliente")).thenReturn(Optional.of(new Factura()));
 
         boolean canAccess = resourceAccessService.canAccessFacturaId("factura-1");
 

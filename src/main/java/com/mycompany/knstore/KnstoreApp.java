@@ -23,7 +23,6 @@ import tech.jhipster.config.JHipsterConstants;
 public class KnstoreApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(KnstoreApp.class);
-
     private final Environment env;
 
     public KnstoreApp(Environment env) {
