@@ -95,7 +95,7 @@ class ResourceAccessServiceTest {
     @Test
     void clienteCanAccessOwnCuentaId() {
         authenticate("cliente", AuthoritiesConstants.CLIENTE);
-        when(cuentaRepository.findByIdAndUserLogin("cuenta-1", "cliente")).thenReturn(Optional.of(new Cuenta()));
+        when(cuentaRepositorys.findByIdAndUserLogin("cuenta-1", "cliente")).thenReturn(Optional.of(new Cuenta()));
 
         boolean canAccess = resourceAccessService.canAccessCuentaId("cuenta-1");
 

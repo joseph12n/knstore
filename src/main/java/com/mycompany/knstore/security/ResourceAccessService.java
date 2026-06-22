@@ -78,8 +78,8 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentUserLogin()
-            .flatMap(login -> cuentaRepository.findByIdAndUserId(id, login).map(cuenta -> true))
+        return SecurityUtils.getCurrentUserId()
+            .flatMap(userId -> cuentaRepository.findByIdAndUserId(id, userId).map(cuenta -> true))
             .orElse(false);
     }
 
@@ -282,10 +282,7 @@ public class ResourceAccessService {
         if (isAdminOrManager()) {
             return true;
         }
-        if (!isCliente() || direccionDTO == null || direccionDTO.getCuenta() == null || direccionDTO.getCuenta().getId() == null) {
-            return false;
-        }
-        return canAccessCuentaId(direccionDTO.getCuenta().getId());
+        return isCliente();
     }
 
     public boolean canAccessDireccionId(String id) {

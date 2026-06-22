@@ -51,7 +51,7 @@ export const DireccionUpdate = () => {
     const entity = {
       ...direccionEntity,
       ...values,
-      cuenta: isCliente ? direccionEntity?.cuenta : cuentas.find(it => it.id.toString() === values.cuenta?.toString()),
+      cuenta: isCliente ? direccionEntity?.cuenta || cuentas[0] : cuentas.find(it => it.id.toString() === values.cuenta?.toString()),
     };
 
     if (isNew) {
@@ -139,25 +139,31 @@ export const DireccionUpdate = () => {
                 }}
               />
               <ValidatedField label="Activo" id="direccion-activo" name="activo" data-cy="activo" check type="checkbox" />
-              <ValidatedField
-                id="direccion-cuenta"
-                name="cuenta"
-                data-cy="cuenta"
-                label="Cuenta"
-                type="select"
-                required
-                disabled={isCliente}
-              >
-                <option value="" key="0" />
-                {cuentas
-                  ? cuentas.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <FormText>Este campo es obligatorio.</FormText>
+              {isCliente ? (
+                <ValidatedField
+                  id="direccion-cuenta"
+                  name="cuenta"
+                  data-cy="cuenta"
+                  label="Cuenta"
+                  type="text"
+                  readOnly
+                  value={cuentas[0]?.id || direccionEntity?.cuenta?.id || ''}
+                />
+              ) : (
+                <>
+                  <ValidatedField id="direccion-cuenta" name="cuenta" data-cy="cuenta" label="Cuenta" type="select" required>
+                    <option value="" key="0" />
+                    {cuentas
+                      ? cuentas.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </ValidatedField>
+                  <FormText>Este campo es obligatorio.</FormText>
+                </>
+              )}
               <Button as={Link as any} id="cancel-save" data-cy="entityCreateCancelButton" to="/direccion" replace variant="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
