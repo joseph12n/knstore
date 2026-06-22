@@ -63,7 +63,7 @@ public class MailService {
 
     private void sendEmailSync(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         if (!enabled) {
-            LOG.debug("Email sending is disabled; skipping message to '{}'", to);
+            LOG.warn("Email sending is disabled; skipping message to '{}'", to);
             return;
         }
         LOG.debug(

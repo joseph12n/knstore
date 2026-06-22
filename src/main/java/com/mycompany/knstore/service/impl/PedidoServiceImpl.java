@@ -1,6 +1,7 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Pedido;
+import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
@@ -28,10 +29,13 @@ public class PedidoServiceImpl implements PedidoService {
 
     private final PedidoRepository pedidoRepository;
 
+    private final CuentaRepository cuentaRepository;
+
     private final PedidoMapper pedidoMapper;
 
-    public PedidoServiceImpl(PedidoRepository pedidoRepository, PedidoMapper pedidoMapper) {
+    public PedidoServiceImpl(PedidoRepository pedidoRepository, CuentaRepository cuentaRepository, PedidoMapper pedidoMapper) {
         this.pedidoRepository = pedidoRepository;
+        this.cuentaRepository = cuentaRepository;
         this.pedidoMapper = pedidoMapper;
     }
 
@@ -70,8 +74,8 @@ public class PedidoServiceImpl implements PedidoService {
     public Page<PedidoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Pedidos");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserId()
-                .map(login -> pedidoRepository.findByCuentaId(login, pageable).map(pedidoMapper::toDto))
+            return getCurrentAccountId()
+                .map(cuentaId -> pedidoRepository.findByCuentaId(cuentaId, pageable).map(pedidoMapper::toDto))
                 .orElse(Page.empty(pageable));
         }
         return pedidoRepository.findAll(pageable).map(pedidoMapper::toDto);
@@ -85,10 +89,10 @@ public class PedidoServiceImpl implements PedidoService {
     public List<PedidoDTO> findAllWhereEnvioIsNull() {
         LOG.debug("Request to get all pedidos where Envio is null");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserId()
-                .map(login ->
+            return getCurrentAccountId()
+                .map(cuentaId ->
                     pedidoRepository
-                        .findByCuentaUserLoginAndEnvioIsNull(login)
+                        .findByCuentaIdAndEnvioIsNull(cuentaId)
                         .stream()
                         .map(pedidoMapper::toDto)
                         .collect(Collectors.toCollection(LinkedList::new))
@@ -105,8 +109,8 @@ public class PedidoServiceImpl implements PedidoService {
     public Optional<PedidoDTO> findOne(String id) {
         LOG.debug("Request to get Pedido : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return SecurityUtils.getCurrentUserId()
-                .flatMap(login -> pedidoRepository.findByIdAndCuentaId(id, login))
+            return getCurrentAccountId()
+                .flatMap(cuentaId -> pedidoRepository.findByIdAndCuentaId(id, cuentaId))
                 .map(pedidoMapper::toDto);
         }
         return pedidoRepository.findById(id).map(pedidoMapper::toDto);
@@ -116,5 +120,11 @@ public class PedidoServiceImpl implements PedidoService {
     public void delete(String id) {
         LOG.debug("Request to delete Pedido : {}", id);
         pedidoRepository.deleteById(id);
+    }
+
+    private Optional<String> getCurrentAccountId() {
+        return SecurityUtils.getCurrentUserId()
+            .flatMap(cuentaRepository::findOneByUserId)
+            .map(cuenta -> cuenta.getId());
     }
 }
