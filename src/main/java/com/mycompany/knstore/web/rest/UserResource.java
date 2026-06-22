@@ -140,6 +140,9 @@ public class UserResource {
         @Valid @RequestBody AdminUserDTO userDTO
     ) {
         LOG.debug("REST request to update User : {}", userDTO);
+        if (login != null && !login.equalsIgnoreCase(userDTO.getLogin())) {
+            throw new BadRequestAlertException("Invalid login", "userManagement", "logininvalid");
+        }
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
