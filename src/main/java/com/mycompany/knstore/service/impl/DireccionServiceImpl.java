@@ -6,6 +6,7 @@ import com.mycompany.knstore.repository.DireccionRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.DireccionService;
+import com.mycompany.knstore.service.dto.CuentaDTO;
 import com.mycompany.knstore.service.dto.DireccionDTO;
 import com.mycompany.knstore.service.mapper.DireccionMapper;
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public class DireccionServiceImpl implements DireccionService {
     @Override
     public DireccionDTO save(DireccionDTO direccionDTO) {
         LOG.debug("Request to save Direccion : {}", direccionDTO);
+        assignCurrentClienteCuentaIfMissing(direccionDTO);
         Direccion direccion = direccionMapper.toEntity(direccionDTO);
         direccion = direccionRepository.save(direccion);
         return direccionMapper.toDto(direccion);
@@ -54,6 +56,7 @@ public class DireccionServiceImpl implements DireccionService {
     @Override
     public DireccionDTO update(DireccionDTO direccionDTO) {
         LOG.debug("Request to update Direccion : {}", direccionDTO);
+        assignCurrentClienteCuentaIfMissing(direccionDTO);
         Direccion direccion = direccionMapper.toEntity(direccionDTO);
         direccion = direccionRepository.save(direccion);
         return direccionMapper.toDto(direccion);
@@ -62,6 +65,7 @@ public class DireccionServiceImpl implements DireccionService {
     @Override
     public Optional<DireccionDTO> partialUpdate(DireccionDTO direccionDTO) {
         LOG.debug("Request to partially update Direccion : {}", direccionDTO);
+        assignCurrentClienteCuentaIfMissing(direccionDTO);
 
         return direccionRepository
             .findById(direccionDTO.getId())
@@ -130,5 +134,18 @@ public class DireccionServiceImpl implements DireccionService {
         return SecurityUtils.getCurrentUserId()
             .flatMap(cuentaRepository::findOneByUserId)
             .map(cuenta -> cuenta.getId());
+    }
+
+    private void assignCurrentClienteCuentaIfMissing(DireccionDTO direccionDTO) {
+        if (!SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            return;
+        }
+        if (direccionDTO.getCuenta() != null && direccionDTO.getCuenta().getId() != null) {
+            return;
+        }
+        String cuentaId = getCurrentAccountId().orElseThrow(() -> new IllegalStateException("Current client account not found"));
+        CuentaDTO cuentaDTO = new CuentaDTO();
+        cuentaDTO.setId(cuentaId);
+        direccionDTO.setCuenta(cuentaDTO);
     }
 }
