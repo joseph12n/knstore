@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -29,6 +30,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/pagos")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
 public class PagoResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(PagoResource.class);
@@ -55,6 +57,7 @@ public class PagoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPagoDto(#pagoDTO)")
     public ResponseEntity<PagoDTO> createPago(@Valid @RequestBody PagoDTO pagoDTO) throws URISyntaxException {
         LOG.debug("REST request to save Pago : {}", pagoDTO);
         if (pagoDTO.getId() != null) {
@@ -77,6 +80,9 @@ public class PagoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessPagoId(#id) and @resourceAccessService.canAccessPagoDto(#pagoDTO))"
+    )
     public ResponseEntity<PagoDTO> updatePago(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody PagoDTO pagoDTO
@@ -111,6 +117,9 @@ public class PagoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessPagoId(#id) and @resourceAccessService.canAccessPagoDto(#pagoDTO))"
+    )
     public ResponseEntity<PagoDTO> partialUpdatePago(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody PagoDTO pagoDTO
@@ -156,6 +165,7 @@ public class PagoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the pagoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPagoId(#id)")
     public ResponseEntity<PagoDTO> getPago(@PathVariable("id") String id) {
         LOG.debug("REST request to get Pago : {}", id);
         Optional<PagoDTO> pagoDTO = pagoService.findOne(id);
@@ -169,6 +179,7 @@ public class PagoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPagoId(#id)")
     public ResponseEntity<Void> deletePago(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Pago : {}", id);
         pagoService.delete(id);

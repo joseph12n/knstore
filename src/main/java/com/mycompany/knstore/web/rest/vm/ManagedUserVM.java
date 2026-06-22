@@ -1,6 +1,7 @@
 package com.mycompany.knstore.web.rest.vm;
 
 import com.mycompany.knstore.service.dto.AdminUserDTO;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -12,6 +13,7 @@ public class ManagedUserVM extends AdminUserDTO {
 
     public static final int PASSWORD_MAX_LENGTH = 100;
 
+    @NotBlank
     @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String password;
 

@@ -22,4 +22,8 @@ public interface ItemCarritoRepository extends MongoRepository<ItemCarrito, Stri
 
     @Query("{'id': ?0}")
     Optional<ItemCarrito> findOneWithEagerRelationships(String id);
+
+    List<ItemCarrito> findByCarritoId(String login);
+
+    Optional<ItemCarrito> findByIdAndCarritoId(String id, String login);
 }

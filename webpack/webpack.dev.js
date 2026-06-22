@@ -10,6 +10,7 @@ const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
 const ENV = 'development';
+const useDesktopNotifier = process.platform !== 'win32';
 
 module.exports = async options =>
   webpackMerge(await commonConfig({ env: ENV }), {
@@ -97,9 +98,11 @@ module.exports = async options =>
           reload: false,
         },
       ),
-      new WebpackNotifierPlugin({
-        title: 'Knstore',
-        contentImage: path.join(__dirname, 'logo-jhipster.png'),
-      }),
+      useDesktopNotifier
+        ? new WebpackNotifierPlugin({
+            title: 'Knstore',
+            contentImage: path.join(__dirname, 'logo-jhipster.png'),
+          })
+        : null,
     ].filter(Boolean),
   });

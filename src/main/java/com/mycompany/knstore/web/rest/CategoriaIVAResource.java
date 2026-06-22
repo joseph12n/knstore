@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -24,6 +25,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/categoria-ivas")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
 public class CategoriaIVAResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(CategoriaIVAResource.class);

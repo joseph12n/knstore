@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import { Authority } from 'app/shared/jhipster/constants';
 
 import { createEntity, getEntity, reset, updateEntity } from './direccion.reducer';
 
@@ -23,6 +24,8 @@ export const DireccionUpdate = () => {
   const loading = useAppSelector(state => state.direccion.loading);
   const updating = useAppSelector(state => state.direccion.updating);
   const updateSuccess = useAppSelector(state => state.direccion.updateSuccess);
+  const authorities = useAppSelector(state => state.authentication.account.authorities || []);
+  const isCliente = authorities.includes(Authority.CLIENTE);
 
   const handleClose = () => {
     navigate(`/direccion${location.search}`);
@@ -48,7 +51,7 @@ export const DireccionUpdate = () => {
     const entity = {
       ...direccionEntity,
       ...values,
-      cuenta: cuentas.find(it => it.id.toString() === values.cuenta?.toString()),
+      cuenta: isCliente ? direccionEntity?.cuenta || cuentas[0] : cuentas.find(it => it.id.toString() === values.cuenta?.toString()),
     };
 
     if (isNew) {
@@ -136,17 +139,31 @@ export const DireccionUpdate = () => {
                 }}
               />
               <ValidatedField label="Activo" id="direccion-activo" name="activo" data-cy="activo" check type="checkbox" />
-              <ValidatedField id="direccion-cuenta" name="cuenta" data-cy="cuenta" label="Cuenta" type="select" required>
-                <option value="" key="0" />
-                {cuentas
-                  ? cuentas.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <FormText>Este campo es obligatorio.</FormText>
+              {isCliente ? (
+                <ValidatedField
+                  id="direccion-cuenta"
+                  name="cuenta"
+                  data-cy="cuenta"
+                  label="Cuenta"
+                  type="text"
+                  readOnly
+                  value={cuentas[0]?.id || direccionEntity?.cuenta?.id || ''}
+                />
+              ) : (
+                <>
+                  <ValidatedField id="direccion-cuenta" name="cuenta" data-cy="cuenta" label="Cuenta" type="select" required>
+                    <option value="" key="0" />
+                    {cuentas
+                      ? cuentas.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </ValidatedField>
+                  <FormText>Este campo es obligatorio.</FormText>
+                </>
+              )}
               <Button as={Link as any} id="cancel-save" data-cy="entityCreateCancelButton" to="/direccion" replace variant="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

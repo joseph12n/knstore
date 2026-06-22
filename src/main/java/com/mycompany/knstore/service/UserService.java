@@ -9,6 +9,7 @@ import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.dto.AdminUserDTO;
 import com.mycompany.knstore.service.dto.UserDTO;
+import com.mycompany.knstore.web.rest.vm.ManagedUserVM;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -125,7 +126,7 @@ public class UserService {
         return true;
     }
 
-    public User createUser(AdminUserDTO userDTO) {
+    public User createUser(ManagedUserVM userDTO) {
         User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
@@ -134,12 +135,16 @@ public class UserService {
             user.setEmail(userDTO.getEmail().toLowerCase());
         }
         user.setImageUrl(userDTO.getImageUrl());
-        if (userDTO.getLangKey() == null) {
+        if (userDTO.getLangKey() == null || userDTO.getLangKey().isBlank()) {
             user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        String password = userDTO.getPassword();
+        if (password == null || password.isBlank()) {
+            password = RandomUtil.generatePassword();
+        }
+        String encryptedPassword = passwordEncoder.encode(password);
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
@@ -178,7 +183,9 @@ public class UserService {
                 }
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
-                user.setLangKey(userDTO.getLangKey());
+                if (userDTO.getLangKey() != null && !userDTO.getLangKey().isBlank()) {
+                    user.setLangKey(userDTO.getLangKey());
+                }
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO
@@ -212,7 +219,7 @@ public class UserService {
      * @param imageUrl  image URL of user.
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtils.getCurrentUserId()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
                 user.setFirstName(firstName);
@@ -228,7 +235,7 @@ public class UserService {
     }
 
     public void changePassword(String currentClearTextPassword, String newPassword) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtils.getCurrentUserId()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
                 String currentEncryptedPassword = user.getPassword();

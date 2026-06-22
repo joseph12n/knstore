@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -30,6 +31,7 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/pedidos")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
 public class PedidoResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(PedidoResource.class);
@@ -56,6 +58,7 @@ public class PedidoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPedidoDto(#pedidoDTO)")
     public ResponseEntity<PedidoDTO> createPedido(@Valid @RequestBody PedidoDTO pedidoDTO) throws URISyntaxException {
         LOG.debug("REST request to save Pedido : {}", pedidoDTO);
         if (pedidoDTO.getId() != null) {
@@ -78,6 +81,9 @@ public class PedidoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessPedidoId(#id) and @resourceAccessService.canAccessPedidoDto(#pedidoDTO))"
+    )
     public ResponseEntity<PedidoDTO> updatePedido(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody PedidoDTO pedidoDTO
@@ -112,6 +118,9 @@ public class PedidoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessPedidoId(#id) and @resourceAccessService.canAccessPedidoDto(#pedidoDTO))"
+    )
     public ResponseEntity<PedidoDTO> partialUpdatePedido(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody PedidoDTO pedidoDTO
@@ -165,6 +174,7 @@ public class PedidoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the pedidoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPedidoId(#id)")
     public ResponseEntity<PedidoDTO> getPedido(@PathVariable("id") String id) {
         LOG.debug("REST request to get Pedido : {}", id);
         Optional<PedidoDTO> pedidoDTO = pedidoService.findOne(id);
@@ -178,6 +188,7 @@ public class PedidoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPedidoId(#id)")
     public ResponseEntity<Void> deletePedido(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Pedido : {}", id);
         pedidoService.delete(id);
