@@ -36,7 +36,7 @@ spring:
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   mongodb:
-    uri: mongodb://localhost:27017/knstore
+    uri: mongodb://localhost:27017/knstoretest
   thymeleaf:
     cache: false
 

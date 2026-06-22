@@ -66,7 +66,7 @@ public class ResourceAccessService {
         if (cuentaDTO == null || cuentaDTO.getUser() == null || cuentaDTO.getUser().getLogin() == null) {
             return false;
         }
-        return getCurrentUserLogin()
+        return getCurrentLogin()
             .map(login -> login.equalsIgnoreCase(cuentaDTO.getUser().getLogin()))
             .orElse(false);
     }
@@ -78,8 +78,8 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return SecurityUtils.getCurrentUserId()
-            .flatMap(userId -> cuentaRepository.findByIdAndUserId(id, userId).map(cuenta -> true))
+        return getCurrentLogin()
+            .flatMap(login -> cuentaRepository.findByIdAndUserId(id, login).map(cuenta -> true))
             .orElse(false);
     }
 
@@ -100,7 +100,7 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
+        return getCurrentLogin()
             .flatMap(login -> carritoRepository.findByIdAndCuentaId(id, login).map(carrito -> true))
             .orElse(false);
     }
@@ -122,7 +122,7 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
+        return getCurrentLogin()
             .flatMap(login -> pedidoRepository.findByIdAndCuentaId(id, login).map(pedido -> true))
             .orElse(false);
     }
@@ -144,14 +144,8 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                carritoRepository
-                    .findByCuentaId(cuentaId)
-                    .stream()
-                    .map(carrito -> carrito.getId())
-                    .anyMatch(carritoId -> itemCarritoRepository.findByIdAndCarritoId(id, carritoId).isPresent())
-            )
+        return getCurrentLogin()
+            .flatMap(login -> itemCarritoRepository.findByIdAndCarritoId(id, login).map(itemCarrito -> true))
             .orElse(false);
     }
 
@@ -172,15 +166,8 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                pedidoRepository
-                    .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                    .getContent()
-                    .stream()
-                    .map(pedido -> pedido.getId())
-                    .anyMatch(pedidoId -> itemPedidoRepository.findByIdAndPedidoId(id, pedidoId).isPresent())
-            )
+        return getCurrentLogin()
+            .flatMap(login -> itemPedidoRepository.findByIdAndPedidoId(id, login).map(itemPedido -> true))
             .orElse(false);
     }
 
@@ -201,15 +188,8 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                pedidoRepository
-                    .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                    .getContent()
-                    .stream()
-                    .map(pedido -> pedido.getId())
-                    .anyMatch(pedidoId -> pagoRepository.findByIdAndPedidoId(id, pedidoId).isPresent())
-            )
+        return getCurrentLogin()
+            .flatMap(login -> pagoRepository.findByIdAndPedidoId(id, login).map(pago -> true))
             .orElse(false);
     }
 
@@ -230,15 +210,8 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                pedidoRepository
-                    .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                    .getContent()
-                    .stream()
-                    .map(pedido -> pedido.getId())
-                    .anyMatch(pedidoId -> envioRepository.findByIdAndPedidoId(id, pedidoId).isPresent())
-            )
+        return getCurrentLogin()
+            .flatMap(login -> envioRepository.findByIdAndPedidoId(id, login).map(envio -> true))
             .orElse(false);
     }
 
@@ -259,22 +232,8 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                pedidoRepository
-                    .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                    .getContent()
-                    .stream()
-                    .map(pedido -> pedido.getId())
-                    .anyMatch(pedidoId ->
-                        pagoRepository
-                            .findByPedidoId(pedidoId, org.springframework.data.domain.Pageable.unpaged())
-                            .getContent()
-                            .stream()
-                            .map(pago -> pago.getId())
-                            .anyMatch(pagoId -> facturaRepository.findByIdAndPagoId(id, pagoId).isPresent())
-                    )
-            )
+        return getCurrentLogin()
+            .flatMap(login -> facturaRepository.findByIdAndPagoId(id, login).map(factura -> true))
             .orElse(false);
     }
 
@@ -282,7 +241,10 @@ public class ResourceAccessService {
         if (isAdminOrManager()) {
             return true;
         }
-        return isCliente();
+        if (!isCliente() || direccionDTO == null || direccionDTO.getCuenta() == null || direccionDTO.getCuenta().getId() == null) {
+            return false;
+        }
+        return canAccessCuentaId(direccionDTO.getCuenta().getId());
     }
 
     public boolean canAccessDireccionId(String id) {
@@ -308,8 +270,8 @@ public class ResourceAccessService {
         return SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE);
     }
 
-    private Optional<String> getCurrentUserLogin() {
-        return SecurityUtils.getCurrentUserLogin();
+    private Optional<String> getCurrentLogin() {
+        return SecurityUtils.getCurrentUserId();
     }
 
     private Optional<String> getCurrentAccountId() {

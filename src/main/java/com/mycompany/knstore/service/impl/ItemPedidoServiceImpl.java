@@ -1,9 +1,7 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.ItemPedido;
-import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.ItemPedidoRepository;
-import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.ItemPedidoService;
@@ -29,21 +27,10 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
 
     private final ItemPedidoRepository itemPedidoRepository;
 
-    private final PedidoRepository pedidoRepository;
-
-    private final CuentaRepository cuentaRepository;
-
     private final ItemPedidoMapper itemPedidoMapper;
 
-    public ItemPedidoServiceImpl(
-        ItemPedidoRepository itemPedidoRepository,
-        PedidoRepository pedidoRepository,
-        CuentaRepository cuentaRepository,
-        ItemPedidoMapper itemPedidoMapper
-    ) {
+    public ItemPedidoServiceImpl(ItemPedidoRepository itemPedidoRepository, ItemPedidoMapper itemPedidoMapper) {
         this.itemPedidoRepository = itemPedidoRepository;
-        this.pedidoRepository = pedidoRepository;
-        this.cuentaRepository = cuentaRepository;
         this.itemPedidoMapper = itemPedidoMapper;
     }
 
@@ -82,13 +69,11 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     public List<ItemPedidoDTO> findAll() {
         LOG.debug("Request to get all ItemPedidos");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return getCurrentAccountId()
-                .map(cuentaId ->
-                    pedidoRepository
-                        .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                        .getContent()
+            return SecurityUtils.getCurrentUserId()
+                .map(login ->
+                    itemPedidoRepository
+                        .findByPedidoId(login)
                         .stream()
-                        .flatMap(pedido -> itemPedidoRepository.findByPedidoId(pedido.getId()).stream())
                         .map(itemPedidoMapper::toDto)
                         .collect(Collectors.toCollection(LinkedList::new))
                 )
@@ -105,17 +90,8 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     public Optional<ItemPedidoDTO> findOne(String id) {
         LOG.debug("Request to get ItemPedido : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return getCurrentAccountId()
-                .flatMap(cuentaId ->
-                    pedidoRepository
-                        .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                        .getContent()
-                        .stream()
-                        .map(pedido -> itemPedidoRepository.findByIdAndPedidoId(id, pedido.getId()))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .findFirst()
-                )
+            return SecurityUtils.getCurrentUserId()
+                .flatMap(login -> itemPedidoRepository.findByIdAndPedidoId(id, login))
                 .map(itemPedidoMapper::toDto);
         }
         return itemPedidoRepository.findOneWithEagerRelationships(id).map(itemPedidoMapper::toDto);
@@ -125,11 +101,5 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     public void delete(String id) {
         LOG.debug("Request to delete ItemPedido : {}", id);
         itemPedidoRepository.deleteById(id);
-    }
-
-    private Optional<String> getCurrentAccountId() {
-        return SecurityUtils.getCurrentUserId()
-            .flatMap(cuentaRepository::findOneByUserId)
-            .map(cuenta -> cuenta.getId());
     }
 }

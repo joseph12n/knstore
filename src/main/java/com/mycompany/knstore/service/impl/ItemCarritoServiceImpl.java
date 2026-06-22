@@ -1,8 +1,6 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.ItemCarrito;
-import com.mycompany.knstore.repository.CarritoRepository;
-import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.ItemCarritoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
@@ -29,21 +27,10 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
 
     private final ItemCarritoRepository itemCarritoRepository;
 
-    private final CarritoRepository carritoRepository;
-
-    private final CuentaRepository cuentaRepository;
-
     private final ItemCarritoMapper itemCarritoMapper;
 
-    public ItemCarritoServiceImpl(
-        ItemCarritoRepository itemCarritoRepository,
-        CarritoRepository carritoRepository,
-        CuentaRepository cuentaRepository,
-        ItemCarritoMapper itemCarritoMapper
-    ) {
+    public ItemCarritoServiceImpl(ItemCarritoRepository itemCarritoRepository, ItemCarritoMapper itemCarritoMapper) {
         this.itemCarritoRepository = itemCarritoRepository;
-        this.carritoRepository = carritoRepository;
-        this.cuentaRepository = cuentaRepository;
         this.itemCarritoMapper = itemCarritoMapper;
     }
 
@@ -82,12 +69,11 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public List<ItemCarritoDTO> findAll() {
         LOG.debug("Request to get all ItemCarritos");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return getCurrentAccountId()
-                .map(cuentaId ->
-                    carritoRepository
-                        .findByCuentaId(cuentaId)
+            return SecurityUtils.getCurrentUserId()
+                .map(login ->
+                    itemCarritoRepository
+                        .findByCarritoId(login)
                         .stream()
-                        .flatMap(carrito -> itemCarritoRepository.findByCarritoId(carrito.getId()).stream())
                         .map(itemCarritoMapper::toDto)
                         .collect(Collectors.toCollection(LinkedList::new))
                 )
@@ -104,16 +90,8 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public Optional<ItemCarritoDTO> findOne(String id) {
         LOG.debug("Request to get ItemCarrito : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
-            return getCurrentAccountId()
-                .flatMap(cuentaId ->
-                    carritoRepository
-                        .findByCuentaId(cuentaId)
-                        .stream()
-                        .map(carrito -> itemCarritoRepository.findByIdAndCarritoId(id, carrito.getId()))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .findFirst()
-                )
+            return SecurityUtils.getCurrentUserId()
+                .flatMap(login -> itemCarritoRepository.findByIdAndCarritoId(id, login))
                 .map(itemCarritoMapper::toDto);
         }
         return itemCarritoRepository.findOneWithEagerRelationships(id).map(itemCarritoMapper::toDto);
@@ -123,11 +101,5 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public void delete(String id) {
         LOG.debug("Request to delete ItemCarrito : {}", id);
         itemCarritoRepository.deleteById(id);
-    }
-
-    private Optional<String> getCurrentAccountId() {
-        return SecurityUtils.getCurrentUserId()
-            .flatMap(cuentaRepository::findOneByUserId)
-            .map(cuenta -> cuenta.getId());
     }
 }
