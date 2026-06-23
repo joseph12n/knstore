@@ -9,6 +9,7 @@ import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.dto.AdminUserDTO;
 import com.mycompany.knstore.service.dto.UserDTO;
+import com.mycompany.knstore.web.rest.vm.ManagedUserVM;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -111,7 +112,6 @@ public class UserService {
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
-        authorityRepository.findById(AuthoritiesConstants.CLIENTE).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         LOG.debug("Created Information for User: {}", newUser);
@@ -126,7 +126,7 @@ public class UserService {
         return true;
     }
 
-    public User createUser(AdminUserDTO userDTO, String password) {
+    public User createUser(ManagedUserVM userDTO) {
         User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
@@ -140,11 +140,11 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String newPassword = password;
-        if (newPassword == null || newPassword.isBlank()) {
-            newPassword = RandomUtil.generatePassword();
+        String password = userDTO.getPassword();
+        if (password == null || password.isBlank()) {
+            password = RandomUtil.generatePassword();
         }
-        String encryptedPassword = passwordEncoder.encode(newPassword);
+        String encryptedPassword = passwordEncoder.encode(password);
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
@@ -219,7 +219,7 @@ public class UserService {
      * @param imageUrl  image URL of user.
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtils.getCurrentUserId()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
                 user.setFirstName(firstName);
@@ -235,7 +235,7 @@ public class UserService {
     }
 
     public void changePassword(String currentClearTextPassword, String newPassword) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtils.getCurrentUserId()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
                 String currentEncryptedPassword = user.getPassword();

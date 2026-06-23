@@ -1,4 +1,4 @@
-package com.mycompany.knstore.service;
+package com.mycompany.knstore.security;
 
 import com.mycompany.knstore.repository.CarritoRepository;
 import com.mycompany.knstore.repository.CuentaRepository;
@@ -9,8 +9,6 @@ import com.mycompany.knstore.repository.ItemCarritoRepository;
 import com.mycompany.knstore.repository.ItemPedidoRepository;
 import com.mycompany.knstore.repository.PagoRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
-import com.mycompany.knstore.security.AuthoritiesConstants;
-import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.dto.CarritoDTO;
 import com.mycompany.knstore.service.dto.CuentaDTO;
 import com.mycompany.knstore.service.dto.DireccionDTO;
@@ -284,10 +282,7 @@ public class ResourceAccessService {
         if (isAdminOrManager()) {
             return true;
         }
-        if (!isCliente() || direccionDTO == null || direccionDTO.getCuenta() == null || direccionDTO.getCuenta().getId() == null) {
-            return false;
-        }
-        return canAccessCuentaId(direccionDTO.getCuenta().getId());
+        return isCliente();
     }
 
     public boolean canAccessDireccionId(String id) {

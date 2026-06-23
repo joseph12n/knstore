@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser(roles = { "ADMIN", "MANAGER" })
+@WithMockUser
 class ProductoImagenResourceIT {
 
     private static final byte[] DEFAULT_IMAGEN = TestUtil.createByteArray(1, "0");

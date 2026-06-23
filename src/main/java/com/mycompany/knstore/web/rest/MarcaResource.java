@@ -138,7 +138,6 @@ public class MarcaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Marcas in body.
      */
     @GetMapping("")
-    @PreAuthorize("permitAll()")
     public List<MarcaDTO> getAllMarcas() {
         LOG.debug("REST request to get all Marcas");
         return marcaService.findAll();
@@ -151,7 +150,6 @@ public class MarcaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the marcaDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<MarcaDTO> getMarca(@PathVariable("id") String id) {
         LOG.debug("REST request to get Marca : {}", id);
         Optional<MarcaDTO> marcaDTO = marcaService.findOne(id);
