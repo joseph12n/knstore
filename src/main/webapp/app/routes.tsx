@@ -236,15 +236,8 @@ const AppRoutes = () => {
             }
           />
 
-          {/* CRUD de entidades JHipster - solo ADMIN/MANAGER */}
-          <Route
-            path="*"
-            element={
-              <PrivateRoute hasAnyAuthorities={ADMIN_AUTHORITIES}>
-                <EntitiesRoutes />
-              </PrivateRoute>
-            }
-          />
+          {/* CRUD de entidades JHipster - cada ruta interna define sus propios permisos */}
+          <Route path="*" element={<EntitiesRoutes />} />
           <Route path="*" element={<PageNotFound />} />
         </ErrorBoundaryRoutes>
       </Suspense>
