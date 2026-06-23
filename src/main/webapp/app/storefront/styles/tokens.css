@@ -1,0 +1,84 @@
+/* ==========================================================================
+   KN Storefront - Design Tokens (RNF-012)
+   ==========================================================================
+   Sistema de tokens de diseño basado en variables CSS. Se usa exclusivamente
+   en el storefront de cliente. El panel /admin conserva el tema Bootswatch
+   Cyborg generado por JHipster.
+   ========================================================================== */
+
+:root {
+  /* --- Paleta de marca --- */
+  --kn-color-primary: #111111;
+  --kn-color-primary-rgb: 17, 17, 17;
+  --kn-color-secondary: #6c757d;
+  --kn-color-accent: #e31b23;
+  --kn-color-accent-rgb: 227, 27, 35;
+  --kn-color-accent-hover: #c4121a;
+
+  /* --- Superficies --- */
+  --kn-color-background: #ffffff;
+  --kn-color-surface: #f8f9fa;
+  --kn-color-surface-elevated: #ffffff;
+  --kn-color-border: #e9ecef;
+  --kn-color-border-strong: #dee2e6;
+
+  /* --- Texto --- */
+  --kn-color-text: #212529;
+  --kn-color-text-secondary: #6c757d;
+  --kn-color-text-muted: #adb5bd;
+  --kn-color-text-inverse: #ffffff;
+
+  /* --- Estados --- */
+  --kn-color-success: #198754;
+  --kn-color-warning: #ffc107;
+  --kn-color-danger: #dc3545;
+  --kn-color-info: #0dcaf0;
+
+  /* --- Tipografía --- */
+  --kn-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --kn-font-family-headings: var(--kn-font-family-base);
+  --kn-font-size-xs: 0.75rem;
+  --kn-font-size-sm: 0.875rem;
+  --kn-font-size-base: 1rem;
+  --kn-font-size-md: 1.125rem;
+  --kn-font-size-lg: 1.25rem;
+  --kn-font-size-xl: 1.5rem;
+  --kn-font-size-2xl: 2rem;
+  --kn-font-size-3xl: 2.5rem;
+  --kn-font-weight-normal: 400;
+  --kn-font-weight-medium: 500;
+  --kn-font-weight-semibold: 600;
+  --kn-font-weight-bold: 700;
+  --kn-line-height-base: 1.5;
+  --kn-line-height-heading: 1.2;
+
+  /* --- Espaciados --- */
+  --kn-space-1: 0.25rem;
+  --kn-space-2: 0.5rem;
+  --kn-space-3: 0.75rem;
+  --kn-space-4: 1rem;
+  --kn-space-5: 1.25rem;
+  --kn-space-6: 1.5rem;
+  --kn-space-8: 2rem;
+  --kn-space-10: 2.5rem;
+  --kn-space-12: 3rem;
+  --kn-space-16: 4rem;
+
+  /* --- Layout --- */
+  --kn-header-height: 4rem;
+  --kn-max-content-width: 1440px;
+  --kn-border-radius: 0.5rem;
+  --kn-border-radius-sm: 0.25rem;
+  --kn-border-radius-lg: 0.75rem;
+  --kn-border-radius-pill: 50rem;
+
+  /* --- Sombras --- */
+  --kn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --kn-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --kn-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* --- Transiciones --- */
+  --kn-transition-fast: 150ms ease-in-out;
+  --kn-transition-base: 250ms ease-in-out;
+  --kn-transition-slow: 350ms ease-in-out;
+}

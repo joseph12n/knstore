@@ -11,6 +11,7 @@ import com.mycompany.knstore.service.dto.CategoriaDTO;
 import com.mycompany.knstore.service.dto.CategoriaIVADTO;
 import com.mycompany.knstore.service.dto.MarcaDTO;
 import com.mycompany.knstore.service.dto.ProductoDTO;
+import com.mycompany.knstore.service.dto.ProductoImagenDTO;
 import com.mycompany.knstore.service.dto.ProductoInventarioDTO;
 import com.mycompany.knstore.service.dto.ProductoPrecioDTO;
 import com.mycompany.knstore.service.dto.SubcategoriaDTO;
@@ -19,7 +20,7 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Producto} and its DTO {@link ProductoDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { ProductoImagenMapper.class })
 public interface ProductoMapper extends EntityMapper<ProductoDTO, Producto> {
     @Mapping(target = "precio", source = "precio", qualifiedByName = "productoPrecioId")
     @Mapping(target = "inventario", source = "inventario", qualifiedByName = "productoInventarioId")
@@ -27,6 +28,7 @@ public interface ProductoMapper extends EntityMapper<ProductoDTO, Producto> {
     @Mapping(target = "subcategoria", source = "subcategoria", qualifiedByName = "subcategoriaNombre")
     @Mapping(target = "marca", source = "marca", qualifiedByName = "marcaId")
     @Mapping(target = "categoriaIva", source = "categoriaIva", qualifiedByName = "categoriaIVAId")
+    @Mapping(target = "imagenes", source = "imageneses")
     ProductoDTO toDto(Producto s);
 
     @Named("productoPrecioId")

@@ -1,10 +1,12 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Producto;
+import com.mycompany.knstore.repository.ProductoImagenRepository;
 import com.mycompany.knstore.repository.ProductoRepository;
 import com.mycompany.knstore.service.ProductoService;
 import com.mycompany.knstore.service.dto.ProductoDTO;
 import com.mycompany.knstore.service.mapper.ProductoMapper;
+import java.util.HashSet;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +24,17 @@ public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepository;
 
+    private final ProductoImagenRepository productoImagenRepository;
+
     private final ProductoMapper productoMapper;
 
-    public ProductoServiceImpl(ProductoRepository productoRepository, ProductoMapper productoMapper) {
+    public ProductoServiceImpl(
+        ProductoRepository productoRepository,
+        ProductoImagenRepository productoImagenRepository,
+        ProductoMapper productoMapper
+    ) {
         this.productoRepository = productoRepository;
+        this.productoImagenRepository = productoImagenRepository;
         this.productoMapper = productoMapper;
     }
 
@@ -63,17 +72,24 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public Page<ProductoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Productos");
-        return productoRepository.findAll(pageable).map(productoMapper::toDto);
+        return productoRepository.findAll(pageable).map(this::loadImages).map(productoMapper::toDto);
     }
 
     public Page<ProductoDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return productoRepository.findAllWithEagerRelationships(pageable).map(productoMapper::toDto);
+        return productoRepository.findAllWithEagerRelationships(pageable).map(this::loadImages).map(productoMapper::toDto);
     }
 
     @Override
     public Optional<ProductoDTO> findOne(String id) {
         LOG.debug("Request to get Producto : {}", id);
-        return productoRepository.findOneWithEagerRelationships(id).map(productoMapper::toDto);
+        return productoRepository.findOneWithEagerRelationships(id).map(this::loadImages).map(productoMapper::toDto);
+    }
+
+    private Producto loadImages(Producto producto) {
+        if (producto != null && producto.getId() != null) {
+            producto.setImageneses(new HashSet<>(productoImagenRepository.findByProductoId(producto.getId())));
+        }
+        return producto;
     }
 
     @Override
