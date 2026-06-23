@@ -13,7 +13,9 @@ import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Categoria;
 import com.mycompany.knstore.domain.Producto;
 import com.mycompany.knstore.domain.Subcategoria;
+import com.mycompany.knstore.repository.CategoriaRepository;
 import com.mycompany.knstore.repository.ProductoRepository;
+import com.mycompany.knstore.repository.SubcategoriaRepository;
 import com.mycompany.knstore.service.ProductoService;
 import com.mycompany.knstore.service.dto.ProductoDTO;
 import com.mycompany.knstore.service.mapper.ProductoMapper;
@@ -39,7 +41,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class ProductoResourceIT {
 
     private static final String DEFAULT_NOMBRE = "AAAAAAAAAA";
@@ -83,6 +85,12 @@ class ProductoResourceIT {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private SubcategoriaRepository subcategoriaRepository;
 
     @Mock
     private ProductoRepository productoRepositoryMock;
@@ -167,6 +175,8 @@ class ProductoResourceIT {
     @BeforeEach
     void initTest() {
         producto = createEntity();
+        categoriaRepository.save(producto.getCategoria());
+        subcategoriaRepository.save(producto.getSubcategoria());
     }
 
     @AfterEach
@@ -388,7 +398,9 @@ class ProductoResourceIT {
             .unidadMedida(UPDATED_UNIDAD_MEDIDA)
             .descripcion(UPDATED_DESCRIPCION)
             .destacado(UPDATED_DESTACADO)
-            .activo(UPDATED_ACTIVO);
+            .activo(UPDATED_ACTIVO)
+            .categoria(producto.getCategoria())
+            .subcategoria(producto.getSubcategoria());
         ProductoDTO productoDTO = productoMapper.toDto(updatedProducto);
 
         restProductoMockMvc
