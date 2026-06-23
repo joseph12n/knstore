@@ -145,6 +145,7 @@ public class ProductoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Productos in body.
      */
     @GetMapping("")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<ProductoDTO>> getAllProductos(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
@@ -167,6 +168,7 @@ public class ProductoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the productoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<ProductoDTO> getProducto(@PathVariable("id") String id) {
         LOG.debug("REST request to get Producto : {}", id);
         Optional<ProductoDTO> productoDTO = productoService.findOne(id);

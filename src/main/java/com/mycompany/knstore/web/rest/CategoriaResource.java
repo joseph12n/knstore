@@ -144,6 +144,7 @@ public class CategoriaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Categorias in body.
      */
     @GetMapping("")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<CategoriaDTO>> getAllCategorias(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         LOG.debug("REST request to get a page of Categorias");
         Page<CategoriaDTO> page = categoriaService.findAll(pageable);
@@ -158,6 +159,7 @@ public class CategoriaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the categoriaDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<CategoriaDTO> getCategoria(@PathVariable("id") String id) {
         LOG.debug("REST request to get Categoria : {}", id);
         Optional<CategoriaDTO> categoriaDTO = categoriaService.findOne(id);

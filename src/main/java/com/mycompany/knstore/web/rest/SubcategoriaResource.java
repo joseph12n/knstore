@@ -146,6 +146,7 @@ public class SubcategoriaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Subcategorias in body.
      */
     @GetMapping("")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<SubcategoriaDTO>> getAllSubcategorias(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
@@ -168,6 +169,7 @@ public class SubcategoriaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the subcategoriaDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<SubcategoriaDTO> getSubcategoria(@PathVariable("id") String id) {
         LOG.debug("REST request to get Subcategoria : {}", id);
         Optional<SubcategoriaDTO> subcategoriaDTO = subcategoriaService.findOne(id);
