@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, FormText, Row } from 'react-bootstrap';
 import { ValidatedField, ValidatedForm } from 'react-jhipster';
 import { Link, useNavigate, useParams } from 'react-router';
@@ -26,6 +26,7 @@ export const DireccionUpdate = () => {
   const updateSuccess = useAppSelector(state => state.direccion.updateSuccess);
   const authorities = useAppSelector(state => state.authentication.account.authorities || []);
   const isCliente = authorities.includes(Authority.CLIENTE);
+  const [selectedCuentaId, setSelectedCuentaId] = useState<string | undefined>(undefined);
 
   const handleClose = () => {
     navigate(`/direccion${location.search}`);
@@ -47,11 +48,27 @@ export const DireccionUpdate = () => {
     }
   }, [updateSuccess]);
 
+  useEffect(() => {
+    if (direccionEntity?.cuenta?.id) {
+      setSelectedCuentaId(direccionEntity.cuenta.id);
+    }
+  }, [direccionEntity]);
+
+  const resolveCuenta = value => {
+    if (value == null || value === '') {
+      return undefined;
+    }
+    if (typeof value === 'object' && value.id) {
+      return { id: value.id };
+    }
+    return { id: value.toString() };
+  };
+
   const saveEntity = values => {
     const entity = {
       ...direccionEntity,
       ...values,
-      cuenta: isCliente ? direccionEntity?.cuenta || cuentas[0] : cuentas.find(it => it.id.toString() === values.cuenta?.toString()),
+      cuenta: isCliente ? resolveCuenta(direccionEntity?.cuenta?.id) : resolveCuenta(selectedCuentaId || values.cuenta),
     };
 
     if (isNew) {
@@ -147,11 +164,19 @@ export const DireccionUpdate = () => {
                   label="Cuenta"
                   type="text"
                   readOnly
-                  value={cuentas[0]?.id || direccionEntity?.cuenta?.id || ''}
+                  value={direccionEntity?.cuenta?.id || ''}
                 />
               ) : (
                 <>
-                  <ValidatedField id="direccion-cuenta" name="cuenta" data-cy="cuenta" label="Cuenta" type="select" required>
+                  <ValidatedField
+                    id="direccion-cuenta"
+                    name="cuenta"
+                    data-cy="cuenta"
+                    label="Cuenta"
+                    type="select"
+                    required
+                    onChange={event => setSelectedCuentaId(event.target.value)}
+                  >
                     <option value="" key="0" />
                     {cuentas
                       ? cuentas.map(otherEntity => (
