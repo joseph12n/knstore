@@ -5,7 +5,6 @@ import { getEntities as getCategorias } from 'app/entities/categoria/categoria.r
 import { getEntities as getSubcategorias } from 'app/entities/subcategoria/subcategoria.reducer';
 import { getEntities as getMarcas } from 'app/entities/marca/marca.reducer';
 import { getEntities as getProductos } from 'app/entities/producto/producto.reducer';
-import { getEntities as getProductoImagenes } from 'app/entities/producto-imagen/producto-imagen.reducer';
 import { IProductoStorefront } from 'app/storefront/model/storefront.model';
 import { CATALOG_PAGE_SIZE } from 'app/storefront/utils/constants';
 
@@ -17,7 +16,6 @@ export const useCatalog = (options?: { page?: number; size?: number; sort?: stri
   const subcategorias = useAppSelector(state => state.subcategoria.entities) ?? [];
   const marcas = useAppSelector(state => state.marca.entities) ?? [];
   const productos = useAppSelector(state => state.producto.entities) ?? [];
-  const imagenes = useAppSelector(state => state.productoImagen.entities) ?? [];
   const categoriaLoading = useAppSelector(state => state.categoria.loading);
   const subcategoriaLoading = useAppSelector(state => state.subcategoria.loading);
   const productoLoading = useAppSelector(state => state.producto.loading);
@@ -33,20 +31,18 @@ export const useCatalog = (options?: { page?: number; size?: number; sort?: stri
 
   useEffect(() => {
     dispatch(getProductos({ page, size, sort }));
-    dispatch(getProductoImagenes({ page: 0, size: 1000, sort: 'esPrincipal,desc' }));
   }, [dispatch, page, size, sort]);
 
   const productosStorefront: IProductoStorefront[] = useMemo(() => {
-    // TODO backend: optimizar para que el DTO de Producto incluya imagenes directamente.
     let list = productos.map(p => ({
       ...p,
-      imagenes: imagenes.filter(img => img.producto?.id === p.id),
+      imagenes: p.imagenes ?? [],
     }));
     if (onlyActive) {
       list = list.filter(p => p.activo);
     }
     return list;
-  }, [productos, imagenes, onlyActive]);
+  }, [productos, onlyActive]);
 
   const categoriasActivas = useMemo(() => categorias.filter(c => c.activo), [categorias]);
   const subcategoriasActivas = useMemo(

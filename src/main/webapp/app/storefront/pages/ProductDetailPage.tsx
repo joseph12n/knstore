@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getEntities as getProductoImagenes } from 'app/entities/producto-imagen/producto-imagen.reducer';
 import { getEntities as getProductos } from 'app/entities/producto/producto.reducer';
 import { IProductoStorefront } from 'app/storefront/model/storefront.model';
 import { buildImageUrl, formatCOP } from 'app/storefront/utils/format';
@@ -28,18 +27,16 @@ export const ProductDetailPage = ({ onAddToCart }: ProductDetailPageProps) => {
   const productos = useAppSelector(state => state.producto.entities) ?? [];
   const loading = useAppSelector(state => state.producto.loading);
   const errorMessage = useAppSelector(state => state.producto.errorMessage);
-  const imagenes = useAppSelector(state => state.productoImagen.entities) ?? [];
 
   useEffect(() => {
     if (productos.length === 0) {
       dispatch(getProductos({ page: 0, size: 100, sort: 'nombre,asc' }));
     }
-    dispatch(getProductoImagenes({ page: 0, size: 1000, sort: 'esPrincipal,desc' }));
   }, [dispatch, productos.length]);
 
   const producto = useMemo(() => productos.find(p => p.slug === slug), [productos, slug]) as IProductoStorefront | undefined;
 
-  const productoImagenes = useMemo(() => (producto ? imagenes.filter(img => img.producto?.id === producto.id) : []), [imagenes, producto]);
+  const productoImagenes = useMemo(() => producto?.imagenes ?? [], [producto]);
 
   useEffect(() => {
     if (producto) {
