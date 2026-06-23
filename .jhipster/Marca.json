@@ -1,0 +1,25 @@
+{
+  "annotations": {
+    "changelogDate": "20260616211255"
+  },
+  "applications": ["knstore"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "slug",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength", "unique"],
+      "fieldValidateRulesMaxlength": "120"
+    }
+  ],
+  "name": "Marca",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
