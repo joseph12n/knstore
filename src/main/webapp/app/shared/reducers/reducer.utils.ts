@@ -26,21 +26,21 @@ export type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;
  * Check if the async action type is rejected
  */
 export function isRejectedAction(action: UnknownAction) {
-  return action.type.endsWith('/rejected');
+  return typeof action.type === 'string' && action.type.endsWith('/rejected');
 }
 
 /**
  * Check if the async action type is pending
  */
 export function isPendingAction(action: UnknownAction) {
-  return action.type.endsWith('/pending');
+  return typeof action.type === 'string' && action.type.endsWith('/pending');
 }
 
 /**
  * Check if the async action type is completed
  */
 export function isFulfilledAction(action: UnknownAction) {
-  return action.type.endsWith('/fulfilled');
+  return typeof action.type === 'string' && action.type.endsWith('/fulfilled');
 }
 
 const commonErrorProperties: (keyof SerializedError)[] = ['name', 'message', 'stack', 'code'];

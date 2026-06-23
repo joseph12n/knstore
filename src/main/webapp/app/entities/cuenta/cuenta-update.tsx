@@ -21,13 +21,14 @@ export const CuentaUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
+  const account = useAppSelector(state => state.authentication.account);
   const users = useAppSelector(state => state.userManagement.users);
   const tipoDocumentos = useAppSelector(state => state.tipoDocumento.entities);
   const cuentaEntity = useAppSelector(state => state.cuenta.entity);
   const loading = useAppSelector(state => state.cuenta.loading);
   const updating = useAppSelector(state => state.cuenta.updating);
   const updateSuccess = useAppSelector(state => state.cuenta.updateSuccess);
-  const authorities = useAppSelector(state => state.authentication.account.authorities || []);
+  const authorities = account.authorities || [];
   const isCliente = authorities.includes(Authority.CLIENTE);
   const generoValues = Object.keys(Genero);
 
@@ -42,7 +43,9 @@ export const CuentaUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getUsers({}));
+    if (!isCliente) {
+      dispatch(getUsers({}));
+    }
     dispatch(getTipoDocumentos({}));
   }, []);
 
@@ -56,7 +59,9 @@ export const CuentaUpdate = () => {
     const entity = {
       ...cuentaEntity,
       ...values,
-      user: isCliente ? cuentaEntity?.user : users.find(it => it.id.toString() === values.user?.toString()),
+      user: isCliente
+        ? cuentaEntity?.user || { id: account.id, login: account.login }
+        : users.find(it => it.id.toString() === values.user?.toString()),
       tipoDocumento: tipoDocumentos.find(it => it.id.toString() === values.tipoDocumento?.toString()),
     };
 
@@ -69,7 +74,9 @@ export const CuentaUpdate = () => {
 
   const defaultValues = () =>
     isNew
-      ? {}
+      ? {
+          user: isCliente ? account?.id : undefined,
+        }
       : {
           genero: 'MASCULINO',
           ...cuentaEntity,
@@ -188,17 +195,21 @@ export const CuentaUpdate = () => {
                 accept="image/*"
               />
               <ValidatedField label="Activo" id="cuenta-activo" name="activo" data-cy="activo" check type="checkbox" />
-              <ValidatedField id="cuenta-user" name="user" data-cy="user" label="User" type="select" required disabled={isCliente}>
-                <option value="" key="0" />
-                {users
-                  ? users.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.login}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <FormText>Este campo es obligatorio.</FormText>
+              {!isCliente && (
+                <>
+                  <ValidatedField id="cuenta-user" name="user" data-cy="user" label="User" type="select" required>
+                    <option value="" key="0" />
+                    {users
+                      ? users.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.login}
+                          </option>
+                        ))
+                      : null}
+                  </ValidatedField>
+                  <FormText>Este campo es obligatorio.</FormText>
+                </>
+              )}
               <ValidatedField id="cuenta-tipoDocumento" name="tipoDocumento" data-cy="tipoDocumento" label="Tipo Documento" type="select">
                 <option value="" key="0" />
                 {tipoDocumentos
