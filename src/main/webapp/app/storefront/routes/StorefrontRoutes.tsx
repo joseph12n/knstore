@@ -53,9 +53,25 @@ const StorefrontRoutes = ({ cartItems, onAddToCart, onUpdateCartQuantity, onRemo
       }
     />
     <Route
-      path="cuenta/direcciones"
+      index
       element={
         <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
+          <AccountPage />
+        </PrivateRoute>
+      }
+    />
+    <Route
+      path="cuenta/direcciones"
+      element={
+        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE]}>
+          <AddressesPage />
+        </PrivateRoute>
+      }
+    />
+    <Route
+      path="direcciones"
+      element={
+        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE]}>
           <AddressesPage />
         </PrivateRoute>
       }
@@ -69,7 +85,23 @@ const StorefrontRoutes = ({ cartItems, onAddToCart, onUpdateCartQuantity, onRemo
       }
     />
     <Route
+      path="pedidos"
+      element={
+        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
+          <OrdersPage />
+        </PrivateRoute>
+      }
+    />
+    <Route
       path="cuenta/pedidos/:id"
+      element={
+        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
+          <OrderDetailPage />
+        </PrivateRoute>
+      }
+    />
+    <Route
+      path="pedidos/:id"
       element={
         <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
           <OrderDetailPage />

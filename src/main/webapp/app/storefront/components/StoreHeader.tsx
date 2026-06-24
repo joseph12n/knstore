@@ -52,7 +52,7 @@ export const StoreHeader = ({
 
   const account = useAppSelector(state => state.authentication.account);
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
-  const isAdminOrManager = hasAnyAuthority(account.authorities, [Authority.ADMIN, Authority.MANAGER]);
+  const isAdmin = hasAnyAuthority(account.authorities, [Authority.ADMIN]);
 
   const cartCount = items.reduce((sum, item) => sum + item.cantidad, 0);
 
@@ -113,7 +113,7 @@ export const StoreHeader = ({
                     <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
                     Direcciones
                   </NavDropdown.Item>
-                  {isAdminOrManager && (
+                  {isAdmin && (
                     <>
                       <NavDropdown.Divider />
                       <NavDropdown.Item as={Link as any} to="/admin/user-management">
