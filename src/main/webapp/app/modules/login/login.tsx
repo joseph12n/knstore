@@ -43,13 +43,8 @@ export const Login = () => {
     if (hasAnyAuthority(accountAuthorities, [Authority.ADMIN])) {
       return <Navigate to="/admin/user-management" replace />;
     }
-
     if (hasAnyAuthority(accountAuthorities, [Authority.MANAGER])) {
-      return <Navigate to="/pedido" replace />;
-    }
-
-    if (hasAnyAuthority(accountAuthorities, [Authority.CLIENTE])) {
-      return <Navigate to="/carrito" replace />;
+      return <Navigate to="/entities/cuenta" replace />;
     }
 
     return <Navigate to="/" replace />;

@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 
 import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
 import PrivateRoute from 'app/shared/auth/private-route';
+import PageNotFound from 'app/shared/error/page-not-found';
 import { Authority } from 'app/shared/jhipster/constants';
 
 import EtiquetaProducto from './etiqueta-producto';
@@ -177,6 +178,7 @@ export default () => {
           }
         />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
+        <Route path="*" element={<PageNotFound />} />
       </ErrorBoundaryRoutes>
     </div>
   );

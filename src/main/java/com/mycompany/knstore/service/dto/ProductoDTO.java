@@ -2,7 +2,9 @@ package com.mycompany.knstore.service.dto;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.mycompany.knstore.domain.Producto} entity.
@@ -60,6 +62,8 @@ public class ProductoDTO implements Serializable {
     private MarcaDTO marca;
 
     private CategoriaIVADTO categoriaIva;
+
+    private Set<ProductoImagenDTO> imagenes = new HashSet<>();
 
     public String getId() {
         return id;
@@ -205,6 +209,14 @@ public class ProductoDTO implements Serializable {
         this.categoriaIva = categoriaIva;
     }
 
+    public Set<ProductoImagenDTO> getImagenes() {
+        return this.imagenes;
+    }
+
+    public void setImagenes(Set<ProductoImagenDTO> imagenes) {
+        this.imagenes = imagenes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -248,6 +260,7 @@ public class ProductoDTO implements Serializable {
             ", subcategoria=" + getSubcategoria() +
             ", marca=" + getMarca() +
             ", categoriaIva=" + getCategoriaIva() +
+            ", imagenes=" + getImagenes() +
             "}";
     }
 }
