@@ -83,6 +83,31 @@ const EntitiesMenu = () => {
           Pedido
         </MenuItem>
       )}
+      {isClientPanelRole && (
+        <MenuItem icon="asterisk" to="/item-pedido">
+          Item Pedido
+        </MenuItem>
+      )}
+      {isClientPanelRole && (
+        <MenuItem icon="asterisk" to="/item-carrito">
+          Item Carrito
+        </MenuItem>
+      )}
+      {isClientPanelRole && (
+        <MenuItem icon="asterisk" to="/pago">
+          Pago
+        </MenuItem>
+      )}
+      {isClientPanelRole && (
+        <MenuItem icon="asterisk" to="/envio">
+          Envio
+        </MenuItem>
+      )}
+      {isClientPanelRole && (
+        <MenuItem icon="asterisk" to="/factura">
+          Factura
+        </MenuItem>
+      )}
       {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
     </>
   );
