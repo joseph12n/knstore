@@ -46,9 +46,14 @@ module.exports = async options =>
         },
       ],
     },
+
     devServer: {
       host: '0.0.0.0',
       port: 9060,
+      allowedHosts: 'all',
+      client: {
+        webSocketURL: 'auto://0.0.0.0/ws',
+      },
       hot: true,
       static: {
         directory: './target/classes/static/',
