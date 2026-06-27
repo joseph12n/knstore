@@ -20,7 +20,7 @@ const loading = <div>loading ...</div>;
 
 const Account = React.lazy(() => import(/* webpackChunkName: "account" */ 'app/modules/account'));
 
-const ADMIN_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER];
+const ADMIN_AUTHORITIES = [Authority.ADMIN];
 const STORE_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER];
 const ACCOUNT_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER];
 

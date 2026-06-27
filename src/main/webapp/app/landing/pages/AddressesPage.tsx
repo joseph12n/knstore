@@ -1,10 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
+<<<<<<< HEAD:src/main/webapp/app/landing/pages/AddressesPage.tsx
 import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
+=======
+import { Button, Card, Col, Container, Form, Modal, Row } from 'react-bootstrap';
+import { Link } from 'react-router';
+>>>>>>> origin/laura:src/main/webapp/app/storefront/pages/AddressesPage.tsx
 import { toast } from 'react-toastify';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
+import { hasAnyAuthority } from 'app/shared/auth/private-route';
+import { Authority } from 'app/shared/jhipster/constants';
 import {
   createEntity as createDireccion,
   deleteEntity as deleteDireccion,
@@ -23,11 +30,17 @@ export const AddressesPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState<IDireccion | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedCuentaId, setSelectedCuentaId] = useState('');
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
   const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
+<<<<<<< HEAD:src/main/webapp/app/landing/pages/AddressesPage.tsx
   const loading = useAppSelector(state => state.direccion.loading || state.cuenta.loading);
+=======
+  const loading = useAppSelector(state => state.direccion.loading);
+  const isAdminOrManager = hasAnyAuthority(account.authorities ?? [], [Authority.ADMIN, Authority.MANAGER]);
+>>>>>>> origin/laura:src/main/webapp/app/storefront/pages/AddressesPage.tsx
 
   useEffect(() => {
     dispatch(getSession());
@@ -37,6 +50,7 @@ export const AddressesPage = () => {
 
   const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
 
+<<<<<<< HEAD:src/main/webapp/app/landing/pages/AddressesPage.tsx
   useEffect(() => {
     if (!loading && cuentaUsuario === undefined) {
       toast.info('Completa tu perfil para poder gestionar direcciones.');
@@ -45,9 +59,32 @@ export const AddressesPage = () => {
   }, [loading, cuentaUsuario, navigate]);
 
   const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
+=======
+  const direccionesUsuario = useMemo(() => {
+    if (isAdminOrManager) {
+      if (!selectedCuentaId) {
+        return direcciones;
+      }
+      return direcciones.filter(d => d.cuenta?.id === selectedCuentaId);
+    }
+    return direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id);
+  }, [direcciones, cuentaUsuario, isAdminOrManager, selectedCuentaId]);
+
+  useEffect(() => {
+    if (isAdminOrManager && !selectedCuentaId && cuentas.length > 0) {
+      setSelectedCuentaId(cuentas[0].id ?? '');
+    }
+    if (!isAdminOrManager) {
+      setSelectedCuentaId(cuentaUsuario?.id ?? '');
+    }
+  }, [isAdminOrManager, cuentas, cuentaUsuario, selectedCuentaId]);
+>>>>>>> origin/laura:src/main/webapp/app/storefront/pages/AddressesPage.tsx
 
   const handleOpenForm = (direccion?: IDireccion) => {
     setEditingAddress(direccion);
+    if (direccion?.cuenta?.id) {
+      setSelectedCuentaId(direccion.cuenta.id);
+    }
     setShowForm(true);
   };
 
@@ -57,8 +94,9 @@ export const AddressesPage = () => {
   };
 
   const handleSubmit = async (data: any) => {
-    if (!cuentaUsuario) {
-      toast.error('No se encontró tu perfil de cliente.');
+    const cuentaId = isAdminOrManager ? selectedCuentaId : cuentaUsuario?.id;
+    if (!cuentaId) {
+      toast.error(isAdminOrManager ? 'Selecciona una cuenta para guardar la dirección.' : 'No se encontró tu perfil de cliente.');
       return;
     }
 
@@ -66,7 +104,7 @@ export const AddressesPage = () => {
     try {
       const payload = {
         ...data,
-        cuenta: { id: cuentaUsuario.id },
+        cuenta: { id: cuentaId },
       };
 
       if (editingAddress?.id) {
@@ -98,17 +136,24 @@ export const AddressesPage = () => {
 
   const handleSetDefault = async (direccion: IDireccion) => {
     try {
+      const cuentaId = direccion.cuenta?.id ?? (isAdminOrManager ? selectedCuentaId : cuentaUsuario?.id);
+      if (!cuentaId) {
+        toast.error('No se encontró la cuenta de la dirección.');
+        return;
+      }
+      const direccionesMismaCuenta = direcciones.filter(d => d.cuenta?.id === cuentaId);
+
       // Desactivar otras y activar la seleccionada
-      for (const d of direccionesUsuario) {
+      for (const d of direccionesMismaCuenta) {
         if (d.id !== direccion.id && d.activo) {
-          await dispatch(updateDireccion({ ...d, activo: false, cuenta: { id: cuentaUsuario?.id } }));
+          await dispatch(updateDireccion({ ...d, activo: false, cuenta: { id: cuentaId } }));
         }
       }
       await dispatch(
         updateDireccion({
           ...direccion,
           activo: true,
-          cuenta: { id: cuentaUsuario?.id },
+          cuenta: { id: cuentaId },
         }),
       );
       toast.success('Dirección predeterminada actualizada.');
@@ -160,6 +205,18 @@ export const AddressesPage = () => {
           <Modal.Title className="fw-bold">{editingAddress ? 'Editar dirección' : 'Nueva dirección'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {isAdminOrManager && (
+            <Form.Group className="mb-3">
+              <Form.Label>Cuenta *</Form.Label>
+              <Form.Select value={selectedCuentaId} onChange={e => setSelectedCuentaId(e.target.value)}>
+                {cuentas.map(cuenta => (
+                  <option key={cuenta.id} value={cuenta.id}>
+                    {cuenta.primerNombre} {cuenta.primerApellido} ({cuenta.user?.login})
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          )}
           <AddressForm initialData={editingAddress} onSubmit={handleSubmit} onCancel={handleCloseForm} isSubmitting={isSubmitting} />
         </Modal.Body>
       </Modal>

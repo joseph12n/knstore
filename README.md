@@ -2,6 +2,12 @@
 
 This application was generated using JHipster 9.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v9.1.0](https://www.jhipster.tech/documentation-archive/v9.1.0).
 
+## Resumen de ajustes recientes
+
+- **Direcciones en storefront (`/cuenta/direcciones`)**: se corrigio el flujo para que ADMIN y MANAGER puedan crear/editar direcciones seleccionando la cuenta destino, sin depender del perfil cliente propio.
+- **Permisos administrativos**: se ajusto el acceso a `/admin/*` para que sea solo de ADMIN y se elimino la redireccion de MANAGER a `/admin/user-management` (evita error 403).
+- **Navegacion de login por rol**: ADMIN entra al panel administrativo y MANAGER se dirige al modulo de entidades permitido.
+
 ## Project Structure
 
 Node is required for generation and recommended for development. `package.json` is always generated for a better development experience with prettier, commit hooks, scripts and so on.

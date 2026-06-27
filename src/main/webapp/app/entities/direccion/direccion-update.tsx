@@ -54,6 +54,12 @@ export const DireccionUpdate = () => {
     }
   }, [direccionEntity]);
 
+  useEffect(() => {
+    if (!isCliente && isNew && !selectedCuentaId && cuentas?.length > 0) {
+      setSelectedCuentaId(cuentas[0].id);
+    }
+  }, [isCliente, isNew, selectedCuentaId, cuentas]);
+
   const resolveCuenta = value => {
     if (value == null || value === '') {
       return undefined;
@@ -65,10 +71,11 @@ export const DireccionUpdate = () => {
   };
 
   const saveEntity = values => {
+    const cuentaId = isCliente ? direccionEntity?.cuenta?.id : selectedCuentaId || values.cuenta || cuentas?.[0]?.id;
     const entity = {
       ...direccionEntity,
       ...values,
-      cuenta: isCliente ? resolveCuenta(direccionEntity?.cuenta?.id) : resolveCuenta(selectedCuentaId || values.cuenta),
+      cuenta: resolveCuenta(cuentaId),
     };
 
     if (isNew) {
@@ -175,9 +182,9 @@ export const DireccionUpdate = () => {
                     label="Cuenta"
                     type="select"
                     required
+                    value={selectedCuentaId || ''}
                     onChange={event => setSelectedCuentaId(event.target.value)}
                   >
-                    <option value="" key="0" />
                     {cuentas
                       ? cuentas.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
