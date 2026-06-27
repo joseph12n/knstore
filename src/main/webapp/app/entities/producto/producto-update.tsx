@@ -198,7 +198,7 @@ export const ProductoUpdate = () => {
                 {productoPrecios
                   ? productoPrecios.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.precioVenta}
                       </option>
                     ))
                   : null}
@@ -208,7 +208,7 @@ export const ProductoUpdate = () => {
                 {productoInventarios
                   ? productoInventarios.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.stock}
                       </option>
                     ))
                   : null}
@@ -247,7 +247,7 @@ export const ProductoUpdate = () => {
                 {marcas
                   ? marcas.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.nombre}
                       </option>
                     ))
                   : null}
@@ -257,7 +257,7 @@ export const ProductoUpdate = () => {
                 {categoriaIVAS
                   ? categoriaIVAS.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.nombre}
                       </option>
                     ))
                   : null}

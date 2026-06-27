@@ -60,8 +60,8 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
       } else {
         Storage.session.set(AUTHENTICATION_TOKEN_KEY, jwt);
       }
+      dispatch(getSession());
     }
-    dispatch(getSession());
   };
 
 export const clearAuthToken = () => {

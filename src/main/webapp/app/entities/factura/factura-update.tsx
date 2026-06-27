@@ -223,7 +223,7 @@ export const FacturaUpdate = () => {
                 {pagos
                   ? pagos.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.referenciaPasarela}
                       </option>
                     ))
                   : null}

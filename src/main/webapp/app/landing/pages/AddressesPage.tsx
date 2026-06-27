@@ -1,11 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-<<<<<<< HEAD:src/main/webapp/app/landing/pages/AddressesPage.tsx
-import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
+import { Button, Card, Col, Form, Modal, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
-=======
-import { Button, Card, Col, Container, Form, Modal, Row } from 'react-bootstrap';
-import { Link } from 'react-router';
->>>>>>> origin/laura:src/main/webapp/app/storefront/pages/AddressesPage.tsx
 import { toast } from 'react-toastify';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -35,12 +30,8 @@ export const AddressesPage = () => {
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
   const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
-<<<<<<< HEAD:src/main/webapp/app/landing/pages/AddressesPage.tsx
-  const loading = useAppSelector(state => state.direccion.loading || state.cuenta.loading);
-=======
-  const loading = useAppSelector(state => state.direccion.loading);
   const isAdminOrManager = hasAnyAuthority(account.authorities ?? [], [Authority.ADMIN, Authority.MANAGER]);
->>>>>>> origin/laura:src/main/webapp/app/storefront/pages/AddressesPage.tsx
+  const loading = useAppSelector(state => state.direccion.loading || state.cuenta.loading);
 
   useEffect(() => {
     dispatch(getSession());
@@ -50,16 +41,13 @@ export const AddressesPage = () => {
 
   const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
 
-<<<<<<< HEAD:src/main/webapp/app/landing/pages/AddressesPage.tsx
   useEffect(() => {
-    if (!loading && cuentaUsuario === undefined) {
+    if (!loading && !isAdminOrManager && cuentaUsuario === undefined) {
       toast.info('Completa tu perfil para poder gestionar direcciones.');
       navigate('/cuenta/perfil');
     }
-  }, [loading, cuentaUsuario, navigate]);
+  }, [loading, cuentaUsuario, isAdminOrManager, navigate]);
 
-  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
-=======
   const direccionesUsuario = useMemo(() => {
     if (isAdminOrManager) {
       if (!selectedCuentaId) {
@@ -78,7 +66,6 @@ export const AddressesPage = () => {
       setSelectedCuentaId(cuentaUsuario?.id ?? '');
     }
   }, [isAdminOrManager, cuentas, cuentaUsuario, selectedCuentaId]);
->>>>>>> origin/laura:src/main/webapp/app/storefront/pages/AddressesPage.tsx
 
   const handleOpenForm = (direccion?: IDireccion) => {
     setEditingAddress(direccion);
