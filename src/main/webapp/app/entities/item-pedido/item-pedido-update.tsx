@@ -230,7 +230,7 @@ export const ItemPedidoUpdate = () => {
                 {pedidos
                   ? pedidos.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.numeroPedido}
                       </option>
                     ))
                   : null}

@@ -46,6 +46,7 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
   const account = useAppSelector(state => state.authentication.account);
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
   const isAdmin = hasAnyAuthority(account.authorities, [Authority.ADMIN]);
+  const isAdminOrManager = hasAnyAuthority(account.authorities ?? [], [Authority.ADMIN, Authority.MANAGER]);
 
   const cartCount = count;
 

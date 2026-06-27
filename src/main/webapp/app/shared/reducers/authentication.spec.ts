@@ -199,6 +199,23 @@ describe('Authentication reducer tests', () => {
       );
       expect(authenticate.fulfilled.match(result)).toBe(true);
     });
+
+    it('does not fetch the session when login fails', async () => {
+      const loginError = new Error('Request failed with status code 401');
+      axios.post = vi.fn().mockRejectedValue(loginError);
+      axios.get = vi.fn();
+      const loginStore = configureStore({
+        reducer: authentication,
+      });
+
+      await loginStore.dispatch(login('test', 'bad-password') as any);
+
+      expect(axios.get).not.toHaveBeenCalled();
+      expect(loginStore.getState()).toMatchObject({
+        loginError: true,
+        isAuthenticated: false,
+      });
+    });
   });
   describe('clearAuthToken', () => {
     let store;
