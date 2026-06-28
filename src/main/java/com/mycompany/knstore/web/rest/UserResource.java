@@ -1,7 +1,9 @@
 package com.mycompany.knstore.web.rest;
 
 import com.mycompany.knstore.config.Constants;
+import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.domain.User;
+import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.UserRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.service.MailService;
@@ -86,10 +88,18 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private final CuentaRepository cuentaRepository;
+
+    public UserResource(
+        UserService userService,
+        UserRepository userRepository,
+        MailService mailService,
+        CuentaRepository cuentaRepository
+    ) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.cuentaRepository = cuentaRepository;
     }
 
     /**
@@ -117,6 +127,7 @@ public class UserResource {
             throw new EmailAlreadyUsedException();
         } else {
             User newUser = userService.createUser(userDTO, userDTO.getPassword());
+            createCuentaForUserIfMissing(newUser);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/admin/users/" + newUser.getLogin()))
                 .headers(
@@ -206,5 +217,23 @@ public class UserResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
             .build();
+    }
+
+    private void createCuentaForUserIfMissing(User user) {
+        if (user == null || user.getId() == null) {
+            return;
+        }
+        cuentaRepository.findOneByUserId(user.getId()).ifPresentOrElse(
+            cuenta -> LOG.debug("Cuenta already exists for user {}", user.getLogin()),
+            () -> {
+                Cuenta cuenta = new Cuenta();
+                cuenta.setPrimerNombre(org.apache.commons.lang3.StringUtils.defaultString(user.getFirstName(), user.getLogin()));
+                cuenta.setPrimerApellido(org.apache.commons.lang3.StringUtils.defaultString(user.getLastName(), "-"));
+                cuenta.setActivo(true);
+                cuenta.setUser(user);
+                cuentaRepository.save(cuenta);
+                LOG.debug("Created Cuenta for user {}", user.getLogin());
+            }
+        );
     }
 }
