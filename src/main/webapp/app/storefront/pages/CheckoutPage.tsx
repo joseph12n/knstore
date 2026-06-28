@@ -5,11 +5,9 @@ import { toast } from 'react-toastify';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
-import { createEntity as createPedido } from 'app/entities/pedido/pedido.reducer';
-import { createEntity as createPago } from 'app/entities/pago/pago.reducer';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
 import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
-import { createEntity as createItemPedido } from 'app/entities/item-pedido/item-pedido.reducer';
+import { buildCheckoutPayload, checkout } from 'app/storefront/services/checkout.service';
 import { CartItem } from 'app/storefront/model/storefront.model';
 import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/storefront/utils/constants';
 import { formatCOP } from 'app/storefront/utils/format';
@@ -90,58 +88,12 @@ export const CheckoutPage = ({ cartItems, onCheckoutComplete }: CheckoutPageProp
     setIsSubmitting(true);
 
     try {
-      // TODO backend: reemplazar por endpoint atómico de checkout cuando esté disponible.
-      // TODO backend: integrar callback de pasarela de pagos para cambiar estado a APROVED/REJECTED (RF-055).
-      const pedidoResult = await dispatch(
-        createPedido({
-          estado: 'PENDING',
-          subtotal,
-          costoEnvio,
-          total,
-          notasCliente: notas,
-          direccion: { id: selectedDireccionId },
-          cuenta: { id: cuentaUsuario.id },
-        }),
-      );
-
-      const pedidoCreado = (pedidoResult.payload as any)?.data;
-
-      if (!pedidoCreado?.id) {
-        throw new Error('No se pudo crear el pedido');
-      }
-
-      // Crear items del pedido
-      for (const item of items) {
-        await dispatch(
-          createItemPedido({
-            cantidad: item.cantidad,
-            precioUnitario: item.precioUnitario,
-            subtotal: item.precioUnitario * item.cantidad,
-            nombreProducto: item.producto.nombre,
-            slugProducto: item.producto.slug,
-            marcaProducto: item.producto.marca?.nombre,
-            skuProducto: item.producto.sku,
-            colorProducto: item.producto.color,
-            tallaProducto: item.producto.talla,
-            pedido: { id: pedidoCreado.id },
-            producto: { id: item.producto.id },
-          }),
-        );
-      }
-
-      // Crear pago inicial
-      await dispatch(
-        createPago({
-          metodoPago: selectedPago as any,
-          estado: 'PENDING' as any,
-          monto: total,
-          pedido: { id: pedidoCreado.id },
-        }),
-      );
+      const payload = buildCheckoutPayload(items, selectedDireccionId, costoEnvio, selectedPago, notas);
+      const pedidoCreado = await checkout(payload);
 
       toast.success('¡Pedido creado exitosamente!');
       onCheckoutComplete();
-      navigate(`/cuenta/pedidos/${pedidoCreado.id}`);
+      navigate(`/cuenta/pedidos/${pedidoCreado.pedidoId}`);
     } catch {
       toast.error('No pudimos procesar tu pedido. Inténtalo de nuevo.');
     } finally {

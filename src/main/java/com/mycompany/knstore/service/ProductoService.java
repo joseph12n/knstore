@@ -58,6 +58,15 @@ public interface ProductoService {
     Optional<ProductoDTO> findOne(String id);
 
     /**
+     * Search active productos by query string (nombre, descripcion, sku, referencia, codigoBarras).
+     *
+     * @param query the search query.
+     * @param pageable the pagination information.
+     * @return the page of matching active productos.
+     */
+    Page<ProductoDTO> searchActive(String query, Pageable pageable);
+
+    /**
      * Delete the "id" producto.
      *
      * @param id the id of the entity.
