@@ -45,7 +45,6 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
 
   const account = useAppSelector(state => state.authentication.account);
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
-  const isAdmin = hasAnyAuthority(account.authorities, [Authority.ADMIN]);
   const isAdminOrManager = hasAnyAuthority(account.authorities ?? [], [Authority.ADMIN, Authority.MANAGER]);
 
   const cartCount = count;
@@ -107,7 +106,7 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
                     <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
                     Direcciones
                   </NavDropdown.Item>
-                  {isAdmin && (
+                  {isAdminOrManager && (
                     <>
                       <NavDropdown.Divider />
                       <NavDropdown.Item as={Link as any} to="/admin/user-management">
