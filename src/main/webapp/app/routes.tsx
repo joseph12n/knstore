@@ -21,7 +21,7 @@ const loading = <div>loading ...</div>;
 const Account = React.lazy(() => import(/* webpackChunkName: "account" */ 'app/modules/account'));
 
 const ADMIN_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER];
-const STORE_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER];
+const CLIENT_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE];
 const ACCOUNT_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER];
 
 const AppRoutes = () => (
@@ -38,7 +38,7 @@ const AppRoutes = () => (
           <Route
             path="checkout"
             element={
-              <PrivateRoute hasAnyAuthorities={STORE_AUTHORITIES}>
+              <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
                 <StorefrontRoutes />
               </PrivateRoute>
             }
@@ -51,7 +51,7 @@ const AppRoutes = () => (
           <Route
             path="cuenta/*"
             element={
-              <PrivateRoute hasAnyAuthorities={STORE_AUTHORITIES}>
+              <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
                 <AccountRoutes />
               </PrivateRoute>
             }
