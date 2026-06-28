@@ -226,7 +226,7 @@ export const PedidoUpdate = () => {
                 {direccions
                   ? direccions.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.direccion}
+                        {otherEntity.id}
                       </option>
                     ))
                   : null}
@@ -237,7 +237,7 @@ export const PedidoUpdate = () => {
                 {cuentas
                   ? cuentas.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.primerNombre} {otherEntity.primerApellido}
+                        {otherEntity.id}
                       </option>
                     ))
                   : null}
