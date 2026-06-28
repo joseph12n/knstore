@@ -26,7 +26,8 @@ const Account = React.lazy(() => import(/* webpackChunkName: "account" */ 'app/m
 const Admin = React.lazy(() => import(/* webpackChunkName: "administration" */ 'app/modules/administration'));
 
 const ADMIN_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER];
-const STORE_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER];
+const CLIENT_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE];
+const AUTHENTICATED_AUTHORITIES: string[] = [];
 
 const AppRoutes = () => {
   const dispatch = useAppDispatch();
@@ -162,7 +163,7 @@ const AppRoutes = () => {
           <Route
             path="checkout"
             element={
-              <PrivateRoute hasAnyAuthorities={STORE_AUTHORITIES}>
+              <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
                 <StorefrontLayout
                   categorias={categorias}
                   subcategorias={activeSubcategorias}
@@ -185,7 +186,7 @@ const AppRoutes = () => {
           <Route
             path="cuenta/*"
             element={
-              <PrivateRoute hasAnyAuthorities={STORE_AUTHORITIES}>
+              <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
                 <StorefrontLayout
                   categorias={categorias}
                   subcategorias={activeSubcategorias}
@@ -213,7 +214,7 @@ const AppRoutes = () => {
             <Route
               path="*"
               element={
-                <PrivateRoute hasAnyAuthorities={STORE_AUTHORITIES}>
+                <PrivateRoute hasAnyAuthorities={AUTHENTICATED_AUTHORITIES}>
                   <Account />
                 </PrivateRoute>
               }

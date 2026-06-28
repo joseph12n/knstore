@@ -16,6 +16,8 @@ import OrdersPage from 'app/storefront/pages/OrdersPage';
 import OrderDetailPage from 'app/storefront/pages/OrderDetailPage';
 import { CartItem } from 'app/storefront/model/storefront.model';
 
+const CLIENT_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE];
+
 interface StorefrontRoutesProps {
   cartItems: CartItem[];
   onAddToCart: (producto: any, cantidad?: number) => void;
@@ -39,7 +41,7 @@ const StorefrontRoutes = ({ cartItems, onAddToCart, onUpdateCartQuantity, onRemo
     <Route
       path="checkout"
       element={
-        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
+        <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
           <CheckoutPage cartItems={cartItems} onCheckoutComplete={onClearCart} />
         </PrivateRoute>
       }
@@ -47,7 +49,7 @@ const StorefrontRoutes = ({ cartItems, onAddToCart, onUpdateCartQuantity, onRemo
     <Route
       path="cuenta"
       element={
-        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
+        <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
           <AccountPage />
         </PrivateRoute>
       }
@@ -55,7 +57,7 @@ const StorefrontRoutes = ({ cartItems, onAddToCart, onUpdateCartQuantity, onRemo
     <Route
       path="cuenta/direcciones"
       element={
-        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
+        <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
           <AddressesPage />
         </PrivateRoute>
       }
@@ -63,7 +65,7 @@ const StorefrontRoutes = ({ cartItems, onAddToCart, onUpdateCartQuantity, onRemo
     <Route
       path="cuenta/pedidos"
       element={
-        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
+        <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
           <OrdersPage />
         </PrivateRoute>
       }
@@ -71,7 +73,7 @@ const StorefrontRoutes = ({ cartItems, onAddToCart, onUpdateCartQuantity, onRemo
     <Route
       path="cuenta/pedidos/:id"
       element={
-        <PrivateRoute hasAnyAuthorities={[Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER]}>
+        <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
           <OrderDetailPage />
         </PrivateRoute>
       }
