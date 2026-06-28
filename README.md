@@ -1,244 +1,81 @@
-# knstore
+# KN-Store — E-commerce Platform
 
-This application was generated using JHipster 9.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v9.1.0](https://www.jhipster.tech/documentation-archive/v9.1.0).
+![Status](https://img.shields.io/badge/Status-En_Desarrollo-blue)
+![Backend](https://img.shields.io/badge/Backend-Spring_Boot-green?logo=springboot)
+![Frontend](https://img.shields.io/badge/Frontend-React_&_TS-blue?logo=react)
+![Database](https://img.shields.io/badge/Database-MongoDB-darkgreen?logo=mongodb)
 
-## Project Structure
+**KN-Store** es una plataforma de comercio electrónico integral diseñada para centralizar, automatizar y optimizar la gestión comercial de la tienda. El proyecto nace como una solución estratégica para migrar de procesos manuales e informales —como la recepción de pedidos fragmentada por WhatsApp— hacia un ecosistema digital integrado, eficiente y seguro.
 
-Node is required for generation and recommended for development. `package.json` is always generated for a better development experience with prettier, commit hooks, scripts and so on.
+---
 
-In the project root, JHipster generates configuration files for tools like git, prettier, eslint, husky, and others that are well known and you can find references in the web.
+## 📌 Contexto del Proyecto
 
-`/src/*` structure follows default Java structure.
+### Planteamiento del Problema
 
-- `.yo-rc.json` - Yeoman configuration file
-  JHipster configuration is stored in this file at `generator-jhipster` key. You may find `generator-jhipster-*` for specific blueprints configuration.
-- `.yo-resolve` (optional) - Yeoman conflict resolver
-  Allows to use a specific action when conflicts are found skipping prompts for files that matches a pattern. Each line should match `[pattern] [action]` with pattern been a [Minimatch](https://github.com/isaacs/minimatch#minimatch) pattern and action been one of skip (default if omitted) or force. Lines starting with `#` are considered comments and are ignored.
-- `.jhipster/*.json` - JHipster entity configuration files
+Actualmente, la tienda enfrenta cuellos de botella operativos debido a la gestión manual de inventarios y ventas. La dependencia de canales de mensajería informal limita el alcance del negocio, genera demoras en la atención al cliente y produce inconsistencias en los registros de stock en tiempo real.
 
-- `npmw` - wrapper to use locally installed npm.
-  JHipster installs Node and npm locally using the build tool by default. This wrapper makes sure npm is installed locally and uses it avoiding some differences different versions can cause. By using `./npmw` instead of the traditional `npm` you can configure a Node-less environment to develop or test your application.
-- `/src/main/docker` - Docker configurations for the application and services that the application depends on
+> **Pregunta Problema:** ¿Cómo la implementación de un sistema de comercio electrónico puede impulsar la transformación digital de la tienda KN_STORE, mejorando la atención al cliente y garantizando un control eficiente de los procesos internos?
 
-## Development
+### Justificación
 
-The build system will install automatically the recommended version of Node and npm.
+La automatización integral de los procesos a través de **KN-Store** mitiga el error humano, optimiza los tiempos de respuesta y expande el alcance comercial de la marca. Al unificar el control de stock y ofrecer una experiencia de compra interactiva, el sistema proporciona datos precisos para la toma de decisiones y eleva la competitividad del negocio en el mercado digital.
 
-We provide a wrapper to launch npm.
-You will only need to run this command when dependencies change in [package.json](package.json).
+---
 
-```bash
-./npmw install
-```
+## 🎯 Objetivos
 
-We use npm scripts and Webpack as our build system.
+### Objetivo General
 
-Run the following commands in two separate terminals to create a blissful development experience where your browser
-auto-refreshes when files change on your hard drive.
+Desarrollar un software (e-commerce) para la tienda **KN_STORE** que permita gestionar de manera eficiente los procesos de ventas, inventario y usuarios, mediante módulos integrados que faciliten la administración interna y mejoren la experiencia de compra del cliente, asegurando un entorno funcional, accesible y seguro.
 
-```bash
-./npmw run backend:start
-./npmw run start
-```
+### Objetivos Específicos
 
-Npm is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
-specifying a newer version in [package.json](package.json). You can also run `./npmw update` and `./npmw install` to manage dependencies.
-Add the `help` flag on any command to see how you can use it. For example, `./npmw help update`.
+- **Diseño Arquitectónico:** Estructurar el sistema definiendo los módulos y funcionalidades necesarias para la gestión integral de la tienda.
+- **Canal de Venta Digital:** Implementar una tienda online que permita a los clientes visualizar productos, realizar pedidos y efectuar compras de forma sencilla y segura.
+- **Control Centralizado:** Desarrollar módulos de administración que gestionen los usuarios y el inventario en tiempo real, optimizando el control interno.
+- **Seguridad y Accesibilidad:** Incorporar mecanismos de seguridad y roles de acceso que garanticen la protección de la información y el uso adecuado del sistema.
 
-The `./npmw run` command will list all the scripts available to run for this project.
+---
 
-### PWA Support
+## 📦 Alcance del Sistema (Módulos Principales)
 
-JHipster ships with PWA (Progressive Web App) support, and it's turned off by default. One of the main components of a PWA is a service worker.
+El sistema se compone de los siguientes bloques fundamentales para agilizar la operación:
 
-The service worker initialization code is commented out by default. To enable it, uncomment the following code in `src/main/webapp/index.html`:
+- **🛒 Módulo de Visualización de Productos:** Catálogo digital interactivo donde los clientes exploran productos, filtran por atributos específicos y gestionan su flujo de compra de manera sencilla.
+- **📦 Módulo de Control de Inventario:** Panel administrativo enfocado en el calzado, permitiendo el seguimiento y supervisión detallada del stock según **color, talla, marca y referencia**.
+- **🚚 Módulo de Distribución de Productos:** Gestión del proceso de entrega. Permite a los clientes seleccionar entre modalidades como _Servicio Contraentrega_ o _Paquetería Convencional_ según su ubicación.
+- **🛠️ Módulo de Servicios:** Herramienta interna para estructurar, visualizar y gestionar de forma organizada los distintos servicios complementarios de la tienda.
+- **📧 Módulo de Notificaciones (SMTP):** Servicio automatizado para el envío de correos electrónicos transaccionales (confirmaciones de compra, restablecimiento de contraseñas y actualizaciones de estado).
 
-```html
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js').then(function () {
-      console.log('Service Worker Registered');
-    });
-  }
-</script>
-```
+---
 
-Note: [Workbox](https://developer.chrome.com/docs/workbox) powers JHipster's service worker. It dynamically generates the `service-worker.js` file.
+## 🛠️ Stack Tecnológico
 
-### Managing dependencies
+La plataforma está construida bajo una arquitectura desacoplada utilizando tecnologías modernas y de alto rendimiento:
 
-For example, to add [Leaflet](https://leafletjs.com/) library as a runtime dependency of your application, you would run the following command:
+- **Frontend:** `React.js` con `TypeScript`, garantizando interfaces dinámicas, reactivas y un desarrollo seguro gracias al tipado estático.
+- **Backend:** `Java` con `Spring Boot`, proporcionando un núcleo robusto, escalable y eficiente para la lógica de negocio.
+- **Base de Datos:** `MongoDB`, base de datos NoSQL orientada a documentos que permite una gestión flexible del catálogo de productos y registros dinámicos.
+- **Servicio de Correo:** Protocolo `SMTP` integrado en el backend para la automatización de comunicaciones salientes directas al cliente.
 
-```bash
-./npmw install --save --save-exact leaflet
-```
+---
 
-To benefit from TypeScript type definitions from [DefinitelyTyped](https://definitelytyped.org/) repository in development, you would run the following command:
+## 📐 Arquitectura y Patrones de Diseño
 
-```bash
-./npmw install --save-dev --save-exact @types/leaflet
-```
+El backend implementa principios de arquitectura limpia para asegurar la mantenibilidad del código:
 
-Then you would import the JS and CSS files specified in library's installation instructions so that [Webpack][] knows about them:
-Note: There are still a few other things remaining to do for Leaflet that we won't detail here.
+- **Separación de Capas:** División estricta entre Controladores (REST APIs), Capa de Servicio (Lógica de negocio) y Repositorios (`Spring Data MongoDB`).
+- **Patrón DTO (Data Transfer Objects):** Toda la comunicación entre el frontend y el backend se gestiona mediante DTOs.
+  - **Desacoplamiento:** Desvincula los contratos de la API del modelo de almacenamiento de la base de datos.
+  - **Seguridad:** Protege la información sensible (como contraseñas hash o metadatos innecesarios) evitando su exposición en la red.
 
-For further instructions on how to develop with JHipster, have a look at [Using JHipster in development](https://www.jhipster.tech/development/).
+---
 
-## Building for production
+## 🔐 Control de Acceso (Roles)
 
-### Packaging as jar
+Para garantizar la integridad de las operaciones, el sistema restringe las funcionalidades mediante tres perfiles de usuario:
 
-To build the final jar and optimize the knstore application for production, run:
-
-```bash
-./mvnw -Pprod clean verify
-```
-
-This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
-To ensure everything worked, run:
-
-```bash
-java -jar target/*.jar
-```
-
-Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
-
-Refer to [Using JHipster in production][] for more details.
-
-### Packaging as war
-
-To package your application as a war in order to deploy it to an application server, run:
-
-```bash
-./mvnw -Pprod,war clean verify
-```
-
-### JHipster Control Center
-
-JHipster Control Center can help you manage and control your application(s). You can start a local control center server (accessible on http://localhost:7419) with:
-
-```bash
-docker compose -f src/main/docker/jhipster-control-center.yml up
-```
-
-## Testing
-
-### Spring Boot tests
-
-To launch your application's tests, run:
-
-```bash
-./mvnw verify
-```
-
-### Client tests
-
-Unit tests are run by Jest. They're located near components and can be run with:
-
-```bash
-./npmw test
-```
-
-## Others
-
-### Code quality using Sonar
-
-Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
-
-```bash
-docker compose -f src/main/docker/sonar.yml up -d
-```
-
-Note: we have turned off forced authentication redirect for UI in [src/main/docker/sonar.yml](src/main/docker/sonar.yml) for out of the box experience while trying out SonarQube, for real use cases turn it back on.
-
-You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
-
-Then, run a Sonar analysis:
-
-```bash
-./mvnw -Pprod clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
-```
-
-If you need to re-run the Sonar phase, please be sure to specify at least the `initialize` phase since Sonar properties are loaded from the sonar-project.properties file.
-
-```bash
-./mvnw initialize sonar:sonar -Dsonar.login=admin -Dsonar.password=admin
-```
-
-Additionally, Instead of passing `sonar.password` and `sonar.login` as CLI arguments, these parameters can be configured from [sonar-project.properties](sonar-project.properties) as shown below:
-
-```bash
-sonar.login=admin
-sonar.password=admin
-```
-
-For more information, refer to the [Code quality page][].
-
-### Docker Compose support
-
-JHipster generates a number of Docker Compose configuration files in the [src/main/docker/](src/main/docker/) folder to launch required third party services.
-
-For example, to start required services in Docker containers, run:
-
-```bash
-docker compose -f src/main/docker/services.yml up -d
-```
-
-To stop and remove the containers, run:
-
-```bash
-docker compose -f src/main/docker/services.yml down
-```
-
-[Spring Docker Compose Integration](https://docs.spring.io/spring-boot/reference/features/dev-services.html) is enabled by default. It's possible to disable it in `application.yml`:
-
-```yaml
-spring:
-  ...
-  docker:
-    compose:
-      enabled: false
-```
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a Docker image of your app by running:
-
-```bash
-npm run java:docker
-```
-
-Or build an arm64 Docker image when using an arm64 processor OS, i.e., Apple Silicon chips (M\*), running:
-
-```bash
-npm run java:docker:arm64
-```
-
-Then run:
-
-```bash
-docker compose -f src/main/docker/app.yml up -d
-```
-
-For more information refer to [Docker and Docker-Compose](https://www.jhipster.tech/documentation-archive/v9.1.0/docker-compose/), this page also contains information on the Docker Compose sub-generator (`jhipster docker-compose`), which is able to generate Docker configurations for one or several JHipster applications.
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration](https://www.jhipster.tech/documentation-archive/v9.1.0/setting-up-ci/) page for more information.
-
-## References
-
-- [JHipster Homepage and latest documentation](https://www.jhipster.tech/)
-- [JHipster 9.1.0 archive](https://www.jhipster.tech/documentation-archive/v9.1.0)
-- [Using JHipster in development](https://www.jhipster.tech/documentation-archive/v9.1.0/development/)
-- [Using Docker and Docker-Compose](https://www.jhipster.tech/documentation-archive/v9.1.0/docker-compose)
-- [Using JHipster in production](https://www.jhipster.tech/documentation-archive/v9.1.0/production/)
-- [Running tests page](https://www.jhipster.tech/documentation-archive/v9.1.0/running-tests/)
-- [Code quality page](https://www.jhipster.tech/documentation-archive/v9.1.0/code-quality/)
-- [Setting up Continuous Integration](https://www.jhipster.tech/documentation-archive/v9.1.0/setting-up-ci/)
-- [Node.js](https://nodejs.org/)
-- [NPM](https://www.npmjs.com/)
-- [Webpack](https://webpack.js.org/)
-- [BrowserSync](https://www.browsersync.io/)
-- [Jest](https://jestjs.io)
-- [Leaflet](https://leafletjs.com/)
-- [DefinitelyTyped](https://definitelytyped.org/)
+1. **Administrador:** Acceso total al sistema, gestión global de usuarios, configuraciones críticas del negocio y auditoría.
+2. **Manager:** Gestión operativa del inventario, actualización de stock físico, administración de los servicios y control del estado de distribución.
+3. **Cliente:** Navegación interactiva del catálogo, gestión de perfil personal, generación de pedidos y recepción de notificaciones vía e-mail.
