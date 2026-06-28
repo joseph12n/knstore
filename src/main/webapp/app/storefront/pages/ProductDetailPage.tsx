@@ -121,7 +121,7 @@ export const ProductDetailPage = ({ onAddToCart }: ProductDetailPageProps) => {
                     className="w-100 h-100 object-fit-cover"
                   />
                 ) : (
-                  <img src="/content/images/product-placeholder.svg" alt={producto.nombre} className="w-100 h-100 object-fit-cover" />
+                  <img src="/content/images/product-placeholder.png" alt={producto.nombre} className="w-100 h-100 object-fit-cover" />
                 )}
                 {producto.destacado && (
                   <Badge bg="dark" className="position-absolute top-0 start-0 m-3 text-uppercase">

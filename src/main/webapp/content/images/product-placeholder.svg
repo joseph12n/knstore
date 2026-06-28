@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
-  <rect width="400" height="400" fill="#f8f9fa"/>
-  <path d="M160 170h80M200 130v80" stroke="#dee2e6" stroke-width="6" stroke-linecap="round"/>
-  <rect x="100" y="100" width="200" height="200" rx="16" stroke="#dee2e6" stroke-width="4"/>
-  <text x="200" y="320" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" fill="#adb5bd">Sin imagen</text>
-</svg>
