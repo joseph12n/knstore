@@ -127,7 +127,12 @@ export const ItemCarritoUpdate = () => {
                 {carritos
                   ? carritos.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.cuenta
+                          ? `${otherEntity.cuenta.primerNombre ?? ''} ${otherEntity.cuenta.primerApellido ?? ''}`.trim() ||
+                            otherEntity.cuenta.user?.login ||
+                            otherEntity.cuenta.numDocumento ||
+                            `Carrito ${otherEntity.id}`
+                          : `Carrito ${otherEntity.id}`}
                       </option>
                     ))
                   : null}
