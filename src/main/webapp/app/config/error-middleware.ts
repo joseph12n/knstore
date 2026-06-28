@@ -17,10 +17,15 @@ export default () => next => action => {
   if (DEVELOPMENT) {
     const { error } = action;
     if (error) {
-      console.error(`${action.type} caught at middleware with reason: ${JSON.stringify(error.message)}.`);
-      if (error.response?.data) {
-        const message = getErrorMessage(error.response.data);
-        console.error(`Actual cause: ${message}`);
+      const status = error.response?.status;
+      const url = error.config?.url ?? '';
+      const isExpectedAuthError = status === 401 && (url.endsWith('api/account') || url.endsWith('api/authenticate'));
+      if (!isExpectedAuthError) {
+        console.error(`${action.type} caught at middleware with reason: ${JSON.stringify(error.message)}.`);
+        if (error.response?.data) {
+          const message = getErrorMessage(error.response.data);
+          console.error(`Actual cause: ${message}`);
+        }
       }
     }
   }

@@ -40,7 +40,6 @@ export const Login = () => {
       return <Navigate to={from} replace />;
     }
 
-    // ADMIN va al dashboard administrativo; MANAGER a su panel de cuenta; ROLE_USER/CLIENTE van al storefront.
     if (hasAnyAuthority(accountAuthorities, [Authority.ADMIN])) {
       return <Navigate to="/admin/user-management" replace />;
     }
