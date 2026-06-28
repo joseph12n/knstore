@@ -1,7 +1,10 @@
 package com.mycompany.knstore.web.rest;
 
 import com.mycompany.knstore.repository.CuentaRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
+import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CuentaService;
+import com.mycompany.knstore.service.ResourceAccessService;
 import com.mycompany.knstore.service.dto.CuentaDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -44,9 +47,12 @@ public class CuentaResource {
 
     private final CuentaRepository cuentaRepository;
 
-    public CuentaResource(CuentaService cuentaService, CuentaRepository cuentaRepository) {
+    private final ResourceAccessService resourceAccessService;
+
+    public CuentaResource(CuentaService cuentaService, CuentaRepository cuentaRepository, ResourceAccessService resourceAccessService) {
         this.cuentaService = cuentaService;
         this.cuentaRepository = cuentaRepository;
+        this.resourceAccessService = resourceAccessService;
     }
 
     /**
@@ -57,12 +63,26 @@ public class CuentaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    @PreAuthorize(
+        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (hasAuthority('ROLE_CLIENTE') and @resourceAccessService.canAccessCuentaDto(#cuentaDTO))"
+    )
     public ResponseEntity<CuentaDTO> createCuenta(@Valid @RequestBody CuentaDTO cuentaDTO) throws URISyntaxException {
         LOG.debug("REST request to save Cuenta : {}", cuentaDTO);
         if (cuentaDTO.getId() != null) {
             throw new BadRequestAlertException("A new cuenta cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        // A client can only create a Cuenta for themselves and only if they do not already have one.
+        if (
+            !SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN) &&
+            !SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.MANAGER)
+        ) {
+            Optional<String> currentUserId = SecurityUtils.getCurrentUserId();
+            if (currentUserId.isPresent() && cuentaRepository.findOneByUserId(currentUserId.get()).isPresent()) {
+                throw new BadRequestAlertException("User already has a cuenta", ENTITY_NAME, "cuentaexists");
+            }
+        }
+
         cuentaDTO = cuentaService.save(cuentaDTO);
         return ResponseEntity.created(new URI("/api/cuentas/" + cuentaDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, cuentaDTO.getId()))
