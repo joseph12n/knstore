@@ -83,8 +83,7 @@ export const OrderDetailPage = () => {
           <Badge bg={ORDER_STATUS_COLORS[estado] || 'secondary'}>{ORDER_STATUS_LABELS[estado] || estado}</Badge>
         </div>
         {factura?.codigoQr && (
-          // TODO backend: exponer endpoint de descarga de factura con QR (RF-068).
-          <Button variant="outline-primary" size="sm">
+          <Button variant="outline-primary" size="sm" href={`api/facturas/${factura.id}/download`}>
             Descargar factura
           </Button>
         )}

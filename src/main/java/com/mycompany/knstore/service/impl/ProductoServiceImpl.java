@@ -93,6 +93,13 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    public Page<ProductoDTO> searchActive(String query, Pageable pageable) {
+        LOG.debug("Request to search active Productos by query : {}", query);
+        String escapedQuery = java.util.regex.Pattern.quote(query);
+        return productoRepository.searchActiveByQuery(escapedQuery, pageable).map(this::loadImages).map(productoMapper::toDto);
+    }
+
+    @Override
     public void delete(String id) {
         LOG.debug("Request to delete Producto : {}", id);
         productoRepository.deleteById(id);

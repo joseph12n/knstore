@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -170,6 +171,29 @@ public class FacturaResource {
         LOG.debug("REST request to get Factura : {}", id);
         Optional<FacturaDTO> facturaDTO = facturaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(facturaDTO);
+    }
+
+    /**
+     * {@code GET  /facturas/:id/download} : download the "id" factura with QR data.
+     *
+     * @param id the id of the facturaDTO to download.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the factura data as downloadable JSON.
+     */
+    @GetMapping("/{id}/download")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    public ResponseEntity<byte[]> downloadFactura(@PathVariable("id") String id) {
+        LOG.debug("REST request to download Factura : {}", id);
+        FacturaDTO facturaDTO = facturaService
+            .findOne(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        String filename = "factura-" + (facturaDTO.getPrefijo() != null ? facturaDTO.getPrefijo() + "-" : "") + id + ".json";
+        byte[] content = facturaDTO.toString().getBytes(StandardCharsets.UTF_8);
+
+        return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+            .header("Content-Type", "application/json;charset=UTF-8")
+            .body(content);
     }
 
     /**

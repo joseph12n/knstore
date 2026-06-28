@@ -2,6 +2,8 @@ package com.mycompany.knstore.web.rest;
 
 import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.service.PedidoService;
+import com.mycompany.knstore.service.dto.CheckoutRequestDTO;
+import com.mycompany.knstore.service.dto.CheckoutResultDTO;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -143,6 +145,20 @@ public class PedidoResource {
             result,
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, pedidoDTO.getId())
         );
+    }
+
+    /**
+     * {@code POST  /pedidos/checkout} : atomic checkout creating a pedido, its items and the initial pago.
+     *
+     * @param checkoutRequest the checkout request.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the checkout result.
+     */
+    @PostMapping("/checkout")
+    @PreAuthorize("hasAuthority('ROLE_CLIENTE')")
+    public ResponseEntity<CheckoutResultDTO> checkout(@Valid @RequestBody CheckoutRequestDTO checkoutRequest) {
+        LOG.debug("REST request to checkout : {}", checkoutRequest);
+        CheckoutResultDTO result = pedidoService.checkout(checkoutRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     /**
