@@ -6,8 +6,11 @@ import { NavDropdown } from './menu-components';
 
 const accountMenuItemsAuthenticated = () => (
   <>
+    <MenuItem icon="user" to="/cuenta" data-cy="account-dashboard">
+      Mi cuenta
+    </MenuItem>
     <MenuItem icon="wrench" to="/account/settings" data-cy="settings">
-      Ajustes
+      Ajustes administrador
     </MenuItem>
     <MenuItem icon="lock" to="/account/password" data-cy="passwordItem">
       Contraseña
