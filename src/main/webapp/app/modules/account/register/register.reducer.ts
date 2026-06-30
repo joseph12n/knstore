@@ -42,7 +42,7 @@ export const RegisterSlice = createSlice({
       .addCase(handleRegister.fulfilled, () => ({
         ...initialState,
         registrationSuccess: true,
-        successMessage: 'Registration saved! Please check your email for confirmation.',
+        successMessage: '¡Registro exitoso! Revise su correo electrónico para activar la cuenta.',
       }));
   },
 });
