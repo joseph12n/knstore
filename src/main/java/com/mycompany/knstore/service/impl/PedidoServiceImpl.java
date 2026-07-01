@@ -8,9 +8,12 @@ import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.PedidoService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.service.mapper.PedidoMapper;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
@@ -43,8 +46,17 @@ public class PedidoServiceImpl implements PedidoService {
     public PedidoDTO save(PedidoDTO pedidoDTO) {
         LOG.debug("Request to save Pedido : {}", pedidoDTO);
         Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
+        if (pedido.getNumeroPedido() == null || pedido.getNumeroPedido().isBlank()) {
+            pedido.setNumeroPedido(generarNumeroPedido());
+        }
         pedido = pedidoRepository.save(pedido);
         return pedidoMapper.toDto(pedido);
+    }
+
+    private String generarNumeroPedido() {
+        String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String random = UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+        return "PED-" + fecha + "-" + random;
     }
 
     @Override

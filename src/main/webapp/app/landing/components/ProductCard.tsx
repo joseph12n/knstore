@@ -3,6 +3,7 @@ import { Badge, Card } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 import { IProductoStorefront } from 'app/landing/model/storefront.model';
 import { buildImageUrl, calculateDiscountPercent, formatCOP, truncateText } from 'app/landing/utils/format';
@@ -29,7 +30,15 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const stock = producto.inventario?.stock ?? 0;
+    if (stock <= 0) {
+      toast.error('Producto sin stock disponible.');
+      return;
+    }
+
     onAddToCart?.(producto);
+    toast.success('Producto añadido al carrito');
   };
 
   return (
