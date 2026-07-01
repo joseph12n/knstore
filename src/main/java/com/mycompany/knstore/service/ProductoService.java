@@ -58,6 +58,14 @@ public interface ProductoService {
     Optional<ProductoDTO> findOne(String id);
 
     /**
+     * Get the producto by slug.
+     *
+     * @param slug the slug of the entity.
+     * @return the entity.
+     */
+    Optional<ProductoDTO> findBySlug(String slug);
+
+    /**
      * Delete the "id" producto.
      *
      * @param id the id of the entity.

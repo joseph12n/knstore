@@ -37,6 +37,15 @@ export const getEntity = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
+export const getEntityBySlug = createAsyncThunk(
+  'producto/fetch_entity_by_slug',
+  async (slug: string) => {
+    const requestUrl = `${apiUrl}/slug/${slug}`;
+    return axios.get<IProducto>(requestUrl);
+  },
+  { serializeError: serializeAxiosError },
+);
+
 export const createEntity = createAsyncThunk(
   'producto/create_entity',
   async (entity: IProducto, thunkAPI) => {
@@ -89,6 +98,10 @@ export const ProductoSlice = createEntitySlice({
         state.loading = false;
         state.entity = action.payload.data;
       })
+      .addCase(getEntityBySlug.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entity = action.payload.data;
+      })
       .addCase(deleteEntity.fulfilled, state => {
         state.updating = false;
         state.updateSuccess = true;
@@ -110,7 +123,7 @@ export const ProductoSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getEntity, getEntityBySlug), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;

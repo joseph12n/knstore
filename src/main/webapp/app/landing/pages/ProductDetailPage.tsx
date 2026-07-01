@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getEntities as getProductos } from 'app/entities/producto/producto.reducer';
+import { getEntityBySlug } from 'app/entities/producto/producto.reducer';
 import { IProductoStorefront } from 'app/landing/model/storefront.model';
 import { buildImageUrl, formatCOP } from 'app/landing/utils/format';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
@@ -22,17 +22,22 @@ export const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const productos = useAppSelector(state => state.producto.entities) ?? [];
+  const productoEntity = useAppSelector(state => state.producto.entity);
   const loading = useAppSelector(state => state.producto.loading);
   const errorMessage = useAppSelector(state => state.producto.errorMessage);
 
   useEffect(() => {
-    if (productos.length === 0) {
-      dispatch(getProductos({ page: 0, size: 100, sort: 'nombre,asc' }));
+    if (slug) {
+      dispatch(getEntityBySlug(slug));
     }
-  }, [dispatch, productos.length]);
+  }, [dispatch, slug]);
 
-  const producto = useMemo(() => productos.find(p => p.slug === slug), [productos, slug]) as IProductoStorefront | undefined;
+  const producto = useMemo<IProductoStorefront | undefined>(() => {
+    if (!productoEntity?.slug || productoEntity.slug !== slug) {
+      return undefined;
+    }
+    return { ...productoEntity, imagenes: productoEntity.imagenes ?? [] } as IProductoStorefront;
+  }, [productoEntity, slug]);
 
   const productoImagenes = useMemo(() => producto?.imagenes ?? [], [producto]);
 
@@ -42,7 +47,7 @@ export const ProductDetailPage = () => {
     }
   }, [producto]);
 
-  if (loading && productos.length === 0) {
+  if (loading && !productoEntity?.id) {
     return <LoadingSpinner fullScreen />;
   }
 

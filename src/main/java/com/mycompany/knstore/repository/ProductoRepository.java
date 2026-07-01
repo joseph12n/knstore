@@ -22,4 +22,6 @@ public interface ProductoRepository extends MongoRepository<Producto, String> {
 
     @Query("{'id': ?0}")
     Optional<Producto> findOneWithEagerRelationships(String id);
+
+    Optional<Producto> findBySlug(String slug);
 }

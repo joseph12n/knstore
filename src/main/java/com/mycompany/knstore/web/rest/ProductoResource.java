@@ -176,6 +176,20 @@ public class ProductoResource {
     }
 
     /**
+     * {@code GET  /productos/slug/:slug} : get the producto by slug.
+     *
+     * @param slug the slug of the productoDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the productoDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/slug/{slug}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<ProductoDTO> getProductoBySlug(@PathVariable("slug") String slug) {
+        LOG.debug("REST request to get Producto by slug : {}", slug);
+        Optional<ProductoDTO> productoDTO = productoService.findBySlug(slug);
+        return ResponseUtil.wrapOrNotFound(productoDTO);
+    }
+
+    /**
      * {@code DELETE  /productos/:id} : delete the "id" producto.
      *
      * @param id the id of the productoDTO to delete.
