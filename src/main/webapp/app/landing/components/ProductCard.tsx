@@ -85,7 +85,7 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
           ) : null}
           <button
             type="button"
-            className="btn btn-light btn-sm position-absolute bottom-0 end-0 m-2 rounded-circle"
+            className="btn btn-light btn-sm position-absolute bottom-0 end-0 m-2 rounded-circle z-3"
             aria-label="Añadir a favoritos"
             onClick={e => {
               e.preventDefault();
@@ -106,7 +106,7 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
         <div className="mt-auto d-flex align-items-center justify-content-between">
           <span className="h5 mb-0 fw-bold">{formatCOP(precioVenta)}</span>
           {onAddToCart && (
-            <button type="button" className="btn btn-primary btn-sm" onClick={handleAddToCart}>
+            <button type="button" className="btn btn-primary btn-sm position-relative z-3" onClick={handleAddToCart}>
               Añadir
             </button>
           )}
