@@ -37,7 +37,7 @@ const AppRoutes = () => (
         <Route element={<LandingLayout />}>
           <Route index element={<StoreHome />} />
           <Route path="categorias/:categoriaSlug/:subcategoriaSlug?" element={<CategoryPage />} />
-          <Route path="productos/:slug" element={<ProductDetailPage />} />
+          <Route path="productos/:slug/*" element={<ProductDetailPage />} />
           <Route path="buscar" element={<SearchPage />} />
           <Route path="carrito" element={<CartPage />} />
           <Route

@@ -85,6 +85,12 @@ public class ProductoServiceImpl implements ProductoService {
         return productoRepository.findOneWithEagerRelationships(id).map(this::loadImages).map(productoMapper::toDto);
     }
 
+    @Override
+    public Optional<ProductoDTO> findBySlug(String slug) {
+        LOG.debug("Request to get Producto by slug : {}", slug);
+        return productoRepository.findBySlug(slug).map(this::loadImages).map(productoMapper::toDto);
+    }
+
     private Producto loadImages(Producto producto) {
         if (producto != null && producto.getId() != null) {
             producto.setImageneses(new HashSet<>(productoImagenRepository.findByProductoId(producto.getId())));
