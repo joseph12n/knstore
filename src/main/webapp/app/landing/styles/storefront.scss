@@ -371,3 +371,73 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ==========================================================================
+   Drawer lateral del carrito
+   Se renderiza fuera de .storefront (portal en body), por eso va fuera del scope.
+   ========================================================================== */
+
+.kn-cart-drawer {
+  &.offcanvas {
+    background-color: var(--kn-color-background, #ffffff);
+    color: var(--kn-color-text, #212529);
+    box-shadow: var(--kn-shadow-lg);
+  }
+
+  .kn-cart-drawer__header {
+    background-color: var(--kn-color-background, #ffffff);
+    color: var(--kn-color-text, #212529);
+    padding: 1rem 1.25rem;
+
+    .btn-close {
+      filter: none;
+      opacity: 0.6;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  .kn-cart-drawer__body {
+    background-color: var(--kn-color-background, #ffffff);
+  }
+
+  .kn-cart-drawer__item {
+    background-color: var(--kn-color-surface, #f8f9fa);
+    border: 1px solid var(--kn-color-border, #e9ecef);
+    transition:
+      box-shadow var(--kn-transition-fast),
+      transform var(--kn-transition-fast);
+
+    &:hover {
+      box-shadow: var(--kn-shadow-md);
+      transform: translateY(-1px);
+    }
+  }
+
+  .kn-cart-drawer__item-name {
+    color: var(--kn-color-text, #212529);
+
+    &:hover {
+      color: var(--kn-color-accent, #e31b23);
+    }
+  }
+
+  .kn-cart-drawer__remove {
+    opacity: 0.7;
+    transition: opacity var(--kn-transition-fast);
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .kn-cart-drawer__footer {
+    background-color: var(--kn-color-background, #ffffff);
+  }
+
+  .min-width-0 {
+    min-width: 0;
+  }
+}

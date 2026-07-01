@@ -5,6 +5,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router';
 
 import { buildImageUrl, formatCOP } from 'app/landing/utils/format';
+import { calculateIva, calculateShipping, calculateSubtotal, calculateTotal } from 'app/landing/utils/checkout';
 import QuantitySelector from 'app/landing/components/QuantitySelector';
 import EmptyState from 'app/landing/components/EmptyState';
 import useCart from 'app/landing/hooks/useCart';
@@ -12,9 +13,10 @@ import useCart from 'app/landing/hooks/useCart';
 export const CartPage = () => {
   const navigate = useNavigate();
   const { items, updateQuantity: onUpdateQuantity, removeItem: onRemoveItem, clearCart: onClearCart } = useCart();
-  const subtotal = items.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0);
-  const envio = subtotal > 150000 ? 0 : 9900;
-  const total = subtotal + envio;
+  const subtotal = calculateSubtotal(items);
+  const envio = calculateShipping(subtotal);
+  const iva = calculateIva(subtotal);
+  const total = calculateTotal(subtotal, envio, iva);
 
   if (items.length === 0) {
     return (
@@ -154,6 +156,10 @@ export const CartPage = () => {
             <div className="d-flex justify-content-between mb-2">
               <span>Envío</span>
               <span>{envio === 0 ? 'Gratis' : formatCOP(envio)}</span>
+            </div>
+            <div className="d-flex justify-content-between mb-2">
+              <span>IVA (19%)</span>
+              <span>{formatCOP(iva)}</span>
             </div>
             <hr />
             <div className="d-flex justify-content-between mb-4">

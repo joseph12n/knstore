@@ -18,5 +18,7 @@ public interface SubcategoriaMapper extends EntityMapper<SubcategoriaDTO, Subcat
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "nombre", source = "nombre")
+    @Mapping(target = "slug", source = "slug")
+    @Mapping(target = "activo", source = "activo")
     CategoriaDTO toDtoCategoriaNombre(Categoria categoria);
 }

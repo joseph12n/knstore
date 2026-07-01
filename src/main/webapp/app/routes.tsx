@@ -12,7 +12,12 @@ import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
 import PageNotFound from 'app/shared/error/page-not-found';
 import { Authority } from 'app/shared/jhipster/constants';
 import LandingLayout from 'app/landing/components/LandingLayout';
-import StorefrontRoutes from 'app/landing/routes/StorefrontRoutes';
+import StoreHome from 'app/landing/pages/StoreHome';
+import CategoryPage from 'app/landing/pages/CategoryPage';
+import ProductDetailPage from 'app/landing/pages/ProductDetailPage';
+import SearchPage from 'app/landing/pages/SearchPage';
+import CartPage from 'app/landing/pages/CartPage';
+import CheckoutPage from 'app/landing/pages/CheckoutPage';
 import AccountRoutes from 'app/landing/routes/AccountRoutes';
 import { Admin, EntitiesRoutes } from 'app/dashboard';
 
@@ -30,16 +35,16 @@ const AppRoutes = () => (
       <ErrorBoundaryRoutes>
         {/* Landing / tienda pública */}
         <Route element={<LandingLayout />}>
-          <Route index element={<StorefrontRoutes />} />
-          <Route path="categorias/:categoriaSlug/:subcategoriaSlug?" element={<StorefrontRoutes />} />
-          <Route path="productos/:slug" element={<StorefrontRoutes />} />
-          <Route path="buscar" element={<StorefrontRoutes />} />
-          <Route path="carrito" element={<StorefrontRoutes />} />
+          <Route index element={<StoreHome />} />
+          <Route path="categorias/:categoriaSlug/:subcategoriaSlug?/*" element={<CategoryPage />} />
+          <Route path="productos/:slug/*" element={<ProductDetailPage />} />
+          <Route path="buscar" element={<SearchPage />} />
+          <Route path="carrito" element={<CartPage />} />
           <Route
             path="checkout"
             element={
               <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
-                <StorefrontRoutes />
+                <CheckoutPage />
               </PrivateRoute>
             }
           />

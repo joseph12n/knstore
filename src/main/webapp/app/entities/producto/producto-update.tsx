@@ -1,9 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, FormText, Row } from 'react-bootstrap';
 import { ValidatedField, ValidatedForm } from 'react-jhipster';
 import { Link, useNavigate, useParams } from 'react-router';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+const slugify = (text: string): string =>
+  text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getCategorias } from 'app/entities/categoria/categoria.reducer';
@@ -34,6 +43,9 @@ export const ProductoUpdate = () => {
   const updating = useAppSelector(state => state.producto.updating);
   const updateSuccess = useAppSelector(state => state.producto.updateSuccess);
 
+  const [selectedCategoriaId, setSelectedCategoriaId] = useState<string>('');
+  const [slugTouched, setSlugTouched] = useState<boolean>(false);
+
   const handleClose = () => {
     navigate(`/producto${location.search}`);
   };
@@ -58,6 +70,32 @@ export const ProductoUpdate = () => {
       handleClose();
     }
   }, [updateSuccess]);
+
+  useEffect(() => {
+    const categoriaId = productoEntity?.categoria?.id;
+    if (categoriaId) {
+      setSelectedCategoriaId(categoriaId);
+    }
+  }, [productoEntity]);
+
+  const filteredSubcategorias = subcategorias.filter(s => s.categoria?.id === selectedCategoriaId);
+
+  const handleCategoriaChange = (e: React.ChangeEvent<any>) => {
+    setSelectedCategoriaId(e.target.value);
+  };
+
+  const handleNombreChange = (e: React.ChangeEvent<any>) => {
+    if (!slugTouched) {
+      const slugInput = document.getElementById('producto-slug') as HTMLInputElement | null;
+      if (slugInput) {
+        slugInput.value = slugify(e.target.value);
+      }
+    }
+  };
+
+  const handleSlugChange = () => {
+    setSlugTouched(true);
+  };
 
   const saveEntity = values => {
     const entity = {
@@ -113,6 +151,7 @@ export const ProductoUpdate = () => {
                 name="nombre"
                 data-cy="nombre"
                 type="text"
+                onChange={handleNombreChange}
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
                   maxLength: { value: 200, message: 'Este campo no puede superar más de 200 caracteres.' },
@@ -124,6 +163,7 @@ export const ProductoUpdate = () => {
                 name="slug"
                 data-cy="slug"
                 type="text"
+                onChange={handleSlugChange}
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
                   maxLength: { value: 220, message: 'Este campo no puede superar más de 220 caracteres.' },
@@ -198,7 +238,7 @@ export const ProductoUpdate = () => {
                 {productoPrecios
                   ? productoPrecios.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.precioVenta !== undefined ? `$${otherEntity.precioVenta}` : otherEntity.id}
                       </option>
                     ))
                   : null}
@@ -208,12 +248,20 @@ export const ProductoUpdate = () => {
                 {productoInventarios
                   ? productoInventarios.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        Stock: {otherEntity.stock ?? 0}
                       </option>
                     ))
                   : null}
               </ValidatedField>
-              <ValidatedField id="producto-categoria" name="categoria" data-cy="categoria" label="Categoria" type="select" required>
+              <ValidatedField
+                id="producto-categoria"
+                name="categoria"
+                data-cy="categoria"
+                label="Categoria"
+                type="select"
+                required
+                onChange={handleCategoriaChange}
+              >
                 <option value="" key="0" />
                 {categorias
                   ? categorias.map(otherEntity => (
@@ -233,13 +281,11 @@ export const ProductoUpdate = () => {
                 required
               >
                 <option value="" key="0" />
-                {subcategorias
-                  ? subcategorias.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.nombre}
-                      </option>
-                    ))
-                  : null}
+                {filteredSubcategorias.map(otherEntity => (
+                  <option value={otherEntity.id} key={otherEntity.id}>
+                    {otherEntity.nombre}
+                  </option>
+                ))}
               </ValidatedField>
               <FormText>Este campo es obligatorio.</FormText>
               <ValidatedField id="producto-marca" name="marca" data-cy="marca" label="Marca" type="select">
@@ -247,7 +293,7 @@ export const ProductoUpdate = () => {
                 {marcas
                   ? marcas.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.nombre || otherEntity.id}
                       </option>
                     ))
                   : null}
@@ -257,7 +303,7 @@ export const ProductoUpdate = () => {
                 {categoriaIVAS
                   ? categoriaIVAS.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.nombre || otherEntity.id} {otherEntity.porcentaje !== undefined ? `(${otherEntity.porcentaje}%)` : ''}
                       </option>
                     ))
                   : null}
