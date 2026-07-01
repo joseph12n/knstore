@@ -1,8 +1,7 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Producto;
-import com.mycompany.knstore.repository.ProductoImagenRepository;
-import com.mycompany.knstore.repository.ProductoRepository;
+import com.mycompany.knstore.repository.*;
 import com.mycompany.knstore.service.ProductoService;
 import com.mycompany.knstore.service.dto.ProductoDTO;
 import com.mycompany.knstore.service.mapper.ProductoMapper;
@@ -26,15 +25,39 @@ public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoImagenRepository productoImagenRepository;
 
+    private final ProductoPrecioRepository productoPrecioRepository;
+
+    private final ProductoInventarioRepository productoInventarioRepository;
+
+    private final CategoriaRepository categoriaRepository;
+
+    private final SubcategoriaRepository subcategoriaRepository;
+
+    private final MarcaRepository marcaRepository;
+
+    private final CategoriaIVARepository categoriaIVARepository;
+
     private final ProductoMapper productoMapper;
 
     public ProductoServiceImpl(
         ProductoRepository productoRepository,
         ProductoImagenRepository productoImagenRepository,
+        ProductoPrecioRepository productoPrecioRepository,
+        ProductoInventarioRepository productoInventarioRepository,
+        CategoriaRepository categoriaRepository,
+        SubcategoriaRepository subcategoriaRepository,
+        MarcaRepository marcaRepository,
+        CategoriaIVARepository categoriaIVARepository,
         ProductoMapper productoMapper
     ) {
         this.productoRepository = productoRepository;
         this.productoImagenRepository = productoImagenRepository;
+        this.productoPrecioRepository = productoPrecioRepository;
+        this.productoInventarioRepository = productoInventarioRepository;
+        this.categoriaRepository = categoriaRepository;
+        this.subcategoriaRepository = subcategoriaRepository;
+        this.marcaRepository = marcaRepository;
+        this.categoriaIVARepository = categoriaIVARepository;
         this.productoMapper = productoMapper;
     }
 
@@ -72,17 +95,60 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public Page<ProductoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Productos");
-        return productoRepository.findAll(pageable).map(this::loadImages).map(productoMapper::toDto);
+        return productoRepository.findAll(pageable).map(this::loadRelationships).map(productoMapper::toDto);
     }
 
     public Page<ProductoDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return productoRepository.findAllWithEagerRelationships(pageable).map(this::loadImages).map(productoMapper::toDto);
+        return productoRepository.findAllWithEagerRelationships(pageable).map(this::loadRelationships).map(productoMapper::toDto);
     }
 
     @Override
     public Optional<ProductoDTO> findOne(String id) {
         LOG.debug("Request to get Producto : {}", id);
-        return productoRepository.findOneWithEagerRelationships(id).map(this::loadImages).map(productoMapper::toDto);
+        return productoRepository.findOneWithEagerRelationships(id).map(this::loadRelationships).map(productoMapper::toDto);
+    }
+
+    @Override
+    public Optional<ProductoDTO> findBySlug(String slug) {
+        LOG.debug("Request to get Producto by slug : {}", slug);
+        return productoRepository.findBySlug(slug).map(this::loadRelationships).map(productoMapper::toDto);
+    }
+
+    private Producto loadRelationships(Producto producto) {
+        if (producto == null || producto.getId() == null) {
+            return producto;
+        }
+
+        if (producto.getPrecio() != null && producto.getPrecio().getId() != null) {
+            productoPrecioRepository.findById(producto.getPrecio().getId()).ifPresent(producto::setPrecio);
+        }
+
+        if (producto.getInventario() != null && producto.getInventario().getId() != null) {
+            productoInventarioRepository.findById(producto.getInventario().getId()).ifPresent(producto::setInventario);
+        }
+
+        if (producto.getCategoria() != null && producto.getCategoria().getId() != null) {
+            categoriaRepository.findById(producto.getCategoria().getId()).ifPresent(producto::setCategoria);
+        }
+
+        if (producto.getSubcategoria() != null && producto.getSubcategoria().getId() != null) {
+            subcategoriaRepository.findById(producto.getSubcategoria().getId()).ifPresent(subcategoria -> {
+                producto.setSubcategoria(subcategoria);
+                if (subcategoria.getCategoria() != null && subcategoria.getCategoria().getId() != null) {
+                    categoriaRepository.findById(subcategoria.getCategoria().getId()).ifPresent(subcategoria::setCategoria);
+                }
+            });
+        }
+
+        if (producto.getMarca() != null && producto.getMarca().getId() != null) {
+            marcaRepository.findById(producto.getMarca().getId()).ifPresent(producto::setMarca);
+        }
+
+        if (producto.getCategoriaIva() != null && producto.getCategoriaIva().getId() != null) {
+            categoriaIVARepository.findById(producto.getCategoriaIva().getId()).ifPresent(producto::setCategoriaIva);
+        }
+
+        return loadImages(producto);
     }
 
     private Producto loadImages(Producto producto) {

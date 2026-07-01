@@ -2,16 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
-import { createEntity as createPedido } from 'app/entities/pedido/pedido.reducer';
-import { createEntity as createPago } from 'app/entities/pago/pago.reducer';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
 import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
-import { createEntity as createItemPedido } from 'app/entities/item-pedido/item-pedido.reducer';
 import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
+import { calculateIva, calculateShipping, calculateSubtotal, calculateTotal } from 'app/landing/utils/checkout';
 import CheckoutStepper from 'app/landing/components/CheckoutStepper';
 import AddressCard from 'app/landing/components/AddressCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
@@ -24,7 +23,7 @@ export const CheckoutPage = () => {
   const [step, setStep] = useState(0);
   const [selectedDireccionId, setSelectedDireccionId] = useState('');
   const [selectedEnvio, setSelectedEnvio] = useState('ESTANDAR');
-  const [selectedPago, setSelectedPago] = useState('PSE');
+  const [selectedPago, setSelectedPago] = useState('NEQUI');
   const [notas, setNotas] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -50,9 +49,10 @@ export const CheckoutPage = () => {
 
   const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
 
-  const subtotal = items.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0);
-  const costoEnvio = useMemo(() => SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.cost || 0, [selectedEnvio]);
-  const total = subtotal + costoEnvio;
+  const subtotal = calculateSubtotal(items);
+  const costoEnvio = useMemo(() => calculateShipping(subtotal, selectedEnvio), [subtotal, selectedEnvio]);
+  const iva = useMemo(() => calculateIva(subtotal), [subtotal]);
+  const total = calculateTotal(subtotal, costoEnvio, iva);
 
   useEffect(() => {
     const defaultAddress = direccionesUsuario.find(d => d.activo) || direccionesUsuario[0];
@@ -104,60 +104,30 @@ export const CheckoutPage = () => {
     setIsSubmitting(true);
 
     try {
-      // TODO backend: reemplazar por endpoint atómico de checkout cuando esté disponible.
-      // TODO backend: integrar callback de pasarela de pagos para cambiar estado a APROVED/REJECTED (RF-055).
-      const pedidoResult = await dispatch(
-        createPedido({
-          estado: 'PENDING',
-          subtotal,
-          costoEnvio,
-          total,
-          notasCliente: notas,
-          direccion: { id: selectedDireccionId },
-          cuenta: { id: cuentaUsuario.id },
-        }),
-      );
+      const response = await axios.post<{ pedido: { id?: string; numeroPedido?: string } }>('api/pedidos/checkout', {
+        direccionId: selectedDireccionId,
+        metodoPago: selectedPago,
+        tipoServicioEnvio: selectedEnvio,
+        notasCliente: notas,
+        items: items.map(item => ({
+          productoId: item.producto.id,
+          cantidad: item.cantidad,
+          precioUnitario: item.precioUnitario,
+        })),
+      });
 
-      const pedidoCreado = (pedidoResult.payload as any)?.data;
+      const pedidoCreado = response.data?.pedido;
 
       if (!pedidoCreado?.id) {
         throw new Error('No se pudo crear el pedido');
       }
 
-      // Crear items del pedido
-      for (const item of items) {
-        await dispatch(
-          createItemPedido({
-            cantidad: item.cantidad,
-            precioUnitario: item.precioUnitario,
-            subtotal: item.precioUnitario * item.cantidad,
-            nombreProducto: item.producto.nombre,
-            slugProducto: item.producto.slug,
-            marcaProducto: item.producto.marca?.nombre,
-            skuProducto: item.producto.sku,
-            colorProducto: item.producto.color,
-            tallaProducto: item.producto.talla,
-            pedido: { id: pedidoCreado.id },
-            producto: { id: item.producto.id },
-          }),
-        );
-      }
-
-      // Crear pago inicial
-      await dispatch(
-        createPago({
-          metodoPago: selectedPago as any,
-          estado: 'PENDING' as any,
-          monto: total,
-          pedido: { id: pedidoCreado.id },
-        }),
-      );
-
-      toast.success('¡Pedido creado exitosamente!');
+      toast.success('¡Pago aprobado y pedido creado exitosamente!');
       onCheckoutComplete();
       navigate(`/cuenta/pedidos/${pedidoCreado.id}`);
-    } catch {
-      toast.error('No pudimos procesar tu pedido. Inténtalo de nuevo.');
+    } catch (error: any) {
+      const message = error?.response?.data?.message || error?.message || 'Error desconocido';
+      toast.error(`No pudimos procesar tu pedido: ${message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -282,6 +252,10 @@ export const CheckoutPage = () => {
                   <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
                   <span>{costoEnvio === 0 ? 'Gratis' : formatCOP(costoEnvio)}</span>
                 </div>
+                <div className="d-flex justify-content-between mb-1">
+                  <span>IVA (19%)</span>
+                  <span>{formatCOP(iva)}</span>
+                </div>
                 <hr />
                 <div className="d-flex justify-content-between">
                   <span className="fw-bold">Total a pagar</span>
@@ -298,7 +272,7 @@ export const CheckoutPage = () => {
               </Card.Body>
             </Card>
             <p className="small text-muted">
-              Al confirmar, crearás tu pedido. Serás redirigido al detalle para completar el pago cuando la pasarela esté integrada.
+              Al confirmar, se procesará tu pago de forma simbólica y se creará tu pedido con envío y factura.
             </p>
           </div>
         );

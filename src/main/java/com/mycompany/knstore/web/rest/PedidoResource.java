@@ -1,7 +1,14 @@
 package com.mycompany.knstore.web.rest;
 
+import com.mycompany.knstore.domain.Cuenta;
+import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
+import com.mycompany.knstore.security.SecurityUtils;
+import com.mycompany.knstore.service.CheckoutException;
+import com.mycompany.knstore.service.CheckoutService;
 import com.mycompany.knstore.service.PedidoService;
+import com.mycompany.knstore.service.dto.CheckoutRequestDTO;
+import com.mycompany.knstore.service.dto.CheckoutResultDTO;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -45,9 +52,20 @@ public class PedidoResource {
 
     private final PedidoRepository pedidoRepository;
 
-    public PedidoResource(PedidoService pedidoService, PedidoRepository pedidoRepository) {
+    private final CheckoutService checkoutService;
+
+    private final CuentaRepository cuentaRepository;
+
+    public PedidoResource(
+        PedidoService pedidoService,
+        PedidoRepository pedidoRepository,
+        CheckoutService checkoutService,
+        CuentaRepository cuentaRepository
+    ) {
         this.pedidoService = pedidoService;
         this.pedidoRepository = pedidoRepository;
+        this.checkoutService = checkoutService;
+        this.cuentaRepository = cuentaRepository;
     }
 
     /**
@@ -195,5 +213,30 @@ public class PedidoResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id))
             .build();
+    }
+
+    /**
+     * {@code POST  /pedidos/checkout} : Procesa un checkout atómico simbólico.
+     *
+     * @param request datos del checkout.
+     * @return el {@link ResponseEntity} con el pedido creado.
+     */
+    @PostMapping("/checkout")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
+    public ResponseEntity<CheckoutResultDTO> checkout(@Valid @RequestBody CheckoutRequestDTO request) {
+        LOG.debug("REST request to checkout : {}", request);
+        Optional<String> currentUserId = SecurityUtils.getCurrentUserId();
+        if (currentUserId.isEmpty()) {
+            throw new BadRequestAlertException("Usuario no autenticado", ENTITY_NAME, "usuariorequerido");
+        }
+        Cuenta cuenta = cuentaRepository
+            .findOneByUserId(currentUserId.get())
+            .orElseThrow(() -> new BadRequestAlertException("No se encontró la cuenta del cliente", ENTITY_NAME, "cuentarequerida"));
+        try {
+            CheckoutResultDTO result = checkoutService.checkout(cuenta, request);
+            return ResponseEntity.ok(result);
+        } catch (CheckoutException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "checkouterror");
+        }
     }
 }
