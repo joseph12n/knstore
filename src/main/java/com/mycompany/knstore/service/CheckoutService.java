@@ -6,13 +6,20 @@ import com.mycompany.knstore.repository.*;
 import com.mycompany.knstore.service.dto.*;
 import com.mycompany.knstore.service.mapper.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +33,8 @@ public class CheckoutService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CheckoutService.class);
 
+    private static final String PEDIDO_SEQUENCE_COLLECTION = "pedido_sequence";
+
     private final PedidoRepository pedidoRepository;
     private final ItemPedidoRepository itemPedidoRepository;
     private final PagoRepository pagoRepository;
@@ -36,6 +45,7 @@ public class CheckoutService {
     private final CarritoRepository carritoRepository;
     private final ItemCarritoRepository itemCarritoRepository;
     private final DireccionRepository direccionRepository;
+    private final MongoTemplate mongoTemplate;
 
     private final PedidoMapper pedidoMapper;
     private final ItemPedidoMapper itemPedidoMapper;
@@ -51,6 +61,7 @@ public class CheckoutService {
         CarritoRepository carritoRepository,
         ItemCarritoRepository itemCarritoRepository,
         DireccionRepository direccionRepository,
+        MongoTemplate mongoTemplate,
         PedidoMapper pedidoMapper,
         ItemPedidoMapper itemPedidoMapper
     ) {
@@ -64,6 +75,7 @@ public class CheckoutService {
         this.carritoRepository = carritoRepository;
         this.itemCarritoRepository = itemCarritoRepository;
         this.direccionRepository = direccionRepository;
+        this.mongoTemplate = mongoTemplate;
         this.pedidoMapper = pedidoMapper;
         this.itemPedidoMapper = itemPedidoMapper;
     }
@@ -83,7 +95,7 @@ public class CheckoutService {
             throw new CheckoutException("La dirección no pertenece a la cuenta");
         }
 
-        // Cargar productos y validar stock
+        // Cargar productos, validar stock y precios
         Map<String, Producto> productosMap = new HashMap<>();
         Map<String, Integer> cantidadPorProducto = new HashMap<>();
         for (CheckoutItemDTO item : request.getItems()) {
@@ -92,7 +104,7 @@ public class CheckoutService {
 
         for (String productoId : cantidadPorProducto.keySet()) {
             Producto producto = productoRepository
-                .findOneWithEagerRelationships(productoId)
+                .findById(productoId)
                 .orElseThrow(() -> new CheckoutException("Producto no encontrado: " + productoId));
             productosMap.put(productoId, producto);
 
@@ -102,6 +114,21 @@ public class CheckoutService {
                 throw new CheckoutException(
                     "Stock insuficiente para " + producto.getNombre() + " (disponible: " + (stock == null ? 0 : stock) + ")"
                 );
+            }
+
+            // Validar precio contra el precio de venta real del producto
+            CheckoutItemDTO itemRequest = request
+                .getItems()
+                .stream()
+                .filter(i -> i.getProductoId().equals(productoId))
+                .findFirst()
+                .orElseThrow();
+            BigDecimal precioEsperado =
+                producto.getPrecio() != null && producto.getPrecio().getPrecioVenta() != null
+                    ? producto.getPrecio().getPrecioVenta()
+                    : BigDecimal.ZERO;
+            if (precioEsperado.compareTo(BigDecimal.ZERO) > 0 && itemRequest.getPrecioUnitario().compareTo(precioEsperado) != 0) {
+                throw new CheckoutException("Precio incorrecto para " + producto.getNombre());
             }
         }
 
@@ -119,7 +146,7 @@ public class CheckoutService {
                 producto.getCategoriaIva() != null && producto.getCategoriaIva().getPorcentaje() != null
                     ? producto.getCategoriaIva().getPorcentaje()
                     : BigDecimal.ZERO;
-            BigDecimal valorIva = itemSubtotal.multiply(porcentajeIva).divide(BigDecimal.valueOf(100));
+            BigDecimal valorIva = itemSubtotal.multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             ivaTotal = ivaTotal.add(valorIva);
         }
 
@@ -141,7 +168,7 @@ public class CheckoutService {
         pedido.setCuenta(cuenta);
         pedido = pedidoRepository.save(pedido);
 
-        // Crear ítems del pedido y decrementar stock
+        // Crear ítems del pedido y decrementar stock de forma atómica
         for (CheckoutItemDTO item : request.getItems()) {
             Producto producto = productosMap.get(item.getProductoId());
 
@@ -161,19 +188,16 @@ public class CheckoutService {
                     ? producto.getCategoriaIva().getPorcentaje()
                     : BigDecimal.ZERO;
             itemPedido.setPorcentajeIva(porcentajeIva);
-            BigDecimal valorIva = itemPedido.getSubtotal().multiply(porcentajeIva).divide(BigDecimal.valueOf(100));
+            BigDecimal valorIva = itemPedido.getSubtotal().multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             itemPedido.setValorIva(valorIva);
             itemPedido.setDescuento(BigDecimal.ZERO);
             itemPedido.setPedido(pedido);
             itemPedido.setProducto(producto);
             itemPedidoRepository.save(itemPedido);
 
-            // Decrementar stock
+            // Decrementar stock de forma atómica
             if (producto.getInventario() != null) {
-                ProductoInventario inventario = producto.getInventario();
-                Integer nuevoStock = inventario.getStock() - item.getCantidad();
-                inventario.setStock(nuevoStock);
-                productoInventarioRepository.save(inventario);
+                decrementarStockAtomico(producto.getInventario().getId(), item.getCantidad(), producto.getNombre());
             }
         }
 
@@ -190,14 +214,16 @@ public class CheckoutService {
         pago.setPedido(pedido);
         pago = pagoRepository.save(pago);
 
-        // Crear envío
+        // Crear envío y asociarlo al pedido
         Envio envio = new Envio();
         envio.setTipoServicio(request.getTipoServicioEnvio());
         envio.setEstado(EstadoEnvio.PENDING);
         envio.setCostoEnvio(costoEnvio);
         envio.setPedido(pedido);
         envio.setObservaciones("Envío registrado automáticamente desde el checkout");
-        envioRepository.save(envio);
+        envio = envioRepository.save(envio);
+        pedido.setEnvio(envio);
+        pedidoRepository.save(pedido);
 
         // Crear factura simbólica
         Factura factura = new Factura();
@@ -219,6 +245,16 @@ public class CheckoutService {
         CheckoutResultDTO result = new CheckoutResultDTO();
         result.setPedido(pedidoMapper.toDto(pedido));
         return result;
+    }
+
+    private void decrementarStockAtomico(String inventarioId, int cantidad, String nombreProducto) {
+        Query query = new Query(Criteria.where("id").is(inventarioId).and("stock").gte(cantidad));
+        Update update = new Update().inc("stock", -cantidad);
+        FindAndModifyOptions options = new FindAndModifyOptions().returnNew(true);
+        ProductoInventario actualizado = mongoTemplate.findAndModify(query, update, options, ProductoInventario.class);
+        if (actualizado == null) {
+            throw new CheckoutException("Stock insuficiente para " + nombreProducto + " (posible concurrencia)");
+        }
     }
 
     private void vaciarCarrito(Cuenta cuenta) {
@@ -243,7 +279,14 @@ public class CheckoutService {
 
     private String generarNumeroPedido() {
         String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String random = UUID.randomUUID().toString().substring(0, 4).toUpperCase();
-        return "PED-" + fecha + "-" + random;
+        String sequenceKey = "PED-" + fecha;
+
+        Query query = new Query(Criteria.where("_id").is(sequenceKey));
+        Update update = new Update().inc("seq", 1);
+        FindAndModifyOptions options = new FindAndModifyOptions().upsert(true).returnNew(true);
+        Document sequence = mongoTemplate.findAndModify(query, update, options, Document.class, PEDIDO_SEQUENCE_COLLECTION);
+
+        long seq = sequence != null ? sequence.getLong("seq") : 1L;
+        return String.format("PED-%s-%06d", fecha, seq);
     }
 }
