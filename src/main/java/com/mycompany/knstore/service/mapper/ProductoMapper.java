@@ -22,44 +22,62 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { ProductoImagenMapper.class })
 public interface ProductoMapper extends EntityMapper<ProductoDTO, Producto> {
-    @Mapping(target = "precio", source = "precio", qualifiedByName = "productoPrecioId")
-    @Mapping(target = "inventario", source = "inventario", qualifiedByName = "productoInventarioId")
-    @Mapping(target = "categoria", source = "categoria", qualifiedByName = "categoriaNombre")
-    @Mapping(target = "subcategoria", source = "subcategoria", qualifiedByName = "subcategoriaNombre")
-    @Mapping(target = "marca", source = "marca", qualifiedByName = "marcaId")
-    @Mapping(target = "categoriaIva", source = "categoriaIva", qualifiedByName = "categoriaIVAId")
+    @Mapping(target = "precio", source = "precio", qualifiedByName = "productoPrecioResumen")
+    @Mapping(target = "inventario", source = "inventario", qualifiedByName = "productoInventarioResumen")
+    @Mapping(target = "categoria", source = "categoria", qualifiedByName = "categoriaResumen")
+    @Mapping(target = "subcategoria", source = "subcategoria", qualifiedByName = "subcategoriaResumen")
+    @Mapping(target = "marca", source = "marca", qualifiedByName = "marcaResumen")
+    @Mapping(target = "categoriaIva", source = "categoriaIva", qualifiedByName = "categoriaIVAResumen")
     @Mapping(target = "imagenes", source = "imageneses")
     ProductoDTO toDto(Producto s);
 
-    @Named("productoPrecioId")
+    @Named("productoPrecioResumen")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    ProductoPrecioDTO toDtoProductoPrecioId(ProductoPrecio productoPrecio);
+    @Mapping(target = "precioCompra", source = "precioCompra")
+    @Mapping(target = "precioVenta", source = "precioVenta")
+    @Mapping(target = "precioAdicional", source = "precioAdicional")
+    @Mapping(target = "ganancia", source = "ganancia")
+    ProductoPrecioDTO toDtoProductoPrecioResumen(ProductoPrecio productoPrecio);
 
-    @Named("productoInventarioId")
+    @Named("productoInventarioResumen")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    ProductoInventarioDTO toDtoProductoInventarioId(ProductoInventario productoInventario);
+    @Mapping(target = "stock", source = "stock")
+    @Mapping(target = "stockMinimo", source = "stockMinimo")
+    @Mapping(target = "ubicacionBodega", source = "ubicacionBodega")
+    @Mapping(target = "garantiaMeses", source = "garantiaMeses")
+    ProductoInventarioDTO toDtoProductoInventarioResumen(ProductoInventario productoInventario);
 
-    @Named("categoriaNombre")
+    @Named("categoriaResumen")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "nombre", source = "nombre")
-    CategoriaDTO toDtoCategoriaNombre(Categoria categoria);
+    @Mapping(target = "slug", source = "slug")
+    @Mapping(target = "activo", source = "activo")
+    CategoriaDTO toDtoCategoriaResumen(Categoria categoria);
 
-    @Named("subcategoriaNombre")
+    @Named("subcategoriaResumen")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "nombre", source = "nombre")
-    SubcategoriaDTO toDtoSubcategoriaNombre(Subcategoria subcategoria);
+    @Mapping(target = "slug", source = "slug")
+    @Mapping(target = "activo", source = "activo")
+    @Mapping(target = "categoria", source = "categoria", qualifiedByName = "categoriaResumen")
+    SubcategoriaDTO toDtoSubcategoriaResumen(Subcategoria subcategoria);
 
-    @Named("marcaId")
+    @Named("marcaResumen")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    MarcaDTO toDtoMarcaId(Marca marca);
+    @Mapping(target = "nombre", source = "nombre")
+    @Mapping(target = "slug", source = "slug")
+    MarcaDTO toDtoMarcaResumen(Marca marca);
 
-    @Named("categoriaIVAId")
+    @Named("categoriaIVAResumen")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    CategoriaIVADTO toDtoCategoriaIVAId(CategoriaIVA categoriaIVA);
+    @Mapping(target = "nombre", source = "nombre")
+    @Mapping(target = "porcentaje", source = "porcentaje")
+    @Mapping(target = "estado", source = "estado")
+    CategoriaIVADTO toDtoCategoriaIVAResumen(CategoriaIVA categoriaIVA);
 }

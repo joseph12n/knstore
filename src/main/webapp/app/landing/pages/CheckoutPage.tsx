@@ -10,6 +10,7 @@ import { getEntities as getDireccions } from 'app/entities/direccion/direccion.r
 import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
 import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
+import { calculateIva, calculateShipping, calculateSubtotal, calculateTotal } from 'app/landing/utils/checkout';
 import CheckoutStepper from 'app/landing/components/CheckoutStepper';
 import AddressCard from 'app/landing/components/AddressCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
@@ -22,7 +23,7 @@ export const CheckoutPage = () => {
   const [step, setStep] = useState(0);
   const [selectedDireccionId, setSelectedDireccionId] = useState('');
   const [selectedEnvio, setSelectedEnvio] = useState('ESTANDAR');
-  const [selectedPago, setSelectedPago] = useState('PSE');
+  const [selectedPago, setSelectedPago] = useState('NEQUI');
   const [notas, setNotas] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -48,9 +49,10 @@ export const CheckoutPage = () => {
 
   const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
 
-  const subtotal = items.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0);
-  const costoEnvio = useMemo(() => SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.cost || 0, [selectedEnvio]);
-  const total = subtotal + costoEnvio;
+  const subtotal = calculateSubtotal(items);
+  const costoEnvio = useMemo(() => calculateShipping(subtotal, selectedEnvio), [subtotal, selectedEnvio]);
+  const iva = useMemo(() => calculateIva(subtotal), [subtotal]);
+  const total = calculateTotal(subtotal, costoEnvio, iva);
 
   useEffect(() => {
     const defaultAddress = direccionesUsuario.find(d => d.activo) || direccionesUsuario[0];
@@ -249,6 +251,10 @@ export const CheckoutPage = () => {
                 <div className="d-flex justify-content-between mb-1">
                   <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
                   <span>{costoEnvio === 0 ? 'Gratis' : formatCOP(costoEnvio)}</span>
+                </div>
+                <div className="d-flex justify-content-between mb-1">
+                  <span>IVA (19%)</span>
+                  <span>{formatCOP(iva)}</span>
                 </div>
                 <hr />
                 <div className="d-flex justify-content-between">

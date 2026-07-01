@@ -1,5 +1,6 @@
 import React, { createContext, use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import { CartItem, IProductoStorefront } from 'app/landing/model/storefront.model';
 import { ICarrito } from 'app/shared/model/carrito.model';
@@ -71,6 +72,12 @@ const fetchItemCarritos = async (): Promise<IItemCarrito[]> => {
 const fetchProductos = async (): Promise<IProducto[]> => {
   const response = await axios.get<IProducto[]>('api/productos?size=1000&eagerload=true');
   return response.data;
+};
+
+const handleCartError = (message: string, error: unknown) => {
+  const axiosError = error as any;
+  const detail = axiosError?.response?.data?.detail || axiosError?.response?.data?.message || axiosError?.message || 'Error desconocido';
+  toast.error(`${message}: ${detail}`);
 };
 
 const toStorefrontProducto = (producto: IProducto): IProductoStorefront => ({
@@ -190,7 +197,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
       } else {
         setServerItems(loadedItems);
       }
-    } catch {
+    } catch (error) {
+      handleCartError('No se pudo cargar el carrito', error);
       setServerItems([]);
     } finally {
       if (!cancelled) {
@@ -254,8 +262,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
             carrito: { id: carritoIdRef.current },
             producto: { id: producto.id },
           });
-        } catch {
-          // ignore
+        } catch (error) {
+          handleCartError('No se pudo actualizar la cantidad en el carrito', error);
         }
       } else {
         if (!login) return;
@@ -279,8 +287,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
               precioUnitario,
             },
           ]);
-        } catch {
-          // ignore
+        } catch (error) {
+          handleCartError('No se pudo agregar el producto al carrito', error);
         }
       }
     },
@@ -308,8 +316,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
           carrito: { id: carritoIdRef.current },
           producto: { id: item.producto.id },
         });
-      } catch {
-        // ignore
+      } catch (error) {
+        handleCartError('No se pudo actualizar la cantidad', error);
       }
     },
     [isAuthenticated, serverItems],
@@ -325,8 +333,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
       setServerItems(prev => prev.filter(item => item.id !== itemId));
       try {
         await axios.delete(`api/item-carritos/${itemId}`);
-      } catch {
-        // ignore
+      } catch (error) {
+        handleCartError('No se pudo eliminar el producto del carrito', error);
       }
     },
     [isAuthenticated],
@@ -342,8 +350,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
     setServerItems([]);
     try {
       await Promise.all(itemsToDelete.map(item => (item.id ? axios.delete(`api/item-carritos/${item.id}`) : Promise.resolve())));
-    } catch {
-      // ignore
+    } catch (error) {
+      handleCartError('No se pudo vaciar el carrito', error);
     }
   }, [isAuthenticated, serverItems]);
 
