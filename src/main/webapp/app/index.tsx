@@ -10,6 +10,7 @@ import { loadIcons } from 'app/config/icon-loader';
 import getStore from 'app/config/store';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { clearAuthentication } from 'app/shared/reducers/authentication';
+import { registerServiceWorker } from 'app/serviceWorkerRegistration';
 
 const store = getStore();
 
@@ -17,6 +18,7 @@ const actions = bindActionCreators({ clearAuthentication }, store.dispatch);
 setupAxiosInterceptors(() => actions.clearAuthentication('login.error.unauthorized'));
 
 loadIcons();
+registerServiceWorker();
 
 const rootEl = document.getElementById('root');
 const root = createRoot(rootEl!);

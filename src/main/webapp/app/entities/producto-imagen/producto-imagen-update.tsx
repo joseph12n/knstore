@@ -116,7 +116,7 @@ export const ProductoImagenUpdate = () => {
                 {productos
                   ? productos.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.nombre || otherEntity.id}
                       </option>
                     ))
                   : null}
