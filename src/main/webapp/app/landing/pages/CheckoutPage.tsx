@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
 import { calculateIva, calculateShipping, calculateSubtotal, calculateTotal } from 'app/landing/utils/checkout';
@@ -29,25 +29,28 @@ export const CheckoutPage = () => {
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
+  const cuenta = useAppSelector(state => state.cuenta.entity);
   const loadingDirecciones = useAppSelector(state => state.direccion.loading);
 
   useEffect(() => {
     dispatch(getSession());
     dispatch(getDireccions({ page: 0, size: 100, sort: 'activo,desc' }));
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
-  }, [dispatch]);
-
-  const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
+    if (account.login) {
+      dispatch(getCuentaByLogin(account.login));
+    }
+    return () => {
+      dispatch(resetCuenta());
+    };
+  }, [dispatch, account.login]);
 
   useEffect(() => {
-    if (!loadingDirecciones && !cuentaUsuario) {
+    if (!loadingDirecciones && !cuenta) {
       toast.info('Completa tu perfil para poder finalizar la compra.');
-      navigate('/cuenta/perfil');
+      navigate('/mi-cuenta/perfil');
     }
-  }, [loadingDirecciones, cuentaUsuario, navigate]);
+  }, [loadingDirecciones, cuenta, navigate]);
 
-  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
+  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
   const subtotal = calculateSubtotal(items);
   const costoEnvio = useMemo(() => calculateShipping(subtotal, selectedEnvio), [subtotal, selectedEnvio]);
@@ -73,12 +76,12 @@ export const CheckoutPage = () => {
     );
   }
 
-  if (!cuentaUsuario) {
+  if (!cuenta) {
     return (
       <Container className="py-5 text-center kn-fade-in">
         <h2 className="h3 fw-bold mb-3">Completa tu perfil</h2>
         <p className="text-muted">Necesitas un perfil de cliente para continuar con la compra.</p>
-        <Button variant="primary" as={Link as any} to="/cuenta/perfil">
+        <Button variant="primary" as={Link as any} to="/mi-cuenta/perfil">
           Completar perfil
         </Button>
       </Container>
@@ -96,7 +99,7 @@ export const CheckoutPage = () => {
   const handleBack = () => setStep(prev => Math.max(prev - 1, 0));
 
   const handleSubmit = async () => {
-    if (!cuentaUsuario) {
+    if (!cuenta) {
       toast.error('No se encontró tu perfil de cliente. Completa tu cuenta.');
       return;
     }
@@ -124,7 +127,7 @@ export const CheckoutPage = () => {
 
       toast.success('¡Pago aprobado y pedido creado exitosamente!');
       onCheckoutComplete();
-      navigate(`/cuenta/pedidos/${pedidoCreado.id}`);
+      navigate(`/mi-cuenta/pedidos/${pedidoCreado.id}`);
     } catch (error: any) {
       const message = error?.response?.data?.message || error?.message || 'Error desconocido';
       toast.error(`No pudimos procesar tu pedido: ${message}`);
@@ -144,7 +147,7 @@ export const CheckoutPage = () => {
             ) : direccionesUsuario.length === 0 ? (
               <Card className="p-4 text-center">
                 <p className="text-muted">No tienes direcciones guardadas.</p>
-                <Button variant="primary" onClick={() => navigate('/cuenta/direcciones')}>
+                <Button variant="primary" onClick={() => navigate('/mi-cuenta/direcciones')}>
                   Agregar dirección
                 </Button>
               </Card>

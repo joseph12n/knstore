@@ -42,7 +42,7 @@ export const OrderCard = ({ pedido, onCancel }: OrderCardProps) => {
           </div>
         </div>
         <div className="d-flex gap-2">
-          <Link to={`/cuenta/pedidos/${pedido.id}`} className="btn btn-outline-primary btn-sm flex-grow-1">
+          <Link to={`/mi-cuenta/pedidos/${pedido.id}`} className="btn btn-outline-primary btn-sm flex-grow-1">
             Ver detalle
           </Link>
           {canCancel && onCancel && (

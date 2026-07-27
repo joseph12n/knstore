@@ -11,7 +11,7 @@ import {
   getEntities as getDireccions,
   updateEntity as updateDireccion,
 } from 'app/entities/direccion/direccion.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import { IDireccion } from 'app/shared/model/direccion.model';
 import AddressCard from 'app/landing/components/AddressCard';
 import AddressForm from 'app/landing/components/AddressForm';
@@ -26,25 +26,28 @@ export const AddressesPage = () => {
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
+  const cuenta = useAppSelector(state => state.cuenta.entity);
   const loading = useAppSelector(state => state.direccion.loading || state.cuenta.loading);
 
   useEffect(() => {
     dispatch(getSession());
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
+    if (account.login) {
+      dispatch(getCuentaByLogin(account.login));
+    }
     dispatch(getDireccions({ page: 0, size: 100, sort: 'activo,desc' }));
-  }, [dispatch]);
-
-  const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
+    return () => {
+      dispatch(resetCuenta());
+    };
+  }, [dispatch, account.login]);
 
   useEffect(() => {
-    if (!loading && cuentaUsuario === undefined) {
+    if (!loading && cuenta === undefined) {
       toast.info('Completa tu perfil para poder gestionar direcciones.');
-      navigate('/cuenta/perfil');
+      navigate('/mi-cuenta/perfil');
     }
-  }, [loading, cuentaUsuario, navigate]);
+  }, [loading, cuenta, navigate]);
 
-  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
+  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
   const handleOpenForm = (direccion?: IDireccion) => {
     setEditingAddress(direccion);
@@ -57,7 +60,7 @@ export const AddressesPage = () => {
   };
 
   const handleSubmit = async (data: any) => {
-    if (!cuentaUsuario) {
+    if (!cuenta?.id) {
       toast.error('No se encontró tu perfil de cliente.');
       return;
     }
@@ -66,7 +69,7 @@ export const AddressesPage = () => {
     try {
       const payload = {
         ...data,
-        cuenta: { id: cuentaUsuario.id },
+        cuenta: { id: cuenta.id },
       };
 
       if (editingAddress?.id) {
@@ -101,14 +104,14 @@ export const AddressesPage = () => {
       // Desactivar otras y activar la seleccionada
       for (const d of direccionesUsuario) {
         if (d.id !== direccion.id && d.activo) {
-          await dispatch(updateDireccion({ ...d, activo: false, cuenta: { id: cuentaUsuario?.id } }));
+          await dispatch(updateDireccion({ ...d, activo: false, cuenta: { id: cuenta?.id } }));
         }
       }
       await dispatch(
         updateDireccion({
           ...direccion,
           activo: true,
-          cuenta: { id: cuentaUsuario?.id },
+          cuenta: { id: cuenta?.id },
         }),
       );
       toast.success('Dirección predeterminada actualizada.');
@@ -126,7 +129,7 @@ export const AddressesPage = () => {
         </Button>
       </div>
 
-      <Link to="/cuenta" className="text-muted small d-block mb-4">
+      <Link to="/mi-cuenta" className="text-muted small d-block mb-4">
         ← Volver a mi cuenta
       </Link>
 
