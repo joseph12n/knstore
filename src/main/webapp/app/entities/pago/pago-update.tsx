@@ -180,7 +180,7 @@ export const PagoUpdate = () => {
                 {pedidos
                   ? pedidos.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        #{otherEntity.numeroPedido || otherEntity.id}
                       </option>
                     ))
                   : null}

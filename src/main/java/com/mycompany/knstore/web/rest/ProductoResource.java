@@ -162,6 +162,25 @@ public class ProductoResource {
     }
 
     /**
+     * {@code GET  /productos/search} : search active productos by query.
+     *
+     * @param query the search query.
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of productos in body.
+     */
+    @GetMapping("/search")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<ProductoDTO>> searchProductos(
+        @RequestParam(name = "q", required = false, defaultValue = "") String query,
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+    ) {
+        LOG.debug("REST request to search Productos : {}", query);
+        Page<ProductoDTO> page = productoService.searchActive(query.trim(), pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
      * {@code GET  /productos/:id} : get the "id" producto.
      *
      * @param id the id of the productoDTO to retrieve.
@@ -172,6 +191,20 @@ public class ProductoResource {
     public ResponseEntity<ProductoDTO> getProducto(@PathVariable("id") String id) {
         LOG.debug("REST request to get Producto : {}", id);
         Optional<ProductoDTO> productoDTO = productoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(productoDTO);
+    }
+
+    /**
+     * {@code GET  /productos/slug/:slug} : get the producto by slug.
+     *
+     * @param slug the slug of the productoDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the productoDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/slug/{slug}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<ProductoDTO> getProductoBySlug(@PathVariable("slug") String slug) {
+        LOG.debug("REST request to get Producto by slug : {}", slug);
+        Optional<ProductoDTO> productoDTO = productoService.findBySlug(slug);
         return ResponseUtil.wrapOrNotFound(productoDTO);
     }
 
