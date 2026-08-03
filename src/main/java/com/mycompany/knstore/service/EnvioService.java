@@ -42,6 +42,16 @@ public interface EnvioService {
     Page<EnvioDTO> findAll(Pageable pageable);
 
     /**
+     * Get pending shipments for admin operations.
+     */
+    Page<EnvioDTO> findPendientesAdmin(Pageable pageable);
+
+    /**
+     * Assign tracking number to an existing shipment.
+     */
+    Optional<EnvioDTO> asignarNumeroRastreo(String envioId, String numeroRastreo, String transportadora, String urlRastreo);
+
+    /**
      * Get the "id" envio.
      *
      * @param id the id of the entity.

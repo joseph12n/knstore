@@ -58,6 +58,15 @@ public interface DireccionService {
     Optional<DireccionDTO> findOne(String id);
 
     /**
+     * Marks one address as default (activo=true) for its owner account,
+     * and deactivates the rest of that account addresses.
+     *
+     * @param id the id of the address to set as default.
+     * @return the updated default address.
+     */
+    Optional<DireccionDTO> marcarPredeterminada(String id);
+
+    /**
      * Delete the "id" direccion.
      *
      * @param id the id of the entity.

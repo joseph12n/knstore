@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "factura")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Factura implements Serializable {
+public class Factura extends AbstractAuditingEntity<String> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -28,6 +28,10 @@ public class Factura implements Serializable {
     @Size(max = 10)
     @Field("prefijo")
     private String prefijo;
+
+    @Size(max = 20)
+    @Field("numero_factura")
+    private String numeroFactura;
 
     @Size(max = 96)
     @Field("cufe")
@@ -106,6 +110,19 @@ public class Factura implements Serializable {
 
     public void setPrefijo(String prefijo) {
         this.prefijo = prefijo;
+    }
+
+    public String getNumeroFactura() {
+        return this.numeroFactura;
+    }
+
+    public Factura numeroFactura(String numeroFactura) {
+        this.setNumeroFactura(numeroFactura);
+        return this;
+    }
+
+    public void setNumeroFactura(String numeroFactura) {
+        this.numeroFactura = numeroFactura;
     }
 
     public String getCufe() {
@@ -302,6 +319,7 @@ public class Factura implements Serializable {
         return "Factura{" +
             "id=" + getId() +
             ", prefijo='" + getPrefijo() + "'" +
+            ", numeroFactura='" + getNumeroFactura() + "'" +
             ", cufe='" + getCufe() + "'" +
             ", subtotal=" + getSubtotal() +
             ", descuentos=" + getDescuentos() +

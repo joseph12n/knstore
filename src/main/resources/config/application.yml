@@ -97,7 +97,7 @@ spring:
     name: knstore
   docker:
     compose:
-      enabled: true
+      enabled: ${SPRING_DOCKER_COMPOSE_ENABLED:false}
       lifecycle-management: start-only
       file: src/main/docker/services.yml
   profiles:
@@ -207,3 +207,9 @@ jhipster:
 # ===================================================================
 
 # application:
+
+knstore:
+  payment:
+    gateway:
+      type: simulated
+      simulated-result: APPROVED

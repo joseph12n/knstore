@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -125,5 +126,26 @@ public class MailService {
     public void sendPasswordResetMail(User user) {
         LOG.debug("Sending password reset email to '{}'", user.getEmail());
         sendEmailFromTemplateSync(user, "mail/passwordResetEmail", "email.reset.title");
+    }
+
+    @Async
+    public void sendEmailWithAttachment(String to, String subject, String content, String attachmentName, byte[] attachmentContent) {
+        if (!enabled) {
+            LOG.warn("Email sending is disabled; skipping message with attachment to '{}'", to);
+            return;
+        }
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
+            message.setTo(to);
+            message.setFrom(jHipsterProperties.getMail().getFrom());
+            message.setSubject(subject);
+            message.setText(content, false);
+            message.addAttachment(attachmentName, new ByteArrayResource(attachmentContent));
+            javaMailSender.send(mimeMessage);
+            LOG.debug("Sent email with attachment to User '{}'", to);
+        } catch (MailException | MessagingException e) {
+            LOG.warn("Email with attachment could not be sent to user '{}': {}", to, e.getMessage());
+        }
     }
 }

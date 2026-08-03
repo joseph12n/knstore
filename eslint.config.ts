@@ -1,10 +1,14 @@
 import eslint from '@eslint/js';
 import react from '@eslint-react/eslint-plugin';
 import { defineConfig } from 'eslint/config';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import prettier from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 // jhipster-needle-eslint-add-import - JHipster will add additional import here
+
+const tsconfigRootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(
   {
@@ -31,7 +35,8 @@ export default defineConfig(
         ...globals.browser,
       },
       parserOptions: {
-        project: ['./tsconfig.json', './tsconfig.vitest.json'],
+        tsconfigRootDir,
+        project: ['./tsconfig.eslint.json'],
       },
     },
     rules: {

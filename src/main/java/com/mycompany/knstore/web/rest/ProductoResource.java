@@ -6,6 +6,7 @@ import com.mycompany.knstore.service.dto.ProductoDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -173,6 +174,62 @@ public class ProductoResource {
         LOG.debug("REST request to get Producto : {}", id);
         Optional<ProductoDTO> productoDTO = productoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(productoDTO);
+    }
+
+    /**
+     * {@code GET  /productos/slug/:slug} : get the producto by slug.
+     *
+     * @param slug the slug of the productoDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the productoDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/slug/{slug}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<ProductoDTO> getProductoBySlug(@PathVariable("slug") String slug) {
+        LOG.debug("REST request to get Producto by slug : {}", slug);
+        Optional<ProductoDTO> productoDTO = productoService.findBySlug(slug);
+        return ResponseUtil.wrapOrNotFound(productoDTO);
+    }
+
+    /**
+     * {@code GET /productos/buscar} : buscar productos publicos por texto y filtros.
+     */
+    @GetMapping("/buscar")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<ProductoDTO>> buscarProductos(
+        @RequestParam(name = "q", required = false) String q,
+        @RequestParam(name = "categoriaId", required = false) String categoriaId,
+        @RequestParam(name = "subcategoriaId", required = false) String subcategoriaId,
+        @RequestParam(name = "marcaId", required = false) String marcaId,
+        @RequestParam(name = "minPrecio", required = false) BigDecimal minPrecio,
+        @RequestParam(name = "maxPrecio", required = false) BigDecimal maxPrecio,
+        @RequestParam(name = "destacado", required = false) Boolean destacado,
+        @RequestParam(name = "soloActivos", required = false, defaultValue = "true") boolean soloActivos,
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+    ) {
+        LOG.debug(
+            "REST request to buscar Productos: q={}, categoriaId={}, subcategoriaId={}, marcaId={}, minPrecio={}, maxPrecio={}, destacado={}, soloActivos={}",
+            q,
+            categoriaId,
+            subcategoriaId,
+            marcaId,
+            minPrecio,
+            maxPrecio,
+            destacado,
+            soloActivos
+        );
+        Page<ProductoDTO> page = productoService.buscarPublico(
+            q,
+            categoriaId,
+            subcategoriaId,
+            marcaId,
+            minPrecio,
+            maxPrecio,
+            destacado,
+            soloActivos,
+            pageable
+        );
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

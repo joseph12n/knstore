@@ -33,6 +33,7 @@ const getTsLoaderRule = () => {
 
 module.exports = async options => {
   const development = options.env === 'development';
+  const disableForkTsChecker = process.env.JHI_DISABLE_FORK_TS_CHECKER === 'true';
   return merge(
     {
       cache: {
@@ -91,7 +92,7 @@ module.exports = async options => {
           configType: 'flat',
           extensions: ['ts', 'tsx'],
         }),
-        new ForkTsCheckerWebpackPlugin(),
+        disableForkTsChecker ? null : new ForkTsCheckerWebpackPlugin(),
         new CopyWebpackPlugin({
           patterns: [
             {
@@ -119,7 +120,7 @@ module.exports = async options => {
           inject: 'body',
           base: '/',
         }),
-      ],
+      ].filter(Boolean),
     },
     // jhipster-needle-add-webpack-config - JHipster will add custom config
   );

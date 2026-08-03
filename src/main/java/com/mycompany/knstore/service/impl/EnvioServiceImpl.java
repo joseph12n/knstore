@@ -1,15 +1,19 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Envio;
+import com.mycompany.knstore.domain.enumeration.EstadoEnvio;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.EnvioRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.EnvioService;
+import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.dto.EnvioDTO;
 import com.mycompany.knstore.service.mapper.EnvioMapper;
+import java.time.Instant;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -35,16 +39,20 @@ public class EnvioServiceImpl implements EnvioService {
 
     private final EnvioMapper envioMapper;
 
+    private final HistorialEstadoService historialEstadoService;
+
     public EnvioServiceImpl(
         EnvioRepository envioRepository,
         PedidoRepository pedidoRepository,
         CuentaRepository cuentaRepository,
-        EnvioMapper envioMapper
+        EnvioMapper envioMapper,
+        HistorialEstadoService historialEstadoService
     ) {
         this.envioRepository = envioRepository;
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
         this.envioMapper = envioMapper;
+        this.historialEstadoService = historialEstadoService;
     }
 
     @Override
@@ -97,6 +105,57 @@ public class EnvioServiceImpl implements EnvioService {
                 .orElse(Page.empty(pageable));
         }
         return envioRepository.findAll(pageable).map(envioMapper::toDto);
+    }
+
+    public Page<EnvioDTO> findPendientesAdmin(Pageable pageable) {
+        LOG.debug("Request to get pending Envios for admin");
+        return envioRepository
+            .findByEstadoIn(List.of(EstadoEnvio.PENDING, EstadoEnvio.DISPATCHED, EstadoEnvio.IN_TRANSIT, EstadoEnvio.IN_CITY), pageable)
+            .map(envioMapper::toDto);
+    }
+
+    public Optional<EnvioDTO> asignarNumeroRastreo(String envioId, String numeroRastreo, String transportadora, String urlRastreo) {
+        LOG.debug("Request to assign tracking number {} to Envio {}", numeroRastreo, envioId);
+        String tracking = numeroRastreo != null ? numeroRastreo.trim() : null;
+        if (tracking == null || tracking.isBlank()) {
+            throw new IllegalArgumentException("El numero de rastreo es obligatorio");
+        }
+
+        Optional<Envio> duplicado = envioRepository.findByNumeroRastreo(tracking).filter(envio -> !envioId.equals(envio.getId()));
+        if (duplicado.isPresent()) {
+            throw new IllegalArgumentException("El numero de rastreo ya esta asignado a otro envio");
+        }
+
+        return envioRepository
+            .findById(envioId)
+            .map(envio -> {
+                String estadoAnterior = envio.getEstado() != null ? envio.getEstado().name() : null;
+                String trackingAnterior = envio.getNumeroRastreo();
+
+                envio.setNumeroRastreo(tracking);
+                if (transportadora != null && !transportadora.isBlank()) {
+                    envio.setTransportadora(transportadora.trim());
+                }
+                if (urlRastreo != null && !urlRastreo.isBlank()) {
+                    envio.setUrlRastreo(urlRastreo.trim());
+                }
+
+                if (EstadoEnvio.PENDING.equals(envio.getEstado())) {
+                    envio.setEstado(EstadoEnvio.DISPATCHED);
+                    if (envio.getFechaDespacho() == null) {
+                        envio.setFechaDespacho(Instant.now());
+                    }
+                }
+
+                Envio guardado = envioRepository.save(envio);
+
+                historialEstadoService.registrarCambioEstado("Envio", envioId, "numeroRastreo", trackingAnterior, tracking);
+                if (!estadoAnterior.equals(guardado.getEstado().name())) {
+                    historialEstadoService.registrarCambioEstado("Envio", envioId, "estado", estadoAnterior, guardado.getEstado().name());
+                }
+                return guardado;
+            })
+            .map(envioMapper::toDto);
     }
 
     @Override

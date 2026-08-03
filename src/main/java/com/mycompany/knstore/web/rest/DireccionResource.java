@@ -181,6 +181,14 @@ public class DireccionResource {
         return ResponseUtil.wrapOrNotFound(direccionDTO);
     }
 
+    @PostMapping("/{id}/predeterminada")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessDireccionId(#id)")
+    public ResponseEntity<DireccionDTO> marcarDireccionPredeterminada(@PathVariable("id") String id) {
+        LOG.debug("REST request to mark Direccion as default : {}", id);
+        Optional<DireccionDTO> direccionDTO = direccionService.marcarPredeterminada(id);
+        return ResponseUtil.wrapOrNotFound(direccionDTO, HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, id));
+    }
+
     /**
      * {@code DELETE  /direccions/:id} : delete the "id" direccion.
      *

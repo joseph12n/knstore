@@ -14,6 +14,7 @@
 # ===================================================================
 
 mongock:
+  enabled: false
   migration-scan-package:
     - com.mycompany.knstore.config.dbmigrations
   mongo-db:
@@ -25,6 +26,9 @@ mongock:
 spring:
   application:
     name: knstore
+  data:
+    mongodb:
+      database: knstore
   jackson2:
     serialization:
       write-durations-as-timestamps: false

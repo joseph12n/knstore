@@ -1,8 +1,13 @@
 package com.mycompany.knstore.web.rest;
 
+import com.mycompany.knstore.domain.HistorialEstado;
 import com.mycompany.knstore.repository.PagoRepository;
+import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.PagoService;
+import com.mycompany.knstore.service.dto.PagoCallbackRequestDTO;
 import com.mycompany.knstore.service.dto.PagoDTO;
+import com.mycompany.knstore.service.dto.PagoIniciarRequestDTO;
+import com.mycompany.knstore.service.dto.PagoReembolsoRequestDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -44,9 +49,12 @@ public class PagoResource {
 
     private final PagoRepository pagoRepository;
 
-    public PagoResource(PagoService pagoService, PagoRepository pagoRepository) {
+    private final HistorialEstadoService historialEstadoService;
+
+    public PagoResource(PagoService pagoService, PagoRepository pagoRepository, HistorialEstadoService historialEstadoService) {
         this.pagoService = pagoService;
         this.pagoRepository = pagoRepository;
+        this.historialEstadoService = historialEstadoService;
     }
 
     /**
@@ -144,6 +152,42 @@ public class PagoResource {
         );
     }
 
+    @PostMapping("/iniciar")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPedidoId(#iniciarRequest.pedidoId)")
+    public ResponseEntity<PagoDTO> iniciarPago(@Valid @RequestBody PagoIniciarRequestDTO iniciarRequest) {
+        LOG.debug("REST request to iniciar Pago : {}", iniciarRequest);
+        try {
+            PagoDTO pagoDTO = pagoService.iniciarPago(iniciarRequest);
+            return ResponseEntity.ok(pagoDTO);
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestAlertException(ex.getMessage(), ENTITY_NAME, "iniciarinvalid");
+        }
+    }
+
+    @PostMapping("/callback")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<PagoDTO> procesarCallback(@Valid @RequestBody PagoCallbackRequestDTO callbackRequest) {
+        LOG.debug("REST request to callback de Pago : {}", callbackRequest);
+        try {
+            PagoDTO pagoDTO = pagoService.procesarCallback(callbackRequest);
+            return ResponseEntity.ok(pagoDTO);
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestAlertException(ex.getMessage(), ENTITY_NAME, "callbackinvalid");
+        }
+    }
+
+    @PostMapping("/{id}/reembolso")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<PagoDTO> reembolsarPago(@PathVariable("id") String id, @Valid @RequestBody PagoReembolsoRequestDTO request) {
+        LOG.debug("REST request to refund Pago : {}", id);
+        try {
+            PagoDTO pagoDTO = pagoService.reembolsar(id, request.getMotivo());
+            return ResponseEntity.ok(pagoDTO);
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestAlertException(ex.getMessage(), ENTITY_NAME, "refundinvalid");
+        }
+    }
+
     /**
      * {@code GET  /pagos} : get all the Pagos.
      *
@@ -170,6 +214,13 @@ public class PagoResource {
         LOG.debug("REST request to get Pago : {}", id);
         Optional<PagoDTO> pagoDTO = pagoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(pagoDTO);
+    }
+
+    @GetMapping("/{id}/historial")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPagoId(#id)")
+    public ResponseEntity<List<HistorialEstado>> getHistorialPago(@PathVariable("id") String id) {
+        LOG.debug("REST request to get historial for Pago : {}", id);
+        return ResponseEntity.ok(historialEstadoService.obtenerHistorialEntidad("Pago", id));
     }
 
     /**

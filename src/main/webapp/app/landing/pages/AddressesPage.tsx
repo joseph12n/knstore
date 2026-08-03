@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Col, Form, Modal, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
@@ -123,26 +124,8 @@ export const AddressesPage = () => {
 
   const handleSetDefault = async (direccion: IDireccion) => {
     try {
-      const cuentaId = direccion.cuenta?.id ?? (isAdminOrManager ? selectedCuentaId : cuentaUsuario?.id);
-      if (!cuentaId) {
-        toast.error('No se encontró la cuenta de la dirección.');
-        return;
-      }
-      const direccionesMismaCuenta = direcciones.filter(d => d.cuenta?.id === cuentaId);
-
-      // Desactivar otras y activar la seleccionada
-      for (const d of direccionesMismaCuenta) {
-        if (d.id !== direccion.id && d.activo) {
-          await dispatch(updateDireccion({ ...d, activo: false, cuenta: { id: cuentaId } }));
-        }
-      }
-      await dispatch(
-        updateDireccion({
-          ...direccion,
-          activo: true,
-          cuenta: { id: cuentaId },
-        }),
-      );
+      await axios.post(`/api/direccions/${direccion.id}/predeterminada`);
+      await dispatch(getDireccions({ page: 0, size: 100, sort: 'activo,desc' }));
       toast.success('Dirección predeterminada actualizada.');
     } catch {
       toast.error('No pudimos actualizar la dirección predeterminada.');

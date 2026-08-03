@@ -1,6 +1,8 @@
 package com.mycompany.knstore.service;
 
+import com.mycompany.knstore.service.dto.PagoCallbackRequestDTO;
 import com.mycompany.knstore.service.dto.PagoDTO;
+import com.mycompany.knstore.service.dto.PagoIniciarRequestDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +34,12 @@ public interface PagoService {
      * @return the persisted entity.
      */
     Optional<PagoDTO> partialUpdate(PagoDTO pagoDTO);
+
+    PagoDTO iniciarPago(PagoIniciarRequestDTO iniciarRequest);
+
+    PagoDTO procesarCallback(PagoCallbackRequestDTO callbackRequest);
+
+    PagoDTO reembolsar(String pagoId, String motivo);
 
     /**
      * Get all the pagos.

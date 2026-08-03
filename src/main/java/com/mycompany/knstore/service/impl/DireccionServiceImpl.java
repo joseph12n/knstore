@@ -11,6 +11,7 @@ import com.mycompany.knstore.service.dto.DireccionDTO;
 import com.mycompany.knstore.service.mapper.DireccionMapper;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -122,6 +123,34 @@ public class DireccionServiceImpl implements DireccionService {
                 .map(direccionMapper::toDto);
         }
         return direccionRepository.findById(id).map(direccionMapper::toDto);
+    }
+
+    @Override
+    public Optional<DireccionDTO> marcarPredeterminada(String id) {
+        LOG.debug("Request to set default Direccion : {}", id);
+
+        return direccionRepository
+            .findById(id)
+            .map(direccionObjetivo -> {
+                if (direccionObjetivo.getCuenta() == null || direccionObjetivo.getCuenta().getId() == null) {
+                    throw new IllegalArgumentException("La dirección no tiene cuenta asociada");
+                }
+
+                String cuentaId = direccionObjetivo.getCuenta().getId();
+                List<Direccion> direccionesCuenta = direccionRepository.findByCuentaId(cuentaId, Pageable.unpaged()).getContent();
+
+                for (Direccion direccion : direccionesCuenta) {
+                    boolean debeSerActiva = Objects.equals(direccion.getId(), id);
+                    if (!Objects.equals(Boolean.TRUE.equals(direccion.getActivo()), debeSerActiva)) {
+                        direccion.setActivo(debeSerActiva);
+                        direccionRepository.save(direccion);
+                    }
+                }
+
+                direccionObjetivo.setActivo(true);
+                return direccionObjetivo;
+            })
+            .map(direccionMapper::toDto);
     }
 
     @Override

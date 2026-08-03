@@ -40,6 +40,11 @@ public class PagoDTO implements Serializable {
 
     private Instant fechaPago;
 
+    @Size(max = 500)
+    private String motivoReembolso;
+
+    private Instant fechaReembolso;
+
     @NotNull
     private PedidoDTO pedido;
 
@@ -115,6 +120,22 @@ public class PagoDTO implements Serializable {
         this.fechaPago = fechaPago;
     }
 
+    public String getMotivoReembolso() {
+        return motivoReembolso;
+    }
+
+    public void setMotivoReembolso(String motivoReembolso) {
+        this.motivoReembolso = motivoReembolso;
+    }
+
+    public Instant getFechaReembolso() {
+        return fechaReembolso;
+    }
+
+    public void setFechaReembolso(Instant fechaReembolso) {
+        this.fechaReembolso = fechaReembolso;
+    }
+
     public PedidoDTO getPedido() {
         return pedido;
     }
@@ -157,6 +178,8 @@ public class PagoDTO implements Serializable {
             ", descripcionRespuesta='" + getDescripcionRespuesta() + "'" +
             ", intentos=" + getIntentos() +
             ", fechaPago='" + getFechaPago() + "'" +
+            ", motivoReembolso='" + getMotivoReembolso() + "'" +
+            ", fechaReembolso='" + getFechaReembolso() + "'" +
             ", pedido=" + getPedido() +
             "}";
     }

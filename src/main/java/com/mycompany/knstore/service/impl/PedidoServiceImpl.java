@@ -1,15 +1,18 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Pedido;
+import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
+import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.PedidoService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.service.mapper.PedidoMapper;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -33,10 +36,18 @@ public class PedidoServiceImpl implements PedidoService {
 
     private final PedidoMapper pedidoMapper;
 
-    public PedidoServiceImpl(PedidoRepository pedidoRepository, CuentaRepository cuentaRepository, PedidoMapper pedidoMapper) {
+    private final HistorialEstadoService historialEstadoService;
+
+    public PedidoServiceImpl(
+        PedidoRepository pedidoRepository,
+        CuentaRepository cuentaRepository,
+        PedidoMapper pedidoMapper,
+        HistorialEstadoService historialEstadoService
+    ) {
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
         this.pedidoMapper = pedidoMapper;
+        this.historialEstadoService = historialEstadoService;
     }
 
     @Override
@@ -44,6 +55,7 @@ public class PedidoServiceImpl implements PedidoService {
         LOG.debug("Request to save Pedido : {}", pedidoDTO);
         Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
         pedido = pedidoRepository.save(pedido);
+        registrarTransicionEstadoPedido(pedido.getId(), null, pedido.getEstado());
         return pedidoMapper.toDto(pedido);
     }
 
@@ -51,7 +63,9 @@ public class PedidoServiceImpl implements PedidoService {
     public PedidoDTO update(PedidoDTO pedidoDTO) {
         LOG.debug("Request to update Pedido : {}", pedidoDTO);
         Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
+        EstadoPedido estadoAnterior = pedidoRepository.findById(pedido.getId()).map(Pedido::getEstado).orElse(null);
         pedido = pedidoRepository.save(pedido);
+        registrarTransicionEstadoPedido(pedido.getId(), estadoAnterior, pedido.getEstado());
         return pedidoMapper.toDto(pedido);
     }
 
@@ -62,12 +76,26 @@ public class PedidoServiceImpl implements PedidoService {
         return pedidoRepository
             .findById(pedidoDTO.getId())
             .map(existingPedido -> {
+                EstadoPedido estadoAnterior = existingPedido.getEstado();
                 pedidoMapper.partialUpdate(existingPedido, pedidoDTO);
-
-                return existingPedido;
+                Pedido pedidoGuardado = pedidoRepository.save(existingPedido);
+                registrarTransicionEstadoPedido(pedidoGuardado.getId(), estadoAnterior, pedidoGuardado.getEstado());
+                return pedidoGuardado;
             })
-            .map(pedidoRepository::save)
             .map(pedidoMapper::toDto);
+    }
+
+    private void registrarTransicionEstadoPedido(String pedidoId, EstadoPedido estadoAnterior, EstadoPedido estadoNuevo) {
+        if (pedidoId == null || Objects.equals(estadoAnterior, estadoNuevo)) {
+            return;
+        }
+        historialEstadoService.registrarCambioEstado(
+            "Pedido",
+            pedidoId,
+            "estado",
+            estadoAnterior != null ? estadoAnterior.name() : null,
+            estadoNuevo != null ? estadoNuevo.name() : null
+        );
     }
 
     @Override

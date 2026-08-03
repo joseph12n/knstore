@@ -2,11 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { createEntity as createPedido } from 'app/entities/pedido/pedido.reducer';
-import { createEntity as createPago } from 'app/entities/pago/pago.reducer';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
 import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
 import { createEntity as createItemPedido } from 'app/entities/item-pedido/item-pedido.reducer';
@@ -143,17 +143,17 @@ export const CheckoutPage = () => {
         );
       }
 
-      // Crear pago inicial
-      await dispatch(
-        createPago({
-          metodoPago: selectedPago as any,
-          estado: 'PENDING' as any,
-          monto: total,
-          pedido: { id: pedidoCreado.id },
-        }),
-      );
+      try {
+        await axios.post('api/pagos/iniciar', {
+          pedidoId: pedidoCreado.id,
+          metodoPago: selectedPago,
+        });
+      } catch (paymentInitError: any) {
+        const paymentMessage = paymentInitError?.response?.data?.message || paymentInitError?.message || 'Error desconocido';
+        toast.warning(`El pedido fue creado, pero no pudimos iniciar el pago: ${paymentMessage}`);
+      }
 
-      toast.success('¡Pedido creado exitosamente!');
+      toast.success('Pedido creado e inicio de pago registrado. Te notificaremos el resultado del pago.');
       onCheckoutComplete();
       navigate(`/cuenta/pedidos/${pedidoCreado.id}`);
     } catch {
@@ -298,7 +298,8 @@ export const CheckoutPage = () => {
               </Card.Body>
             </Card>
             <p className="small text-muted">
-              Al confirmar, crearás tu pedido. Serás redirigido al detalle para completar el pago cuando la pasarela esté integrada.
+              Al confirmar, se creará tu pedido en estado pendiente y se iniciará el proceso de pago. El pedido se confirma cuando el
+              callback de la pasarela apruebe el pago.
             </p>
           </div>
         );

@@ -1,13 +1,17 @@
 package com.mycompany.knstore.web.rest;
 
+import com.mycompany.knstore.domain.Factura;
 import com.mycompany.knstore.repository.FacturaRepository;
 import com.mycompany.knstore.service.FacturaService;
+import com.mycompany.knstore.service.MailService;
 import com.mycompany.knstore.service.dto.FacturaDTO;
+import com.mycompany.knstore.service.invoice.FacturaPdfService;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +49,20 @@ public class FacturaResource {
 
     private final FacturaRepository facturaRepository;
 
-    public FacturaResource(FacturaService facturaService, FacturaRepository facturaRepository) {
+    private final FacturaPdfService facturaPdfService;
+
+    private final MailService mailService;
+
+    public FacturaResource(
+        FacturaService facturaService,
+        FacturaRepository facturaRepository,
+        FacturaPdfService facturaPdfService,
+        MailService mailService
+    ) {
         this.facturaService = facturaService;
         this.facturaRepository = facturaRepository;
+        this.facturaPdfService = facturaPdfService;
+        this.mailService = mailService;
     }
 
     /**
@@ -170,6 +186,66 @@ public class FacturaResource {
         LOG.debug("REST request to get Factura : {}", id);
         Optional<FacturaDTO> facturaDTO = facturaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(facturaDTO);
+    }
+
+    @GetMapping("/{id}/pdf")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    public ResponseEntity<byte[]> getFacturaPdf(@PathVariable("id") String id) {
+        LOG.debug("REST request to get PDF de Factura : {}", id);
+        return facturaRepository
+            .findById(id)
+            .map(factura -> {
+                byte[] pdf = facturaPdfService.generarPdf(factura);
+                String numero =
+                    factura.getNumeroFactura() != null && !factura.getNumeroFactura().isBlank() ? factura.getNumeroFactura() : id;
+                return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=factura-" + numero + ".pdf")
+                    .body(pdf);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/enviar-email")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    public ResponseEntity<Void> enviarFacturaPorEmail(@PathVariable("id") String id) {
+        LOG.debug("REST request to send factura by email : {}", id);
+        Factura factura = facturaRepository
+            .findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+        String recipient = resolveClientEmail(factura);
+        if (recipient == null || recipient.isBlank()) {
+            throw new BadRequestAlertException("No se encontro email para enviar la factura", ENTITY_NAME, "emailnotfound");
+        }
+
+        byte[] pdf = facturaPdfService.generarPdf(factura);
+        String numero =
+            factura.getNumeroFactura() != null && !factura.getNumeroFactura().isBlank() ? factura.getNumeroFactura() : factura.getId();
+        mailService.sendEmailWithAttachment(
+            recipient,
+            "Factura " + numero,
+            "Adjuntamos su factura " + numero + ". Gracias por su compra en KN Store.",
+            "factura-" + numero + ".pdf",
+            pdf
+        );
+
+        factura.setEnviada(Boolean.TRUE);
+        factura.setFechaEnvioEmail(Instant.now());
+        facturaRepository.save(factura);
+
+        return ResponseEntity.noContent()
+            .headers(HeaderUtil.createAlert(applicationName, "Factura enviada por email", id))
+            .build();
+    }
+
+    private String resolveClientEmail(Factura factura) {
+        if (factura.getPago() == null || factura.getPago().getPedido() == null || factura.getPago().getPedido().getCuenta() == null) {
+            return null;
+        }
+        if (factura.getPago().getPedido().getCuenta().getUser() == null) {
+            return null;
+        }
+        return factura.getPago().getPedido().getCuenta().getUser().getEmail();
     }
 
     /**

@@ -112,8 +112,7 @@ export const OrderDetailPage = () => {
             </Button>
           )}
           {factura?.codigoQr && (
-            // TODO backend: exponer endpoint de descarga de factura con QR (RF-068).
-            <Button variant="outline-primary" size="sm">
+            <Button variant="outline-primary" size="sm" href={`/api/facturas/${factura.id}/pdf`} target="_blank" rel="noopener noreferrer">
               Descargar factura
             </Button>
           )}

@@ -9,7 +9,9 @@ import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.FacturaService;
 import com.mycompany.knstore.service.dto.FacturaDTO;
+import com.mycompany.knstore.service.invoice.FacturaConsecutivoService;
 import com.mycompany.knstore.service.mapper.FacturaMapper;
+import com.mycompany.knstore.service.util.MoneyUtils;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,24 +40,32 @@ public class FacturaServiceImpl implements FacturaService {
 
     private final FacturaMapper facturaMapper;
 
+    private final FacturaConsecutivoService facturaConsecutivoService;
+
     public FacturaServiceImpl(
         FacturaRepository facturaRepository,
         PagoRepository pagoRepository,
         PedidoRepository pedidoRepository,
         CuentaRepository cuentaRepository,
-        FacturaMapper facturaMapper
+        FacturaMapper facturaMapper,
+        FacturaConsecutivoService facturaConsecutivoService
     ) {
         this.facturaRepository = facturaRepository;
         this.pagoRepository = pagoRepository;
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
         this.facturaMapper = facturaMapper;
+        this.facturaConsecutivoService = facturaConsecutivoService;
     }
 
     @Override
     public FacturaDTO save(FacturaDTO facturaDTO) {
         LOG.debug("Request to save Factura : {}", facturaDTO);
         Factura factura = facturaMapper.toEntity(facturaDTO);
+        if (factura.getNumeroFactura() == null || factura.getNumeroFactura().isBlank()) {
+            factura.setNumeroFactura(facturaConsecutivoService.siguienteNumeroFactura());
+        }
+        normalizeMonetaryFields(factura);
         factura = facturaRepository.save(factura);
         return facturaMapper.toDto(factura);
     }
@@ -64,6 +74,7 @@ public class FacturaServiceImpl implements FacturaService {
     public FacturaDTO update(FacturaDTO facturaDTO) {
         LOG.debug("Request to update Factura : {}", facturaDTO);
         Factura factura = facturaMapper.toEntity(facturaDTO);
+        normalizeMonetaryFields(factura);
         factura = facturaRepository.save(factura);
         return facturaMapper.toDto(factura);
     }
@@ -76,6 +87,7 @@ public class FacturaServiceImpl implements FacturaService {
             .findById(facturaDTO.getId())
             .map(existingFactura -> {
                 facturaMapper.partialUpdate(existingFactura, facturaDTO);
+                normalizeMonetaryFields(existingFactura);
 
                 return existingFactura;
             })
@@ -146,5 +158,13 @@ public class FacturaServiceImpl implements FacturaService {
         return SecurityUtils.getCurrentUserId()
             .flatMap(cuentaRepository::findOneByUserId)
             .map(cuenta -> cuenta.getId());
+    }
+
+    private void normalizeMonetaryFields(Factura factura) {
+        factura.setSubtotal(MoneyUtils.normalize(factura.getSubtotal()));
+        factura.setDescuentos(MoneyUtils.normalize(factura.getDescuentos()));
+        factura.setBaseGravableIva(MoneyUtils.normalize(factura.getBaseGravableIva()));
+        factura.setValorIva(MoneyUtils.normalize(factura.getValorIva()));
+        factura.setTotal(MoneyUtils.normalize(factura.getTotal()));
     }
 }

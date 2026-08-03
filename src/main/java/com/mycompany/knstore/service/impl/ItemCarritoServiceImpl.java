@@ -9,6 +9,7 @@ import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.ItemCarritoService;
 import com.mycompany.knstore.service.dto.ItemCarritoDTO;
 import com.mycompany.knstore.service.mapper.ItemCarritoMapper;
+import com.mycompany.knstore.service.util.MoneyUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +52,7 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public ItemCarritoDTO save(ItemCarritoDTO itemCarritoDTO) {
         LOG.debug("Request to save ItemCarrito : {}", itemCarritoDTO);
         ItemCarrito itemCarrito = itemCarritoMapper.toEntity(itemCarritoDTO);
+        normalizeMonetaryFields(itemCarrito);
         itemCarrito = itemCarritoRepository.save(itemCarrito);
         return itemCarritoMapper.toDto(itemCarrito);
     }
@@ -59,6 +61,7 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public ItemCarritoDTO update(ItemCarritoDTO itemCarritoDTO) {
         LOG.debug("Request to update ItemCarrito : {}", itemCarritoDTO);
         ItemCarrito itemCarrito = itemCarritoMapper.toEntity(itemCarritoDTO);
+        normalizeMonetaryFields(itemCarrito);
         itemCarrito = itemCarritoRepository.save(itemCarrito);
         return itemCarritoMapper.toDto(itemCarrito);
     }
@@ -71,6 +74,7 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
             .findById(itemCarritoDTO.getId())
             .map(existingItemCarrito -> {
                 itemCarritoMapper.partialUpdate(existingItemCarrito, itemCarritoDTO);
+                normalizeMonetaryFields(existingItemCarrito);
 
                 return existingItemCarrito;
             })
@@ -129,5 +133,10 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
         return SecurityUtils.getCurrentUserId()
             .flatMap(cuentaRepository::findOneByUserId)
             .map(cuenta -> cuenta.getId());
+    }
+
+    private void normalizeMonetaryFields(ItemCarrito itemCarrito) {
+        itemCarrito.setPrecioUnitario(MoneyUtils.normalize(itemCarrito.getPrecioUnitario()));
+        itemCarrito.setSubtotal(MoneyUtils.normalize(itemCarrito.getSubtotal()));
     }
 }

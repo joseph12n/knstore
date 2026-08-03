@@ -1,8 +1,11 @@
 package com.mycompany.knstore.web.rest;
 
+import com.mycompany.knstore.domain.HistorialEstado;
 import com.mycompany.knstore.repository.PedidoRepository;
+import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.PedidoService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
+import com.mycompany.knstore.service.dto.PedidoEstadoUpdateRequestDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -45,9 +48,12 @@ public class PedidoResource {
 
     private final PedidoRepository pedidoRepository;
 
-    public PedidoResource(PedidoService pedidoService, PedidoRepository pedidoRepository) {
+    private final HistorialEstadoService historialEstadoService;
+
+    public PedidoResource(PedidoService pedidoService, PedidoRepository pedidoRepository, HistorialEstadoService historialEstadoService) {
         this.pedidoService = pedidoService;
         this.pedidoRepository = pedidoRepository;
+        this.historialEstadoService = historialEstadoService;
     }
 
     /**
@@ -179,6 +185,44 @@ public class PedidoResource {
         LOG.debug("REST request to get Pedido : {}", id);
         Optional<PedidoDTO> pedidoDTO = pedidoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(pedidoDTO);
+    }
+
+    @PostMapping("/{id}/estado")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<PedidoDTO> actualizarEstadoPedido(
+        @PathVariable("id") String id,
+        @Valid @RequestBody PedidoEstadoUpdateRequestDTO request
+    ) {
+        LOG.debug("REST request to actualizar estado Pedido {} -> {}", id, request.getEstado());
+        PedidoDTO pedidoActual = pedidoService
+            .findOne(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        if (Objects.equals(pedidoActual.getEstado(), request.getEstado())) {
+            throw new BadRequestAlertException("El pedido ya se encuentra en el estado solicitado", ENTITY_NAME, "estadoigual");
+        }
+
+        PedidoDTO patch = new PedidoDTO();
+        patch.setId(id);
+        patch.setEstado(request.getEstado());
+        PedidoDTO actualizado = pedidoService
+            .partialUpdate(patch)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        if (request.getMotivo() != null && !request.getMotivo().isBlank()) {
+            historialEstadoService.registrarCambioEstado("Pedido", id, "motivoEstado", null, request.getMotivo().trim());
+        }
+
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, actualizado.getId()))
+            .body(actualizado);
+    }
+
+    @GetMapping("/{id}/historial")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPedidoId(#id)")
+    public ResponseEntity<List<HistorialEstado>> getHistorialPedido(@PathVariable("id") String id) {
+        LOG.debug("REST request to get historial for Pedido : {}", id);
+        return ResponseEntity.ok(historialEstadoService.obtenerHistorialEntidad("Pedido", id));
     }
 
     /**

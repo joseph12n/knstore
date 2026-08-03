@@ -5,6 +5,7 @@ import com.mycompany.knstore.repository.ProductoPrecioRepository;
 import com.mycompany.knstore.service.ProductoPrecioService;
 import com.mycompany.knstore.service.dto.ProductoPrecioDTO;
 import com.mycompany.knstore.service.mapper.ProductoPrecioMapper;
+import com.mycompany.knstore.service.util.ProductoPrecioUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
     public ProductoPrecioDTO save(ProductoPrecioDTO productoPrecioDTO) {
         LOG.debug("Request to save ProductoPrecio : {}", productoPrecioDTO);
         ProductoPrecio productoPrecio = productoPrecioMapper.toEntity(productoPrecioDTO);
+        ProductoPrecioUtils.normalizeAndComputeGanancia(productoPrecio);
         productoPrecio = productoPrecioRepository.save(productoPrecio);
         return productoPrecioMapper.toDto(productoPrecio);
     }
@@ -43,6 +45,7 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
     public ProductoPrecioDTO update(ProductoPrecioDTO productoPrecioDTO) {
         LOG.debug("Request to update ProductoPrecio : {}", productoPrecioDTO);
         ProductoPrecio productoPrecio = productoPrecioMapper.toEntity(productoPrecioDTO);
+        ProductoPrecioUtils.normalizeAndComputeGanancia(productoPrecio);
         productoPrecio = productoPrecioRepository.save(productoPrecio);
         return productoPrecioMapper.toDto(productoPrecio);
     }
@@ -55,6 +58,7 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
             .findById(productoPrecioDTO.getId())
             .map(existingProductoPrecio -> {
                 productoPrecioMapper.partialUpdate(existingProductoPrecio, productoPrecioDTO);
+                ProductoPrecioUtils.normalizeAndComputeGanancia(existingProductoPrecio);
 
                 return existingProductoPrecio;
             })
