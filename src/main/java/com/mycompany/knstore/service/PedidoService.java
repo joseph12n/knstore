@@ -1,7 +1,5 @@
 package com.mycompany.knstore.service;
 
-import com.mycompany.knstore.service.dto.CheckoutRequestDTO;
-import com.mycompany.knstore.service.dto.CheckoutResultDTO;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import java.util.List;
 import java.util.Optional;
@@ -12,14 +10,6 @@ import org.springframework.data.domain.Pageable;
  * Service Interface for managing {@link com.mycompany.knstore.domain.Pedido}.
  */
 public interface PedidoService {
-    /**
-     * Process an atomic checkout request creating the pedido, its items and the initial pago.
-     *
-     * @param checkoutRequest the checkout request.
-     * @return the result of the checkout with the created pedido summary.
-     */
-    CheckoutResultDTO checkout(CheckoutRequestDTO checkoutRequest);
-
     /**
      * Save a pedido.
      *
