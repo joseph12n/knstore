@@ -34,6 +34,18 @@ public class DireccionDTO implements Serializable {
     private Boolean activo;
 
     @NotNull
+    @Size(max = 100)
+    private String telefonoContacto;
+
+    @NotNull
+    @Size(max = 100)
+    private String destinatario;
+
+    @NotNull
+    @Size(max = 20)
+    private String codigoPostal;
+
+    @NotNull
     private CuentaDTO cuenta;
 
     public String getId() {
@@ -92,6 +104,30 @@ public class DireccionDTO implements Serializable {
         this.activo = activo;
     }
 
+    public String getTelefonoContacto() {
+        return telefonoContacto;
+    }
+
+    public void setTelefonoContacto(String telefonoContacto) {
+        this.telefonoContacto = telefonoContacto;
+    }
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
+    }
+
+    public String getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
+    }
+
     public CuentaDTO getCuenta() {
         return cuenta;
     }
@@ -132,6 +168,9 @@ public class DireccionDTO implements Serializable {
             ", municipio='" + getMunicipio() + "'" +
             ", departamento='" + getDepartamento() + "'" +
             ", activo='" + getActivo() + "'" +
+            ", telefonoContacto='" + getTelefonoContacto() + "'" +
+            ", destinatario='" + getDestinatario() + "'" +
+            ", codigoPostal='" + getCodigoPostal() + "'" +
             ", cuenta=" + getCuenta() +
             "}";
     }
