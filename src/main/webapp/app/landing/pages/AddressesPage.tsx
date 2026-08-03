@@ -10,11 +10,13 @@ import {
   deleteEntity as deleteDireccion,
   getEntities as getDireccions,
   updateEntity as updateDireccion,
+  setPredeterminada,
 } from 'app/entities/direccion/direccion.reducer';
 import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import { IDireccion } from 'app/shared/model/direccion.model';
 import AddressCard from 'app/landing/components/AddressCard';
 import AddressForm from 'app/landing/components/AddressForm';
+import DeleteConfirmModal from 'app/landing/components/DeleteConfirmModal';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 
 export const AddressesPage = () => {
@@ -23,6 +25,8 @@ export const AddressesPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState<IDireccion | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingAddress, setDeletingAddress] = useState<IDireccion | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
@@ -87,33 +91,29 @@ export const AddressesPage = () => {
     }
   };
 
-  const handleDelete = async (direccion: IDireccion) => {
-    if (!window.confirm('¿Estás seguro de eliminar esta dirección?')) {
+  const handleDelete = (direccion: IDireccion) => {
+    setDeletingAddress(direccion);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingAddress?.id) {
       return;
     }
+    setIsDeleting(true);
     try {
-      await dispatch(deleteDireccion(direccion.id!));
+      await dispatch(deleteDireccion(deletingAddress.id));
       toast.success('Dirección eliminada correctamente.');
+      setDeletingAddress(null);
     } catch {
       toast.error('No pudimos eliminar la dirección. Inténtalo de nuevo.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   const handleSetDefault = async (direccion: IDireccion) => {
     try {
-      // Desactivar otras y activar la seleccionada
-      for (const d of direccionesUsuario) {
-        if (d.id !== direccion.id && d.activo) {
-          await dispatch(updateDireccion({ ...d, activo: false, cuenta: { id: cuenta?.id } }));
-        }
-      }
-      await dispatch(
-        updateDireccion({
-          ...direccion,
-          activo: true,
-          cuenta: { id: cuenta?.id },
-        }),
-      );
+      await dispatch(setPredeterminada(direccion.id!));
       toast.success('Dirección predeterminada actualizada.');
     } catch {
       toast.error('No pudimos actualizar la dirección predeterminada.');
@@ -166,6 +166,16 @@ export const AddressesPage = () => {
           <AddressForm initialData={editingAddress} onSubmit={handleSubmit} onCancel={handleCloseForm} isSubmitting={isSubmitting} />
         </Modal.Body>
       </Modal>
+
+      <DeleteConfirmModal
+        show={!!deletingAddress}
+        onHide={() => setDeletingAddress(null)}
+        onConfirm={handleConfirmDelete}
+        isSubmitting={isDeleting}
+        title="Eliminar dirección"
+        message="¿Estás seguro de eliminar esta dirección? Esta acción no se puede deshacer."
+        confirmLabel="Sí, eliminar"
+      />
     </div>
   );
 };
