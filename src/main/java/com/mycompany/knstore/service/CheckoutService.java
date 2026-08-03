@@ -178,16 +178,14 @@ public class CheckoutService {
             }
         }
 
-        // Crear pago simbólico aprobado
+        // Crear pago inicial en estado PENDING; se resuelve mediante /api/pagos/iniciar
         Pago pago = new Pago();
         pago.setMetodoPago(request.getMetodoPago());
-        pago.setEstado(EstadoPago.APPROVED);
+        pago.setEstado(EstadoPago.PENDING);
         pago.setMonto(total);
-        pago.setReferenciaPasarela("PAGO-SIMBOLICO-" + pedido.getNumeroPedido());
-        pago.setCodigoAutorizacion("AUT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        pago.setDescripcionRespuesta("Pago aprobado de forma simbólica");
-        pago.setIntentos(1);
-        pago.setFechaPago(Instant.now());
+        pago.setReferenciaPasarela("PAGO-PENDIENTE-" + pedido.getNumeroPedido());
+        pago.setDescripcionRespuesta("Esperando respuesta de la pasarela");
+        pago.setIntentos(0);
         pago.setPedido(pedido);
         pago = pagoRepository.save(pago);
 
@@ -201,20 +199,6 @@ public class CheckoutService {
         envio = envioRepository.save(envio);
         pedido.setEnvio(envio);
         pedidoRepository.save(pedido);
-
-        // Crear factura simbólica
-        Factura factura = new Factura();
-        factura.setPrefijo("FE");
-        factura.setSubtotal(subtotal);
-        factura.setDescuentos(descuento);
-        factura.setBaseGravableIva(subtotal);
-        factura.setValorIva(ivaTotal);
-        factura.setTotal(total);
-        factura.setEnviada(false);
-        factura.setFechaEmision(Instant.now());
-        factura.setFechaVencimiento(LocalDate.now().plusDays(30));
-        factura.setPago(pago);
-        facturaRepository.save(factura);
 
         // Vaciar carrito del usuario
         vaciarCarrito(cuenta);
