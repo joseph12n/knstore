@@ -188,7 +188,9 @@ export const DireccionUpdate = () => {
                     {cuentas
                       ? cuentas.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity.primerNombre} {otherEntity.primerApellido}
+                            {`${otherEntity.primerNombre ?? ''} ${otherEntity.primerApellido ?? ''}`.trim() ||
+                              otherEntity.user?.login ||
+                              otherEntity.id}
                           </option>
                         ))
                       : null}

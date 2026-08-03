@@ -67,32 +67,6 @@ public interface ProductoService {
     Optional<ProductoDTO> findBySlug(String slug);
 
     /**
-     * Buscar productos publicos por texto y filtros.
-     *
-     * @param q texto libre para nombre, descripcion, sku, referencia o slug.
-     * @param categoriaId id de categoria opcional.
-     * @param subcategoriaId id de subcategoria opcional.
-     * @param marcaId id de marca opcional.
-     * @param minPrecio precio minimo opcional.
-     * @param maxPrecio precio maximo opcional.
-     * @param destacado filtro opcional para productos destacados.
-     * @param soloActivos si true, limita a productos activos.
-     * @param pageable paginacion.
-     * @return pagina de productos filtrados.
-     */
-    Page<ProductoDTO> buscarPublico(
-        String q,
-        String categoriaId,
-        String subcategoriaId,
-        String marcaId,
-        BigDecimal minPrecio,
-        BigDecimal maxPrecio,
-        Boolean destacado,
-        boolean soloActivos,
-        Pageable pageable
-    );
-
-    /**
      * Delete the "id" producto.
      *
      * @param id the id of the entity.

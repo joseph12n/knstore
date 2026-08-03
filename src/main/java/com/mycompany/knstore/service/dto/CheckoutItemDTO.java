@@ -6,16 +6,20 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+/**
+ * Item de carrito enviado en una solicitud de checkout.
+ */
 public class CheckoutItemDTO implements Serializable {
 
     @NotBlank
     private String productoId;
 
     @NotNull
-    @Min(1)
+    @Min(value = 1)
     private Integer cantidad;
 
     @NotNull
+    @Min(value = 0)
     private BigDecimal precioUnitario;
 
     public String getProductoId() {

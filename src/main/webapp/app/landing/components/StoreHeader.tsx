@@ -94,15 +94,15 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
                   id="account-dropdown"
                   align="end"
                 >
-                  <NavDropdown.Item as={Link as any} to="/cuenta">
+                  <NavDropdown.Item as={Link as any} to="/mi-cuenta">
                     <FontAwesomeIcon icon={faUser} className="me-2" />
                     Perfil
                   </NavDropdown.Item>
-                  <NavDropdown.Item as={Link as any} to="/cuenta/pedidos">
+                  <NavDropdown.Item as={Link as any} to="/mi-cuenta/pedidos">
                     <FontAwesomeIcon icon={faShoppingBag} className="me-2" />
                     Mis pedidos
                   </NavDropdown.Item>
-                  <NavDropdown.Item as={Link as any} to="/cuenta/direcciones">
+                  <NavDropdown.Item as={Link as any} to="/mi-cuenta/direcciones">
                     <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
                     Direcciones
                   </NavDropdown.Item>
@@ -210,31 +210,31 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
             {isAuthenticated && (
               <>
                 <hr className="my-2" />
-                <Nav.Link as={Link as any} to="/cuenta" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faUser} className="me-2" />
                   Mi cuenta
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/pedidos" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/pedidos" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faShoppingBag} className="me-2" />
                   Mis pedidos
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/direcciones" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/direcciones" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
                   Direcciones
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/pagos" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/pagos" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faCreditCard} className="me-2" />
                   Pagos
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/envios" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/envios" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faTruck} className="me-2" />
                   Envíos
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/facturas" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/facturas" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faFileInvoice} className="me-2" />
                   Facturas
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/seguridad" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/seguridad" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faLock} className="me-2" />
                   Seguridad
                 </Nav.Link>

@@ -111,6 +111,8 @@ spring:
         - api-docs
         # Uncomment to activate TLS for the dev profile
         #- tls
+      prod:
+        - secret-samples
   jmx:
     enabled: false
   messages:

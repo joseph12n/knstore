@@ -6,33 +6,51 @@ import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getPedidos, partialUpdateEntity as partialUpdatePedido } from 'app/entities/pedido/pedido.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import OrderCard from 'app/landing/components/OrderCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import EmptyState from 'app/landing/components/EmptyState';
 import OrderCancelModal from 'app/landing/components/OrderCancelModal';
+import Pagination from 'app/landing/components/Pagination';
+
+const ITEMS_PER_PAGE = 10;
 
 export const OrdersPage = () => {
   const dispatch = useAppDispatch();
   const account = useAppSelector(state => state.authentication.account);
   const pedidos = useAppSelector(state => state.pedido.entities) ?? [];
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
-  const loading = useAppSelector(state => state.pedido.loading);
+  const totalItems = useAppSelector(state => state.pedido.totalItems ?? 0);
+  const cuenta = useAppSelector(state => state.cuenta.entity);
+  const loading = useAppSelector(state => state.pedido.loading || state.cuenta.loading);
 
+  const [activePage, setActivePage] = useState(1);
   const [pedidoToCancel, setPedidoToCancel] = useState<string | undefined>();
   const [isCancelling, setIsCancelling] = useState(false);
 
   useEffect(() => {
     dispatch(getSession());
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
-    dispatch(getPedidos({ page: 0, size: 100, sort: 'numeroPedido,desc' }));
-  }, [dispatch]);
+    if (account.login) {
+      dispatch(getCuentaByLogin(account.login));
+    }
+    return () => {
+      dispatch(resetCuenta());
+    };
+  }, [dispatch, account.login]);
 
-  const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
+  useEffect(() => {
+    dispatch(
+      getPedidos({
+        page: activePage - 1,
+        size: ITEMS_PER_PAGE,
+        sort: 'numeroPedido,desc',
+      }),
+    );
+  }, [dispatch, activePage]);
 
+  // TODO backend: filtrar pedidos por cuentaId para evitar filtrar en cliente.
   const pedidosUsuario = useMemo(
-    () => pedidos.filter(p => p.cuenta?.id === cuentaUsuario?.id).sort((a, b) => (b.id || '').localeCompare(a.id || '')),
-    [pedidos, cuentaUsuario],
+    () => pedidos.filter(p => p.cuenta?.id === cuenta?.id).sort((a, b) => (b.id || '').localeCompare(a.id || '')),
+    [pedidos, cuenta],
   );
 
   const selectedPedido = useMemo(() => pedidosUsuario.find(p => p.id === pedidoToCancel), [pedidosUsuario, pedidoToCancel]);
@@ -48,7 +66,7 @@ export const OrdersPage = () => {
         }),
       );
       toast.success('Pedido cancelado correctamente');
-      dispatch(getPedidos({ page: 0, size: 100, sort: 'numeroPedido,desc' }));
+      dispatch(getPedidos({ page: activePage - 1, size: ITEMS_PER_PAGE, sort: 'numeroPedido,desc' }));
     } catch {
       toast.error('No pudimos cancelar el pedido. Inténtalo de nuevo.');
     } finally {
@@ -60,7 +78,7 @@ export const OrdersPage = () => {
   return (
     <div className="kn-fade-in">
       <h1 className="h2 fw-bold mb-4">Mis pedidos</h1>
-      <Link to="/cuenta" className="text-muted small d-block mb-4">
+      <Link to="/mi-cuenta" className="text-muted small d-block mb-4">
         ← Volver a mi cuenta
       </Link>
 
@@ -81,6 +99,7 @@ export const OrdersPage = () => {
           {pedidosUsuario.map(pedido => (
             <OrderCard key={pedido.id} pedido={pedido} onCancel={() => setPedidoToCancel(pedido.id)} />
           ))}
+          <Pagination activePage={activePage} itemsPerPage={ITEMS_PER_PAGE} totalItems={totalItems} onPageChange={setActivePage} />
         </div>
       )}
 

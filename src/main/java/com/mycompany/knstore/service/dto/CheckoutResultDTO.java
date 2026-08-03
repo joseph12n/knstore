@@ -2,6 +2,9 @@ package com.mycompany.knstore.service.dto;
 
 import java.io.Serializable;
 
+/**
+ * Resultado de un checkout atómico exitoso.
+ */
 public class CheckoutResultDTO implements Serializable {
 
     private PedidoDTO pedido;

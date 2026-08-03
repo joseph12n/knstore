@@ -13,11 +13,13 @@ import {
   deleteEntity as deleteDireccion,
   getEntities as getDireccions,
   updateEntity as updateDireccion,
+  setPredeterminada,
 } from 'app/entities/direccion/direccion.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import { IDireccion } from 'app/shared/model/direccion.model';
 import AddressCard from 'app/landing/components/AddressCard';
 import AddressForm from 'app/landing/components/AddressForm';
+import DeleteConfirmModal from 'app/landing/components/DeleteConfirmModal';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 
 export const AddressesPage = () => {
@@ -26,47 +28,33 @@ export const AddressesPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState<IDireccion | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedCuentaId, setSelectedCuentaId] = useState('');
+  const [deletingAddress, setDeletingAddress] = useState<IDireccion | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
-  const isAdminOrManager = hasAnyAuthority(account.authorities ?? [], [Authority.ADMIN, Authority.MANAGER]);
+  const cuenta = useAppSelector(state => state.cuenta.entity);
   const loading = useAppSelector(state => state.direccion.loading || state.cuenta.loading);
 
   useEffect(() => {
     dispatch(getSession());
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
+    if (account.login) {
+      dispatch(getCuentaByLogin(account.login));
+    }
     dispatch(getDireccions({ page: 0, size: 100, sort: 'activo,desc' }));
-  }, [dispatch]);
-
-  const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
+    return () => {
+      dispatch(resetCuenta());
+    };
+  }, [dispatch, account.login]);
 
   useEffect(() => {
-    if (!loading && !isAdminOrManager && cuentaUsuario === undefined) {
+    if (!loading && cuenta === undefined) {
       toast.info('Completa tu perfil para poder gestionar direcciones.');
-      navigate('/cuenta/perfil');
+      navigate('/mi-cuenta/perfil');
     }
-  }, [loading, cuentaUsuario, isAdminOrManager, navigate]);
+  }, [loading, cuenta, navigate]);
 
-  const direccionesUsuario = useMemo(() => {
-    if (isAdminOrManager) {
-      if (!selectedCuentaId) {
-        return direcciones;
-      }
-      return direcciones.filter(d => d.cuenta?.id === selectedCuentaId);
-    }
-    return direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id);
-  }, [direcciones, cuentaUsuario, isAdminOrManager, selectedCuentaId]);
-
-  useEffect(() => {
-    if (isAdminOrManager && !selectedCuentaId && cuentas.length > 0) {
-      setSelectedCuentaId(cuentas[0].id ?? '');
-    }
-    if (!isAdminOrManager) {
-      setSelectedCuentaId(cuentaUsuario?.id ?? '');
-    }
-  }, [isAdminOrManager, cuentas, cuentaUsuario, selectedCuentaId]);
+  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
   const handleOpenForm = (direccion?: IDireccion) => {
     setEditingAddress(direccion);
@@ -82,9 +70,8 @@ export const AddressesPage = () => {
   };
 
   const handleSubmit = async (data: any) => {
-    const cuentaId = isAdminOrManager ? selectedCuentaId : cuentaUsuario?.id;
-    if (!cuentaId) {
-      toast.error(isAdminOrManager ? 'Selecciona una cuenta para guardar la dirección.' : 'No se encontró tu perfil de cliente.');
+    if (!cuenta?.id) {
+      toast.error('No se encontró tu perfil de cliente.');
       return;
     }
 
@@ -92,7 +79,7 @@ export const AddressesPage = () => {
     try {
       const payload = {
         ...data,
-        cuenta: { id: cuentaId },
+        cuenta: { id: cuenta.id },
       };
 
       if (editingAddress?.id) {
@@ -110,22 +97,29 @@ export const AddressesPage = () => {
     }
   };
 
-  const handleDelete = async (direccion: IDireccion) => {
-    if (!window.confirm('¿Estás seguro de eliminar esta dirección?')) {
+  const handleDelete = (direccion: IDireccion) => {
+    setDeletingAddress(direccion);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingAddress?.id) {
       return;
     }
+    setIsDeleting(true);
     try {
-      await dispatch(deleteDireccion(direccion.id!));
+      await dispatch(deleteDireccion(deletingAddress.id));
       toast.success('Dirección eliminada correctamente.');
+      setDeletingAddress(null);
     } catch {
       toast.error('No pudimos eliminar la dirección. Inténtalo de nuevo.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   const handleSetDefault = async (direccion: IDireccion) => {
     try {
-      await axios.post(`/api/direccions/${direccion.id}/predeterminada`);
-      await dispatch(getDireccions({ page: 0, size: 100, sort: 'activo,desc' }));
+      await dispatch(setPredeterminada(direccion.id!));
       toast.success('Dirección predeterminada actualizada.');
     } catch {
       toast.error('No pudimos actualizar la dirección predeterminada.');
@@ -141,7 +135,7 @@ export const AddressesPage = () => {
         </Button>
       </div>
 
-      <Link to="/cuenta" className="text-muted small d-block mb-4">
+      <Link to="/mi-cuenta" className="text-muted small d-block mb-4">
         ← Volver a mi cuenta
       </Link>
 
@@ -190,6 +184,16 @@ export const AddressesPage = () => {
           <AddressForm initialData={editingAddress} onSubmit={handleSubmit} onCancel={handleCloseForm} isSubmitting={isSubmitting} />
         </Modal.Body>
       </Modal>
+
+      <DeleteConfirmModal
+        show={!!deletingAddress}
+        onHide={() => setDeletingAddress(null)}
+        onConfirm={handleConfirmDelete}
+        isSubmitting={isDeleting}
+        title="Eliminar dirección"
+        message="¿Estás seguro de eliminar esta dirección? Esta acción no se puede deshacer."
+        confirmLabel="Sí, eliminar"
+      />
     </div>
   );
 };

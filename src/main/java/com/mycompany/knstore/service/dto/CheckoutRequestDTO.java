@@ -1,24 +1,31 @@
 package com.mycompany.knstore.service.dto;
 
+import com.mycompany.knstore.domain.enumeration.MetodoPago;
 import com.mycompany.knstore.domain.enumeration.TipoServicioEnvio;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Solicitud de checkout atómico para crear pedido, ítems, pago, envío y factura.
+ */
 public class CheckoutRequestDTO implements Serializable {
 
     @NotBlank
     private String direccionId;
 
-    @Valid
-    @NotEmpty
-    private List<CheckoutItemDTO> items;
+    @NotNull
+    private MetodoPago metodoPago;
 
+    @NotNull
     private TipoServicioEnvio tipoServicioEnvio;
 
     private String notasCliente;
+
+    @NotEmpty
+    private List<CheckoutItemDTO> items;
 
     public String getDireccionId() {
         return direccionId;
@@ -28,12 +35,12 @@ public class CheckoutRequestDTO implements Serializable {
         this.direccionId = direccionId;
     }
 
-    public List<CheckoutItemDTO> getItems() {
-        return items;
+    public MetodoPago getMetodoPago() {
+        return metodoPago;
     }
 
-    public void setItems(List<CheckoutItemDTO> items) {
-        this.items = items;
+    public void setMetodoPago(MetodoPago metodoPago) {
+        this.metodoPago = metodoPago;
     }
 
     public TipoServicioEnvio getTipoServicioEnvio() {
@@ -50,5 +57,13 @@ public class CheckoutRequestDTO implements Serializable {
 
     public void setNotasCliente(String notasCliente) {
         this.notasCliente = notasCliente;
+    }
+
+    public List<CheckoutItemDTO> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CheckoutItemDTO> items) {
+        this.items = items;
     }
 }

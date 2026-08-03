@@ -40,7 +40,7 @@ export const truncateText = (text?: string | null, maxLength = 80): string => {
 export const buildImageUrl = (
   contentType?: string | null,
   base64?: string | null,
-  fallback = '/content/images/product-placeholder.svg',
+  fallback = '/content/images/product-placeholder.png',
 ): string => {
   if (!base64) {
     return fallback;

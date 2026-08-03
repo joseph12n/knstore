@@ -26,14 +26,14 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { to: '/cuenta', label: 'Mi cuenta', icon: faHome, end: true },
-  { to: '/cuenta/perfil', label: 'Perfil', icon: faUser },
-  { to: '/cuenta/direcciones', label: 'Direcciones', icon: faMapMarkerAlt },
-  { to: '/cuenta/pedidos', label: 'Pedidos', icon: faShoppingBag },
-  { to: '/cuenta/pagos', label: 'Pagos', icon: faCreditCard },
-  { to: '/cuenta/envios', label: 'Envíos', icon: faTruck },
-  { to: '/cuenta/facturas', label: 'Facturas', icon: faFileInvoice },
-  { to: '/cuenta/seguridad', label: 'Seguridad', icon: faLock },
+  { to: '/mi-cuenta', label: 'Mi cuenta', icon: faHome, end: true },
+  { to: '/mi-cuenta/perfil', label: 'Perfil', icon: faUser },
+  { to: '/mi-cuenta/direcciones', label: 'Direcciones', icon: faMapMarkerAlt },
+  { to: '/mi-cuenta/pedidos', label: 'Pedidos', icon: faShoppingBag },
+  { to: '/mi-cuenta/pagos', label: 'Pagos', icon: faCreditCard },
+  { to: '/mi-cuenta/envios', label: 'Envíos', icon: faTruck },
+  { to: '/mi-cuenta/facturas', label: 'Facturas', icon: faFileInvoice },
+  { to: '/mi-cuenta/seguridad', label: 'Seguridad', icon: faLock },
 ];
 
 const externalNavItems: NavItem[] = [{ to: '/carrito', label: 'Mi carrito', icon: faShoppingCart }];

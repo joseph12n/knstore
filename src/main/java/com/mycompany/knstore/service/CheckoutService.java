@@ -3,17 +3,15 @@ package com.mycompany.knstore.service;
 import com.mycompany.knstore.domain.*;
 import com.mycompany.knstore.domain.enumeration.*;
 import com.mycompany.knstore.repository.*;
-import com.mycompany.knstore.service.dto.CheckoutItemDTO;
-import com.mycompany.knstore.service.dto.CheckoutRequestDTO;
-import com.mycompany.knstore.service.dto.CheckoutResultDTO;
-import com.mycompany.knstore.service.mapper.ItemPedidoMapper;
-import com.mycompany.knstore.service.mapper.PedidoMapper;
-import com.mycompany.knstore.service.util.MoneyUtils;
+import com.mycompany.knstore.service.dto.*;
+import com.mycompany.knstore.service.mapper.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Servicio de checkout atómico. Crea pedido, ítems y envío
+ * Servicio de checkout atómico. Crea pedido, ítems, pago (simbólico), envío y factura
  * en una sola operación, además de decrementar stock y vaciar el carrito del cliente.
  */
 @Service
@@ -39,14 +37,15 @@ public class CheckoutService {
 
     private final PedidoRepository pedidoRepository;
     private final ItemPedidoRepository itemPedidoRepository;
+    private final PagoRepository pagoRepository;
     private final EnvioRepository envioRepository;
+    private final FacturaRepository facturaRepository;
     private final ProductoRepository productoRepository;
     private final ProductoInventarioRepository productoInventarioRepository;
     private final CarritoRepository carritoRepository;
     private final ItemCarritoRepository itemCarritoRepository;
     private final DireccionRepository direccionRepository;
     private final MongoTemplate mongoTemplate;
-    private final HistorialEstadoService historialEstadoService;
 
     private final PedidoMapper pedidoMapper;
     private final ItemPedidoMapper itemPedidoMapper;
@@ -54,27 +53,29 @@ public class CheckoutService {
     public CheckoutService(
         PedidoRepository pedidoRepository,
         ItemPedidoRepository itemPedidoRepository,
+        PagoRepository pagoRepository,
         EnvioRepository envioRepository,
+        FacturaRepository facturaRepository,
         ProductoRepository productoRepository,
         ProductoInventarioRepository productoInventarioRepository,
         CarritoRepository carritoRepository,
         ItemCarritoRepository itemCarritoRepository,
         DireccionRepository direccionRepository,
         MongoTemplate mongoTemplate,
-        HistorialEstadoService historialEstadoService,
         PedidoMapper pedidoMapper,
         ItemPedidoMapper itemPedidoMapper
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
+        this.pagoRepository = pagoRepository;
         this.envioRepository = envioRepository;
+        this.facturaRepository = facturaRepository;
         this.productoRepository = productoRepository;
         this.productoInventarioRepository = productoInventarioRepository;
         this.carritoRepository = carritoRepository;
         this.itemCarritoRepository = itemCarritoRepository;
         this.direccionRepository = direccionRepository;
         this.mongoTemplate = mongoTemplate;
-        this.historialEstadoService = historialEstadoService;
         this.pedidoMapper = pedidoMapper;
         this.itemPedidoMapper = itemPedidoMapper;
     }
@@ -126,11 +127,7 @@ public class CheckoutService {
                 producto.getPrecio() != null && producto.getPrecio().getPrecioVenta() != null
                     ? producto.getPrecio().getPrecioVenta()
                     : BigDecimal.ZERO;
-            BigDecimal precioUnitarioRequest = MoneyUtils.normalizeOrZero(itemRequest.getPrecioUnitario());
-            BigDecimal precioEsperadoNormalizado = MoneyUtils.normalizeOrZero(precioEsperado);
-            if (
-                precioEsperadoNormalizado.compareTo(BigDecimal.ZERO) > 0 && precioUnitarioRequest.compareTo(precioEsperadoNormalizado) != 0
-            ) {
+            if (precioEsperado.compareTo(BigDecimal.ZERO) > 0 && itemRequest.getPrecioUnitario().compareTo(precioEsperado) != 0) {
                 throw new CheckoutException("Precio incorrecto para " + producto.getNombre());
             }
         }
@@ -140,31 +137,27 @@ public class CheckoutService {
         BigDecimal ivaTotal = BigDecimal.ZERO;
         for (CheckoutItemDTO item : request.getItems()) {
             Producto producto = productosMap.get(item.getProductoId());
-            BigDecimal precio = MoneyUtils.normalizeOrZero(item.getPrecioUnitario());
+            BigDecimal precio = item.getPrecioUnitario() != null ? item.getPrecioUnitario() : BigDecimal.ZERO;
             BigDecimal cantidad = BigDecimal.valueOf(item.getCantidad());
-            BigDecimal itemSubtotal = MoneyUtils.normalize(precio.multiply(cantidad));
+            BigDecimal itemSubtotal = precio.multiply(cantidad);
             subtotal = subtotal.add(itemSubtotal);
 
             BigDecimal porcentajeIva =
                 producto.getCategoriaIva() != null && producto.getCategoriaIva().getPorcentaje() != null
                     ? producto.getCategoriaIva().getPorcentaje()
                     : BigDecimal.ZERO;
-            BigDecimal valorIva = MoneyUtils.normalize(
-                itemSubtotal.multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
-            );
+            BigDecimal valorIva = itemSubtotal.multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             ivaTotal = ivaTotal.add(valorIva);
         }
 
-        subtotal = MoneyUtils.normalizeOrZero(subtotal);
-        ivaTotal = MoneyUtils.normalizeOrZero(ivaTotal);
-        BigDecimal costoEnvio = MoneyUtils.normalizeOrZero(calcularCostoEnvio(request.getTipoServicioEnvio()));
-        BigDecimal descuento = MoneyUtils.normalizeOrZero(BigDecimal.ZERO);
-        BigDecimal total = MoneyUtils.normalize(subtotal.add(ivaTotal).add(costoEnvio).subtract(descuento));
+        BigDecimal costoEnvio = calcularCostoEnvio(request.getTipoServicioEnvio());
+        BigDecimal descuento = BigDecimal.ZERO;
+        BigDecimal total = subtotal.add(ivaTotal).add(costoEnvio).subtract(descuento);
 
         // Crear pedido
         Pedido pedido = new Pedido();
         pedido.setNumeroPedido(generarNumeroPedido());
-        pedido.setEstado(EstadoPedido.PENDING);
+        pedido.setEstado(EstadoPedido.CONFIRMED);
         pedido.setSubtotal(subtotal);
         pedido.setIvaTotal(ivaTotal);
         pedido.setCostoEnvio(costoEnvio);
@@ -174,7 +167,6 @@ public class CheckoutService {
         pedido.setDireccion(direccion);
         pedido.setCuenta(cuenta);
         pedido = pedidoRepository.save(pedido);
-        historialEstadoService.registrarCambioEstado("Pedido", pedido.getId(), "estado", null, pedido.getEstado().name());
 
         // Crear ítems del pedido y decrementar stock de forma atómica
         for (CheckoutItemDTO item : request.getItems()) {
@@ -188,20 +180,17 @@ public class CheckoutService {
             itemPedido.setColorProducto(producto.getColor());
             itemPedido.setTallaProducto(producto.getTalla());
             itemPedido.setCantidad(item.getCantidad());
-            BigDecimal precioUnitarioItem = MoneyUtils.normalizeOrZero(item.getPrecioUnitario());
-            itemPedido.setPrecioUnitario(precioUnitarioItem);
-            itemPedido.setSubtotal(MoneyUtils.normalize(precioUnitarioItem.multiply(BigDecimal.valueOf(item.getCantidad()))));
+            itemPedido.setPrecioUnitario(item.getPrecioUnitario());
+            itemPedido.setSubtotal(item.getPrecioUnitario().multiply(BigDecimal.valueOf(item.getCantidad())));
 
             BigDecimal porcentajeIva =
                 producto.getCategoriaIva() != null && producto.getCategoriaIva().getPorcentaje() != null
                     ? producto.getCategoriaIva().getPorcentaje()
                     : BigDecimal.ZERO;
-            itemPedido.setPorcentajeIva(MoneyUtils.normalize(porcentajeIva));
-            BigDecimal valorIva = MoneyUtils.normalize(
-                itemPedido.getSubtotal().multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
-            );
+            itemPedido.setPorcentajeIva(porcentajeIva);
+            BigDecimal valorIva = itemPedido.getSubtotal().multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             itemPedido.setValorIva(valorIva);
-            itemPedido.setDescuento(MoneyUtils.normalizeOrZero(BigDecimal.ZERO));
+            itemPedido.setDescuento(BigDecimal.ZERO);
             itemPedido.setPedido(pedido);
             itemPedido.setProducto(producto);
             itemPedidoRepository.save(itemPedido);
@@ -211,6 +200,19 @@ public class CheckoutService {
                 decrementarStockAtomico(producto.getInventario().getId(), item.getCantidad(), producto.getNombre());
             }
         }
+
+        // Crear pago simbólico aprobado
+        Pago pago = new Pago();
+        pago.setMetodoPago(request.getMetodoPago());
+        pago.setEstado(EstadoPago.APPROVED);
+        pago.setMonto(total);
+        pago.setReferenciaPasarela("PAGO-SIMBOLICO-" + pedido.getNumeroPedido());
+        pago.setCodigoAutorizacion("AUT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        pago.setDescripcionRespuesta("Pago aprobado de forma simbólica");
+        pago.setIntentos(1);
+        pago.setFechaPago(Instant.now());
+        pago.setPedido(pedido);
+        pago = pagoRepository.save(pago);
 
         // Crear envío y asociarlo al pedido
         Envio envio = new Envio();
@@ -222,6 +224,20 @@ public class CheckoutService {
         envio = envioRepository.save(envio);
         pedido.setEnvio(envio);
         pedidoRepository.save(pedido);
+
+        // Crear factura simbólica
+        Factura factura = new Factura();
+        factura.setPrefijo("FE");
+        factura.setSubtotal(subtotal);
+        factura.setDescuentos(descuento);
+        factura.setBaseGravableIva(subtotal);
+        factura.setValorIva(ivaTotal);
+        factura.setTotal(total);
+        factura.setEnviada(false);
+        factura.setFechaEmision(Instant.now());
+        factura.setFechaVencimiento(LocalDate.now().plusDays(30));
+        factura.setPago(pago);
+        facturaRepository.save(factura);
 
         // Vaciar carrito del usuario
         vaciarCarrito(cuenta);

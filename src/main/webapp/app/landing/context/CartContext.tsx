@@ -7,7 +7,6 @@ import { ICarrito } from 'app/shared/model/carrito.model';
 import { IItemCarrito } from 'app/shared/model/item-carrito.model';
 import { ICuenta } from 'app/shared/model/cuenta.model';
 import { IProducto } from 'app/shared/model/producto.model';
-import { IUser } from 'app/shared/model/user.model';
 
 const CART_STORAGE_KEY = 'knstore-cart';
 
@@ -55,50 +54,6 @@ const findCuenta = async (login: string): Promise<ICuenta | undefined> => {
   return response.data.find(c => c.user?.login === login);
 };
 
-const createCuentaForAccount = async (account: IUser): Promise<ICuenta | undefined> => {
-  if (!account?.login || !account?.id) {
-    return undefined;
-  }
-
-  const payload: ICuenta = {
-    primerNombre: account.firstName || account.login,
-    primerApellido: account.lastName || account.login,
-    activo: true,
-    user: {
-      id: account.id,
-      login: account.login,
-    },
-  };
-
-  try {
-    const response = await axios.post<ICuenta>('api/cuentas', payload);
-    return response.data;
-  } catch (error) {
-    const axiosError = error as any;
-    const status = axiosError?.response?.status;
-
-    // If another process created the cuenta between read and create, fetch it again.
-    if (status === 400 || status === 409) {
-      return findCuenta(account.login);
-    }
-
-    throw error;
-  }
-};
-
-const findOrCreateCuenta = async (account: IUser): Promise<ICuenta | undefined> => {
-  if (!account?.login) {
-    return undefined;
-  }
-
-  const existing = await findCuenta(account.login);
-  if (existing?.id) {
-    return existing;
-  }
-
-  return createCuentaForAccount(account);
-};
-
 const findOrCreateCarrito = async (cuentaId: string): Promise<ICarrito> => {
   const carritosResponse = await axios.get<ICarrito[]>('api/carritos');
   const existing = carritosResponse.data.find(c => c.cuenta?.id === cuentaId);
@@ -133,10 +88,10 @@ const toStorefrontProducto = (producto: IProducto): IProductoStorefront => ({
 interface CartProviderProps {
   children: React.ReactNode;
   isAuthenticated: boolean;
-  account?: IUser;
+  login?: string;
 }
 
-export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenticated, account }) => {
+export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenticated, login }) => {
   const [localItems, setLocalItems] = useState<CartItem[]>(() => loadLocalCart());
   const [serverItems, setServerItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -173,7 +128,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
   }, [isAuthenticated]);
 
   const loadServerCart = useCallback(async () => {
-    if (!isAuthenticated || !account?.login || initialized || mergingRef.current) {
+    if (!isAuthenticated || !login || initialized || mergingRef.current) {
       return;
     }
 
@@ -181,9 +136,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
     setLoading(true);
 
     try {
-      const [cuenta, productos] = await Promise.all([findOrCreateCuenta(account), fetchProductos()]);
+      const [cuenta, productos] = await Promise.all([findCuenta(login), fetchProductos()]);
       if (!cuenta?.id || cancelled) {
-        toast.error('No se pudo preparar la cuenta para el carrito. Completa tu perfil e intenta nuevamente.');
         setLoading(false);
         return;
       }
@@ -194,21 +148,18 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
       const itemsBelongingToCart = itemCarritos.filter(item => item.carrito?.id === carrito.id);
 
       const productosMap = new Map(productos.map(p => [p.id, p]));
-      const loadedItems = itemsBelongingToCart.reduce<CartItem[]>((acc, item) => {
-        const producto = productosMap.get(item.producto?.id ?? '');
-        if (!producto) {
-          return acc;
-        }
-
-        acc.push({
-          id: item.id,
-          producto: toStorefrontProducto(producto),
-          cantidad: item.cantidad ?? 1,
-          precioUnitario: item.precioUnitario ?? producto.precio?.precioVenta ?? 0,
-        });
-
-        return acc;
-      }, []);
+      const loadedItems = itemsBelongingToCart
+        .map(item => {
+          const producto = productosMap.get(item.producto?.id ?? '');
+          if (!producto) return undefined;
+          return {
+            id: item.id,
+            producto: toStorefrontProducto(producto),
+            cantidad: item.cantidad ?? 1,
+            precioUnitario: item.precioUnitario ?? producto.precio?.precioVenta ?? 0,
+          };
+        })
+        .filter((item): item is NonNullable<typeof item> => item !== undefined);
 
       // Merge localStorage cart into server cart
       const local = loadLocalCart();
@@ -259,7 +210,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
     return () => {
       cancelled = true;
     };
-  }, [isAuthenticated, account, initialized]);
+  }, [isAuthenticated, login, initialized]);
 
   useEffect(() => {
     loadServerCart();
@@ -315,16 +266,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
           handleCartError('No se pudo actualizar la cantidad en el carrito', error);
         }
       } else {
-        if (!account?.login) {
-          toast.error('Debes iniciar sesión nuevamente para usar el carrito.');
-          return;
-        }
+        if (!login) return;
         try {
-          const cuenta = await findOrCreateCuenta(account);
-          if (!cuenta?.id) {
-            toast.error('No se pudo preparar la cuenta para el carrito.');
-            return;
-          }
+          const cuenta = await findCuenta(login);
+          if (!cuenta?.id) return;
           const carrito = await findOrCreateCarrito(cuenta.id);
           carritoIdRef.current = carrito.id;
           const response = await axios.post<IItemCarrito>('api/item-carritos', {
@@ -347,7 +292,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
         }
       }
     },
-    [isAuthenticated, serverItems, account],
+    [isAuthenticated, serverItems, login],
   );
 
   const updateQuantity = useCallback(

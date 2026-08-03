@@ -11,7 +11,10 @@ public class DireccionTestSamples {
             .barrio("barrio1")
             .localidad("localidad1")
             .municipio("municipio1")
-            .departamento("departamento1");
+            .departamento("departamento1")
+            .telefonoContacto("telefonoContacto1")
+            .destinatario("destinatario1")
+            .codigoPostal("codigoPostal1");
     }
 
     public static Direccion getDireccionSample2() {
@@ -21,7 +24,10 @@ public class DireccionTestSamples {
             .barrio("barrio2")
             .localidad("localidad2")
             .municipio("municipio2")
-            .departamento("departamento2");
+            .departamento("departamento2")
+            .telefonoContacto("telefonoContacto2")
+            .destinatario("destinatario2")
+            .codigoPostal("codigoPostal2");
     }
 
     public static Direccion getDireccionRandomSampleGenerator() {
@@ -31,6 +37,9 @@ public class DireccionTestSamples {
             .barrio(UUID.randomUUID().toString())
             .localidad(UUID.randomUUID().toString())
             .municipio(UUID.randomUUID().toString())
-            .departamento(UUID.randomUUID().toString());
+            .departamento(UUID.randomUUID().toString())
+            .telefonoContacto(UUID.randomUUID().toString())
+            .destinatario(UUID.randomUUID().toString())
+            .codigoPostal(UUID.randomUUID().toString());
     }
 }

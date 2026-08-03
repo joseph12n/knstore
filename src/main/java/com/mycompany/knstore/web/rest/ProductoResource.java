@@ -163,6 +163,25 @@ public class ProductoResource {
     }
 
     /**
+     * {@code GET  /productos/search} : search active productos by query.
+     *
+     * @param query the search query.
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of productos in body.
+     */
+    @GetMapping("/search")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<ProductoDTO>> searchProductos(
+        @RequestParam(name = "q", required = false, defaultValue = "") String query,
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+    ) {
+        LOG.debug("REST request to search Productos : {}", query);
+        Page<ProductoDTO> page = productoService.searchActive(query.trim(), pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
      * {@code GET  /productos/:id} : get the "id" producto.
      *
      * @param id the id of the productoDTO to retrieve.
@@ -188,48 +207,6 @@ public class ProductoResource {
         LOG.debug("REST request to get Producto by slug : {}", slug);
         Optional<ProductoDTO> productoDTO = productoService.findBySlug(slug);
         return ResponseUtil.wrapOrNotFound(productoDTO);
-    }
-
-    /**
-     * {@code GET /productos/buscar} : buscar productos publicos por texto y filtros.
-     */
-    @GetMapping("/buscar")
-    @PreAuthorize("permitAll()")
-    public ResponseEntity<List<ProductoDTO>> buscarProductos(
-        @RequestParam(name = "q", required = false) String q,
-        @RequestParam(name = "categoriaId", required = false) String categoriaId,
-        @RequestParam(name = "subcategoriaId", required = false) String subcategoriaId,
-        @RequestParam(name = "marcaId", required = false) String marcaId,
-        @RequestParam(name = "minPrecio", required = false) BigDecimal minPrecio,
-        @RequestParam(name = "maxPrecio", required = false) BigDecimal maxPrecio,
-        @RequestParam(name = "destacado", required = false) Boolean destacado,
-        @RequestParam(name = "soloActivos", required = false, defaultValue = "true") boolean soloActivos,
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable
-    ) {
-        LOG.debug(
-            "REST request to buscar Productos: q={}, categoriaId={}, subcategoriaId={}, marcaId={}, minPrecio={}, maxPrecio={}, destacado={}, soloActivos={}",
-            q,
-            categoriaId,
-            subcategoriaId,
-            marcaId,
-            minPrecio,
-            maxPrecio,
-            destacado,
-            soloActivos
-        );
-        Page<ProductoDTO> page = productoService.buscarPublico(
-            q,
-            categoriaId,
-            subcategoriaId,
-            marcaId,
-            minPrecio,
-            maxPrecio,
-            destacado,
-            soloActivos,
-            pageable
-        );
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

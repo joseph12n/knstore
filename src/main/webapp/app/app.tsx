@@ -21,25 +21,38 @@ import { getSession } from 'app/shared/reducers/authentication';
 
 const baseHref = document.querySelector('base')!.getAttribute('href')!.replace(/\/$/, '');
 
+// Layouts:
+// - Storefront: la tienda pública y el panel del cliente usan el header/footer de storefront.
+// - Admin: el dashboard /admin y los CRUD de entidades (incluyendo /cuenta) usan el layout JHipster clásico.
+type AppLayout = 'storefront' | 'admin';
+
+// Rutas públicas de la tienda y del panel del cliente. Deben mantenerse sincronizadas con routes.tsx.
+const STOREFRONT_PATHS = [
+  '/',
+  '/categorias',
+  '/productos',
+  '/buscar',
+  '/carrito',
+  '/checkout',
+  '/mi-cuenta',
+  '/login',
+  '/logout',
+  '/account',
+];
+
+// Determina el layout que debe usar la ruta actual. El fallback es el layout admin.
+const resolveLayout = (pathname: string): AppLayout => {
+  if (pathname.startsWith('/admin')) {
+    return 'admin';
+  }
+
+  const isStorefront = STOREFRONT_PATHS.some(path => (path === '/' ? pathname === '/' || pathname === '' : pathname.startsWith(path)));
+  return isStorefront ? 'storefront' : 'admin';
+};
+
 const AppContent = () => {
   const location = useLocation();
-  // Rutas que pertenecen al dashboard administrativo generado por JHipster.
-  const isAdminRoute = location.pathname.startsWith('/admin');
-  // Las rutas de entidades CRUD autogeneradas también usan el layout admin.
-  const isEntityCrudRoute =
-    !isAdminRoute &&
-    !location.pathname.startsWith('/cuenta') &&
-    !location.pathname.startsWith('/carrito') &&
-    !location.pathname.startsWith('/checkout') &&
-    !location.pathname.startsWith('/categorias') &&
-    !location.pathname.startsWith('/productos') &&
-    !location.pathname.startsWith('/buscar') &&
-    location.pathname !== '/' &&
-    location.pathname !== '/login' &&
-    location.pathname !== '/logout' &&
-    !location.pathname.startsWith('/account');
-
-  const isStorefrontRoute = !isAdminRoute && !isEntityCrudRoute;
+  const layout = resolveLayout(location.pathname);
 
   const dispatch = useAppDispatch();
 
@@ -56,7 +69,7 @@ const AppContent = () => {
   const isInProduction = useAppSelector(state => state.applicationProfile.inProduction);
   const isOpenAPIEnabled = useAppSelector(state => state.applicationProfile.isOpenAPIEnabled);
 
-  if (isStorefrontRoute) {
+  if (layout === 'storefront') {
     return (
       <div className="app-container storefront-app">
         <ToastContainer position="top-right" className="toastify-container" toastClassName="toastify-toast" />
