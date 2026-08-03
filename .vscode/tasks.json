@@ -1,0 +1,32 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "mvn-test-pedido-pago",
+			"type": "shell",
+			"command": "./mvnw -DskipTests=false -Dtest=PedidoResourceIT,PagoResourceIT test",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "mvn-test-pedido",
+			"type": "shell",
+			"command": "./mvnw.cmd -Dtest=PedidoResourceIT -DfailIfNoTests=false test -e",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "maven-pedido-it-full-trace",
+			"type": "shell",
+			"command": ".\\mvnw.cmd",
+			"args": [
+				"-Dtest=PedidoResourceIT",
+				"-DfailIfNoTests=false",
+				"test",
+				"-e",
+				"-DtrimStackTrace=false"
+			],
+			"isBackground": false
+		}
+	]
+}
