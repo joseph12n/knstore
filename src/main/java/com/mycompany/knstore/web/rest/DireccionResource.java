@@ -201,7 +201,7 @@ public class DireccionResource {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessDireccionId(#id)")
     public ResponseEntity<DireccionDTO> marcarDireccionPredeterminada(@PathVariable("id") String id) {
         LOG.debug("REST request to mark Direccion as default : {}", id);
-        Optional<DireccionDTO> direccionDTO = direccionService.marcarPredeterminada(id);
+        Optional<DireccionDTO> direccionDTO = Optional.of(direccionService.setPredeterminada(id));
         return ResponseUtil.wrapOrNotFound(direccionDTO, HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, id));
     }
 

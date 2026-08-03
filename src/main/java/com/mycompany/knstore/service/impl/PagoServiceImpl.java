@@ -17,9 +17,15 @@ import com.mycompany.knstore.service.dto.PagoCallbackRequestDTO;
 import com.mycompany.knstore.service.dto.PagoDTO;
 import com.mycompany.knstore.service.dto.PagoIniciarRequestDTO;
 import com.mycompany.knstore.service.mapper.PagoMapper;
+import com.mycompany.knstore.service.payment.PaymentGateway;
+import com.mycompany.knstore.service.payment.PaymentGatewayInitResult;
+import com.mycompany.knstore.service.payment.PaymentGatewayRefundResult;
+import com.mycompany.knstore.service.payment.PaymentGatewayStatusResult;
+import com.mycompany.knstore.service.util.MoneyUtils;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
@@ -59,7 +65,9 @@ public class PagoServiceImpl implements PagoService {
         PedidoRepository pedidoRepository,
         CuentaRepository cuentaRepository,
         FacturaRepository facturaRepository,
-        PagoMapper pagoMapper
+        PagoMapper pagoMapper,
+        HistorialEstadoService historialEstadoService,
+        PaymentGateway paymentGateway
     ) {
         this.pagoRepository = pagoRepository;
         this.pedidoRepository = pedidoRepository;

@@ -5,7 +5,6 @@ import { faTrash, faShoppingBag, faArrowRight } from '@fortawesome/free-solid-sv
 import { Link } from 'react-router';
 
 import { buildImageUrl, formatCOP } from 'app/landing/utils/format';
-import { FREE_SHIPPING_MESSAGE } from 'app/landing/utils/constants';
 import QuantitySelector from './QuantitySelector';
 import EmptyState from './EmptyState';
 import useCart from 'app/landing/hooks/useCart';

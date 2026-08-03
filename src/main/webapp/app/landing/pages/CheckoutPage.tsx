@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
@@ -7,8 +7,8 @@ import axios from 'axios';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
-import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/landing/utils/constants';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
+import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS, FREE_SHIPPING_MESSAGE } from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
 import { calculateIva, calculateShipping, calculateSubtotal, calculateTotal } from 'app/landing/utils/checkout';
 import CheckoutStepper from 'app/landing/components/CheckoutStepper';
@@ -20,23 +20,18 @@ export const CheckoutPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { items, clearCart: onCheckoutComplete } = useCart();
+
   const [step, setStep] = useState(0);
   const [selectedDireccionId, setSelectedDireccionId] = useState('');
   const [selectedEnvio, setSelectedEnvio] = useState('ESTANDAR');
   const [selectedPago, setSelectedPago] = useState('NEQUI');
   const [notas, setNotas] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [previewLoading, setPreviewLoading] = useState(false);
-  const [previewError, setPreviewError] = useState<string | null>(null);
-  const [preview, setPreview] = useState<{ subtotal: number; iva: number; envio: number; total: number } | null>(null);
-  const [paymentResult, setPaymentResult] = useState<{ status: 'APPROVED' | 'REJECTED' | null; message: string; pedidoId?: string } | null>(
-    null,
-  );
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
   const cuenta = useAppSelector(state => state.cuenta.entity);
-  const loadingDirecciones = useAppSelector(state => state.direccion.loading);
+  const loadingDirecciones = useAppSelector(state => state.direccion.loading || state.cuenta.loading);
 
   useEffect(() => {
     dispatch(getSession());
@@ -44,6 +39,7 @@ export const CheckoutPage = () => {
     if (account.login) {
       dispatch(getCuentaByLogin(account.login));
     }
+
     return () => {
       dispatch(resetCuenta());
     };
@@ -56,7 +52,7 @@ export const CheckoutPage = () => {
     }
   }, [loadingDirecciones, cuenta, navigate]);
 
-  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
+  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
   const subtotal = calculateSubtotal(items);
   const costoEnvio = useMemo(() => calculateShipping(subtotal, selectedEnvio), [subtotal, selectedEnvio]);
@@ -69,44 +65,6 @@ export const CheckoutPage = () => {
       setSelectedDireccionId(defaultAddress.id!);
     }
   }, [direccionesUsuario, selectedDireccionId]);
-
-  useEffect(() => {
-    if (step !== 3) {
-      setPreview(null);
-      setPreviewError(null);
-      return;
-    }
-
-    if (!cuenta || !selectedDireccionId || items.length === 0) {
-      return;
-    }
-
-    const loadPreview = async () => {
-      setPreviewLoading(true);
-      setPreviewError(null);
-      try {
-        const response = await axios.post<{ subtotal: number; iva: number; envio: number; total: number }>('api/pedidos/preview', {
-          direccionId: selectedDireccionId,
-          metodoPago: selectedPago,
-          tipoServicioEnvio: selectedEnvio,
-          notasCliente: notas,
-          items: items.map(item => ({
-            productoId: item.producto.id,
-            cantidad: item.cantidad,
-            precioUnitario: item.precioUnitario,
-          })),
-        });
-        setPreview(response.data);
-      } catch (error: any) {
-        const message = error?.response?.data?.message || error?.message || 'Error desconocido';
-        setPreviewError(`No pudimos calcular los totales: ${message}`);
-      } finally {
-        setPreviewLoading(false);
-      }
-    };
-
-    loadPreview();
-  }, [step, selectedDireccionId, selectedEnvio, selectedPago, notas, items, cuenta]);
 
   if (items.length === 0) {
     return (
@@ -137,6 +95,7 @@ export const CheckoutPage = () => {
       toast.error('Selecciona una dirección de envío.');
       return;
     }
+
     setStep(prev => Math.min(prev + 1, CHECKOUT_STEPS.length - 1));
   };
 
@@ -151,7 +110,7 @@ export const CheckoutPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post<{ pedido: { id?: string; numeroPedido?: string } }>('api/pedidos/checkout', {
+      const response = await axios.post<{ pedido: { id?: string } }>('api/pedidos/checkout', {
         direccionId: selectedDireccionId,
         metodoPago: selectedPago,
         tipoServicioEnvio: selectedEnvio,
@@ -164,14 +123,13 @@ export const CheckoutPage = () => {
       });
 
       const pedidoCreado = response.data?.pedido;
-
       if (!pedidoCreado?.id) {
         throw new Error('No se pudo crear el pedido');
       }
 
-      toast.success('¡Pago aprobado y pedido creado exitosamente!');
+      toast.success('¡Pedido creado exitosamente!');
       onCheckoutComplete();
-      navigate(`/cuenta/pedidos/${pedidoCreado.id}`);
+      navigate(`/mi-cuenta/pedidos/${pedidoCreado.id}`);
     } catch (error: any) {
       const message = error?.response?.data?.message || error?.message || 'Error desconocido';
       toast.error(`No pudimos procesar tu pedido: ${message}`);
@@ -313,33 +271,13 @@ export const CheckoutPage = () => {
                   <div>
                     <strong>Método de pago:</strong> {PAYMENT_METHODS.find(p => p.key === selectedPago)?.label}
                   </div>
-                  <div className="d-flex justify-content-between mb-1">
-                    <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
-                    <span>{preview.envio === 0 ? 'Gratis' : formatCOP(preview.envio)}</span>
+                  <div>
+                    <strong>Dirección:</strong> {direccionesUsuario.find(d => d.id === selectedDireccionId)?.direccion}
                   </div>
-                  <div className="d-flex justify-content-between mb-1">
-                    <span>IVA</span>
-                    <span>{formatCOP(preview.iva)}</span>
-                  </div>
-                  <hr />
-                  <div className="d-flex justify-content-between">
-                    <span className="fw-bold">Total a pagar</span>
-                    <span className="h4 fw-bold">{formatCOP(preview.total)}</span>
-                  </div>
-                  <div className="mt-3 small text-muted">
-                    <div>
-                      <strong>Método de pago:</strong> {PAYMENT_METHODS.find(p => p.key === selectedPago)?.label}
-                    </div>
-                    <div>
-                      <strong>Dirección:</strong> {direccionesUsuario.find(d => d.id === selectedDireccionId)?.direccion}
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-            )}
-            <p className="small text-muted">
-              Al confirmar, se procesará tu pago de forma simbólica y se creará tu pedido con envío y factura.
-            </p>
+                </div>
+              </Card.Body>
+            </Card>
+            <p className="small text-muted">Al confirmar, se creará tu pedido con el método de envío y pago seleccionados.</p>
           </div>
         );
       default:
@@ -361,12 +299,8 @@ export const CheckoutPage = () => {
             <Button variant="primary" onClick={handleNext}>
               Continuar
             </Button>
-          ) : paymentResult?.status === 'REJECTED' ? (
-            <Button variant="warning" onClick={handleRetryPayment} disabled={isSubmitting}>
-              {isSubmitting ? 'Procesando...' : 'Reintentar pago'}
-            </Button>
           ) : (
-            <Button variant="accent" onClick={handleSubmit} disabled={isSubmitting || previewLoading || !preview || !!previewError}>
+            <Button variant="accent" onClick={handleSubmit} disabled={isSubmitting}>
               {isSubmitting ? 'Procesando...' : 'Confirmar pedido'}
             </Button>
           )}

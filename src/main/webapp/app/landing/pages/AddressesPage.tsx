@@ -1,13 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Card, Col, Form, Modal, Row } from 'react-bootstrap';
+import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
-import { hasAnyAuthority } from 'app/shared/auth/private-route';
-import { Authority } from 'app/shared/jhipster/constants';
 import {
   createEntity as createDireccion,
   deleteEntity as deleteDireccion,
@@ -58,9 +55,6 @@ export const AddressesPage = () => {
 
   const handleOpenForm = (direccion?: IDireccion) => {
     setEditingAddress(direccion);
-    if (direccion?.cuenta?.id) {
-      setSelectedCuentaId(direccion.cuenta.id);
-    }
     setShowForm(true);
   };
 
@@ -169,18 +163,6 @@ export const AddressesPage = () => {
           <Modal.Title className="fw-bold">{editingAddress ? 'Editar dirección' : 'Nueva dirección'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {isAdminOrManager && (
-            <Form.Group className="mb-3">
-              <Form.Label>Cuenta *</Form.Label>
-              <Form.Select value={selectedCuentaId} onChange={e => setSelectedCuentaId(e.target.value)}>
-                {cuentas.map(cuenta => (
-                  <option key={cuenta.id} value={cuenta.id}>
-                    {cuenta.primerNombre} {cuenta.primerApellido} ({cuenta.user?.login})
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          )}
           <AddressForm initialData={editingAddress} onSubmit={handleSubmit} onCancel={handleCloseForm} isSubmitting={isSubmitting} />
         </Modal.Body>
       </Modal>

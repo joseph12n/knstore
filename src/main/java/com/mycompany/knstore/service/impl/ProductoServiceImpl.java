@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,6 +171,101 @@ public class ProductoServiceImpl implements ProductoService {
         LOG.debug("Request to search active Productos by query : {}", query);
         String escapedQuery = java.util.regex.Pattern.quote(query);
         return productoRepository.searchActiveByQuery(escapedQuery, pageable).map(this::loadImages).map(productoMapper::toDto);
+    }
+
+    public Page<ProductoDTO> buscarPublico(
+        String texto,
+        String categoriaId,
+        String subcategoriaId,
+        String marcaId,
+        BigDecimal precioMin,
+        BigDecimal precioMax,
+        Boolean destacado,
+        boolean soloActivos,
+        Pageable pageable
+    ) {
+        LOG.debug("Request to buscarPublico productos. texto: {}", texto);
+
+        String textoNormalizado = texto == null ? "" : texto.trim().toLowerCase(Locale.ROOT);
+
+        List<Producto> filtrados = productoRepository
+            .findAllWithEagerRelationships()
+            .stream()
+            .filter(producto -> !soloActivos || Boolean.TRUE.equals(producto.getActivo()))
+            .filter(
+                producto -> categoriaId == null || (producto.getCategoria() != null && categoriaId.equals(producto.getCategoria().getId()))
+            )
+            .filter(
+                producto ->
+                    subcategoriaId == null ||
+                    (producto.getSubcategoria() != null && subcategoriaId.equals(producto.getSubcategoria().getId()))
+            )
+            .filter(producto -> marcaId == null || (producto.getMarca() != null && marcaId.equals(producto.getMarca().getId())))
+            .filter(producto -> destacado == null || Objects.equals(destacado, producto.getDestacado()))
+            .filter(producto -> {
+                if (textoNormalizado.isBlank()) {
+                    return true;
+                }
+                String nombre = producto.getNombre() == null ? "" : producto.getNombre().toLowerCase(Locale.ROOT);
+                String descripcion = producto.getDescripcion() == null ? "" : producto.getDescripcion().toLowerCase(Locale.ROOT);
+                String sku = producto.getSku() == null ? "" : producto.getSku().toLowerCase(Locale.ROOT);
+                String slug = producto.getSlug() == null ? "" : producto.getSlug().toLowerCase(Locale.ROOT);
+                return (
+                    nombre.contains(textoNormalizado) ||
+                    descripcion.contains(textoNormalizado) ||
+                    sku.contains(textoNormalizado) ||
+                    slug.contains(textoNormalizado)
+                );
+            })
+            .filter(producto -> {
+                BigDecimal precio =
+                    producto.getPrecio() != null && producto.getPrecio().getPrecioVenta() != null
+                        ? producto.getPrecio().getPrecioVenta()
+                        : BigDecimal.ZERO;
+                if (precioMin != null && precio.compareTo(precioMin) < 0) {
+                    return false;
+                }
+                if (precioMax != null && precio.compareTo(precioMax) > 0) {
+                    return false;
+                }
+                return true;
+            })
+            .toList();
+
+        List<Sort.Order> orders = new ArrayList<>();
+        pageable.getSort().forEach(orders::add);
+        Comparator<Producto> comparator = Comparator.comparing(Producto::getNombre, String.CASE_INSENSITIVE_ORDER);
+
+        if (!orders.isEmpty()) {
+            comparator = null;
+            for (Sort.Order order : orders) {
+                Comparator<Producto> current = switch (order.getProperty()) {
+                    case "nombre" -> Comparator.comparing(Producto::getNombre, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+                    case "slug" -> Comparator.comparing(Producto::getSlug, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+                    case "sku" -> Comparator.comparing(Producto::getSku, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+                    case "precio", "precioVenta" -> Comparator.comparing(
+                        p -> p.getPrecio() != null ? p.getPrecio().getPrecioVenta() : null,
+                        Comparator.nullsLast(BigDecimal::compareTo)
+                    );
+                    default -> Comparator.comparing(Producto::getNombre, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+                };
+                if (order.isDescending()) {
+                    current = current.reversed();
+                }
+                comparator = comparator == null ? current : comparator.thenComparing(current);
+            }
+        }
+
+        filtrados = filtrados.stream().sorted(comparator).toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), filtrados.size());
+        List<ProductoDTO> content =
+            start >= filtrados.size()
+                ? List.of()
+                : filtrados.subList(start, end).stream().map(this::loadRelationships).map(productoMapper::toDto).toList();
+
+        return new PageImpl<>(content, pageable, filtrados.size());
     }
 
     @Override

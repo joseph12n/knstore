@@ -56,13 +56,16 @@ public class PedidoServiceImpl implements PedidoService {
 
     private final PedidoMapper pedidoMapper;
 
+    private final HistorialEstadoService historialEstadoService;
+
     public PedidoServiceImpl(
         PedidoRepository pedidoRepository,
         CuentaRepository cuentaRepository,
         ItemPedidoRepository itemPedidoRepository,
         ProductoInventarioRepository productoInventarioRepository,
         MongoTemplate mongoTemplate,
-        PedidoMapper pedidoMapper
+        PedidoMapper pedidoMapper,
+        HistorialEstadoService historialEstadoService
     ) {
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
@@ -199,5 +202,18 @@ public class PedidoServiceImpl implements PedidoService {
 
         long seq = sequence != null ? ((Number) sequence.get("seq")).longValue() : 1L;
         return String.format("PED-%s-%06d", fecha, seq);
+    }
+
+    private void registrarTransicionEstadoPedido(String pedidoId, EstadoPedido estadoAnterior, EstadoPedido estadoNuevo) {
+        if (pedidoId == null || Objects.equals(estadoAnterior, estadoNuevo)) {
+            return;
+        }
+        historialEstadoService.registrarCambioEstado(
+            "Pedido",
+            pedidoId,
+            "estado",
+            estadoAnterior != null ? estadoAnterior.name() : null,
+            estadoNuevo != null ? estadoNuevo.name() : null
+        );
     }
 }

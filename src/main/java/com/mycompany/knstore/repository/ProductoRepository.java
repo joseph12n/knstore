@@ -23,5 +23,14 @@ public interface ProductoRepository extends MongoRepository<Producto, String> {
     @Query("{'id': ?0}")
     Optional<Producto> findOneWithEagerRelationships(String id);
 
+    @Query(
+        "{ 'activo': true, '$or': [ " +
+            "{ 'nombre': { $regex: ?0, $options: 'i' } }, " +
+            "{ 'descripcion': { $regex: ?0, $options: 'i' } }, " +
+            "{ 'slug': { $regex: ?0, $options: 'i' } }, " +
+            "{ 'sku': { $regex: ?0, $options: 'i' } } ] }"
+    )
+    Page<Producto> searchActiveByQuery(String query, Pageable pageable);
+
     Optional<Producto> findBySlug(String slug);
 }

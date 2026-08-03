@@ -1,12 +1,15 @@
 package com.mycompany.knstore.web.rest;
 
 import com.mycompany.knstore.domain.Cuenta;
+import com.mycompany.knstore.domain.HistorialEstado;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CheckoutException;
 import com.mycompany.knstore.service.CheckoutService;
+import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.PedidoService;
+import com.mycompany.knstore.service.dto.CheckoutPreviewDTO;
 import com.mycompany.knstore.service.dto.CheckoutRequestDTO;
 import com.mycompany.knstore.service.dto.CheckoutResultDTO;
 import com.mycompany.knstore.service.dto.PedidoDTO;
@@ -57,16 +60,20 @@ public class PedidoResource {
 
     private final CuentaRepository cuentaRepository;
 
+    private final HistorialEstadoService historialEstadoService;
+
     public PedidoResource(
         PedidoService pedidoService,
         PedidoRepository pedidoRepository,
         CheckoutService checkoutService,
-        CuentaRepository cuentaRepository
+        CuentaRepository cuentaRepository,
+        HistorialEstadoService historialEstadoService
     ) {
         this.pedidoService = pedidoService;
         this.pedidoRepository = pedidoRepository;
         this.checkoutService = checkoutService;
         this.cuentaRepository = cuentaRepository;
+        this.historialEstadoService = historialEstadoService;
     }
 
     /**

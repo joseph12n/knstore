@@ -247,6 +247,84 @@ public class CheckoutService {
         return result;
     }
 
+    public CheckoutPreviewDTO preview(Cuenta cuenta, CheckoutRequestDTO request) {
+        LOG.debug("Request to preview checkout for cuenta {}: {}", cuenta.getId(), request);
+
+        if (request.getItems() == null || request.getItems().isEmpty()) {
+            throw new CheckoutException("El carrito está vacío");
+        }
+
+        Direccion direccion = direccionRepository
+            .findById(request.getDireccionId())
+            .orElseThrow(() -> new CheckoutException("Dirección no encontrada"));
+
+        if (direccion.getCuenta() == null || !direccion.getCuenta().getId().equals(cuenta.getId())) {
+            throw new CheckoutException("La dirección no pertenece a la cuenta");
+        }
+
+        Map<String, Producto> productosMap = new HashMap<>();
+        Map<String, Integer> cantidadPorProducto = new HashMap<>();
+        for (CheckoutItemDTO item : request.getItems()) {
+            cantidadPorProducto.merge(item.getProductoId(), item.getCantidad(), Integer::sum);
+        }
+
+        for (String productoId : cantidadPorProducto.keySet()) {
+            Producto producto = productoRepository
+                .findById(productoId)
+                .orElseThrow(() -> new CheckoutException("Producto no encontrado: " + productoId));
+            productosMap.put(productoId, producto);
+
+            Integer stock = producto.getInventario() != null ? producto.getInventario().getStock() : 0;
+            Integer requerido = cantidadPorProducto.get(productoId);
+            if (stock == null || stock < requerido) {
+                throw new CheckoutException(
+                    "Stock insuficiente para " + producto.getNombre() + " (disponible: " + (stock == null ? 0 : stock) + ")"
+                );
+            }
+
+            CheckoutItemDTO itemRequest = request
+                .getItems()
+                .stream()
+                .filter(i -> i.getProductoId().equals(productoId))
+                .findFirst()
+                .orElseThrow();
+            BigDecimal precioEsperado =
+                producto.getPrecio() != null && producto.getPrecio().getPrecioVenta() != null
+                    ? producto.getPrecio().getPrecioVenta()
+                    : BigDecimal.ZERO;
+            if (precioEsperado.compareTo(BigDecimal.ZERO) > 0 && itemRequest.getPrecioUnitario().compareTo(precioEsperado) != 0) {
+                throw new CheckoutException("Precio incorrecto para " + producto.getNombre());
+            }
+        }
+
+        BigDecimal subtotal = BigDecimal.ZERO;
+        BigDecimal ivaTotal = BigDecimal.ZERO;
+        for (CheckoutItemDTO item : request.getItems()) {
+            Producto producto = productosMap.get(item.getProductoId());
+            BigDecimal precio = item.getPrecioUnitario() != null ? item.getPrecioUnitario() : BigDecimal.ZERO;
+            BigDecimal cantidad = BigDecimal.valueOf(item.getCantidad());
+            BigDecimal itemSubtotal = precio.multiply(cantidad);
+            subtotal = subtotal.add(itemSubtotal);
+
+            BigDecimal porcentajeIva =
+                producto.getCategoriaIva() != null && producto.getCategoriaIva().getPorcentaje() != null
+                    ? producto.getCategoriaIva().getPorcentaje()
+                    : BigDecimal.ZERO;
+            BigDecimal valorIva = itemSubtotal.multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+            ivaTotal = ivaTotal.add(valorIva);
+        }
+
+        BigDecimal costoEnvio = calcularCostoEnvio(request.getTipoServicioEnvio());
+        BigDecimal total = subtotal.add(ivaTotal).add(costoEnvio);
+
+        CheckoutPreviewDTO preview = new CheckoutPreviewDTO();
+        preview.setSubtotal(subtotal);
+        preview.setIva(ivaTotal);
+        preview.setEnvio(costoEnvio);
+        preview.setTotal(total);
+        return preview;
+    }
+
     private void decrementarStockAtomico(String inventarioId, int cantidad, String nombreProducto) {
         Query query = new Query(Criteria.where("id").is(inventarioId).and("stock").gte(cantidad));
         Update update = new Update().inc("stock", -cantidad);

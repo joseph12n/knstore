@@ -125,7 +125,6 @@ public class DireccionServiceImpl implements DireccionService {
         return direccionRepository.findById(id).map(direccionMapper::toDto);
     }
 
-    @Override
     public Optional<DireccionDTO> marcarPredeterminada(String id) {
         LOG.debug("Request to set default Direccion : {}", id);
 
