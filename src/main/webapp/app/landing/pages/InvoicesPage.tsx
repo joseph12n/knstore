@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Badge, Card, Table } from 'react-bootstrap';
+import { Badge, Button, Card, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import dayjs from 'dayjs';
+import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
@@ -9,6 +10,7 @@ import { getEntities as getFacturas } from 'app/entities/factura/factura.reducer
 import { getEntities as getPagos } from 'app/entities/pago/pago.reducer';
 import { getEntities as getPedidos } from 'app/entities/pedido/pedido.reducer';
 import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
+import { IFactura } from 'app/shared/model/factura.model';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import EmptyState from 'app/landing/components/EmptyState';
 import Pagination from 'app/landing/components/Pagination';
@@ -27,6 +29,29 @@ export const InvoicesPage = () => {
   const loading = useAppSelector(state => state.factura.loading || state.pago.loading || state.pedido.loading || state.cuenta.loading);
 
   const [activePage, setActivePage] = useState(1);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+
+  const handleDownload = async (factura: IFactura) => {
+    if (!factura.id) return;
+    setDownloadingId(factura.id);
+    try {
+      const response = await axios.get<Blob>(`api/facturas/${factura.id}/pdf`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      const filename = `${factura.prefijo || 'FAC'}-${factura.id}.pdf`;
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch {
+      // fall back to legacy JSON download
+      window.location.href = `api/facturas/${factura.id}/download`;
+    } finally {
+      setDownloadingId(null);
+    }
+  };
 
   useEffect(() => {
     dispatch(getSession());
@@ -112,9 +137,15 @@ export const InvoicesPage = () => {
                   <td className="fw-semibold">{formatCOP(factura.total)}</td>
                   <td>{factura.fechaEmision ? dayjs(factura.fechaEmision).format('DD/MM/YYYY') : '-'}</td>
                   <td>
-                    {factura.codigoQr && (
-                      // TODO backend: exponer endpoint de descarga de factura con QR (RF-068).
-                      <span className="text-muted small">Descarga no disponible</span>
+                    {factura.enviada !== undefined && (
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={() => handleDownload(factura)}
+                        disabled={downloadingId === factura.id}
+                      >
+                        {downloadingId === factura.id ? 'Descargando...' : 'Descargar PDF'}
+                      </Button>
                     )}
                   </td>
                 </tr>

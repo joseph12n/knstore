@@ -78,14 +78,14 @@ const fetchProductos = async (): Promise<IProducto[]> => {
 };
 
 const handleCartError = (message: string, error: unknown) => {
-  const axiosError = error as any;
+  const axiosError = error as { response?: { data?: { detail?: string; message?: string } }; message?: string } | undefined;
   const detail = axiosError?.response?.data?.detail || axiosError?.response?.data?.message || axiosError?.message || 'Error desconocido';
   toast.error(`${message}: ${detail}`);
 };
 
 const toStorefrontProducto = (producto: IProducto): IProductoStorefront => ({
   ...producto,
-  imagenes: (producto as any).imagenes ?? [],
+  imagenes: producto.imagenes ?? [],
 });
 
 interface CartProviderProps {

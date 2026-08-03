@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import { Badge, Button, Card, Col, Row, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity as getPedido, partialUpdateEntity as partialUpdatePedido } from 'app/entities/pedido/pedido.reducer';
@@ -31,6 +32,7 @@ export const OrderDetailPage = () => {
 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isDownloadingFactura, setIsDownloadingFactura] = useState(false);
 
   const loadPedido = () => {
     if (id) {
@@ -56,6 +58,27 @@ export const OrderDetailPage = () => {
     } finally {
       setIsCancelling(false);
       setShowCancelModal(false);
+    }
+  };
+
+  const handleDownloadFactura = async () => {
+    if (!factura?.id) return;
+    setIsDownloadingFactura(true);
+    try {
+      const response = await axios.get<Blob>(`api/facturas/${factura.id}/pdf`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      const filename = `${factura.prefijo || 'FAC'}-${factura.id}.pdf`;
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch {
+      window.location.href = `api/facturas/${factura.id}/download`;
+    } finally {
+      setIsDownloadingFactura(false);
     }
   };
 
@@ -111,9 +134,9 @@ export const OrderDetailPage = () => {
               Cancelar pedido
             </Button>
           )}
-          {factura?.codigoQr && (
-            <Button variant="outline-primary" size="sm" href={`api/facturas/${factura.id}/download`}>
-              Descargar factura
+          {factura?.id && (
+            <Button variant="outline-primary" size="sm" onClick={handleDownloadFactura} disabled={isDownloadingFactura}>
+              {isDownloadingFactura ? 'Descargando...' : 'Descargar factura'}
             </Button>
           )}
         </div>
