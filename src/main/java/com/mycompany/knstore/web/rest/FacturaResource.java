@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -194,6 +195,92 @@ public class FacturaResource {
             .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
             .header("Content-Type", "application/json;charset=UTF-8")
             .body(content);
+    }
+
+    /**
+     * {@code GET  /facturas/:id/pdf} : download the "id" factura as PDF.
+     *
+     * @param id the id of the facturaDTO to download.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PDF content.
+     */
+    @GetMapping("/{id}/pdf")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    public ResponseEntity<byte[]> downloadFacturaPdf(@PathVariable("id") String id) {
+        LOG.debug("REST request to download Factura PDF : {}", id);
+        FacturaDTO facturaDTO = facturaService
+            .findOne(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        String label = (facturaDTO.getPrefijo() != null ? facturaDTO.getPrefijo() : "FAC") + "-" + id;
+        byte[] content = buildMinimalPdf("Factura " + label, "Total: $" + facturaDTO.getTotal());
+        String filename = label + ".pdf";
+
+        return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(content);
+    }
+
+    private byte[] buildMinimalPdf(String title, String detail) {
+        String escapedTitle = escapePdfString(title);
+        String escapedDetail = escapePdfString(detail);
+        String pageContent =
+            "BT /F1 18 Tf 100 700 Td (" + escapedTitle + ") Tj ET\n" + "BT /F1 12 Tf 100 670 Td (" + escapedDetail + ") Tj ET";
+
+        StringBuilder pdf = new StringBuilder();
+        pdf.append("%PDF-1.4\n");
+
+        List<Long> offsets = new java.util.ArrayList<>();
+
+        offsets.add((long) pdf.length());
+        pdf.append("1 0 obj\n");
+        pdf.append("<< /Type /Catalog /Pages 2 0 R >>\n");
+        pdf.append("endobj\n");
+
+        offsets.add((long) pdf.length());
+        pdf.append("2 0 obj\n");
+        pdf.append("<< /Type /Pages /Kids [3 0 R] /Count 1 >>\n");
+        pdf.append("endobj\n");
+
+        offsets.add((long) pdf.length());
+        pdf.append("3 0 obj\n");
+        pdf.append("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\n");
+        pdf.append("endobj\n");
+
+        offsets.add((long) pdf.length());
+        pdf.append("4 0 obj\n");
+        pdf.append("<< /Length " + pageContent.length() + " >>\n");
+        pdf.append("stream\n");
+        pdf.append(pageContent);
+        pdf.append("\nendstream\n");
+        pdf.append("endobj\n");
+
+        offsets.add((long) pdf.length());
+        pdf.append("5 0 obj\n");
+        pdf.append("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\n");
+        pdf.append("endobj\n");
+
+        long xrefOffset = pdf.length();
+        pdf.append("xref\n");
+        pdf.append("0 6\n");
+        pdf.append(String.format("%010d %05d f \n", 0, 65535));
+        for (Long offset : offsets) {
+            pdf.append(String.format("%010d %05d n \n", offset, 0));
+        }
+        pdf.append("trailer\n");
+        pdf.append("<< /Size 6 /Root 1 0 R >>\n");
+        pdf.append("startxref\n");
+        pdf.append(xrefOffset).append("\n");
+        pdf.append("%%EOF");
+
+        return pdf.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    private String escapePdfString(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)");
     }
 
     /**
