@@ -146,6 +146,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
       }
 
       const carrito = await findOrCreateCarrito(cuenta.id);
+      if (!carrito.id) {
+        setLoading(false);
+        return;
+      }
       carritoIdRef.current = carrito.id;
       const itemsBelongingToCart = await fetchItemCarritos(carrito.id);
 

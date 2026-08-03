@@ -1,9 +1,12 @@
 /**
- * Utilidades de cálculo para el checkout del storefront.
+ * Utilidades de cálculo local para el checkout del storefront.
+ * Nota: los totales definitivos se obtienen del backend vía POST /api/pedidos/preview.
  * RNF-026: los montos siempre se muestran formateados a 2 decimales en COP.
  */
 
-export const FREE_SHIPPING_THRESHOLD = 150000;
+import { FREE_SHIPPING_THRESHOLD } from 'app/landing/utils/constants';
+
+export { FREE_SHIPPING_THRESHOLD };
 export const DEFAULT_SHIPPING_COST = 9900;
 
 export interface CartItemLike {

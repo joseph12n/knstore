@@ -8,9 +8,8 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
 import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
-import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/landing/utils/constants';
+import { CHECKOUT_STEPS, FREE_SHIPPING_MESSAGE, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
-import { calculateIva, calculateShipping, calculateSubtotal, calculateTotal } from 'app/landing/utils/checkout';
 import CheckoutStepper from 'app/landing/components/CheckoutStepper';
 import AddressCard from 'app/landing/components/AddressCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
@@ -26,6 +25,9 @@ export const CheckoutPage = () => {
   const [selectedPago, setSelectedPago] = useState('NEQUI');
   const [notas, setNotas] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<{ subtotal: number; iva: number; envio: number; total: number } | null>(null);
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
@@ -52,17 +54,50 @@ export const CheckoutPage = () => {
 
   const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
-  const subtotal = calculateSubtotal(items);
-  const costoEnvio = useMemo(() => calculateShipping(subtotal, selectedEnvio), [subtotal, selectedEnvio]);
-  const iva = useMemo(() => calculateIva(subtotal), [subtotal]);
-  const total = calculateTotal(subtotal, costoEnvio, iva);
-
   useEffect(() => {
     const defaultAddress = direccionesUsuario.find(d => d.activo) || direccionesUsuario[0];
     if (defaultAddress && !selectedDireccionId) {
       setSelectedDireccionId(defaultAddress.id!);
     }
   }, [direccionesUsuario, selectedDireccionId]);
+
+  useEffect(() => {
+    if (step !== 3) {
+      setPreview(null);
+      setPreviewError(null);
+      return;
+    }
+
+    if (!cuenta || !selectedDireccionId || items.length === 0) {
+      return;
+    }
+
+    const loadPreview = async () => {
+      setPreviewLoading(true);
+      setPreviewError(null);
+      try {
+        const response = await axios.post<{ subtotal: number; iva: number; envio: number; total: number }>('api/pedidos/preview', {
+          direccionId: selectedDireccionId,
+          metodoPago: selectedPago,
+          tipoServicioEnvio: selectedEnvio,
+          notasCliente: notas,
+          items: items.map(item => ({
+            productoId: item.producto.id,
+            cantidad: item.cantidad,
+            precioUnitario: item.precioUnitario,
+          })),
+        });
+        setPreview(response.data);
+      } catch (error: any) {
+        const message = error?.response?.data?.message || error?.message || 'Error desconocido';
+        setPreviewError(`No pudimos calcular los totales: ${message}`);
+      } finally {
+        setPreviewLoading(false);
+      }
+    };
+
+    loadPreview();
+  }, [step, selectedDireccionId, selectedEnvio, selectedPago, notas, items, cuenta]);
 
   if (items.length === 0) {
     return (
@@ -172,6 +207,7 @@ export const CheckoutPage = () => {
         return (
           <div>
             <h5 className="fw-bold mb-3">Método de envío</h5>
+            <p className="text-muted small mb-3">{FREE_SHIPPING_MESSAGE}</p>
             <Row className="g-3">
               {SHIPPING_METHODS.map(method => (
                 <Col md={6} key={method.key}>
@@ -244,36 +280,42 @@ export const CheckoutPage = () => {
         return (
           <div>
             <h5 className="fw-bold mb-3">Confirmación</h5>
-            <Card className="mb-3">
-              <Card.Body>
-                <h6 className="fw-bold">Resumen</h6>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Subtotal</span>
-                  <span>{formatCOP(subtotal)}</span>
-                </div>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
-                  <span>{costoEnvio === 0 ? 'Gratis' : formatCOP(costoEnvio)}</span>
-                </div>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>IVA (19%)</span>
-                  <span>{formatCOP(iva)}</span>
-                </div>
-                <hr />
-                <div className="d-flex justify-content-between">
-                  <span className="fw-bold">Total a pagar</span>
-                  <span className="h4 fw-bold">{formatCOP(total)}</span>
-                </div>
-                <div className="mt-3 small text-muted">
-                  <div>
-                    <strong>Método de pago:</strong> {PAYMENT_METHODS.find(p => p.key === selectedPago)?.label}
+            {previewLoading || !preview ? (
+              <LoadingSpinner />
+            ) : previewError ? (
+              <div className="alert alert-danger">{previewError}</div>
+            ) : (
+              <Card className="mb-3">
+                <Card.Body>
+                  <h6 className="fw-bold">Resumen</h6>
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>Subtotal</span>
+                    <span>{formatCOP(preview.subtotal)}</span>
                   </div>
-                  <div>
-                    <strong>Dirección:</strong> {direccionesUsuario.find(d => d.id === selectedDireccionId)?.direccion}
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
+                    <span>{preview.envio === 0 ? 'Gratis' : formatCOP(preview.envio)}</span>
                   </div>
-                </div>
-              </Card.Body>
-            </Card>
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>IVA</span>
+                    <span>{formatCOP(preview.iva)}</span>
+                  </div>
+                  <hr />
+                  <div className="d-flex justify-content-between">
+                    <span className="fw-bold">Total a pagar</span>
+                    <span className="h4 fw-bold">{formatCOP(preview.total)}</span>
+                  </div>
+                  <div className="mt-3 small text-muted">
+                    <div>
+                      <strong>Método de pago:</strong> {PAYMENT_METHODS.find(p => p.key === selectedPago)?.label}
+                    </div>
+                    <div>
+                      <strong>Dirección:</strong> {direccionesUsuario.find(d => d.id === selectedDireccionId)?.direccion}
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+            )}
             <p className="small text-muted">
               Al confirmar, se procesará tu pago de forma simbólica y se creará tu pedido con envío y factura.
             </p>
