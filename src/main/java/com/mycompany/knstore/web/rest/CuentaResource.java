@@ -78,9 +78,9 @@ public class CuentaResource {
             !SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.MANAGER)
         ) {
             Optional<String> currentUserId = SecurityUtils.getCurrentUserId();
-            if (currentUserId.isPresent() && cuentaRepository.findOneByUserId(currentUserId.get()).isPresent()) {
+            currentUserId.flatMap(cuentaRepository::findOneByUserId).ifPresent(existing -> {
                 throw new BadRequestAlertException("User already has a cuenta", ENTITY_NAME, "cuentaexists");
-            }
+            });
         }
 
         cuentaDTO = cuentaService.save(cuentaDTO);

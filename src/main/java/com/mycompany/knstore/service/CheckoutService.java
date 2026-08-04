@@ -287,6 +287,6 @@ public class CheckoutService {
         Document sequence = mongoTemplate.findAndModify(query, update, options, Document.class, PEDIDO_SEQUENCE_COLLECTION);
 
         long seq = sequence != null ? ((Number) sequence.get("seq")).longValue() : 1L;
-        return String.format("PED-%s-%06d", fecha, seq);
+        return "PED-%s-%06d".formatted(fecha, seq);
     }
 }

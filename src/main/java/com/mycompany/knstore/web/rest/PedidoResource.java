@@ -230,7 +230,7 @@ public class PedidoResource {
             throw new BadRequestAlertException("Usuario no autenticado", ENTITY_NAME, "usuariorequerido");
         }
         Cuenta cuenta = cuentaRepository
-            .findOneByUserId(currentUserId.get())
+            .findOneByUserId(currentUserId.orElseThrow())
             .orElseThrow(() -> new BadRequestAlertException("No se encontró la cuenta del cliente", ENTITY_NAME, "cuentarequerida"));
         try {
             CheckoutResultDTO result = checkoutService.checkout(cuenta, request);
