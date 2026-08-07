@@ -8,7 +8,7 @@ services:
     networks:
       - knstore
     ports:
-      - 127.0.0.1:27018:27017
+      - 27018:27017
     volumes:
       - knstore-mongodb-data:/data/db/
     healthcheck:
