@@ -2,7 +2,7 @@
 name: knstore
 services:
   app:
-    image: knstore:latest
+    image: eljoseph12/knstore:latest
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=dev,api-docs,secret-samples
