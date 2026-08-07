@@ -10,6 +10,8 @@ services:
       - SPRING_MONGODB_URI=mongodb://mongodb:27017/knstore
     ports:
       - 8080:8080
+    networks:
+      - knstore
     healthcheck:
       test:
         - CMD-SHELL
@@ -26,3 +28,9 @@ services:
     extends:
       file: ./mongodb.yml
       service: mongodb
+networks:
+  knstore:
+    name: knstore
+volumes:
+  knstore-mongodb-data:
+    name: knstore-mongodb-data

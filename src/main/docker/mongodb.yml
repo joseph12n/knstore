@@ -7,8 +7,10 @@ services:
     # remove the "127.0.0.1:" prefix
     ports:
       - 27017:27017
-    # volumes:
-    #   - ~/volumes/jhipster/knstore/mongodb/:/data/db/
+    volumes:
+      - knstore-mongodb-data:/data/db/
+    networks:
+      - knstore
     healthcheck:
       test: ['CMD', 'echo', '''db.runCommand("ping").ok''', '|', 'mongo', 'localhost:27017/test', '--quiet']
       interval: 5s
