@@ -2,12 +2,13 @@
 name: knstore
 services:
   app:
-    image: eljoseph12/knstore:latest
+    image: knstore:latest
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=dev,api-docs,secret-samples
       - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
-      - SPRING_MONGODB_URI=mongodb://mongodb:27018/knstore
+      - SPRING_MONGODB_URI=mongodb://mongodb:27017/knstore
+      - SPRING_DOCKER_COMPOSE_ENABLED=false
     ports:
       - 8080:8080
     networks:
