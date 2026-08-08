@@ -15,4 +15,6 @@ public interface PagoRepository extends MongoRepository<Pago, String> {
     Page<Pago> findByPedidoId(String login, Pageable pageable);
 
     Optional<Pago> findByIdAndPedidoId(String id, String login);
+
+    Optional<Pago> findByReferenciaPasarela(String referenciaPasarela);
 }

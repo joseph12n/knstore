@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class DireccionResourceIT {
 
     private static final String DEFAULT_DIRECCION = "AAAAAAAAAA";
@@ -363,6 +363,11 @@ class DireccionResourceIT {
             .destinatario(UPDATED_DESTINATARIO)
             .codigoPostal(UPDATED_CODIGO_POSTAL);
         DireccionDTO direccionDTO = direccionMapper.toDto(updatedDireccion);
+        if (direccionDTO.getCuenta() == null) {
+            com.mycompany.knstore.service.dto.CuentaDTO relDto = new com.mycompany.knstore.service.dto.CuentaDTO();
+            relDto.setId(insertedDireccion.getCuenta().getId());
+            direccionDTO.setCuenta(relDto);
+        }
 
         restDireccionMockMvc
             .perform(

@@ -5,6 +5,7 @@ import com.mycompany.knstore.domain.enumeration.*;
 import com.mycompany.knstore.repository.*;
 import com.mycompany.knstore.service.dto.*;
 import com.mycompany.knstore.service.mapper.*;
+import com.mycompany.knstore.service.util.MoneyUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
@@ -35,6 +36,8 @@ public class CheckoutService {
 
     private static final String PEDIDO_SEQUENCE_COLLECTION = "pedido_sequence";
 
+    private static final BigDecimal UMBRAL_ENVIO_GRATIS = new BigDecimal("150000");
+
     private final PedidoRepository pedidoRepository;
     private final ItemPedidoRepository itemPedidoRepository;
     private final PagoRepository pagoRepository;
@@ -50,6 +53,8 @@ public class CheckoutService {
     private final PedidoMapper pedidoMapper;
     private final ItemPedidoMapper itemPedidoMapper;
 
+    private final HistorialEstadoService historialEstadoService;
+
     public CheckoutService(
         PedidoRepository pedidoRepository,
         ItemPedidoRepository itemPedidoRepository,
@@ -63,7 +68,8 @@ public class CheckoutService {
         DireccionRepository direccionRepository,
         MongoTemplate mongoTemplate,
         PedidoMapper pedidoMapper,
-        ItemPedidoMapper itemPedidoMapper
+        ItemPedidoMapper itemPedidoMapper,
+        HistorialEstadoService historialEstadoService
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
@@ -78,6 +84,7 @@ public class CheckoutService {
         this.mongoTemplate = mongoTemplate;
         this.pedidoMapper = pedidoMapper;
         this.itemPedidoMapper = itemPedidoMapper;
+        this.historialEstadoService = historialEstadoService;
     }
 
     public CheckoutPreviewDTO preview(Cuenta cuenta, CheckoutRequestDTO request) {
@@ -99,10 +106,10 @@ public class CheckoutService {
         TotalesCheckout totales = calcularTotales(request, productosMap);
 
         CheckoutPreviewDTO preview = new CheckoutPreviewDTO();
-        preview.setSubtotal(totales.subtotal());
-        preview.setIva(totales.ivaTotal());
-        preview.setEnvio(totales.costoEnvio());
-        preview.setTotal(totales.subtotal().add(totales.ivaTotal()).add(totales.costoEnvio()));
+        preview.setSubtotal(MoneyUtils.normalizar(totales.subtotal()));
+        preview.setIva(MoneyUtils.normalizar(totales.ivaTotal()));
+        preview.setEnvio(MoneyUtils.normalizar(totales.costoEnvio()));
+        preview.setTotal(MoneyUtils.normalizar(totales.subtotal().add(totales.ivaTotal()).add(totales.costoEnvio())));
         return preview;
     }
 
@@ -125,16 +132,16 @@ public class CheckoutService {
 
         // Calcular totales
         TotalesCheckout totales = calcularTotales(request, productosMap);
-        BigDecimal subtotal = totales.subtotal();
-        BigDecimal ivaTotal = totales.ivaTotal();
-        BigDecimal costoEnvio = totales.costoEnvio();
+        BigDecimal subtotal = MoneyUtils.normalizar(totales.subtotal());
+        BigDecimal ivaTotal = MoneyUtils.normalizar(totales.ivaTotal());
+        BigDecimal costoEnvio = MoneyUtils.normalizar(totales.costoEnvio());
         BigDecimal descuento = BigDecimal.ZERO;
-        BigDecimal total = subtotal.add(ivaTotal).add(costoEnvio).subtract(descuento);
+        BigDecimal total = MoneyUtils.normalizar(subtotal.add(ivaTotal).add(costoEnvio).subtract(descuento));
 
-        // Crear pedido
+        // Crear pedido en PENDING; se confirma cuando la pasarela aprueba el pago.
         Pedido pedido = new Pedido();
         pedido.setNumeroPedido(generarNumeroPedido());
-        pedido.setEstado(EstadoPedido.CONFIRMED);
+        pedido.setEstado(EstadoPedido.PENDING);
         pedido.setSubtotal(subtotal);
         pedido.setIvaTotal(ivaTotal);
         pedido.setCostoEnvio(costoEnvio);
@@ -144,6 +151,7 @@ public class CheckoutService {
         pedido.setDireccion(direccion);
         pedido.setCuenta(cuenta);
         pedido = pedidoRepository.save(pedido);
+        historialEstadoService.registrar("PEDIDO", pedido.getId(), "estado", null, pedido.getEstado().name());
 
         // Crear ítems del pedido y decrementar stock de forma atómica
         for (CheckoutItemDTO item : request.getItems()) {
@@ -157,15 +165,17 @@ public class CheckoutService {
             itemPedido.setColorProducto(producto.getColor());
             itemPedido.setTallaProducto(producto.getTalla());
             itemPedido.setCantidad(item.getCantidad());
-            itemPedido.setPrecioUnitario(item.getPrecioUnitario());
-            itemPedido.setSubtotal(item.getPrecioUnitario().multiply(BigDecimal.valueOf(item.getCantidad())));
+            itemPedido.setPrecioUnitario(MoneyUtils.normalizar(item.getPrecioUnitario()));
+            itemPedido.setSubtotal(MoneyUtils.multiplicar(BigDecimal.valueOf(item.getCantidad()), item.getPrecioUnitario()));
 
             BigDecimal porcentajeIva =
                 producto.getCategoriaIva() != null && producto.getCategoriaIva().getPorcentaje() != null
                     ? producto.getCategoriaIva().getPorcentaje()
                     : BigDecimal.ZERO;
             itemPedido.setPorcentajeIva(porcentajeIva);
-            BigDecimal valorIva = itemPedido.getSubtotal().multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+            BigDecimal valorIva = MoneyUtils.normalizar(
+                itemPedido.getSubtotal().multiply(porcentajeIva).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
+            );
             itemPedido.setValorIva(valorIva);
             itemPedido.setDescuento(BigDecimal.ZERO);
             itemPedido.setPedido(pedido);
@@ -178,16 +188,16 @@ public class CheckoutService {
             }
         }
 
-        // Crear pago inicial en estado PENDING; se resuelve mediante /api/pagos/iniciar
+        // Crear pago inicial en estado PENDING; la pasarela lo resuelve por callback
         Pago pago = new Pago();
         pago.setMetodoPago(request.getMetodoPago());
         pago.setEstado(EstadoPago.PENDING);
-        pago.setMonto(total);
-        pago.setReferenciaPasarela("PAGO-PENDIENTE-" + pedido.getNumeroPedido());
-        pago.setDescripcionRespuesta("Esperando respuesta de la pasarela");
+        pago.setMonto(MoneyUtils.normalizar(total));
+        pago.setDescripcionRespuesta("Esperando inicio de pago por la pasarela");
         pago.setIntentos(0);
         pago.setPedido(pedido);
         pago = pagoRepository.save(pago);
+        historialEstadoService.registrar("PAGO", pago.getId(), "estado", null, pago.getEstado().name());
 
         // Crear envío y asociarlo al pedido
         Envio envio = new Envio();
@@ -274,7 +284,7 @@ public class CheckoutService {
             Producto producto = productosMap.get(item.getProductoId());
             BigDecimal precio = item.getPrecioUnitario() != null ? item.getPrecioUnitario() : BigDecimal.ZERO;
             BigDecimal cantidad = BigDecimal.valueOf(item.getCantidad());
-            BigDecimal itemSubtotal = precio.multiply(cantidad);
+            BigDecimal itemSubtotal = MoneyUtils.multiplicar(cantidad, precio);
             subtotal = subtotal.add(itemSubtotal);
 
             BigDecimal porcentajeIva =
@@ -285,13 +295,16 @@ public class CheckoutService {
             ivaTotal = ivaTotal.add(valorIva);
         }
 
-        BigDecimal costoEnvio = calcularCostoEnvio(request.getTipoServicioEnvio());
-        return new TotalesCheckout(subtotal, ivaTotal, costoEnvio);
+        BigDecimal costoEnvio = calcularCostoEnvio(subtotal, request.getTipoServicioEnvio());
+        return new TotalesCheckout(MoneyUtils.normalizar(subtotal), MoneyUtils.normalizar(ivaTotal), MoneyUtils.normalizar(costoEnvio));
     }
 
     private record TotalesCheckout(BigDecimal subtotal, BigDecimal ivaTotal, BigDecimal costoEnvio) {}
 
-    private BigDecimal calcularCostoEnvio(TipoServicioEnvio tipoServicio) {
+    private BigDecimal calcularCostoEnvio(BigDecimal subtotal, TipoServicioEnvio tipoServicio) {
+        if (subtotal != null && subtotal.compareTo(UMBRAL_ENVIO_GRATIS) >= 0) {
+            return BigDecimal.ZERO;
+        }
         if (tipoServicio == null) {
             return BigDecimal.valueOf(9900);
         }

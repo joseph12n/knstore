@@ -11,15 +11,19 @@ import com.mycompany.knstore.repository.PagoRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
+import com.mycompany.knstore.service.HistorialEstadoService;
+import com.mycompany.knstore.service.MailService;
 import com.mycompany.knstore.service.PagoService;
 import com.mycompany.knstore.service.dto.PagoDTO;
+import com.mycompany.knstore.service.invoice.FacturaPdfService;
 import com.mycompany.knstore.service.mapper.PagoMapper;
+import com.mycompany.knstore.service.payment.PaymentGateway;
+import com.mycompany.knstore.service.util.MoneyUtils;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,18 +50,34 @@ public class PagoServiceImpl implements PagoService {
 
     private final PagoMapper pagoMapper;
 
+    private final HistorialEstadoService historialEstadoService;
+
+    private final PaymentGateway paymentGateway;
+
+    private final FacturaPdfService facturaPdfService;
+
+    private final MailService mailService;
+
     public PagoServiceImpl(
         PagoRepository pagoRepository,
         PedidoRepository pedidoRepository,
         CuentaRepository cuentaRepository,
         FacturaRepository facturaRepository,
-        PagoMapper pagoMapper
+        PagoMapper pagoMapper,
+        HistorialEstadoService historialEstadoService,
+        PaymentGateway paymentGateway,
+        FacturaPdfService facturaPdfService,
+        MailService mailService
     ) {
         this.pagoRepository = pagoRepository;
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
         this.facturaRepository = facturaRepository;
         this.pagoMapper = pagoMapper;
+        this.historialEstadoService = historialEstadoService;
+        this.paymentGateway = paymentGateway;
+        this.facturaPdfService = facturaPdfService;
+        this.mailService = mailService;
     }
 
     @Override
@@ -156,11 +176,12 @@ public class PagoServiceImpl implements PagoService {
             .findByPedidoId(pedidoId, org.springframework.data.domain.Pageable.unpaged())
             .getContent()
             .stream()
+            .filter(existing -> EstadoPago.PENDING.equals(existing.getEstado()))
             .findFirst()
             .orElseGet(() -> {
                 Pago nuevo = new Pago();
                 nuevo.setPedido(pedido);
-                nuevo.setMonto(pedido.getTotal());
+                nuevo.setMonto(MoneyUtils.normalizar(pedido.getTotal()));
                 nuevo.setMetodoPago(com.mycompany.knstore.domain.enumeration.MetodoPago.NEQUI);
                 nuevo.setEstado(EstadoPago.PENDING);
                 nuevo.setIntentos(0);
@@ -168,48 +189,177 @@ public class PagoServiceImpl implements PagoService {
             });
 
         pago.setIntentos((pago.getIntentos() == null ? 0 : pago.getIntentos()) + 1);
+        EstadoPago estadoAnterior = pago.getEstado();
+        pago.setReferenciaPasarela(paymentGateway.iniciarPago(pago.getMonto()));
+        pago.setEstado(EstadoPago.PENDING);
+        pago.setDescripcionRespuesta("Pago iniciado. Esperando confirmacion de la pasarela");
+        pago.setCodigoAutorizacion(null);
+        pago.setFechaPago(null);
+        pago = pagoRepository.save(pago);
 
-        // Simulación de pasarela: aprobamos en el primer intento; rechazamos tras 3 intentos.
-        boolean aprobado = pago.getIntentos() <= 2;
+        historialEstadoService.registrar(
+            "PAGO",
+            pago.getId(),
+            "estado",
+            estadoAnterior != null ? estadoAnterior.name() : null,
+            EstadoPago.PENDING.name()
+        );
+
+        // Pasarela simbolica: el pago se aprueba automaticamente y la factura se genera en el mismo flujo.
+        return procesarCallback(pago.getReferenciaPasarela(), "APPROVED", pago.getMonto(), null);
+    }
+
+    @Override
+    public PagoDTO procesarCallback(String referencia, String estado, BigDecimal monto, String codigoAutorizacion) {
+        LOG.debug("Request to process payment callback for referencia : {}", referencia);
+        Pago pago = pagoRepository
+            .findByReferenciaPasarela(referencia)
+            .orElseThrow(() -> new IllegalArgumentException("Referencia de pago no encontrada"));
+
+        // Idempotencia: un pago ya resuelto no se reprocesa.
+        if (EstadoPago.APPROVED.equals(pago.getEstado()) || EstadoPago.REJECTED.equals(pago.getEstado())) {
+            return pagoMapper.toDto(pago);
+        }
+
+        EstadoPago estadoAnterior = pago.getEstado();
+        PaymentGateway.ResultadoCallback resultado = paymentGateway.procesarCallback(
+            new PaymentGateway.CallbackPayload(referencia, estado, monto, codigoAutorizacion)
+        );
+
+        boolean montoCoherente = monto == null || monto.compareTo(pago.getMonto()) == 0;
+        boolean aprobado = "APPROVED".equals(resultado.estado()) && montoCoherente;
+
         if (aprobado) {
             pago.setEstado(EstadoPago.APPROVED);
-            pago.setReferenciaPasarela(
-                "PAGO-" + pedido.getNumeroPedido() + "-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase()
-            );
-            pago.setCodigoAutorizacion("AUT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-            pago.setDescripcionRespuesta("Pago aprobado por la pasarela");
+            pago.setCodigoAutorizacion(resultado.codigoAutorizacion());
+            pago.setDescripcionRespuesta(resultado.descripcion());
             pago.setFechaPago(Instant.now());
+            pago = pagoRepository.save(pago);
 
-            pedido.setEstado(EstadoPedido.CONFIRMED);
-            pedidoRepository.save(pedido);
-
+            Pedido pedido = pago.getPedido();
+            if (pedido != null && !EstadoPedido.CONFIRMED.equals(pedido.getEstado())) {
+                EstadoPedido estadoPedidoAnterior = pedido.getEstado();
+                pedido.setEstado(EstadoPedido.CONFIRMED);
+                pedidoRepository.save(pedido);
+                historialEstadoService.registrar(
+                    "PEDIDO",
+                    pedido.getId(),
+                    "estado",
+                    estadoPedidoAnterior != null ? estadoPedidoAnterior.name() : null,
+                    EstadoPedido.CONFIRMED.name()
+                );
+            }
             crearFacturaSiNoExiste(pago, pedido);
         } else {
             pago.setEstado(EstadoPago.REJECTED);
-            pago.setDescripcionRespuesta("Pago rechazado por la pasarela. Puedes reintentar.");
+            pago.setDescripcionRespuesta(
+                montoCoherente ? resultado.descripcion() : "Pago rechazado: el monto no coincide con el total del pedido"
+            );
+            pago = pagoRepository.save(pago);
         }
 
+        historialEstadoService.registrar(
+            "PAGO",
+            pago.getId(),
+            "estado",
+            estadoAnterior != null ? estadoAnterior.name() : null,
+            pago.getEstado().name()
+        );
+        return pagoMapper.toDto(pago);
+    }
+
+    @Override
+    public Optional<PagoDTO> consultarEstado(String referencia) {
+        LOG.debug("Request to consultar estado de pago por referencia : {}", referencia);
+        return pagoRepository.findByReferenciaPasarela(referencia).map(pagoMapper::toDto);
+    }
+
+    @Override
+    public PagoDTO reembolsar(String id, String motivo) {
+        LOG.debug("Request to reembolsar Pago : {} - {}", id, motivo);
+        Pago pago = pagoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Pago no encontrado"));
+
+        if (EstadoPago.REFUNDED.equals(pago.getEstado())) {
+            throw new IllegalStateException("Este pago ya fue reembolsado");
+        }
+        if (!EstadoPago.APPROVED.equals(pago.getEstado())) {
+            throw new IllegalStateException("Solo se pueden reembolsar pagos aprobados");
+        }
+
+        paymentGateway.reembolsar(pago.getReferenciaPasarela(), pago.getMonto(), motivo);
+
+        EstadoPago estadoAnterior = pago.getEstado();
+        pago.setEstado(EstadoPago.REFUNDED);
+        pago.setFechaReembolso(Instant.now());
+        pago.setMotivoReembolso(motivo);
         pago = pagoRepository.save(pago);
+
+        historialEstadoService.registrar(
+            "PAGO",
+            pago.getId(),
+            "estado",
+            estadoAnterior != null ? estadoAnterior.name() : null,
+            EstadoPago.REFUNDED.name()
+        );
+
+        // Trazabilidad cruzada cuando el pedido ya estaba enviado o entregado.
+        if (pago.getPedido() != null) {
+            Pedido pedido = pago.getPedido();
+            if (EstadoPedido.SHIPPED.equals(pedido.getEstado()) || EstadoPedido.DELIVERED.equals(pedido.getEstado())) {
+                historialEstadoService.registrar("PEDIDO", pedido.getId(), "reembolso", null, motivo);
+            }
+        }
         return pagoMapper.toDto(pago);
     }
 
     private void crearFacturaSiNoExiste(Pago pago, Pedido pedido) {
+        if (pedido == null) {
+            return;
+        }
         boolean existeFactura = facturaRepository
             .findByPagoId(pago.getId(), org.springframework.data.domain.Pageable.unpaged())
             .hasContent();
         if (!existeFactura) {
             Factura factura = new Factura();
             factura.setPrefijo("FE");
-            factura.setSubtotal(pedido.getSubtotal());
-            factura.setDescuentos(pedido.getDescuento() == null ? BigDecimal.ZERO : pedido.getDescuento());
-            factura.setBaseGravableIva(pedido.getSubtotal());
-            factura.setValorIva(pedido.getIvaTotal());
-            factura.setTotal(pedido.getTotal());
-            factura.setEnviada(false);
+            factura.setNumero(facturaPdfService.generarConsecutivo("FE"));
+            factura.setSubtotal(MoneyUtils.normalizar(pedido.getSubtotal()));
+            factura.setDescuentos(MoneyUtils.normalizar(pedido.getDescuento() == null ? BigDecimal.ZERO : pedido.getDescuento()));
+            factura.setBaseGravableIva(MoneyUtils.normalizar(pedido.getSubtotal()));
+            factura.setValorIva(MoneyUtils.normalizar(pedido.getIvaTotal()));
+            factura.setTotal(MoneyUtils.normalizar(pedido.getTotal()));
+            factura.setEnviada(true);
             factura.setFechaEmision(Instant.now());
             factura.setFechaVencimiento(LocalDate.now().plusDays(30));
+            factura.setFechaEnvioEmail(Instant.now());
             factura.setPago(pago);
             facturaRepository.save(factura);
+
+            enviarFacturaPorCorreo(factura, pedido);
+        }
+    }
+
+    private void enviarFacturaPorCorreo(Factura factura, Pedido pedido) {
+        try {
+            String destinatario = null;
+            if (pedido.getCuenta() != null && pedido.getCuenta().getUser() != null) {
+                destinatario = pedido.getCuenta().getUser().getEmail();
+            }
+            if (destinatario == null || destinatario.isBlank()) {
+                LOG.warn("Sin correo del cliente; la factura {} no se envio", factura.getNumero());
+                return;
+            }
+            byte[] pdf = facturaPdfService.generarPdf(factura, pedido);
+            String nombreArchivo = factura.getNumero() + ".pdf";
+            mailService.sendEmailWithAttachment(
+                destinatario,
+                "Tu factura KN-Store " + factura.getNumero(),
+                "<p>Gracias por tu compra. Adjuntamos tu factura <strong>" + factura.getNumero() + "</strong>.</p>",
+                nombreArchivo,
+                pdf
+            );
+        } catch (Exception e) {
+            LOG.warn("No se pudo generar o enviar la factura {}: {}", factura.getNumero(), e.getMessage());
         }
     }
 

@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class PedidoResourceIT {
 
     private static final String DEFAULT_NUMERO_PEDIDO = "AAAAAAAAAA";
@@ -345,6 +345,16 @@ class PedidoResourceIT {
             .ipOrigen(UPDATED_IP_ORIGEN)
             .userAgent(UPDATED_USER_AGENT);
         PedidoDTO pedidoDTO = pedidoMapper.toDto(updatedPedido);
+        if (pedidoDTO.getCuenta() == null) {
+            com.mycompany.knstore.service.dto.CuentaDTO cuentaRelDto = new com.mycompany.knstore.service.dto.CuentaDTO();
+            cuentaRelDto.setId(insertedPedido.getCuenta().getId());
+            pedidoDTO.setCuenta(cuentaRelDto);
+        }
+        if (pedidoDTO.getDireccion() == null) {
+            com.mycompany.knstore.service.dto.DireccionDTO direccionRelDto = new com.mycompany.knstore.service.dto.DireccionDTO();
+            direccionRelDto.setId(insertedPedido.getDireccion().getId());
+            pedidoDTO.setDireccion(direccionRelDto);
+        }
 
         restPedidoMockMvc
             .perform(

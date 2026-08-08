@@ -61,6 +61,37 @@ public class MailService {
         sendEmailSync(to, subject, content, isMultipart, isHtml);
     }
 
+    /**
+     * Envia un correo con un archivo adjunto (ej. factura en PDF).
+     *
+     * @param to destinatario.
+     * @param subject asunto.
+     * @param content contenido HTML del mensaje.
+     * @param attachmentFilename nombre del archivo adjunto.
+     * @param attachment contenido del archivo adjunto.
+     */
+    @Async
+    public void sendEmailWithAttachment(String to, String subject, String content, String attachmentFilename, byte[] attachment) {
+        if (!enabled) {
+            LOG.warn("Email sending is disabled; skipping message to '{}'", to);
+            return;
+        }
+        LOG.debug("Send email with attachment '{}' to '{}' with subject '{}'", attachmentFilename, to, subject);
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
+            message.setTo(to);
+            message.setFrom(jHipsterProperties.getMail().getFrom());
+            message.setSubject(subject);
+            message.setText(content, true);
+            message.addAttachment(attachmentFilename, new org.springframework.core.io.ByteArrayResource(attachment));
+            javaMailSender.send(mimeMessage);
+            LOG.debug("Sent email with attachment to '{}'", to);
+        } catch (MailException | MessagingException e) {
+            LOG.warn("Email with attachment could not be sent to user '{}': {}", to, e.getMessage());
+        }
+    }
+
     private void sendEmailSync(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         if (!enabled) {
             LOG.warn("Email sending is disabled; skipping message to '{}'", to);

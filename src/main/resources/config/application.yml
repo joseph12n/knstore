@@ -92,6 +92,16 @@ mongock:
   migration-scan-package:
     - com.mycompany.knstore.config.dbmigrations
 
+# Propiedades especificas de KN-Store
+knstore:
+  payment:
+    gateway:
+      # Pasarela activa: "simulated" para desarrollo y pruebas.
+      type: simulated
+      simulated:
+        # Resultado forzado para pruebas (approve | reject). Vacío = usar el estado del payload.
+        result: ''
+
 spring:
   application:
     name: knstore

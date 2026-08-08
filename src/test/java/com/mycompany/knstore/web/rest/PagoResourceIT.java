@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class PagoResourceIT {
 
     private static final MetodoPago DEFAULT_METODO_PAGO = MetodoPago.CREDIT_CARD;
@@ -297,6 +297,11 @@ class PagoResourceIT {
             .intentos(UPDATED_INTENTOS)
             .fechaPago(UPDATED_FECHA_PAGO);
         PagoDTO pagoDTO = pagoMapper.toDto(updatedPago);
+        if (pagoDTO.getPedido() == null) {
+            com.mycompany.knstore.service.dto.PedidoDTO relDto = new com.mycompany.knstore.service.dto.PedidoDTO();
+            relDto.setId(insertedPago.getPedido().getId());
+            pagoDTO.setPedido(relDto);
+        }
 
         restPagoMockMvc
             .perform(put(ENTITY_API_URL_ID, pagoDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(pagoDTO)))

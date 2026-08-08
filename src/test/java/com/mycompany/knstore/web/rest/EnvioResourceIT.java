@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class EnvioResourceIT {
 
     private static final String DEFAULT_TRANSPORTADORA = "AAAAAAAAAA";
@@ -297,6 +297,11 @@ class EnvioResourceIT {
             .fechaEntregaEstimada(UPDATED_FECHA_ENTREGA_ESTIMADA)
             .fechaEntrega(UPDATED_FECHA_ENTREGA);
         EnvioDTO envioDTO = envioMapper.toDto(updatedEnvio);
+        if (envioDTO.getPedido() == null) {
+            com.mycompany.knstore.service.dto.PedidoDTO relDto = new com.mycompany.knstore.service.dto.PedidoDTO();
+            relDto.setId(insertedEnvio.getPedido().getId());
+            envioDTO.setPedido(relDto);
+        }
 
         restEnvioMockMvc
             .perform(

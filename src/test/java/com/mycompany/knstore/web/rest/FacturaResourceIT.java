@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class FacturaResourceIT {
 
     private static final String DEFAULT_PREFIJO = "AAAAAAAAAA";
@@ -337,6 +337,11 @@ class FacturaResourceIT {
             .fechaVencimiento(UPDATED_FECHA_VENCIMIENTO)
             .fechaEnvioEmail(UPDATED_FECHA_ENVIO_EMAIL);
         FacturaDTO facturaDTO = facturaMapper.toDto(updatedFactura);
+        if (facturaDTO.getPago() == null) {
+            com.mycompany.knstore.service.dto.PagoDTO relDto = new com.mycompany.knstore.service.dto.PagoDTO();
+            relDto.setId(insertedFactura.getPago().getId());
+            facturaDTO.setPago(relDto);
+        }
 
         restFacturaMockMvc
             .perform(

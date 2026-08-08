@@ -1,6 +1,7 @@
 package com.mycompany.knstore.repository;
 
 import com.mycompany.knstore.domain.Envio;
+import com.mycompany.knstore.domain.enumeration.EstadoEnvio;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +16,6 @@ public interface EnvioRepository extends MongoRepository<Envio, String> {
     Page<Envio> findByPedidoId(String login, Pageable pageable);
 
     Optional<Envio> findByIdAndPedidoId(String id, String login);
+
+    Page<Envio> findByEstado(EstadoEnvio estado, Pageable pageable);
 }

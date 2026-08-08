@@ -10,6 +10,7 @@ import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.repository.ProductoInventarioRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
+import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.PedidoService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.service.mapper.PedidoMapper;
@@ -54,13 +55,16 @@ public class PedidoServiceImpl implements PedidoService {
 
     private final PedidoMapper pedidoMapper;
 
+    private final HistorialEstadoService historialEstadoService;
+
     public PedidoServiceImpl(
         PedidoRepository pedidoRepository,
         CuentaRepository cuentaRepository,
         ItemPedidoRepository itemPedidoRepository,
         ProductoInventarioRepository productoInventarioRepository,
         MongoTemplate mongoTemplate,
-        PedidoMapper pedidoMapper
+        PedidoMapper pedidoMapper,
+        HistorialEstadoService historialEstadoService
     ) {
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
@@ -68,6 +72,7 @@ public class PedidoServiceImpl implements PedidoService {
         this.productoInventarioRepository = productoInventarioRepository;
         this.mongoTemplate = mongoTemplate;
         this.pedidoMapper = pedidoMapper;
+        this.historialEstadoService = historialEstadoService;
     }
 
     @Override
@@ -169,6 +174,44 @@ public class PedidoServiceImpl implements PedidoService {
                 .map(pedidoMapper::toDto);
         }
         return pedidoRepository.findById(id).map(pedidoMapper::toDto);
+    }
+
+    @Override
+    public PedidoDTO cambiarEstado(String id, EstadoPedido nuevoEstado) {
+        LOG.debug("Request to change estado of Pedido : {} -> {}", id, nuevoEstado);
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new IllegalStateException("Pedido no encontrado"));
+        EstadoPedido estadoAnterior = pedido.getEstado();
+        validarTransicionPedido(estadoAnterior, nuevoEstado);
+        pedido.setEstado(nuevoEstado);
+        pedido = pedidoRepository.save(pedido);
+        historialEstadoService.registrar(
+            "PEDIDO",
+            pedido.getId(),
+            "estado",
+            estadoAnterior != null ? estadoAnterior.name() : null,
+            nuevoEstado.name()
+        );
+        return pedidoMapper.toDto(pedido);
+    }
+
+    private void validarTransicionPedido(EstadoPedido anterior, EstadoPedido nuevo) {
+        if (anterior == null || nuevo == null) {
+            throw new IllegalStateException("El estado del pedido es obligatorio");
+        }
+        if (anterior.equals(nuevo)) {
+            return;
+        }
+        boolean valida = switch (anterior) {
+            case PENDING -> nuevo == EstadoPedido.CONFIRMED || nuevo == EstadoPedido.CANCELLED;
+            case CONFIRMED -> nuevo == EstadoPedido.SHIPPED || nuevo == EstadoPedido.CANCELLED;
+            case SHIPPED -> nuevo == EstadoPedido.DELIVERED;
+            case DELIVERED -> nuevo == EstadoPedido.RETURNED;
+            case PROCESSING -> nuevo == EstadoPedido.CANCELLED || nuevo == EstadoPedido.SHIPPED;
+            case RETURNED, CANCELLED -> false;
+        };
+        if (!valida) {
+            throw new IllegalStateException("Transicion invalida de " + anterior.name() + " a " + nuevo.name());
+        }
     }
 
     @Override

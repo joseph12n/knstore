@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "pago")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Pago implements Serializable {
+public class Pago extends AbstractAuditingEntity<String> {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -57,6 +57,12 @@ public class Pago implements Serializable {
 
     @Field("fecha_pago")
     private Instant fechaPago;
+
+    @Field("fecha_reembolso")
+    private Instant fechaReembolso;
+
+    @Field("motivo_reembolso")
+    private String motivoReembolso;
 
     @DBRef
     @Field("pedido")
@@ -180,6 +186,32 @@ public class Pago implements Serializable {
 
     public void setFechaPago(Instant fechaPago) {
         this.fechaPago = fechaPago;
+    }
+
+    public Instant getFechaReembolso() {
+        return this.fechaReembolso;
+    }
+
+    public Pago fechaReembolso(Instant fechaReembolso) {
+        this.setFechaReembolso(fechaReembolso);
+        return this;
+    }
+
+    public void setFechaReembolso(Instant fechaReembolso) {
+        this.fechaReembolso = fechaReembolso;
+    }
+
+    public String getMotivoReembolso() {
+        return this.motivoReembolso;
+    }
+
+    public Pago motivoReembolso(String motivoReembolso) {
+        this.setMotivoReembolso(motivoReembolso);
+        return this;
+    }
+
+    public void setMotivoReembolso(String motivoReembolso) {
+        this.motivoReembolso = motivoReembolso;
     }
 
     public Pedido getPedido() {

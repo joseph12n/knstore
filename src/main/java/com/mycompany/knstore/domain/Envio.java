@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "envio")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Envio implements Serializable {
+public class Envio extends AbstractAuditingEntity<String> {
 
     @Serial
     private static final long serialVersionUID = 1L;

@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class CategoriaIVAResourceIT {
 
     private static final String DEFAULT_NOMBRE = "AAAAAAAAAA";

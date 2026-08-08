@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class ProductoInventarioResourceIT {
 
     private static final Integer DEFAULT_STOCK = 0;

@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "pedido")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Pedido implements Serializable {
+public class Pedido extends AbstractAuditingEntity<String> {
 
     @Serial
     private static final long serialVersionUID = 1L;

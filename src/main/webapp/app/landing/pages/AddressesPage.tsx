@@ -12,8 +12,7 @@ import {
   updateEntity as updateDireccion,
   setPredeterminada,
 } from 'app/entities/direccion/direccion.reducer';
-import { createEntity as createCuenta, getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
-import { ICuenta } from 'app/shared/model/cuenta.model';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import { IDireccion } from 'app/shared/model/direccion.model';
 import AddressCard from 'app/landing/components/AddressCard';
 import AddressForm from 'app/landing/components/AddressForm';
@@ -47,24 +46,26 @@ export const AddressesPage = () => {
 
   const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
-  const ensureCuenta = async (): Promise<ICuenta> => {
-    if (cuenta?.id) {
-      return cuenta;
-    }
-
-    const minimalCuenta: ICuenta = {
-      primerNombre: account.firstName || account.login || 'Usuario',
-      primerApellido: account.lastName || '',
-      activo: true,
-      user: { id: account.id, login: account.login },
-    };
-
-    const result = await dispatch(createCuenta(minimalCuenta)).unwrap();
-    return result.data;
-  };
+  const nombreCompleto = useMemo(
+    () => [cuenta?.primerNombre, cuenta?.segundoNombre, cuenta?.primerApellido, cuenta?.segundoApellido].filter(Boolean).join(' ').trim(),
+    [cuenta],
+  );
 
   const handleOpenForm = (direccion?: IDireccion) => {
-    setEditingAddress(direccion);
+    if (!cuenta?.id) {
+      toast.info('Primero completa tu perfil para poder registrar direcciones.');
+      navigate('/mi-cuenta/perfil/editar');
+      return;
+    }
+    // Autocompletar con los datos del perfil al registrar una direccion nueva.
+    if (!direccion) {
+      setEditingAddress({
+        destinatario: nombreCompleto || '',
+        telefonoContacto: cuenta?.celular || '',
+      } as IDireccion);
+    } else {
+      setEditingAddress(direccion);
+    }
     setShowForm(true);
   };
 
@@ -74,14 +75,16 @@ export const AddressesPage = () => {
   };
 
   const handleSubmit = async (data: any) => {
+    if (!cuenta?.id) {
+      toast.error('Primero debes completar tu perfil para registrar direcciones.');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const targetCuenta = await ensureCuenta();
-      const createdProfile = !cuenta?.id;
-
       const payload = {
         ...data,
-        cuenta: { id: targetCuenta.id },
+        cuenta: { id: cuenta.id },
       };
 
       if (editingAddress?.id) {
@@ -90,9 +93,6 @@ export const AddressesPage = () => {
       } else {
         await dispatch(createDireccion(payload));
         toast.success('Dirección creada correctamente.');
-        if (createdProfile) {
-          toast.info('Creamos tu perfil automáticamente. Recuerda completarlo cuando quieras.');
-        }
       }
       handleCloseForm();
     } catch {
@@ -181,7 +181,7 @@ export const AddressesPage = () => {
         </Row>
       )}
 
-      <Modal show={showForm} onHide={handleCloseForm} size="lg" centered>
+      <Modal show={showForm} onHide={handleCloseForm} size="lg" centered unmountOnExit>
         <Modal.Header closeButton>
           <Modal.Title className="fw-bold">{editingAddress ? 'Editar dirección' : 'Nueva dirección'}</Modal.Title>
         </Modal.Header>

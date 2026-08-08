@@ -341,8 +341,11 @@ class AccountResourceIT {
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup).isPresent();
         assertThat(userDup.orElseThrow().getAuthorities())
-            .hasSize(1)
-            .containsExactly(authorityRepository.findById(AuthoritiesConstants.USER).orElseThrow());
+            .hasSize(2)
+            .containsExactlyInAnyOrder(
+                authorityRepository.findById(AuthoritiesConstants.USER).orElseThrow(),
+                authorityRepository.findById(AuthoritiesConstants.CLIENTE).orElseThrow()
+            );
 
         userService.deleteUser("badguy");
     }

@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class TipoDocumentoResourceIT {
 
     private static final String DEFAULT_SIGLA = "AAAAAAAAAA";
