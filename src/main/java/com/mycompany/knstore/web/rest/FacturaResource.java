@@ -1,13 +1,18 @@
 package com.mycompany.knstore.web.rest;
 
+import com.mycompany.knstore.domain.Factura;
+import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.repository.FacturaRepository;
 import com.mycompany.knstore.service.FacturaService;
 import com.mycompany.knstore.service.dto.FacturaDTO;
+import com.mycompany.knstore.service.invoice.FacturaPdfService;
+import com.mycompany.knstore.service.mapper.FacturaMapper;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +50,20 @@ public class FacturaResource {
 
     private final FacturaRepository facturaRepository;
 
-    public FacturaResource(FacturaService facturaService, FacturaRepository facturaRepository) {
+    private final FacturaPdfService facturaPdfService;
+
+    private final FacturaMapper facturaMapper;
+
+    public FacturaResource(
+        FacturaService facturaService,
+        FacturaRepository facturaRepository,
+        FacturaPdfService facturaPdfService,
+        FacturaMapper facturaMapper
+    ) {
         this.facturaService = facturaService;
         this.facturaRepository = facturaRepository;
+        this.facturaPdfService = facturaPdfService;
+        this.facturaMapper = facturaMapper;
     }
 
     /**
@@ -170,6 +187,55 @@ public class FacturaResource {
         LOG.debug("REST request to get Factura : {}", id);
         Optional<FacturaDTO> facturaDTO = facturaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(facturaDTO);
+    }
+
+    /**
+     * {@code GET  /facturas/:id/download} : download the "id" factura with QR data.
+     *
+     * @param id the id of the facturaDTO to download.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the factura data as downloadable JSON.
+     */
+    @GetMapping("/{id}/download")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    public ResponseEntity<byte[]> downloadFactura(@PathVariable("id") String id) {
+        LOG.debug("REST request to download Factura : {}", id);
+        FacturaDTO facturaDTO = facturaService
+            .findOne(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        String filename = "factura-" + (facturaDTO.getPrefijo() != null ? facturaDTO.getPrefijo() + "-" : "") + id + ".json";
+        byte[] content = facturaDTO.toString().getBytes(StandardCharsets.UTF_8);
+
+        return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+            .header("Content-Type", "application/json;charset=UTF-8")
+            .body(content);
+    }
+
+    /**
+     * {@code GET  /facturas/:id/pdf} : download the "id" factura as PDF.
+     *
+     * @param id the id of the facturaDTO to download.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PDF content.
+     */
+    @GetMapping("/{id}/pdf")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    public ResponseEntity<byte[]> downloadFacturaPdf(@PathVariable("id") String id) {
+        LOG.debug("REST request to download Factura PDF : {}", id);
+        FacturaDTO facturaDTO = facturaService
+            .findOne(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        Factura factura = facturaMapper.toEntity(facturaDTO);
+        Pedido pedido = factura.getPago() != null ? factura.getPago().getPedido() : null;
+        byte[] content = facturaPdfService.generarPdf(factura, pedido);
+        String numero = facturaDTO.getNumero() != null ? facturaDTO.getNumero() : id;
+        String filename = numero + ".pdf";
+
+        return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(content);
     }
 
     /**

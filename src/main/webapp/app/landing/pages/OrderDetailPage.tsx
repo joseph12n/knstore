@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import { Badge, Button, Card, Col, Row, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity as getPedido, partialUpdateEntity as partialUpdatePedido } from 'app/entities/pedido/pedido.reducer';
@@ -31,6 +32,7 @@ export const OrderDetailPage = () => {
 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isDownloadingFactura, setIsDownloadingFactura] = useState(false);
 
   const loadPedido = () => {
     if (id) {
@@ -59,6 +61,27 @@ export const OrderDetailPage = () => {
     }
   };
 
+  const handleDownloadFactura = async () => {
+    if (!factura?.id) return;
+    setIsDownloadingFactura(true);
+    try {
+      const response = await axios.get<Blob>(`api/facturas/${factura.id}/pdf`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      const filename = `${factura.prefijo || 'FAC'}-${factura.id}.pdf`;
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch {
+      window.location.href = `api/facturas/${factura.id}/download`;
+    } finally {
+      setIsDownloadingFactura(false);
+    }
+  };
+
   const items = useMemo(() => itemsPedido.filter(i => i.pedido?.id === id), [itemsPedido, id]);
   const pago = useMemo(() => pagos.find(p => p.pedido?.id === id), [pagos, id]);
   const envio = useMemo(() => envios.find(e => e.pedido?.id === id), [envios, id]);
@@ -83,7 +106,7 @@ export const OrderDetailPage = () => {
           title="Pedido no encontrado"
           description="El pedido que buscas no existe o no tienes acceso."
           action={
-            <Link to="/cuenta/pedidos" className="btn btn-primary">
+            <Link to="/mi-cuenta/pedidos" className="btn btn-primary">
               Volver a mis pedidos
             </Link>
           }
@@ -97,7 +120,7 @@ export const OrderDetailPage = () => {
 
   return (
     <div className="kn-fade-in">
-      <Link to="/cuenta/pedidos" className="text-muted small d-block mb-3">
+      <Link to="/mi-cuenta/pedidos" className="text-muted small d-block mb-3">
         ← Volver a mis pedidos
       </Link>
       <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
@@ -111,10 +134,9 @@ export const OrderDetailPage = () => {
               Cancelar pedido
             </Button>
           )}
-          {factura?.codigoQr && (
-            // TODO backend: exponer endpoint de descarga de factura con QR (RF-068).
-            <Button variant="outline-primary" size="sm">
-              Descargar factura
+          {factura?.id && (
+            <Button variant="outline-primary" size="sm" onClick={handleDownloadFactura} disabled={isDownloadingFactura}>
+              {isDownloadingFactura ? 'Descargando...' : 'Descargar factura'}
             </Button>
           )}
         </div>

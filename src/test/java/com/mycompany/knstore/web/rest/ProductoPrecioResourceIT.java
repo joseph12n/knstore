@@ -30,14 +30,14 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class ProductoPrecioResourceIT {
 
     private static final BigDecimal DEFAULT_PRECIO_COMPRA = new BigDecimal(0);
     private static final BigDecimal UPDATED_PRECIO_COMPRA = new BigDecimal(1);
 
     private static final BigDecimal DEFAULT_PRECIO_VENTA = new BigDecimal(0);
-    private static final BigDecimal UPDATED_PRECIO_VENTA = new BigDecimal(1);
+    private static final BigDecimal UPDATED_PRECIO_VENTA = new BigDecimal(3);
 
     private static final BigDecimal DEFAULT_PRECIO_ADICIONAL = new BigDecimal(0);
     private static final BigDecimal UPDATED_PRECIO_ADICIONAL = new BigDecimal(1);

@@ -58,6 +58,15 @@ public interface DireccionService {
     Optional<DireccionDTO> findOne(String id);
 
     /**
+     * Set the given direccion as the default one for its cuenta,
+     * deactivating any other default address of the same cuenta.
+     *
+     * @param id the id of the direccion to set as default.
+     * @return the updated direccion.
+     */
+    DireccionDTO setPredeterminada(String id);
+
+    /**
      * Delete the "id" direccion.
      *
      * @param id the id of the entity.

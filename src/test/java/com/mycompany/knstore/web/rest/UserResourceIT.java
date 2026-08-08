@@ -12,6 +12,7 @@ import com.mycompany.knstore.repository.UserRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.service.dto.AdminUserDTO;
 import com.mycompany.knstore.service.mapper.UserMapper;
+import com.mycompany.knstore.web.rest.vm.ManagedUserVM;
 import java.util.*;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -106,7 +107,7 @@ class UserResourceIT {
     @Test
     void createUser() throws Exception {
         // Create the User
-        AdminUserDTO userDTO = new AdminUserDTO();
+        ManagedUserVM userDTO = new ManagedUserVM();
         userDTO.setLogin(DEFAULT_LOGIN);
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
@@ -115,6 +116,7 @@ class UserResourceIT {
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
         userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
+        userDTO.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
 
         var returnedUserDTO = om.readValue(
             restUserMockMvc

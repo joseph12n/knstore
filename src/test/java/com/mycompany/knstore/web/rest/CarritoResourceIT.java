@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class CarritoResourceIT {
 
     private static final BigDecimal DEFAULT_SUBTOTAL = new BigDecimal(0);
@@ -193,6 +193,11 @@ class CarritoResourceIT {
         Carrito updatedCarrito = carritoRepository.findById(carrito.getId()).orElseThrow();
         updatedCarrito.subtotal(UPDATED_SUBTOTAL).fechaActualizacion(UPDATED_FECHA_ACTUALIZACION);
         CarritoDTO carritoDTO = carritoMapper.toDto(updatedCarrito);
+        if (carritoDTO.getCuenta() == null) {
+            com.mycompany.knstore.service.dto.CuentaDTO relDto = new com.mycompany.knstore.service.dto.CuentaDTO();
+            relDto.setId(insertedCarrito.getCuenta().getId());
+            carritoDTO.setCuenta(relDto);
+        }
 
         restCarritoMockMvc
             .perform(

@@ -47,7 +47,7 @@ export const StoreFooter = () => (
               </Link>
             </li>
             <li className="mb-2">
-              <Link to="/cuenta/pedidos" className="text-muted text-decoration-none">
+              <Link to="/mi-cuenta/pedidos" className="text-muted text-decoration-none">
                 Mis pedidos
               </Link>
             </li>

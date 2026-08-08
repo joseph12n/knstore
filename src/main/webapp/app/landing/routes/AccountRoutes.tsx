@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router';
 
 import AccountLayout from 'app/landing/components/AccountLayout';
 import AccountPage from 'app/landing/pages/AccountPage';
+import ProfileReadOnly from 'app/landing/pages/ProfileReadOnly';
 import ProfilePage from 'app/landing/pages/ProfilePage';
 import PasswordChangePage from 'app/landing/pages/PasswordChangePage';
 import AddressesPage from 'app/landing/pages/AddressesPage';
@@ -16,7 +17,7 @@ const AccountRoutes = () => (
   <Routes>
     <Route path="/" element={<AccountLayout />}>
       <Route index element={<AccountPage />} />
-      <Route path="perfil" element={<ProfilePage />} />
+      <Route path="perfil" element={<ProfileReadOnly />} />
       <Route path="perfil/editar" element={<ProfilePage />} />
       <Route path="seguridad" element={<PasswordChangePage />} />
       <Route path="direcciones" element={<AddressesPage />} />
