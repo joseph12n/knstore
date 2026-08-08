@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,21 +6,24 @@ import { faKey, faMapMarkerAlt, faShoppingBag, faUser } from '@fortawesome/free-
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 
 export const AccountPage = () => {
   const dispatch = useAppDispatch();
   const account = useAppSelector(state => state.authentication.account);
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
+  const cuenta = useAppSelector(state => state.cuenta.entity);
   const loading = useAppSelector(state => state.cuenta.loading);
 
   useEffect(() => {
     dispatch(getSession());
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
-  }, [dispatch]);
-
-  const cuenta = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
+    if (account.login) {
+      dispatch(getCuentaByLogin(account.login));
+    }
+    return () => {
+      dispatch(resetCuenta());
+    };
+  }, [dispatch, account.login]);
 
   if (loading) {
     return <LoadingSpinner fullScreen />;
@@ -49,7 +52,7 @@ export const AccountPage = () => {
               </h5>
               <p className="text-muted mb-1">{account.email}</p>
               <p className="text-muted small">{account.login}</p>
-              <Link to="/cuenta/perfil/editar" className="btn btn-outline-primary btn-sm mt-2">
+              <Link to="/mi-cuenta/perfil/editar" className="btn btn-outline-primary btn-sm mt-2">
                 Editar perfil
               </Link>
             </Card.Body>
@@ -63,7 +66,7 @@ export const AccountPage = () => {
                   <FontAwesomeIcon icon={faShoppingBag} size="2x" className="mb-3 text-muted" />
                   <h5 className="fw-bold">Mis pedidos</h5>
                   <p className="text-muted small">Consulta el estado y el historial de tus compras.</p>
-                  <Link to="/cuenta/pedidos" className="btn btn-primary btn-sm">
+                  <Link to="/mi-cuenta/pedidos" className="btn btn-primary btn-sm">
                     Ver pedidos
                   </Link>
                 </Card.Body>
@@ -75,7 +78,7 @@ export const AccountPage = () => {
                   <FontAwesomeIcon icon={faMapMarkerAlt} size="2x" className="mb-3 text-muted" />
                   <h5 className="fw-bold">Direcciones</h5>
                   <p className="text-muted small">Administra tus direcciones de envío.</p>
-                  <Link to="/cuenta/direcciones" className="btn btn-primary btn-sm">
+                  <Link to="/mi-cuenta/direcciones" className="btn btn-primary btn-sm">
                     Ver direcciones
                   </Link>
                 </Card.Body>
@@ -106,7 +109,7 @@ export const AccountPage = () => {
                   </div>
                 </Col>
               </Row>
-              <Button variant="outline-primary" size="sm" className="mt-3" as={Link as any} to="/cuenta/perfil/editar">
+              <Button variant="outline-primary" size="sm" className="mt-3" as={Link as any} to="/mi-cuenta/perfil/editar">
                 Editar información
               </Button>
             </Card.Body>
@@ -119,7 +122,7 @@ export const AccountPage = () => {
                 Seguridad
               </h5>
               <p className="text-muted small mb-3">Actualiza tu contraseña para mantener tu cuenta protegida.</p>
-              <Link to="/cuenta/seguridad" className="btn btn-outline-primary btn-sm">
+              <Link to="/mi-cuenta/seguridad" className="btn btn-outline-primary btn-sm">
                 Cambiar contraseña
               </Link>
             </Card.Body>

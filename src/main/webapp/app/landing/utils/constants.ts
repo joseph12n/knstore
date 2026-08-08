@@ -6,6 +6,15 @@ export const STORE_NAME = 'Knstore';
 
 export const CATALOG_PAGE_SIZE = 24;
 
+export const FREE_SHIPPING_THRESHOLD = 150000;
+
+export const FREE_SHIPPING_MESSAGE = `Envío gratis desde ${FREE_SHIPPING_THRESHOLD.toLocaleString('es-CO', {
+  style: 'currency',
+  currency: 'COP',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+})}`;
+
 export const BREAKPOINTS = {
   xs: 0,
   sm: 576,

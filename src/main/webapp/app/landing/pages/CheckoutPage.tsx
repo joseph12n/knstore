@@ -7,10 +7,15 @@ import axios from 'axios';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
-import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/landing/utils/constants';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
+import {
+  CHECKOUT_STEPS,
+  FREE_SHIPPING_MESSAGE,
+  PAYMENT_METHODS,
+  PAYMENT_STATUS_LABELS,
+  SHIPPING_METHODS,
+} from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
-import { calculateIva, calculateShipping, calculateSubtotal, calculateTotal } from 'app/landing/utils/checkout';
 import CheckoutStepper from 'app/landing/components/CheckoutStepper';
 import AddressCard from 'app/landing/components/AddressCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
@@ -26,33 +31,37 @@ export const CheckoutPage = () => {
   const [selectedPago, setSelectedPago] = useState('NEQUI');
   const [notas, setNotas] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<{ subtotal: number; iva: number; envio: number; total: number } | null>(null);
+  const [paymentResult, setPaymentResult] = useState<{ status: 'APPROVED' | 'REJECTED' | null; message: string; pedidoId?: string } | null>(
+    null,
+  );
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
+  const cuenta = useAppSelector(state => state.cuenta.entity);
   const loadingDirecciones = useAppSelector(state => state.direccion.loading);
 
   useEffect(() => {
     dispatch(getSession());
     dispatch(getDireccions({ page: 0, size: 100, sort: 'activo,desc' }));
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
-  }, [dispatch]);
-
-  const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
+    if (account.login) {
+      dispatch(getCuentaByLogin(account.login));
+    }
+    return () => {
+      dispatch(resetCuenta());
+    };
+  }, [dispatch, account.login]);
 
   useEffect(() => {
-    if (!loadingDirecciones && !cuentaUsuario) {
+    if (!loadingDirecciones && !cuenta) {
       toast.info('Completa tu perfil para poder finalizar la compra.');
-      navigate('/cuenta/perfil');
+      navigate('/mi-cuenta/perfil');
     }
-  }, [loadingDirecciones, cuentaUsuario, navigate]);
+  }, [loadingDirecciones, cuenta, navigate]);
 
-  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
-
-  const subtotal = calculateSubtotal(items);
-  const costoEnvio = useMemo(() => calculateShipping(subtotal, selectedEnvio), [subtotal, selectedEnvio]);
-  const iva = useMemo(() => calculateIva(subtotal), [subtotal]);
-  const total = calculateTotal(subtotal, costoEnvio, iva);
+  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
   useEffect(() => {
     const defaultAddress = direccionesUsuario.find(d => d.activo) || direccionesUsuario[0];
@@ -60,6 +69,44 @@ export const CheckoutPage = () => {
       setSelectedDireccionId(defaultAddress.id!);
     }
   }, [direccionesUsuario, selectedDireccionId]);
+
+  useEffect(() => {
+    if (step !== 3) {
+      setPreview(null);
+      setPreviewError(null);
+      return;
+    }
+
+    if (!cuenta || !selectedDireccionId || items.length === 0) {
+      return;
+    }
+
+    const loadPreview = async () => {
+      setPreviewLoading(true);
+      setPreviewError(null);
+      try {
+        const response = await axios.post<{ subtotal: number; iva: number; envio: number; total: number }>('api/pedidos/preview', {
+          direccionId: selectedDireccionId,
+          metodoPago: selectedPago,
+          tipoServicioEnvio: selectedEnvio,
+          notasCliente: notas,
+          items: items.map(item => ({
+            productoId: item.producto.id,
+            cantidad: item.cantidad,
+            precioUnitario: item.precioUnitario,
+          })),
+        });
+        setPreview(response.data);
+      } catch (error: any) {
+        const message = error?.response?.data?.message || error?.message || 'Error desconocido';
+        setPreviewError(`No pudimos calcular los totales: ${message}`);
+      } finally {
+        setPreviewLoading(false);
+      }
+    };
+
+    loadPreview();
+  }, [step, selectedDireccionId, selectedEnvio, selectedPago, notas, items, cuenta]);
 
   if (items.length === 0) {
     return (
@@ -73,12 +120,12 @@ export const CheckoutPage = () => {
     );
   }
 
-  if (!cuentaUsuario) {
+  if (!cuenta) {
     return (
       <Container className="py-5 text-center kn-fade-in">
         <h2 className="h3 fw-bold mb-3">Completa tu perfil</h2>
         <p className="text-muted">Necesitas un perfil de cliente para continuar con la compra.</p>
-        <Button variant="primary" as={Link as any} to="/cuenta/perfil">
+        <Button variant="primary" as={Link as any} to="/mi-cuenta/perfil">
           Completar perfil
         </Button>
       </Container>
@@ -96,7 +143,7 @@ export const CheckoutPage = () => {
   const handleBack = () => setStep(prev => Math.max(prev - 1, 0));
 
   const handleSubmit = async () => {
-    if (!cuentaUsuario) {
+    if (!cuenta) {
       toast.error('No se encontró tu perfil de cliente. Completa tu cuenta.');
       return;
     }
@@ -122,12 +169,48 @@ export const CheckoutPage = () => {
         throw new Error('No se pudo crear el pedido');
       }
 
-      toast.success('¡Pago aprobado y pedido creado exitosamente!');
-      onCheckoutComplete();
-      navigate(`/cuenta/pedidos/${pedidoCreado.id}`);
+      // Iniciar pago contra la pasarela simulada
+      const pagoResponse = await axios.post<{ estado: string; descripcionRespuesta: string; id?: string }>('api/pagos/iniciar', {
+        pedidoId: pedidoCreado.id,
+      });
+
+      const pago = pagoResponse.data;
+
+      if (pago.estado === 'APPROVED') {
+        toast.success('¡Pago aprobado y pedido creado exitosamente!');
+        onCheckoutComplete();
+        navigate(`/mi-cuenta/pedidos/${pedidoCreado.id}`);
+      } else {
+        setPaymentResult({ status: 'REJECTED', message: pago.descripcionRespuesta || 'El pago fue rechazado.', pedidoId: pedidoCreado.id });
+        toast.error('El pago no pudo ser procesado. Puedes reintentarlo desde mis pedidos.');
+      }
     } catch (error: any) {
       const message = error?.response?.data?.message || error?.message || 'Error desconocido';
       toast.error(`No pudimos procesar tu pedido: ${message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRetryPayment = async () => {
+    if (!paymentResult?.pedidoId) return;
+    setIsSubmitting(true);
+    try {
+      const pagoResponse = await axios.post<{ estado: string; descripcionRespuesta: string; id?: string }>('api/pagos/iniciar', {
+        pedidoId: paymentResult.pedidoId,
+      });
+      const pago = pagoResponse.data;
+      if (pago.estado === 'APPROVED') {
+        toast.success('¡Pago aprobado!');
+        onCheckoutComplete();
+        navigate(`/mi-cuenta/pedidos/${paymentResult.pedidoId}`);
+      } else {
+        setPaymentResult({ ...paymentResult, message: pago.descripcionRespuesta || 'El pago sigue rechazado.' });
+        toast.error('El pago sigue rechazado. Intenta más tarde.');
+      }
+    } catch (error: any) {
+      const message = error?.response?.data?.message || error?.message || 'Error desconocido';
+      toast.error(`No pudimos reintentar el pago: ${message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -144,7 +227,7 @@ export const CheckoutPage = () => {
             ) : direccionesUsuario.length === 0 ? (
               <Card className="p-4 text-center">
                 <p className="text-muted">No tienes direcciones guardadas.</p>
-                <Button variant="primary" onClick={() => navigate('/cuenta/direcciones')}>
+                <Button variant="primary" onClick={() => navigate('/mi-cuenta/direcciones')}>
                   Agregar dirección
                 </Button>
               </Card>
@@ -169,6 +252,7 @@ export const CheckoutPage = () => {
         return (
           <div>
             <h5 className="fw-bold mb-3">Método de envío</h5>
+            <p className="text-muted small mb-3">{FREE_SHIPPING_MESSAGE}</p>
             <Row className="g-3">
               {SHIPPING_METHODS.map(method => (
                 <Col md={6} key={method.key}>
@@ -241,38 +325,49 @@ export const CheckoutPage = () => {
         return (
           <div>
             <h5 className="fw-bold mb-3">Confirmación</h5>
-            <Card className="mb-3">
-              <Card.Body>
-                <h6 className="fw-bold">Resumen</h6>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Subtotal</span>
-                  <span>{formatCOP(subtotal)}</span>
-                </div>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
-                  <span>{costoEnvio === 0 ? 'Gratis' : formatCOP(costoEnvio)}</span>
-                </div>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>IVA (19%)</span>
-                  <span>{formatCOP(iva)}</span>
-                </div>
-                <hr />
-                <div className="d-flex justify-content-between">
-                  <span className="fw-bold">Total a pagar</span>
-                  <span className="h4 fw-bold">{formatCOP(total)}</span>
-                </div>
-                <div className="mt-3 small text-muted">
-                  <div>
-                    <strong>Método de pago:</strong> {PAYMENT_METHODS.find(p => p.key === selectedPago)?.label}
+            {paymentResult?.status === 'REJECTED' ? (
+              <div className="alert alert-warning">
+                <h6 className="fw-bold">{PAYMENT_STATUS_LABELS.REJECTED}</h6>
+                <p className="mb-0">{paymentResult.message}</p>
+              </div>
+            ) : previewLoading || !preview ? (
+              <LoadingSpinner />
+            ) : previewError ? (
+              <div className="alert alert-danger">{previewError}</div>
+            ) : (
+              <Card className="mb-3">
+                <Card.Body>
+                  <h6 className="fw-bold">Resumen</h6>
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>Subtotal</span>
+                    <span>{formatCOP(preview.subtotal)}</span>
                   </div>
-                  <div>
-                    <strong>Dirección:</strong> {direccionesUsuario.find(d => d.id === selectedDireccionId)?.direccion}
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
+                    <span>{preview.envio === 0 ? 'Gratis' : formatCOP(preview.envio)}</span>
                   </div>
-                </div>
-              </Card.Body>
-            </Card>
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>IVA</span>
+                    <span>{formatCOP(preview.iva)}</span>
+                  </div>
+                  <hr />
+                  <div className="d-flex justify-content-between">
+                    <span className="fw-bold">Total a pagar</span>
+                    <span className="h4 fw-bold">{formatCOP(preview.total)}</span>
+                  </div>
+                  <div className="mt-3 small text-muted">
+                    <div>
+                      <strong>Método de pago:</strong> {PAYMENT_METHODS.find(p => p.key === selectedPago)?.label}
+                    </div>
+                    <div>
+                      <strong>Dirección:</strong> {direccionesUsuario.find(d => d.id === selectedDireccionId)?.direccion}
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+            )}
             <p className="small text-muted">
-              Al confirmar, se procesará tu pago de forma simbólica y se creará tu pedido con envío y factura.
+              Al confirmar, se procesará tu pago con la pasarela y se creará tu pedido con envío y factura.
             </p>
           </div>
         );
@@ -295,8 +390,12 @@ export const CheckoutPage = () => {
             <Button variant="primary" onClick={handleNext}>
               Continuar
             </Button>
+          ) : paymentResult?.status === 'REJECTED' ? (
+            <Button variant="warning" onClick={handleRetryPayment} disabled={isSubmitting}>
+              {isSubmitting ? 'Procesando...' : 'Reintentar pago'}
+            </Button>
           ) : (
-            <Button variant="accent" onClick={handleSubmit} disabled={isSubmitting}>
+            <Button variant="accent" onClick={handleSubmit} disabled={isSubmitting || previewLoading || !preview || !!previewError}>
               {isSubmitting ? 'Procesando...' : 'Confirmar pedido'}
             </Button>
           )}

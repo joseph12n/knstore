@@ -55,4 +55,12 @@ public interface PagoService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    /**
+     * Inicia o reintenta el pago de un pedido con la pasarela simulada.
+     *
+     * @param pedidoId the id of the pedido to pay.
+     * @return the persisted pago with its final state.
+     */
+    PagoDTO iniciarPago(String pedidoId);
 }

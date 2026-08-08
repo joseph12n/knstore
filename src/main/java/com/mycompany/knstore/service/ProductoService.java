@@ -66,6 +66,15 @@ public interface ProductoService {
     Optional<ProductoDTO> findBySlug(String slug);
 
     /**
+     * Search active productos by query.
+     *
+     * @param query the search query.
+     * @param pageable the pagination information.
+     * @return the page of entities.
+     */
+    Page<ProductoDTO> searchActive(String query, Pageable pageable);
+
+    /**
      * Delete the "id" producto.
      *
      * @param id the id of the entity.

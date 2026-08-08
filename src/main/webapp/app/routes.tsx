@@ -9,7 +9,6 @@ import Login from 'app/modules/login/login';
 import Logout from 'app/modules/login/logout';
 import PrivateRoute from 'app/shared/auth/private-route';
 import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
-import PageNotFound from 'app/shared/error/page-not-found';
 import { Authority } from 'app/shared/jhipster/constants';
 import LandingLayout from 'app/landing/components/LandingLayout';
 import StoreHome from 'app/landing/pages/StoreHome';
@@ -49,12 +48,11 @@ const AppRoutes = () => (
             }
           />
           {/*
-            NOTA: Esta ruta tiene prioridad sobre la entidad CRUD /cuenta/* generada por JHipster.
-            El CRUD admin de la entidad Cuenta queda oculto para usuarios que accedan por URL /cuenta.
-            Los administradores pueden gestionar cuentas desde el menú Entities > Cuenta, que apunta a la misma ruta.
+            Panel de cliente. El path /mi-cuenta evita colisión con el CRUD admin de la entidad Cuenta (/cuenta/*).
+            Los administradores gestionan cuentas desde el menú Entidades > Cuenta (/cuenta).
           */}
           <Route
-            path="cuenta/*"
+            path="mi-cuenta/*"
             element={
               <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
                 <AccountRoutes />
@@ -68,7 +66,7 @@ const AppRoutes = () => (
         <Route path="logout" element={<Logout />} />
         <Route path="account">
           {/* Panel de cuenta clásico de JHipster: solo ADMIN/MANAGER.
-              Los clientes usan su propio panel en /cuenta. */}
+              Los clientes usan su propio panel en /mi-cuenta. */}
           <Route
             path="*"
             element={
@@ -97,7 +95,6 @@ const AppRoutes = () => (
 
         {/* CRUD de entidades JHipster - cada ruta interna define sus propios permisos */}
         <Route path="*" element={<EntitiesRoutes />} />
-        <Route path="*" element={<PageNotFound />} />
       </ErrorBoundaryRoutes>
     </Suspense>
   </div>

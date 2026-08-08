@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Modal, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
@@ -10,11 +10,14 @@ import {
   deleteEntity as deleteDireccion,
   getEntities as getDireccions,
   updateEntity as updateDireccion,
+  setPredeterminada,
 } from 'app/entities/direccion/direccion.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import { createEntity as createCuenta, getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
+import { ICuenta } from 'app/shared/model/cuenta.model';
 import { IDireccion } from 'app/shared/model/direccion.model';
 import AddressCard from 'app/landing/components/AddressCard';
 import AddressForm from 'app/landing/components/AddressForm';
+import DeleteConfirmModal from 'app/landing/components/DeleteConfirmModal';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 
 export const AddressesPage = () => {
@@ -23,28 +26,42 @@ export const AddressesPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState<IDireccion | undefined>(undefined);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingAddress, setDeletingAddress] = useState<IDireccion | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const account = useAppSelector(state => state.authentication.account);
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
+  const cuenta = useAppSelector(state => state.cuenta.entity);
   const loading = useAppSelector(state => state.direccion.loading || state.cuenta.loading);
 
   useEffect(() => {
     dispatch(getSession());
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
-    dispatch(getDireccions({ page: 0, size: 100, sort: 'activo,desc' }));
-  }, [dispatch]);
-
-  const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
-
-  useEffect(() => {
-    if (!loading && cuentaUsuario === undefined) {
-      toast.info('Completa tu perfil para poder gestionar direcciones.');
-      navigate('/cuenta/perfil');
+    if (account.login) {
+      dispatch(getCuentaByLogin(account.login));
     }
-  }, [loading, cuentaUsuario, navigate]);
+    dispatch(getDireccions({ page: 0, size: 100, sort: 'activo,desc' }));
+    return () => {
+      dispatch(resetCuenta());
+    };
+  }, [dispatch, account.login]);
 
-  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuentaUsuario?.id), [direcciones, cuentaUsuario]);
+  const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
+
+  const ensureCuenta = async (): Promise<ICuenta> => {
+    if (cuenta?.id) {
+      return cuenta;
+    }
+
+    const minimalCuenta: ICuenta = {
+      primerNombre: account.firstName || account.login || 'Usuario',
+      primerApellido: account.lastName || '',
+      activo: true,
+      user: { id: account.id, login: account.login },
+    };
+
+    const result = await dispatch(createCuenta(minimalCuenta)).unwrap();
+    return result.data;
+  };
 
   const handleOpenForm = (direccion?: IDireccion) => {
     setEditingAddress(direccion);
@@ -57,16 +74,14 @@ export const AddressesPage = () => {
   };
 
   const handleSubmit = async (data: any) => {
-    if (!cuentaUsuario) {
-      toast.error('No se encontró tu perfil de cliente.');
-      return;
-    }
-
     setIsSubmitting(true);
     try {
+      const targetCuenta = await ensureCuenta();
+      const createdProfile = !cuenta?.id;
+
       const payload = {
         ...data,
-        cuenta: { id: cuentaUsuario.id },
+        cuenta: { id: targetCuenta.id },
       };
 
       if (editingAddress?.id) {
@@ -75,6 +90,9 @@ export const AddressesPage = () => {
       } else {
         await dispatch(createDireccion(payload));
         toast.success('Dirección creada correctamente.');
+        if (createdProfile) {
+          toast.info('Creamos tu perfil automáticamente. Recuerda completarlo cuando quieras.');
+        }
       }
       handleCloseForm();
     } catch {
@@ -84,33 +102,29 @@ export const AddressesPage = () => {
     }
   };
 
-  const handleDelete = async (direccion: IDireccion) => {
-    if (!window.confirm('¿Estás seguro de eliminar esta dirección?')) {
+  const handleDelete = (direccion: IDireccion) => {
+    setDeletingAddress(direccion);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingAddress?.id) {
       return;
     }
+    setIsDeleting(true);
     try {
-      await dispatch(deleteDireccion(direccion.id!));
+      await dispatch(deleteDireccion(deletingAddress.id));
       toast.success('Dirección eliminada correctamente.');
+      setDeletingAddress(null);
     } catch {
       toast.error('No pudimos eliminar la dirección. Inténtalo de nuevo.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   const handleSetDefault = async (direccion: IDireccion) => {
     try {
-      // Desactivar otras y activar la seleccionada
-      for (const d of direccionesUsuario) {
-        if (d.id !== direccion.id && d.activo) {
-          await dispatch(updateDireccion({ ...d, activo: false, cuenta: { id: cuentaUsuario?.id } }));
-        }
-      }
-      await dispatch(
-        updateDireccion({
-          ...direccion,
-          activo: true,
-          cuenta: { id: cuentaUsuario?.id },
-        }),
-      );
+      await dispatch(setPredeterminada(direccion.id!));
       toast.success('Dirección predeterminada actualizada.');
     } catch {
       toast.error('No pudimos actualizar la dirección predeterminada.');
@@ -126,9 +140,21 @@ export const AddressesPage = () => {
         </Button>
       </div>
 
-      <Link to="/cuenta" className="text-muted small d-block mb-4">
+      <Link to="/mi-cuenta" className="text-muted small d-block mb-4">
         ← Volver a mi cuenta
       </Link>
+
+      {!cuenta?.id && (
+        <Alert variant="warning" className="d-flex justify-content-between align-items-center">
+          <div className="me-3">
+            <strong>Perfil incompleto.</strong> Puedes guardar direcciones, pero te recomendamos completar tu perfil para disfrutar de toda
+            la experiencia.
+          </div>
+          <Button variant="outline-primary" size="sm" className="flex-shrink-0" onClick={() => navigate('/mi-cuenta/perfil/editar')}>
+            Completar perfil
+          </Button>
+        </Alert>
+      )}
 
       {loading ? (
         <LoadingSpinner fullScreen />
@@ -163,6 +189,16 @@ export const AddressesPage = () => {
           <AddressForm initialData={editingAddress} onSubmit={handleSubmit} onCancel={handleCloseForm} isSubmitting={isSubmitting} />
         </Modal.Body>
       </Modal>
+
+      <DeleteConfirmModal
+        show={!!deletingAddress}
+        onHide={() => setDeletingAddress(null)}
+        onConfirm={handleConfirmDelete}
+        isSubmitting={isDeleting}
+        title="Eliminar dirección"
+        message="¿Estás seguro de eliminar esta dirección? Esta acción no se puede deshacer."
+        confirmLabel="Sí, eliminar"
+      />
     </div>
   );
 };

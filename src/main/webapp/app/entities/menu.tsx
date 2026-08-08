@@ -18,7 +18,9 @@ const EntitiesMenu = () => {
           Tipo Documento
         </MenuItem>
       )}
-      {isClientPanelRole && (
+      {isCatalogRole && (
+        // El link /cuenta ahora resuelve el CRUD admin de la entidad Cuenta,
+        // ya que el panel del cliente se movió a /mi-cuenta.
         <MenuItem icon="asterisk" to="/cuenta">
           Cuenta
         </MenuItem>

@@ -168,6 +168,22 @@ public class DireccionResource {
     }
 
     /**
+     * {@code PATCH  /direccions/:id/predeterminada} : set the given direccion as the default one for its cuenta.
+     *
+     * @param id the id of the direccionDTO to set as default.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated direccionDTO.
+     */
+    @PatchMapping("/{id}/predeterminada")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessDireccionId(#id)")
+    public ResponseEntity<DireccionDTO> setPredeterminada(@PathVariable("id") String id) {
+        LOG.debug("REST request to set Direccion predeterminada : {}", id);
+        DireccionDTO result = direccionService.setPredeterminada(id);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+            .body(result);
+    }
+
+    /**
      * {@code GET  /direccions/:id} : get the "id" direccion.
      *
      * @param id the id of the direccionDTO to retrieve.

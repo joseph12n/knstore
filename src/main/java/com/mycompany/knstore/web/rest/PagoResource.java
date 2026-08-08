@@ -5,6 +5,7 @@ import com.mycompany.knstore.service.PagoService;
 import com.mycompany.knstore.service.dto.PagoDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -187,4 +188,32 @@ public class PagoResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id))
             .build();
     }
+
+    /**
+     * {@code POST  /pagos/iniciar} : iniciar o reintentar el pago de un pedido.
+     *
+     * @param request the pedido id to pay.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the pagoDTO.
+     */
+    @PostMapping("/iniciar")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
+    public ResponseEntity<PagoDTO> iniciarPago(@Valid @RequestBody IniciarPagoRequestDTO request) {
+        LOG.debug("REST request to iniciar pago : {}", request);
+        if (request.pedidoId() == null || request.pedidoId().isBlank()) {
+            throw new BadRequestAlertException("El pedido es obligatorio", ENTITY_NAME, "pedidorequerido");
+        }
+        try {
+            PagoDTO result = pagoService.iniciarPago(request.pedidoId());
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "pagoinvalido");
+        }
+    }
+
+    /**
+     * DTO for iniciar pago request.
+     */
+    public record IniciarPagoRequestDTO(@NotBlank String pedidoId) {}
 }

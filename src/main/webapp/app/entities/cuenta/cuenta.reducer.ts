@@ -37,6 +37,15 @@ export const getEntity = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
+export const getCuentaByLogin = createAsyncThunk(
+  'cuenta/fetch_entity_by_login',
+  async (login: string) => {
+    const requestUrl = `${apiUrl}?login=${encodeURIComponent(login)}&size=1&cacheBuster=${Date.now()}`;
+    return axios.get<ICuenta[]>(requestUrl);
+  },
+  { serializeError: serializeAxiosError },
+);
+
 export const createEntity = createAsyncThunk(
   'cuenta/create_entity',
   async (entity: ICuenta, thunkAPI) => {
@@ -89,6 +98,11 @@ export const CuentaSlice = createEntitySlice({
         state.loading = false;
         state.entity = action.payload.data;
       })
+      .addCase(getCuentaByLogin.fulfilled, (state, action) => {
+        const [cuenta] = action.payload.data;
+        state.loading = false;
+        state.entity = cuenta || {};
+      })
       .addCase(deleteEntity.fulfilled, state => {
         state.updating = false;
         state.updateSuccess = true;
@@ -110,7 +124,7 @@ export const CuentaSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getEntity, getCuentaByLogin), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;

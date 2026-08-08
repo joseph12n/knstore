@@ -49,14 +49,16 @@ const clearLocalCart = () => {
   }
 };
 
-const findCuenta = async (login: string): Promise<ICuenta | undefined> => {
-  const response = await axios.get<ICuenta[]>('api/cuentas');
-  return response.data.find(c => c.user?.login === login);
+const findCuentaByLogin = async (login: string): Promise<ICuenta | undefined> => {
+  // TODO backend: confirmar que /api/cuentas soporta filtro por login; si no, solicitar endpoint.
+  const response = await axios.get<ICuenta[]>(`api/cuentas?login=${encodeURIComponent(login)}&size=1`);
+  return response.data[0];
 };
 
 const findOrCreateCarrito = async (cuentaId: string): Promise<ICarrito> => {
-  const carritosResponse = await axios.get<ICarrito[]>('api/carritos');
-  const existing = carritosResponse.data.find(c => c.cuenta?.id === cuentaId);
+  // Buscar solo el carrito activo de la cuenta en lugar de traer todos.
+  const carritosResponse = await axios.get<ICarrito[]>(`api/carritos?cuentaId=${cuentaId}&size=1`);
+  const existing = carritosResponse.data[0];
   if (existing?.id) {
     return existing;
   }
@@ -64,9 +66,10 @@ const findOrCreateCarrito = async (cuentaId: string): Promise<ICarrito> => {
   return createResponse.data;
 };
 
-const fetchItemCarritos = async (): Promise<IItemCarrito[]> => {
-  const response = await axios.get<IItemCarrito[]>('api/item-carritos');
-  return response.data;
+const fetchItemCarritos = async (carritoId: string): Promise<IItemCarrito[]> => {
+  // TODO backend: si no soporta filtro por carritoId, usar size=1000 y filtrar en cliente.
+  const response = await axios.get<IItemCarrito[]>(`api/item-carritos?carritoId=${carritoId}&size=1000`);
+  return response.data.filter(item => item.carrito?.id === carritoId);
 };
 
 const fetchProductos = async (): Promise<IProducto[]> => {
@@ -75,14 +78,14 @@ const fetchProductos = async (): Promise<IProducto[]> => {
 };
 
 const handleCartError = (message: string, error: unknown) => {
-  const axiosError = error as any;
+  const axiosError = error as { response?: { data?: { detail?: string; message?: string } }; message?: string } | undefined;
   const detail = axiosError?.response?.data?.detail || axiosError?.response?.data?.message || axiosError?.message || 'Error desconocido';
   toast.error(`${message}: ${detail}`);
 };
 
 const toStorefrontProducto = (producto: IProducto): IProductoStorefront => ({
   ...producto,
-  imagenes: (producto as any).imagenes ?? [],
+  imagenes: producto.imagenes ?? [],
 });
 
 interface CartProviderProps {
@@ -136,16 +139,19 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
     setLoading(true);
 
     try {
-      const [cuenta, productos] = await Promise.all([findCuenta(login), fetchProductos()]);
+      const [cuenta, productos] = await Promise.all([findCuentaByLogin(login), fetchProductos()]);
       if (!cuenta?.id || cancelled) {
         setLoading(false);
         return;
       }
 
       const carrito = await findOrCreateCarrito(cuenta.id);
+      if (!carrito.id) {
+        setLoading(false);
+        return;
+      }
       carritoIdRef.current = carrito.id;
-      const itemCarritos = await fetchItemCarritos();
-      const itemsBelongingToCart = itemCarritos.filter(item => item.carrito?.id === carrito.id);
+      const itemsBelongingToCart = await fetchItemCarritos(carrito.id);
 
       const productosMap = new Map(productos.map(p => [p.id, p]));
       const loadedItems = itemsBelongingToCart
@@ -268,7 +274,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
       } else {
         if (!login) return;
         try {
-          const cuenta = await findCuenta(login);
+          const cuenta = await findCuentaByLogin(login);
           if (!cuenta?.id) return;
           const carrito = await findOrCreateCarrito(cuenta.id);
           carritoIdRef.current = carrito.id;

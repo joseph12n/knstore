@@ -11,6 +11,9 @@ interface AddressFormData {
   municipio: string;
   departamento: string;
   activo: boolean;
+  telefonoContacto: string;
+  destinatario: string;
+  codigoPostal: string;
 }
 
 interface AddressFormProps {
@@ -33,12 +36,27 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
       municipio: initialData?.municipio || '',
       departamento: initialData?.departamento || '',
       activo: initialData?.activo ?? true,
+      telefonoContacto: initialData?.telefonoContacto || '',
+      destinatario: initialData?.destinatario || '',
+      codigoPostal: initialData?.codigoPostal || '',
     },
   });
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Row>
+        <Col md={12} className="mb-3">
+          <Form.Group>
+            <Form.Label>Destinatario *</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Nombre de quien recibe"
+              isInvalid={!!errors.destinatario}
+              {...register('destinatario', { required: 'El destinatario es obligatorio.' })}
+            />
+            <Form.Control.Feedback type="invalid">{errors.destinatario?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
         <Col md={12} className="mb-3">
           <Form.Group>
             <Form.Label>Dirección *</Form.Label>
@@ -85,6 +103,36 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
               {...register('departamento', { required: 'El departamento es obligatorio.' })}
             />
             <Form.Control.Feedback type="invalid">{errors.departamento?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+        <Col md={6} className="mb-3">
+          <Form.Group>
+            <Form.Label>Teléfono de contacto *</Form.Label>
+            <Form.Control
+              type="tel"
+              placeholder="Teléfono de contacto"
+              isInvalid={!!errors.telefonoContacto}
+              {...register('telefonoContacto', {
+                required: 'El teléfono de contacto es obligatorio.',
+                pattern: {
+                  value: /^\d{7,}$/,
+                  message: 'El teléfono debe tener al menos 7 dígitos.',
+                },
+              })}
+            />
+            <Form.Control.Feedback type="invalid">{errors.telefonoContacto?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+        <Col md={6} className="mb-3">
+          <Form.Group>
+            <Form.Label>Código postal *</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Código postal"
+              isInvalid={!!errors.codigoPostal}
+              {...register('codigoPostal', { required: 'El código postal es obligatorio.' })}
+            />
+            <Form.Control.Feedback type="invalid">{errors.codigoPostal?.message}</Form.Control.Feedback>
           </Form.Group>
         </Col>
       </Row>

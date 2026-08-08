@@ -5,6 +5,7 @@ import { faTrash, faShoppingBag, faArrowRight } from '@fortawesome/free-solid-sv
 import { Link } from 'react-router';
 
 import { buildImageUrl, formatCOP } from 'app/landing/utils/format';
+import { FREE_SHIPPING_MESSAGE } from 'app/landing/utils/constants';
 import QuantitySelector from './QuantitySelector';
 import EmptyState from './EmptyState';
 import useCart from 'app/landing/hooks/useCart';
@@ -110,6 +111,7 @@ export const CartDrawer = ({ show, onHide }: CartDrawerProps) => {
             </div>
 
             <div className="kn-cart-drawer__footer border-top p-3">
+              <div className="text-muted small mb-2">{FREE_SHIPPING_MESSAGE}</div>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <span className="text-muted">Total estimado</span>
                 <span className="h5 fw-bold mb-0">{formatCOP(total)}</span>

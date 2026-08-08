@@ -78,6 +78,17 @@ export const deleteEntity = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
+export const setPredeterminada = createAsyncThunk(
+  'direccion/set_predeterminada',
+  async (id: string | number, thunkAPI) => {
+    const requestUrl = `${apiUrl}/${id}/predeterminada`;
+    const result = await axios.patch<IDireccion>(requestUrl);
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError },
+);
+
 // slice
 
 export const DireccionSlice = createEntitySlice({
@@ -104,7 +115,7 @@ export const DireccionSlice = createEntitySlice({
           totalItems: parseInt(headers['x-total-count'], 10),
         };
       })
-      .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
+      .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity, setPredeterminada), (state, action) => {
         state.updating = false;
         state.loading = false;
         state.updateSuccess = true;
@@ -115,7 +126,7 @@ export const DireccionSlice = createEntitySlice({
         state.updateSuccess = false;
         state.loading = true;
       })
-      .addMatcher(isPending(createEntity, updateEntity, partialUpdateEntity, deleteEntity), state => {
+      .addMatcher(isPending(createEntity, updateEntity, partialUpdateEntity, deleteEntity, setPredeterminada), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.updating = true;
