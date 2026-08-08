@@ -274,8 +274,8 @@ npm run java:docker                                 # Imagen con Jib
 
 ## 11. Archivos clave de referencia
 
-- `README.md`: presentación general del proyecto.
-- `CONTRIBUTING.md`: guía de contribución y convenciones de commits.
+- `docs/03-DOCUMENTACION/README.md`: presentación general del proyecto.
+- `docs/03-DOCUMENTACION/CONTRIBUTING.md`: guía de contribución y convenciones de commits.
 - `knstore.jdl`: definición del dominio JHipster.
 - `.yo-rc.json`: configuración del generador.
 - `pom.xml`: dependencias y plugins Maven.
@@ -294,4 +294,4 @@ npm run java:docker                                 # Imagen con Jib
 - Al trabajar en el landing, preferir hooks `useCart` y `useCatalog` en lugar de repetir lógica de fetching.
 - Mantener responsividad; probar desde 360px.
 - Respetar ownership: cualquier endpoint nuevo para `CLIENTE` debe validar que el recurso pertenece al usuario autenticado.
-- Actualizar este `AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos.
+- Actualizar este `docs/03-DOCUMENTACION/AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos.
