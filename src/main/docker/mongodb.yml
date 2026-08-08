@@ -8,14 +8,17 @@ services:
     networks:
       - knstore
     ports:
-      - 27018:27017
+      - 127.0.0.1:27018:27017
     volumes:
       - knstore-mongodb-data:/data/db/
     healthcheck:
-      test: ['CMD', 'echo', '''db.runCommand("ping").ok''', '|', 'mongo', 'localhost:27017/test', '--quiet']
+      test: ['CMD-SHELL', 'echo ''db.runCommand("ping").ok'' | mongosh localhost:27017/test --quiet']
       interval: 5s
       timeout: 5s
       retries: 10
 networks:
   knstore:
     name: knstore
+volumes:
+  knstore-mongodb-data:
+    name: knstore-mongodb-data
