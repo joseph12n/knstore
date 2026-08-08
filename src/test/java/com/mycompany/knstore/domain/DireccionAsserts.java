@@ -52,7 +52,10 @@ public class DireccionAsserts {
             .satisfies(a -> assertThat(a.getLocalidad()).as("check localidad").isEqualTo(expected.getLocalidad()))
             .satisfies(a -> assertThat(a.getMunicipio()).as("check municipio").isEqualTo(expected.getMunicipio()))
             .satisfies(a -> assertThat(a.getDepartamento()).as("check departamento").isEqualTo(expected.getDepartamento()))
-            .satisfies(a -> assertThat(a.getActivo()).as("check activo").isEqualTo(expected.getActivo()));
+            .satisfies(a -> assertThat(a.getActivo()).as("check activo").isEqualTo(expected.getActivo()))
+            .satisfies(a -> assertThat(a.getTelefonoContacto()).as("check telefonoContacto").isEqualTo(expected.getTelefonoContacto()))
+            .satisfies(a -> assertThat(a.getDestinatario()).as("check destinatario").isEqualTo(expected.getDestinatario()))
+            .satisfies(a -> assertThat(a.getCodigoPostal()).as("check codigoPostal").isEqualTo(expected.getCodigoPostal()));
     }
 
     /**

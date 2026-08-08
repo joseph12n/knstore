@@ -50,6 +50,15 @@ class DireccionResourceIT {
     private static final Boolean DEFAULT_ACTIVO = false;
     private static final Boolean UPDATED_ACTIVO = true;
 
+    private static final String DEFAULT_TELEFONO_CONTACTO = "AAAAAAAAAA";
+    private static final String UPDATED_TELEFONO_CONTACTO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DESTINATARIO = "AAAAAAAAAA";
+    private static final String UPDATED_DESTINATARIO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CODIGO_POSTAL = "AAAAAAAAAA";
+    private static final String UPDATED_CODIGO_POSTAL = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/direccions";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -82,7 +91,10 @@ class DireccionResourceIT {
             .localidad(DEFAULT_LOCALIDAD)
             .municipio(DEFAULT_MUNICIPIO)
             .departamento(DEFAULT_DEPARTAMENTO)
-            .activo(DEFAULT_ACTIVO);
+            .activo(DEFAULT_ACTIVO)
+            .telefonoContacto(DEFAULT_TELEFONO_CONTACTO)
+            .destinatario(DEFAULT_DESTINATARIO)
+            .codigoPostal(DEFAULT_CODIGO_POSTAL);
         // Add required entity
         Cuenta cuenta;
         cuenta = CuentaResourceIT.createEntity();
@@ -104,7 +116,10 @@ class DireccionResourceIT {
             .localidad(UPDATED_LOCALIDAD)
             .municipio(UPDATED_MUNICIPIO)
             .departamento(UPDATED_DEPARTAMENTO)
-            .activo(UPDATED_ACTIVO);
+            .activo(UPDATED_ACTIVO)
+            .telefonoContacto(UPDATED_TELEFONO_CONTACTO)
+            .destinatario(UPDATED_DESTINATARIO)
+            .codigoPostal(UPDATED_CODIGO_POSTAL);
         // Add required entity
         Cuenta cuenta;
         cuenta = CuentaResourceIT.createUpdatedEntity();
@@ -231,6 +246,54 @@ class DireccionResourceIT {
     }
 
     @Test
+    void checkTelefonoContactoIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        direccion.setTelefonoContacto(null);
+
+        // Create the Direccion, which fails.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void checkDestinatarioIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        direccion.setDestinatario(null);
+
+        // Create the Direccion, which fails.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void checkCodigoPostalIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        direccion.setCodigoPostal(null);
+
+        // Create the Direccion, which fails.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
     void getAllDireccions() throws Exception {
         // Initialize the database
         insertedDireccion = direccionRepository.save(direccion);
@@ -246,7 +309,10 @@ class DireccionResourceIT {
             .andExpect(jsonPath("$.[*].localidad").value(hasItem(DEFAULT_LOCALIDAD)))
             .andExpect(jsonPath("$.[*].municipio").value(hasItem(DEFAULT_MUNICIPIO)))
             .andExpect(jsonPath("$.[*].departamento").value(hasItem(DEFAULT_DEPARTAMENTO)))
-            .andExpect(jsonPath("$.[*].activo").value(hasItem(DEFAULT_ACTIVO)));
+            .andExpect(jsonPath("$.[*].activo").value(hasItem(DEFAULT_ACTIVO)))
+            .andExpect(jsonPath("$.[*].telefonoContacto").value(hasItem(DEFAULT_TELEFONO_CONTACTO)))
+            .andExpect(jsonPath("$.[*].destinatario").value(hasItem(DEFAULT_DESTINATARIO)))
+            .andExpect(jsonPath("$.[*].codigoPostal").value(hasItem(DEFAULT_CODIGO_POSTAL)));
     }
 
     @Test
@@ -265,7 +331,10 @@ class DireccionResourceIT {
             .andExpect(jsonPath("$.localidad").value(DEFAULT_LOCALIDAD))
             .andExpect(jsonPath("$.municipio").value(DEFAULT_MUNICIPIO))
             .andExpect(jsonPath("$.departamento").value(DEFAULT_DEPARTAMENTO))
-            .andExpect(jsonPath("$.activo").value(DEFAULT_ACTIVO));
+            .andExpect(jsonPath("$.activo").value(DEFAULT_ACTIVO))
+            .andExpect(jsonPath("$.telefonoContacto").value(DEFAULT_TELEFONO_CONTACTO))
+            .andExpect(jsonPath("$.destinatario").value(DEFAULT_DESTINATARIO))
+            .andExpect(jsonPath("$.codigoPostal").value(DEFAULT_CODIGO_POSTAL));
     }
 
     @Test
@@ -289,7 +358,10 @@ class DireccionResourceIT {
             .localidad(UPDATED_LOCALIDAD)
             .municipio(UPDATED_MUNICIPIO)
             .departamento(UPDATED_DEPARTAMENTO)
-            .activo(UPDATED_ACTIVO);
+            .activo(UPDATED_ACTIVO)
+            .telefonoContacto(UPDATED_TELEFONO_CONTACTO)
+            .destinatario(UPDATED_DESTINATARIO)
+            .codigoPostal(UPDATED_CODIGO_POSTAL);
         DireccionDTO direccionDTO = direccionMapper.toDto(updatedDireccion);
 
         restDireccionMockMvc
@@ -375,7 +447,7 @@ class DireccionResourceIT {
         Direccion partialUpdatedDireccion = new Direccion();
         partialUpdatedDireccion.setId(direccion.getId());
 
-        partialUpdatedDireccion.direccion(UPDATED_DIRECCION).barrio(UPDATED_BARRIO);
+        partialUpdatedDireccion.direccion(UPDATED_DIRECCION).barrio(UPDATED_BARRIO).destinatario(UPDATED_DESTINATARIO);
 
         restDireccionMockMvc
             .perform(
@@ -411,7 +483,10 @@ class DireccionResourceIT {
             .localidad(UPDATED_LOCALIDAD)
             .municipio(UPDATED_MUNICIPIO)
             .departamento(UPDATED_DEPARTAMENTO)
-            .activo(UPDATED_ACTIVO);
+            .activo(UPDATED_ACTIVO)
+            .telefonoContacto(UPDATED_TELEFONO_CONTACTO)
+            .destinatario(UPDATED_DESTINATARIO)
+            .codigoPostal(UPDATED_CODIGO_POSTAL);
 
         restDireccionMockMvc
             .perform(

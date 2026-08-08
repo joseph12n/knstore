@@ -40,10 +40,18 @@ export const AddressCard = ({
             {isDefault && <Badge bg="primary">Predeterminada</Badge>}
           </div>
           <div className="text-muted small">
+            {direccion.destinatario && <div className="fw-medium text-dark">{direccion.destinatario}</div>}
             {direccion.barrio && `${direccion.barrio}, `}
             {direccion.localidad && `${direccion.localidad}, `}
             {direccion.municipio}, {direccion.departamento}
+            {direccion.codigoPostal && ` · C.P. ${direccion.codigoPostal}`}
           </div>
+          {direccion.telefonoContacto && (
+            <div className="text-muted small mt-1">
+              <span>Tel. </span>
+              {direccion.telefonoContacto}
+            </div>
+          )}
         </div>
       </div>
       {!selectable && (

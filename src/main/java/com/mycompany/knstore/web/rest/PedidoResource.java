@@ -7,6 +7,7 @@ import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CheckoutException;
 import com.mycompany.knstore.service.CheckoutService;
 import com.mycompany.knstore.service.PedidoService;
+import com.mycompany.knstore.service.dto.CheckoutPreviewDTO;
 import com.mycompany.knstore.service.dto.CheckoutRequestDTO;
 import com.mycompany.knstore.service.dto.CheckoutResultDTO;
 import com.mycompany.knstore.service.dto.PedidoDTO;
@@ -161,6 +162,31 @@ public class PedidoResource {
             result,
             HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, pedidoDTO.getId())
         );
+    }
+
+    /**
+     * {@code POST  /pedidos/preview} : calculate checkout totals without persisting the pedido.
+     *
+     * @param request the checkout request.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the preview totals.
+     */
+    @PostMapping("/preview")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
+    public ResponseEntity<CheckoutPreviewDTO> previewCheckout(@Valid @RequestBody CheckoutRequestDTO request) {
+        LOG.debug("REST request to preview checkout : {}", request);
+        Optional<String> currentUserId = SecurityUtils.getCurrentUserId();
+        if (currentUserId.isEmpty()) {
+            throw new BadRequestAlertException("Usuario no autenticado", ENTITY_NAME, "usuariorequerido");
+        }
+        Cuenta cuenta = cuentaRepository
+            .findOneByUserId(currentUserId.get())
+            .orElseThrow(() -> new BadRequestAlertException("No se encontró la cuenta del cliente", ENTITY_NAME, "cuentarequerida"));
+        try {
+            CheckoutPreviewDTO result = checkoutService.preview(cuenta, request);
+            return ResponseEntity.ok(result);
+        } catch (CheckoutException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "checkouterror");
+        }
     }
 
     /**

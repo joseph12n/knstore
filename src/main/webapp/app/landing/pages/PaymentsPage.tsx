@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Badge, Card, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import dayjs from 'dayjs';
@@ -7,33 +7,46 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getPagos } from 'app/entities/pago/pago.reducer';
 import { getEntities as getPedidos } from 'app/entities/pedido/pedido.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import EmptyState from 'app/landing/components/EmptyState';
+import Pagination from 'app/landing/components/Pagination';
 import { PAYMENT_STATUS_LABELS } from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
+
+const ITEMS_PER_PAGE = 10;
 
 export const PaymentsPage = () => {
   const dispatch = useAppDispatch();
   const account = useAppSelector(state => state.authentication.account);
   const pagos = useAppSelector(state => state.pago.entities) ?? [];
+  const totalItems = useAppSelector(state => state.pago.totalItems ?? 0);
   const pedidos = useAppSelector(state => state.pedido.entities) ?? [];
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
+  const cuenta = useAppSelector(state => state.cuenta.entity);
   const loading = useAppSelector(state => state.pago.loading || state.pedido.loading || state.cuenta.loading);
+
+  const [activePage, setActivePage] = useState(1);
 
   useEffect(() => {
     dispatch(getSession());
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
-    dispatch(getPedidos({ page: 0, size: 100, sort: 'numeroPedido,desc' }));
-    dispatch(getPagos({ page: 0, size: 100, sort: 'id,desc' }));
+    if (account.login) {
+      dispatch(getCuentaByLogin(account.login));
+    }
+    return () => {
+      dispatch(resetCuenta());
+    };
+  }, [dispatch, account.login]);
+
+  useEffect(() => {
+    // TODO backend: agregar filtro por cuentaId para paginar pagos del usuario directamente.
+    dispatch(getPedidos({ page: 0, size: 1000, sort: 'numeroPedido,desc' }));
   }, [dispatch]);
 
-  const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
+  useEffect(() => {
+    dispatch(getPagos({ page: activePage - 1, size: ITEMS_PER_PAGE, sort: 'id,desc' }));
+  }, [dispatch, activePage]);
 
-  const pedidosUsuarioIds = useMemo(
-    () => new Set(pedidos.filter(p => p.cuenta?.id === cuentaUsuario?.id).map(p => p.id)),
-    [pedidos, cuentaUsuario],
-  );
+  const pedidosUsuarioIds = useMemo(() => new Set(pedidos.filter(p => p.cuenta?.id === cuenta?.id).map(p => p.id)), [pedidos, cuenta]);
 
   const pagosUsuario = useMemo(
     () => pagos.filter(p => p.pedido?.id && pedidosUsuarioIds.has(p.pedido.id)).sort((a, b) => (b.id || '').localeCompare(a.id || '')),
@@ -52,7 +65,7 @@ export const PaymentsPage = () => {
           title="Aún no tienes pagos registrados"
           description="Cuando realices un pedido, podrás ver el historial de pagos aquí."
           action={
-            <Link to="/cuenta/pedidos" className="btn btn-primary">
+            <Link to="/mi-cuenta/pedidos" className="btn btn-primary">
               Ver mis pedidos
             </Link>
           }
@@ -80,7 +93,7 @@ export const PaymentsPage = () => {
               {pagosUsuario.map(pago => (
                 <tr key={pago.id}>
                   <td>
-                    <Link to={`/cuenta/pedidos/${pago.pedido?.id}`}>#{pago.pedido?.numeroPedido || pago.pedido?.id}</Link>
+                    <Link to={`/mi-cuenta/pedidos/${pago.pedido?.id}`}>#{pago.pedido?.numeroPedido || pago.pedido?.id}</Link>
                   </td>
                   <td>{pago.metodoPago}</td>
                   <td>
@@ -96,6 +109,7 @@ export const PaymentsPage = () => {
           </Table>
         </Card.Body>
       </Card>
+      <Pagination activePage={activePage} itemsPerPage={ITEMS_PER_PAGE} totalItems={totalItems} onPageChange={setActivePage} />
     </div>
   );
 };

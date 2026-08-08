@@ -8,6 +8,9 @@ export interface IDireccion {
   municipio?: string;
   departamento?: string;
   activo?: boolean;
+  telefonoContacto?: string | null;
+  destinatario?: string | null;
+  codigoPostal?: string | null;
   cuenta?: ICuenta;
 }
 
