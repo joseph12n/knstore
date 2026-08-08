@@ -11,12 +11,12 @@
 
 ## 📚 Documentación del apartado
 
-| Archivo                    | Descripción                                                                |
-| -------------------------- | -------------------------------------------------------------------------- |
-| `README.md`                | Este archivo: presentación general del proyecto.                           |
-| `AGENTS.md`                | Contexto del proyecto para asistentes de código (agentes de IA).           |
-| `CONTRIBUTING.md`          | Guía de contribución y convenciones de commits.                            |
-| `MONGO-SCHEMA-VALIDATION.md` | Validación y esquema de MongoDB del dominio.                             |
+| Archivo                      | Descripción                                                      |
+| ---------------------------- | ---------------------------------------------------------------- |
+| `README.md`                  | Este archivo: presentación general del proyecto.                 |
+| `AGENTS.md`                  | Contexto del proyecto para asistentes de código (agentes de IA). |
+| `CONTRIBUTING.md`            | Guía de contribución y convenciones de commits.                  |
+| `MONGO-SCHEMA-VALIDATION.md` | Validación y esquema de MongoDB del dominio.                     |
 
 ---
 
