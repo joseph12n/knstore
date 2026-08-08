@@ -11,9 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Cuenta;
+import com.mycompany.knstore.domain.TipoDocumento;
 import com.mycompany.knstore.domain.User;
 import com.mycompany.knstore.domain.enumeration.Genero;
 import com.mycompany.knstore.repository.CuentaRepository;
+import com.mycompany.knstore.repository.TipoDocumentoRepository;
 import com.mycompany.knstore.repository.UserRepository;
 import com.mycompany.knstore.service.CuentaService;
 import com.mycompany.knstore.service.dto.CuentaDTO;
@@ -43,7 +45,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class CuentaResourceIT {
 
     private static final String DEFAULT_NUM_DOCUMENTO = "AAAAAAAAAA";
@@ -91,6 +93,9 @@ class CuentaResourceIT {
     private CuentaRepository cuentaRepository;
 
     @Autowired
+    private TipoDocumentoRepository tipoDocumentoRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Mock
@@ -133,6 +138,9 @@ class CuentaResourceIT {
         User user = UserResourceIT.createEntity();
         user.setId("fixed-id-for-tests");
         cuenta.setUser(user);
+        TipoDocumento tipoDocumento = TipoDocumentoResourceIT.createEntity();
+        tipoDocumento.setId("fixed-id-for-tests-tipo-documento");
+        cuenta.setTipoDocumento(tipoDocumento);
         return cuenta;
     }
 
@@ -166,6 +174,8 @@ class CuentaResourceIT {
     @BeforeEach
     void initTest() {
         cuenta = createEntity();
+        // Persistir el tipo de documento referenciado para que el DBRef resuelva.
+        tipoDocumentoRepository.save(cuenta.getTipoDocumento());
     }
 
     @AfterEach
@@ -361,6 +371,11 @@ class CuentaResourceIT {
             .fotoPerfilContentType(UPDATED_FOTO_PERFIL_CONTENT_TYPE)
             .activo(UPDATED_ACTIVO);
         CuentaDTO cuentaDTO = cuentaMapper.toDto(updatedCuenta);
+        if (cuentaDTO.getUser() == null) {
+            com.mycompany.knstore.service.dto.UserDTO relDto = new com.mycompany.knstore.service.dto.UserDTO();
+            relDto.setId(insertedCuenta.getUser().getId());
+            cuentaDTO.setUser(relDto);
+        }
 
         restCuentaMockMvc
             .perform(

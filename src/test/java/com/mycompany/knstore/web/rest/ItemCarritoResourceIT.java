@@ -41,7 +41,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class ItemCarritoResourceIT {
 
     private static final Integer DEFAULT_CANTIDAD = 1;
@@ -277,6 +277,16 @@ class ItemCarritoResourceIT {
         ItemCarrito updatedItemCarrito = itemCarritoRepository.findById(itemCarrito.getId()).orElseThrow();
         updatedItemCarrito.cantidad(UPDATED_CANTIDAD).precioUnitario(UPDATED_PRECIO_UNITARIO).subtotal(UPDATED_SUBTOTAL);
         ItemCarritoDTO itemCarritoDTO = itemCarritoMapper.toDto(updatedItemCarrito);
+        if (itemCarritoDTO.getCarrito() == null) {
+            com.mycompany.knstore.service.dto.CarritoDTO carritoRelDto = new com.mycompany.knstore.service.dto.CarritoDTO();
+            carritoRelDto.setId(insertedItemCarrito.getCarrito().getId());
+            itemCarritoDTO.setCarrito(carritoRelDto);
+        }
+        if (itemCarritoDTO.getProducto() == null) {
+            com.mycompany.knstore.service.dto.ProductoDTO productoRelDto = new com.mycompany.knstore.service.dto.ProductoDTO();
+            productoRelDto.setId(insertedItemCarrito.getProducto().getId());
+            itemCarritoDTO.setProducto(productoRelDto);
+        }
 
         restItemCarritoMockMvc
             .perform(
@@ -361,7 +371,7 @@ class ItemCarritoResourceIT {
         ItemCarrito partialUpdatedItemCarrito = new ItemCarrito();
         partialUpdatedItemCarrito.setId(itemCarrito.getId());
 
-        partialUpdatedItemCarrito.subtotal(UPDATED_SUBTOTAL);
+        partialUpdatedItemCarrito.cantidad(UPDATED_CANTIDAD).precioUnitario(UPDATED_PRECIO_UNITARIO).subtotal(UPDATED_SUBTOTAL);
 
         restItemCarritoMockMvc
             .perform(

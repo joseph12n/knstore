@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "item_carrito")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class ItemCarrito implements Serializable {
+public class ItemCarrito extends AbstractAuditingEntity<String> {
 
     @Serial
     private static final long serialVersionUID = 1L;

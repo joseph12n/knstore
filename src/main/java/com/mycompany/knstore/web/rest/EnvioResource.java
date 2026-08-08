@@ -1,10 +1,12 @@
 package com.mycompany.knstore.web.rest;
 
+import com.mycompany.knstore.domain.enumeration.EstadoEnvio;
 import com.mycompany.knstore.repository.EnvioRepository;
 import com.mycompany.knstore.service.EnvioService;
 import com.mycompany.knstore.service.dto.EnvioDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -187,4 +189,94 @@ public class EnvioResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id))
             .build();
     }
+
+    /**
+     * {@code PATCH  /envios/:id/tracking} : assign transportadora and numeroRastreo to an envio.
+     *
+     * @param id the id of the envio.
+     * @param request the tracking data.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated envioDTO.
+     */
+    @PatchMapping("/{id}/tracking")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<EnvioDTO> asignarTracking(@PathVariable("id") String id, @Valid @RequestBody AsignarTrackingRequest request) {
+        LOG.debug("REST request to assign tracking to Envio : {}", id);
+        try {
+            EnvioDTO result = envioService.asignarTracking(id, request.transportadora(), request.numeroRastreo());
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "envioinvalido");
+        }
+    }
+
+    /**
+     * {@code PATCH  /envios/:id/estado} : change the estado of an envio (admin operation).
+     *
+     * @param id the id of the envio.
+     * @param request the new estado.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated envioDTO.
+     */
+    @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<EnvioDTO> cambiarEstadoEnvio(
+        @PathVariable("id") String id,
+        @Valid @RequestBody CambiarEstadoEnvioRequest request
+    ) {
+        LOG.debug("REST request to change estado of Envio : {} -> {}", id, request.estado());
+        try {
+            EnvioDTO result = envioService.cambiarEstado(id, request.estado());
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "transicioninvalida");
+        }
+    }
+
+    /**
+     * {@code PATCH  /envios/:id/devolucion} : mark an envio as returned (admin operation).
+     *
+     * @param id the id of the envio.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated envioDTO.
+     */
+    @PatchMapping("/{id}/devolucion")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<EnvioDTO> marcarDevolucion(@PathVariable("id") String id) {
+        LOG.debug("REST request to mark Envio as devuelto : {}", id);
+        try {
+            EnvioDTO result = envioService.marcarDevolucion(id);
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "envioinvalido");
+        }
+    }
+
+    /**
+     * {@code GET  /envios/pendientes} : get the page of pending Envios (logistics tray).
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Envios in body.
+     */
+    @GetMapping("/pendientes")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<List<EnvioDTO>> getEnviosPendientes(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get pending Envios");
+        Page<EnvioDTO> page = envioService.findAllPendientes(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * Request DTO for assigning tracking data to an envio.
+     */
+    public record AsignarTrackingRequest(@NotBlank String transportadora, @NotBlank String numeroRastreo) {}
+
+    /**
+     * Request DTO for changing the estado of an envio.
+     */
+    public record CambiarEstadoEnvioRequest(@NotNull EstadoEnvio estado) {}
 }

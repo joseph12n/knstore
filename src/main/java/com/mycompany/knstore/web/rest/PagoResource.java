@@ -1,7 +1,9 @@
 package com.mycompany.knstore.web.rest;
 
 import com.mycompany.knstore.repository.PagoRepository;
+import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.PagoService;
+import com.mycompany.knstore.service.dto.HistorialEstadoDTO;
 import com.mycompany.knstore.service.dto.PagoDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -45,9 +47,12 @@ public class PagoResource {
 
     private final PagoRepository pagoRepository;
 
-    public PagoResource(PagoService pagoService, PagoRepository pagoRepository) {
+    private final HistorialEstadoService historialEstadoService;
+
+    public PagoResource(PagoService pagoService, PagoRepository pagoRepository, HistorialEstadoService historialEstadoService) {
         this.pagoService = pagoService;
         this.pagoRepository = pagoRepository;
+        this.historialEstadoService = historialEstadoService;
     }
 
     /**
@@ -174,6 +179,19 @@ public class PagoResource {
     }
 
     /**
+     * {@code GET  /pagos/:id/historial} : get the state transition history of a pago.
+     *
+     * @param id the id of the pago.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of transitions.
+     */
+    @GetMapping("/{id}/historial")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPagoId(#id)")
+    public ResponseEntity<List<HistorialEstadoDTO>> getHistorialPago(@PathVariable("id") String id) {
+        LOG.debug("REST request to get historial of Pago : {}", id);
+        return ResponseEntity.ok(historialEstadoService.consultar("PAGO", id));
+    }
+
+    /**
      * {@code DELETE  /pagos/:id} : delete the "id" pago.
      *
      * @param id the id of the pagoDTO to delete.
@@ -216,4 +234,67 @@ public class PagoResource {
      * DTO for iniciar pago request.
      */
     public record IniciarPagoRequestDTO(@NotBlank String pedidoId) {}
+
+    /**
+     * {@code POST  /pagos/callback} : process a payment gateway callback (idempotent).
+     *
+     * @param request the callback payload.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the pagoDTO.
+     */
+    @PostMapping("/callback")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
+    public ResponseEntity<PagoDTO> procesarCallback(@Valid @RequestBody CallbackPagoRequestDTO request) {
+        LOG.debug("REST request to process payment callback : {}", request);
+        try {
+            PagoDTO result = pagoService.procesarCallback(
+                request.referencia(),
+                request.estado(),
+                request.monto(),
+                request.codigoAutorizacion()
+            );
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "callbackinvalido");
+        }
+    }
+
+    /**
+     * DTO for payment callback request.
+     */
+    public record CallbackPagoRequestDTO(
+        @NotBlank String referencia,
+        @NotBlank String estado,
+        @NotNull java.math.BigDecimal monto,
+        String codigoAutorizacion
+    ) {}
+
+    /**
+     * {@code POST  /pagos/:id/reembolso} : refund an approved payment (admin operation).
+     *
+     * @param id the id of the pago.
+     * @param request the refund reason.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the pagoDTO.
+     */
+    @PostMapping("/{id}/reembolso")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<PagoDTO> reembolsarPago(@PathVariable("id") String id, @Valid @RequestBody ReembolsoRequestDTO request) {
+        LOG.debug("REST request to reembolsar Pago : {}", id);
+        try {
+            PagoDTO result = pagoService.reembolsar(id, request.motivo());
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "pagonoencontrado");
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "reembolsoinvalido");
+        }
+    }
+
+    /**
+     * DTO for refund request.
+     */
+    public record ReembolsoRequestDTO(@NotBlank String motivo) {}
 }

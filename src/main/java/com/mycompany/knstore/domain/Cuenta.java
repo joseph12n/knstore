@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "cuenta")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Cuenta implements Serializable {
+public class Cuenta extends AbstractAuditingEntity<String> {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -23,6 +23,7 @@ public class Cuenta implements Serializable {
     @Id
     private String id;
 
+    @NotNull
     @Size(max = 20)
     @Field("num_documento")
     private String numDocumento;
@@ -32,6 +33,7 @@ public class Cuenta implements Serializable {
     @Field("primer_nombre")
     private String primerNombre;
 
+    @NotNull
     @Size(max = 50)
     @Field("segundo_nombre")
     private String segundoNombre;
@@ -41,20 +43,25 @@ public class Cuenta implements Serializable {
     @Field("primer_apellido")
     private String primerApellido;
 
+    @NotNull
     @Size(max = 50)
     @Field("segundo_apellido")
     private String segundoApellido;
 
+    @NotNull
     @Field("genero")
     private Genero genero;
 
+    @NotNull
     @Field("fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
+    @NotNull
     @Size(max = 15)
     @Field("celular")
     private String celular;
 
+    @NotNull
     @Size(max = 15)
     @Field("telefono")
     private String telefono;
@@ -73,6 +80,7 @@ public class Cuenta implements Serializable {
     @Field("user")
     private User user;
 
+    @NotNull
     @DBRef
     @Field("tipoDocumento")
     private TipoDocumento tipoDocumento;

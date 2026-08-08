@@ -224,7 +224,12 @@ export const ProfilePage = () => {
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Segundo nombre</Form.Label>
-                  <Form.Control type="text" {...register('segundoNombre')} />
+                  <Form.Control
+                    type="text"
+                    isInvalid={!!errors.segundoNombre}
+                    {...register('segundoNombre', { required: 'El segundo nombre es obligatorio.' })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.segundoNombre?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
@@ -241,13 +246,21 @@ export const ProfilePage = () => {
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Segundo apellido</Form.Label>
-                  <Form.Control type="text" {...register('segundoApellido')} />
+                  <Form.Control
+                    type="text"
+                    isInvalid={!!errors.segundoApellido}
+                    {...register('segundoApellido', { required: 'El segundo apellido es obligatorio.' })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.segundoApellido?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Tipo de documento</Form.Label>
-                  <Form.Select {...register('tipoDocumentoId')}>
+                  <Form.Select
+                    isInvalid={!!errors.tipoDocumentoId}
+                    {...register('tipoDocumentoId', { required: 'El tipo de documento es obligatorio.' })}
+                  >
                     <option value="">Selecciona...</option>
                     {tiposDocumento.map(tipo => (
                       <option key={tipo.id} value={tipo.id}>
@@ -255,18 +268,24 @@ export const ProfilePage = () => {
                       </option>
                     ))}
                   </Form.Select>
+                  <Form.Control.Feedback type="invalid">{errors.tipoDocumentoId?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Número de documento</Form.Label>
-                  <Form.Control type="text" {...register('numDocumento')} />
+                  <Form.Control
+                    type="text"
+                    isInvalid={!!errors.numDocumento}
+                    {...register('numDocumento', { required: 'El número de documento es obligatorio.' })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.numDocumento?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Género</Form.Label>
-                  <Form.Select {...register('genero')}>
+                  <Form.Select isInvalid={!!errors.genero} {...register('genero', { required: 'El género es obligatorio.' })}>
                     <option value="">Selecciona...</option>
                     {Object.entries(Genero).map(([key, label]) => (
                       <option key={key} value={key}>
@@ -274,12 +293,18 @@ export const ProfilePage = () => {
                       </option>
                     ))}
                   </Form.Select>
+                  <Form.Control.Feedback type="invalid">{errors.genero?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Fecha de nacimiento</Form.Label>
-                  <Form.Control type="date" {...register('fechaNacimiento')} />
+                  <Form.Control
+                    type="date"
+                    isInvalid={!!errors.fechaNacimiento}
+                    {...register('fechaNacimiento', { required: 'La fecha de nacimiento es obligatoria.' })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.fechaNacimiento?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
@@ -287,7 +312,12 @@ export const ProfilePage = () => {
                   <Form.Label>
                     <FontAwesomeIcon icon={faPhone} className="me-1" /> Celular
                   </Form.Label>
-                  <Form.Control type="tel" {...register('celular')} />
+                  <Form.Control
+                    type="tel"
+                    isInvalid={!!errors.celular}
+                    {...register('celular', { required: 'El celular es obligatorio.' })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.celular?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
@@ -295,7 +325,12 @@ export const ProfilePage = () => {
                   <Form.Label>
                     <FontAwesomeIcon icon={faPhone} className="me-1" /> Teléfono
                   </Form.Label>
-                  <Form.Control type="tel" {...register('telefono')} />
+                  <Form.Control
+                    type="tel"
+                    isInvalid={!!errors.telefono}
+                    {...register('telefono', { required: 'El teléfono es obligatorio.' })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.telefono?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">

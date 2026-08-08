@@ -1,5 +1,6 @@
 package com.mycompany.knstore.service;
 
+import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,17 @@ public interface PedidoService {
      * @return the entity.
      */
     Optional<PedidoDTO> findOne(String id);
+
+    /**
+     * Cambia el estado de un pedido validando la maquina de estados
+     * (PENDING » CONFIRMED » SHIPPED » DELIVERED; CANCELLED solo desde PENDING o CONFIRMED).
+     *
+     * @param id id del pedido.
+     * @param nuevoEstado estado destino.
+     * @return el pedido actualizado.
+     * @throws IllegalStateException si la transicion no es valida.
+     */
+    PedidoDTO cambiarEstado(String id, EstadoPedido nuevoEstado);
 
     /**
      * Delete the "id" pedido.

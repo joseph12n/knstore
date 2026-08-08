@@ -39,7 +39,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class SubcategoriaResourceIT {
 
     private static final String DEFAULT_NOMBRE = "AAAAAAAAAA";

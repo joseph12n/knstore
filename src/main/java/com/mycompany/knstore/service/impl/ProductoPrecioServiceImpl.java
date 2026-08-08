@@ -5,6 +5,8 @@ import com.mycompany.knstore.repository.ProductoPrecioRepository;
 import com.mycompany.knstore.service.ProductoPrecioService;
 import com.mycompany.knstore.service.dto.ProductoPrecioDTO;
 import com.mycompany.knstore.service.mapper.ProductoPrecioMapper;
+import com.mycompany.knstore.service.util.MoneyUtils;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +37,7 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
     public ProductoPrecioDTO save(ProductoPrecioDTO productoPrecioDTO) {
         LOG.debug("Request to save ProductoPrecio : {}", productoPrecioDTO);
         ProductoPrecio productoPrecio = productoPrecioMapper.toEntity(productoPrecioDTO);
-        productoPrecio = productoPrecioRepository.save(productoPrecio);
+        productoPrecio = guardarConTotales(productoPrecio);
         return productoPrecioMapper.toDto(productoPrecio);
     }
 
@@ -43,7 +45,7 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
     public ProductoPrecioDTO update(ProductoPrecioDTO productoPrecioDTO) {
         LOG.debug("Request to update ProductoPrecio : {}", productoPrecioDTO);
         ProductoPrecio productoPrecio = productoPrecioMapper.toEntity(productoPrecioDTO);
-        productoPrecio = productoPrecioRepository.save(productoPrecio);
+        productoPrecio = guardarConTotales(productoPrecio);
         return productoPrecioMapper.toDto(productoPrecio);
     }
 
@@ -55,11 +57,25 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
             .findById(productoPrecioDTO.getId())
             .map(existingProductoPrecio -> {
                 productoPrecioMapper.partialUpdate(existingProductoPrecio, productoPrecioDTO);
-
-                return existingProductoPrecio;
+                return guardarConTotales(existingProductoPrecio);
             })
-            .map(productoPrecioRepository::save)
             .map(productoPrecioMapper::toDto);
+    }
+
+    private ProductoPrecio guardarConTotales(ProductoPrecio productoPrecio) {
+        productoPrecio.setPrecioCompra(MoneyUtils.normalizar(productoPrecio.getPrecioCompra()));
+        productoPrecio.setPrecioVenta(MoneyUtils.normalizar(productoPrecio.getPrecioVenta()));
+        productoPrecio.setPrecioAdicional(MoneyUtils.normalizar(productoPrecio.getPrecioAdicional()));
+        calcularGanancia(productoPrecio);
+        return productoPrecioRepository.save(productoPrecio);
+    }
+
+    private void calcularGanancia(ProductoPrecio productoPrecio) {
+        BigDecimal precioVenta = productoPrecio.getPrecioVenta();
+        BigDecimal precioCompra = productoPrecio.getPrecioCompra();
+        if (precioVenta != null && precioCompra != null) {
+            productoPrecio.setGanancia(MoneyUtils.normalizar(precioVenta.subtract(precioCompra)));
+        }
     }
 
     @Override
