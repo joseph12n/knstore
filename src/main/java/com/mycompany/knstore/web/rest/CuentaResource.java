@@ -83,7 +83,11 @@ public class CuentaResource {
             });
         }
 
-        cuentaDTO = cuentaService.save(cuentaDTO);
+        try {
+            cuentaDTO = cuentaService.save(cuentaDTO);
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            throw new BadRequestAlertException("El tipo y número de documento ya están registrados", ENTITY_NAME, "documentoduplicado");
+        }
         return ResponseEntity.created(new URI("/api/cuentas/" + cuentaDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, cuentaDTO.getId()))
             .body(cuentaDTO);
@@ -119,7 +123,11 @@ public class CuentaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        cuentaDTO = cuentaService.update(cuentaDTO);
+        try {
+            cuentaDTO = cuentaService.update(cuentaDTO);
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            throw new BadRequestAlertException("El tipo y número de documento ya están registrados", ENTITY_NAME, "documentoduplicado");
+        }
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, cuentaDTO.getId()))
             .body(cuentaDTO);

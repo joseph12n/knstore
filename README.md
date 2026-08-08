@@ -79,3 +79,34 @@ Para garantizar la integridad de las operaciones, el sistema restringe las funci
 1. **Administrador:** Acceso total al sistema, gestión global de usuarios, configuraciones críticas del negocio y auditoría.
 2. **Manager:** Gestión operativa del inventario, actualización de stock físico, administración de los servicios y control del estado de distribución.
 3. **Cliente:** Navegación interactiva del catálogo, gestión de perfil personal, generación de pedidos y recepción de notificaciones vía e-mail.
+
+---
+
+## 🚀 Desarrollo local
+
+### Base de datos (MongoDB replica set)
+
+El checkout usa transacciones multi-documento, por lo que MongoDB debe correr como **replica set de un nodo**. El archivo `src/main/docker/mongodb.yml` levanta el replica set `rs0` (con su contenedor de inicialización) automáticamente:
+
+```bash
+docker compose -f src/main/docker/services.yml up -d --wait
+```
+
+- La URI de desarrollo ya incluye `?replicaSet=rs0&retryWrites=true&directConnection=true` (`application-dev.yml`, puerto `27018`).
+- Spring Boot 4 inicia el compose automáticamente al levantar la aplicación en `dev`.
+- Verificación: `docker exec knstore-mongodb-1 mongosh --quiet mongodb://localhost:27017/admin --eval 'rs.status().members'` debe mostrar un nodo `PRIMARY`.
+- El seed del catálogo demo (`knstore.seed.catalog=true`) se ejecuta al arrancar en desarrollo; es idempotente y no contamina producción.
+
+### Aplicación
+
+```bash
+./npmw run backend:start   # Spring Boot (puerto 8080)
+./npmw run start           # Webpack dev server (puerto 9000)
+```
+
+### Pruebas
+
+```bash
+./mvnw clean verify        # Backend (Testcontainers levanta el replica set)
+npm test                   # Frontend
+```

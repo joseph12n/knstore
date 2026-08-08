@@ -1,14 +1,20 @@
 package com.mycompany.knstore.service.impl;
 
+import com.mycompany.knstore.domain.Carrito;
 import com.mycompany.knstore.domain.ItemCarrito;
+import com.mycompany.knstore.domain.Producto;
 import com.mycompany.knstore.repository.CarritoRepository;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.ItemCarritoRepository;
+import com.mycompany.knstore.repository.ProductoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.ItemCarritoService;
 import com.mycompany.knstore.service.dto.ItemCarritoDTO;
 import com.mycompany.knstore.service.mapper.ItemCarritoMapper;
+import com.mycompany.knstore.service.util.MoneyUtils;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -33,17 +39,21 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
 
     private final CuentaRepository cuentaRepository;
 
+    private final ProductoRepository productoRepository;
+
     private final ItemCarritoMapper itemCarritoMapper;
 
     public ItemCarritoServiceImpl(
         ItemCarritoRepository itemCarritoRepository,
         CarritoRepository carritoRepository,
         CuentaRepository cuentaRepository,
+        ProductoRepository productoRepository,
         ItemCarritoMapper itemCarritoMapper
     ) {
         this.itemCarritoRepository = itemCarritoRepository;
         this.carritoRepository = carritoRepository;
         this.cuentaRepository = cuentaRepository;
+        this.productoRepository = productoRepository;
         this.itemCarritoMapper = itemCarritoMapper;
     }
 
@@ -51,7 +61,7 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public ItemCarritoDTO save(ItemCarritoDTO itemCarritoDTO) {
         LOG.debug("Request to save ItemCarrito : {}", itemCarritoDTO);
         ItemCarrito itemCarrito = itemCarritoMapper.toEntity(itemCarritoDTO);
-        itemCarrito = itemCarritoRepository.save(itemCarrito);
+        itemCarrito = guardarConTotales(itemCarrito);
         return itemCarritoMapper.toDto(itemCarrito);
     }
 
@@ -59,7 +69,7 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     public ItemCarritoDTO update(ItemCarritoDTO itemCarritoDTO) {
         LOG.debug("Request to update ItemCarrito : {}", itemCarritoDTO);
         ItemCarrito itemCarrito = itemCarritoMapper.toEntity(itemCarritoDTO);
-        itemCarrito = itemCarritoRepository.save(itemCarrito);
+        itemCarrito = guardarConTotales(itemCarrito);
         return itemCarritoMapper.toDto(itemCarrito);
     }
 
@@ -71,10 +81,8 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
             .findById(itemCarritoDTO.getId())
             .map(existingItemCarrito -> {
                 itemCarritoMapper.partialUpdate(existingItemCarrito, itemCarritoDTO);
-
-                return existingItemCarrito;
+                return guardarConTotales(existingItemCarrito);
             })
-            .map(itemCarritoRepository::save)
             .map(itemCarritoMapper::toDto);
     }
 
@@ -122,7 +130,52 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     @Override
     public void delete(String id) {
         LOG.debug("Request to delete ItemCarrito : {}", id);
+        Optional<String> carritoId = itemCarritoRepository.findById(id).map(ItemCarrito::getCarrito).map(Carrito::getId);
         itemCarritoRepository.deleteById(id);
+        carritoId.ifPresent(this::recalcularSubtotalCarrito);
+    }
+
+    private ItemCarrito guardarConTotales(ItemCarrito itemCarrito) {
+        completarPrecioUnitarioSiFalta(itemCarrito);
+        itemCarrito.setSubtotal(calcularSubtotal(itemCarrito));
+        itemCarrito = itemCarritoRepository.save(itemCarrito);
+        if (itemCarrito.getCarrito() != null) {
+            recalcularSubtotalCarrito(itemCarrito.getCarrito().getId());
+        }
+        return itemCarrito;
+    }
+
+    private void completarPrecioUnitarioSiFalta(ItemCarrito itemCarrito) {
+        if (itemCarrito.getPrecioUnitario() != null) {
+            return;
+        }
+        if (itemCarrito.getProducto() == null || itemCarrito.getProducto().getId() == null) {
+            return;
+        }
+        productoRepository
+            .findById(itemCarrito.getProducto().getId())
+            .map(Producto::getPrecio)
+            .filter(precio -> precio.getPrecioVenta() != null)
+            .ifPresent(precio -> itemCarrito.setPrecioUnitario(precio.getPrecioVenta()));
+    }
+
+    private BigDecimal calcularSubtotal(ItemCarrito itemCarrito) {
+        BigDecimal cantidad = BigDecimal.valueOf(itemCarrito.getCantidad() == null ? 0 : itemCarrito.getCantidad());
+        return MoneyUtils.multiplicar(cantidad, itemCarrito.getPrecioUnitario());
+    }
+
+    private void recalcularSubtotalCarrito(String carritoId) {
+        carritoRepository.findById(carritoId).ifPresent(carrito -> {
+            BigDecimal subtotal = itemCarritoRepository
+                .findByCarritoId(carritoId)
+                .stream()
+                .map(ItemCarrito::getSubtotal)
+                .filter(java.util.Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            carrito.setSubtotal(subtotal);
+            carrito.setFechaActualizacion(Instant.now());
+            carritoRepository.save(carrito);
+        });
     }
 
     private Optional<String> getCurrentAccountId() {

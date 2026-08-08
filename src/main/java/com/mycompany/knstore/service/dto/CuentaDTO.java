@@ -14,6 +14,7 @@ public class CuentaDTO implements Serializable {
 
     private String id;
 
+    @NotNull
     @Size(max = 20)
     private String numDocumento;
 
@@ -21,6 +22,7 @@ public class CuentaDTO implements Serializable {
     @Size(max = 50)
     private String primerNombre;
 
+    @NotNull
     @Size(max = 50)
     private String segundoNombre;
 
@@ -28,16 +30,21 @@ public class CuentaDTO implements Serializable {
     @Size(max = 50)
     private String primerApellido;
 
+    @NotNull
     @Size(max = 50)
     private String segundoApellido;
 
+    @NotNull
     private Genero genero;
 
+    @NotNull
     private LocalDate fechaNacimiento;
 
+    @NotNull
     @Size(max = 15)
     private String celular;
 
+    @NotNull
     @Size(max = 15)
     private String telefono;
 
@@ -51,6 +58,7 @@ public class CuentaDTO implements Serializable {
     @NotNull
     private UserDTO user;
 
+    @NotNull
     private TipoDocumentoDTO tipoDocumento;
 
     public String getId() {

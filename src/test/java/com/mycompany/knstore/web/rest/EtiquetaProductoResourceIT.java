@@ -38,7 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class EtiquetaProductoResourceIT {
 
     private static final String DEFAULT_ETIQUETA = "AAAAAAAAAA";
@@ -232,6 +232,11 @@ class EtiquetaProductoResourceIT {
         EtiquetaProducto updatedEtiquetaProducto = etiquetaProductoRepository.findById(etiquetaProducto.getId()).orElseThrow();
         updatedEtiquetaProducto.etiqueta(UPDATED_ETIQUETA);
         EtiquetaProductoDTO etiquetaProductoDTO = etiquetaProductoMapper.toDto(updatedEtiquetaProducto);
+        if (etiquetaProductoDTO.getProducto() == null) {
+            com.mycompany.knstore.service.dto.ProductoDTO relDto = new com.mycompany.knstore.service.dto.ProductoDTO();
+            relDto.setId(insertedEtiquetaProducto.getProducto().getId());
+            etiquetaProductoDTO.setProducto(relDto);
+        }
 
         restEtiquetaProductoMockMvc
             .perform(
