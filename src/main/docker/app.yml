@@ -29,9 +29,15 @@ services:
     extends:
       file: ./mongodb.yml
       service: mongodb
+  mongodb-init:
+    extends:
+      file: ./mongodb.yml
+      service: mongodb-init
 networks:
   knstore:
     name: knstore
 volumes:
   knstore-mongodb-data:
     name: knstore-mongodb-data
+  knstore-mongodb-config:
+    name: knstore-mongodb-config
