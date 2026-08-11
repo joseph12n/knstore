@@ -3,52 +3,23 @@ name: knstore
 services:
   mongodb:
     image: mongo:8.2.9
-    # Replica set de un solo nodo para habilitar transacciones multi-documento reales.
-    command: ['mongod', '--replSet', 'rs0', '--bind_ip_all']
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
     networks:
       - knstore
     ports:
-      - 127.0.0.1:27018:27017
+      - :27018:27017
     volumes:
       - knstore-mongodb-data:/data/db/
-      - knstore-mongodb-config:/data/configdb/
+      - knstore-mongodb-data:/data/configdb/
     healthcheck:
-      test: ['CMD-SHELL', "mongosh --quiet mongodb://localhost:27017/admin --eval 'db.runCommand({ ping: 1 }).ok'"]
+      test: ['CMD-SHELL', 'echo ''db.runCommand("ping").ok'' | mongosh localhost:27017/test --quiet']
       interval: 5s
       timeout: 5s
-      retries: 30
-  mongodb-init:
-    image: mongo:8.2.9
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      - knstore
-    volumes:
-      - knstore-mongodb-data:/data/db/
-      - knstore-mongodb-config:/data/configdb/
-    entrypoint:
-      - /bin/bash
-      - -c
-      - |
-        mongosh --quiet mongodb://mongodb:27017/admin --eval 'rs.initiate({_id: "rs0", members: [{_id: 0, host: "mongodb:27017"}]})' > /dev/null 2>&1 || true
-        for i in $$(seq 1 60); do
-          state=$$(mongosh --quiet mongodb://mongodb:27017/admin --eval 'db.hello().isWritablePrimary' 2>/dev/null)
-          if [ "$$state" = "true" ]; then
-            echo "replica set rs0 listo"
-            exit 0
-          fi
-          sleep 2
-        done
-        echo "no se pudo iniciar el replica set rs0" >&2
-        exit 1
+      retries: 10
 networks:
   knstore:
     name: knstore
 volumes:
   knstore-mongodb-data:
     name: knstore-mongodb-data
-  knstore-mongodb-config:
-    name: knstore-mongodb-config

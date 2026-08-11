@@ -7,7 +7,7 @@ services:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=dev,api-docs,secret-samples
       - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
-      - SPRING_MONGODB_URI=mongodb://mongodb:27017/knstore?replicaSet=rs0&retryWrites=true&directConnection=true
+      - SPRING_MONGODB_URI=mongodb://mongodb:27017/knstore
       - SPRING_DOCKER_COMPOSE_ENABLED=false
     ports:
       - 8080:8080
@@ -29,15 +29,9 @@ services:
     extends:
       file: ./mongodb.yml
       service: mongodb
-  mongodb-init:
-    extends:
-      file: ./mongodb.yml
-      service: mongodb-init
 networks:
   knstore:
     name: knstore
 volumes:
   knstore-mongodb-data:
     name: knstore-mongodb-data
-  knstore-mongodb-config:
-    name: knstore-mongodb-config
