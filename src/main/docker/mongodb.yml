@@ -13,6 +13,7 @@ services:
       - 127.0.0.1:27018:27017
     volumes:
       - knstore-mongodb-data:/data/db/
+      - knstore-mongodb-config:/data/configdb/
     healthcheck:
       test: ['CMD-SHELL', "mongosh --quiet mongodb://localhost:27017/admin --eval 'db.runCommand({ ping: 1 }).ok'"]
       interval: 5s
@@ -25,14 +26,17 @@ services:
         condition: service_healthy
     networks:
       - knstore
+    volumes:
+      - knstore-mongodb-data:/data/db/
+      - knstore-mongodb-config:/data/configdb/
     entrypoint:
       - /bin/bash
       - -c
       - |
         mongosh --quiet mongodb://mongodb:27017/admin --eval 'rs.initiate({_id: "rs0", members: [{_id: 0, host: "mongodb:27017"}]})' > /dev/null 2>&1 || true
-        for i in $(seq 1 60); do
-          state=$(mongosh --quiet mongodb://mongodb:27017/admin --eval 'db.hello().isWritablePrimary' 2>/dev/null)
-          if [ "$state" = "true" ]; then
+        for i in $$(seq 1 60); do
+          state=$$(mongosh --quiet mongodb://mongodb:27017/admin --eval 'db.hello().isWritablePrimary' 2>/dev/null)
+          if [ "$$state" = "true" ]; then
             echo "replica set rs0 listo"
             exit 0
           fi
@@ -46,3 +50,5 @@ networks:
 volumes:
   knstore-mongodb-data:
     name: knstore-mongodb-data
+  knstore-mongodb-config:
+    name: knstore-mongodb-config
