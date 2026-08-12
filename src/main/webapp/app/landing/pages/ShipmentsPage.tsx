@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router';
 import dayjs from 'dayjs';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getEnvios } from 'app/entities/envio/envio.reducer';
-import { getEntities as getPedidos } from 'app/entities/pedido/pedido.reducer';
-import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
+import useCuentaActual from 'app/landing/hooks/useCuentaActual';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import EmptyState from 'app/landing/components/EmptyState';
 import Pagination from 'app/landing/components/Pagination';
@@ -17,46 +15,23 @@ const ITEMS_PER_PAGE = 10;
 
 export const ShipmentsPage = () => {
   const dispatch = useAppDispatch();
-  const account = useAppSelector(state => state.authentication.account);
+  const { account } = useCuentaActual();
   const envios = useAppSelector(state => state.envio.entities) ?? [];
   const totalItems = useAppSelector(state => state.envio.totalItems ?? 0);
-  const pedidos = useAppSelector(state => state.pedido.entities) ?? [];
-  const cuenta = useAppSelector(state => state.cuenta.entity);
-  const loading = useAppSelector(state => state.envio.loading || state.pedido.loading || state.cuenta.loading);
+  const loading = useAppSelector(state => state.envio.loading);
 
   const [activePage, setActivePage] = useState(1);
 
   useEffect(() => {
-    dispatch(getSession());
-    if (account.login) {
-      dispatch(getCuentaByLogin(account.login));
-    }
-    return () => {
-      dispatch(resetCuenta());
-    };
-  }, [dispatch, account.login]);
-
-  useEffect(() => {
-    // TODO backend: agregar filtro por cuentaId para paginar envíos del usuario directamente.
-    dispatch(getPedidos({ page: 0, size: 1000, sort: 'numeroPedido,desc' }));
-  }, [dispatch]);
-
-  useEffect(() => {
+    // El backend pagina y filtra por la cuenta del cliente autenticado.
     dispatch(getEnvios({ page: activePage - 1, size: ITEMS_PER_PAGE, sort: 'id,desc' }));
-  }, [dispatch, activePage]);
-
-  const pedidosUsuarioIds = useMemo(() => new Set(pedidos.filter(p => p.cuenta?.id === cuenta?.id).map(p => p.id)), [pedidos, cuenta]);
-
-  const enviosUsuario = useMemo(
-    () => envios.filter(e => e.pedido?.id && pedidosUsuarioIds.has(e.pedido.id)).sort((a, b) => (b.id || '').localeCompare(a.id || '')),
-    [envios, pedidosUsuarioIds],
-  );
+  }, [dispatch, activePage, account.login]);
 
   if (loading) {
     return <LoadingSpinner fullScreen />;
   }
 
-  if (enviosUsuario.length === 0) {
+  if (envios.length === 0) {
     return (
       <div className="kn-fade-in">
         <h1 className="h2 fw-bold mb-4">Mis envíos</h1>
@@ -77,7 +52,7 @@ export const ShipmentsPage = () => {
     <div className="kn-fade-in">
       <h1 className="h2 fw-bold mb-4">Mis envíos</h1>
       <Row className="g-4">
-        {enviosUsuario.map(envio => (
+        {envios.map(envio => (
           <Col md={6} key={envio.id}>
             <Card className="h-100">
               <Card.Body>

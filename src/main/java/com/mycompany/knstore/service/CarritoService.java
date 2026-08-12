@@ -53,4 +53,11 @@ public interface CarritoService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    /**
+     * Vaciar todos los items de un carrito sin eliminar el carrito en sí.
+     *
+     * @param id the id of the carrito.
+     */
+    void vaciar(String id);
 }

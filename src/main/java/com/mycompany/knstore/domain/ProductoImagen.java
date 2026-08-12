@@ -37,6 +37,10 @@ public class ProductoImagen implements Serializable {
     @Field("es_principal")
     private Boolean esPrincipal;
 
+    @Size(max = 1000)
+    @Field("imagen_url")
+    private String imagenUrl;
+
     @DBRef
     @Field("producto")
     @JsonIgnoreProperties(
@@ -112,6 +116,19 @@ public class ProductoImagen implements Serializable {
         this.esPrincipal = esPrincipal;
     }
 
+    public String getImagenUrl() {
+        return this.imagenUrl;
+    }
+
+    public ProductoImagen imagenUrl(String imagenUrl) {
+        this.setImagenUrl(imagenUrl);
+        return this;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
     public Producto getProducto() {
         return this.producto;
     }
@@ -153,6 +170,7 @@ public class ProductoImagen implements Serializable {
             ", imagenContentType='" + getImagenContentType() + "'" +
             ", imagenAlt='" + getImagenAlt() + "'" +
             ", esPrincipal='" + getEsPrincipal() + "'" +
+            ", imagenUrl='" + getImagenUrl() + "'" +
             "}";
     }
 }

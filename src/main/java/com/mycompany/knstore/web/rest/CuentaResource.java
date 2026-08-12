@@ -8,7 +8,6 @@ import com.mycompany.knstore.service.ResourceAccessService;
 import com.mycompany.knstore.service.dto.CuentaDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -150,7 +149,7 @@ public class CuentaResource {
     )
     public ResponseEntity<CuentaDTO> partialUpdateCuenta(
         @PathVariable(value = "id", required = false) final String id,
-        @NotNull @RequestBody CuentaDTO cuentaDTO
+        @Valid @RequestBody CuentaDTO cuentaDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to partial update Cuenta partially : {}, {}", id, cuentaDTO);
         if (cuentaDTO.getId() == null) {
@@ -164,7 +163,12 @@ public class CuentaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<CuentaDTO> result = cuentaService.partialUpdate(cuentaDTO);
+        Optional<CuentaDTO> result;
+        try {
+            result = cuentaService.partialUpdate(cuentaDTO);
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            throw new BadRequestAlertException("El tipo y número de documento ya están registrados", ENTITY_NAME, "documentoduplicado");
+        }
 
         return ResponseUtil.wrapOrNotFound(
             result,

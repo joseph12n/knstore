@@ -12,7 +12,6 @@ import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.ItemPedidoRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
-import com.mycompany.knstore.repository.ProductoInventarioRepository;
 import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.service.mapper.PedidoMapper;
@@ -40,9 +39,6 @@ class PedidoServiceImplTest {
     private ItemPedidoRepository itemPedidoRepository;
 
     @Mock
-    private ProductoInventarioRepository productoInventarioRepository;
-
-    @Mock
     private MongoTemplate mongoTemplate;
 
     @Mock
@@ -56,7 +52,6 @@ class PedidoServiceImplTest {
             pedidoRepository,
             cuentaRepository,
             itemPedidoRepository,
-            productoInventarioRepository,
             mongoTemplate,
             pedidoMapper,
             historialEstadoService

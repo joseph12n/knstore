@@ -21,12 +21,14 @@ export const CategoryPage = () => {
     productos: rawProductos,
     loading,
     errorMessage,
-  } = useCatalog({ page: 0, size: 48, sort: 'nombre,asc' });
+    retry,
+  } = useCatalog({ page: 0, size: 100, sort: 'nombre,asc', loadOnMount: false });
   const categorias = rawCategorias ?? [];
   const subcategorias = rawSubcategorias ?? [];
   const productos = rawProductos ?? [];
 
   const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState('nombre,asc');
 
   const categoria = useMemo(() => categorias.find(c => c.slug === categoriaSlug), [categorias, categoriaSlug]);
   const subcategoria = useMemo(
@@ -43,10 +45,33 @@ export const CategoryPage = () => {
     });
   }, [productos, categoriaSlug, subcategoriaSlug, categoria]);
 
+  const productosOrdenados = useMemo(() => {
+    const list = [...productosFiltrados];
+    const [field, direction] = sortBy.split(',');
+    list.sort((a, b) => {
+      let comparison = 0;
+      if (field === 'nombre') {
+        comparison = (a.nombre || '').localeCompare(b.nombre || '', 'es');
+      } else if (field === 'precioVenta') {
+        comparison = (a.precio?.precioVenta || 0) - (b.precio?.precioVenta || 0);
+      }
+      return direction === 'desc' ? -comparison : comparison;
+    });
+    return list;
+  }, [productosFiltrados, sortBy]);
+
   const subcategoriasDeCategoria = useMemo(
     () => subcategorias.filter(s => s.categoria?.slug === categoriaSlug),
     [subcategorias, categoriaSlug],
   );
+
+  if (errorMessage && productos.length === 0) {
+    return (
+      <Container className="py-5">
+        <ErrorAlert message="No pudimos cargar los productos. Inténtalo de nuevo." onRetry={retry} />
+      </Container>
+    );
+  }
 
   if (loading && productos.length === 0) {
     return <LoadingSpinner fullScreen />;
@@ -85,8 +110,6 @@ export const CategoryPage = () => {
         </div>
       )}
 
-      {errorMessage && <ErrorAlert message="No pudimos cargar los productos. Inténtalo de nuevo." />}
-
       <Button
         variant="outline-secondary"
         className="d-lg-none mb-3 w-100"
@@ -106,7 +129,7 @@ export const CategoryPage = () => {
                 <h5 className="fw-bold mb-3">Filtros</h5>
                 <Form.Group className="mb-3">
                   <Form.Label className="small fw-semibold">Ordenar por</Form.Label>
-                  <Form.Select aria-label="Ordenar por">
+                  <Form.Select aria-label="Ordenar por" value={sortBy} onChange={e => setSortBy(e.target.value)}>
                     <option value="nombre,asc">Nombre A-Z</option>
                     <option value="nombre,desc">Nombre Z-A</option>
                     <option value="precioVenta,asc">Precio: menor a mayor</option>
@@ -119,7 +142,7 @@ export const CategoryPage = () => {
           </Collapse>
         </Col>
         <Col lg={9}>
-          {productosFiltrados.length === 0 ? (
+          {productosOrdenados.length === 0 ? (
             <EmptyState
               title="No hay productos en esta categoría"
               description="Prueba con otra categoría o vuelve más tarde."
@@ -131,7 +154,7 @@ export const CategoryPage = () => {
             />
           ) : (
             <Row className="g-4">
-              {productosFiltrados.map(producto => (
+              {productosOrdenados.map(producto => (
                 <Col key={producto.id} xs={6} md={4} lg={4} xl={3}>
                   <ProductCard producto={producto} onAddToCart={onAddToCart} />
                 </Col>

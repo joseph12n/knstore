@@ -41,10 +41,12 @@ public class User extends AbstractAuditingEntity<String> implements Serializable
     private String password;
 
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("first_name")
     private String firstName;
 
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("last_name")
     private String lastName;
 

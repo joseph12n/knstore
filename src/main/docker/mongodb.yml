@@ -10,9 +10,10 @@ services:
     networks:
       - knstore
     ports:
-      - 127.0.0.1:27018:27017
+      - :27018:27017
     volumes:
       - knstore-mongodb-data:/data/db/
+      - knstore-mongodb-data:/data/configdb/
     healthcheck:
       test: ['CMD-SHELL', "mongosh --quiet mongodb://localhost:27017/admin --eval 'db.runCommand({ ping: 1 }).ok'"]
       interval: 5s

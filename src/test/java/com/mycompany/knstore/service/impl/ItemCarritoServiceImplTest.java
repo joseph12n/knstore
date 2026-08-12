@@ -122,6 +122,31 @@ class ItemCarritoServiceImplTest {
     }
 
     @Test
+    void elPrecioUnitarioDelClienteEsIgnoradoSeUsaElDeLaBaseDeDatos() {
+        ItemCarrito[] guardado = new ItemCarrito[1];
+        when(itemCarritoRepository.save(any())).thenAnswer(invocation -> {
+            guardado[0] = invocation.getArgument(0);
+            return guardado[0];
+        });
+        when(itemCarritoRepository.findByCarritoId("carrito-1")).thenAnswer(invocation -> List.of(guardado[0]));
+        when(carritoRepository.findById("carrito-1")).thenReturn(Optional.of(carrito));
+        when(carritoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(productoRepository.findById("producto-1")).thenReturn(Optional.of(producto));
+
+        ItemCarritoDTO dto = new ItemCarritoDTO();
+        dto.setId("item-1");
+        dto.setCantidad(1);
+        dto.setPrecioUnitario(new BigDecimal("1"));
+        dto.setCarrito(carritoDto("carrito-1"));
+        dto.setProducto(productoDto("producto-1"));
+
+        ItemCarritoDTO result = service.update(dto);
+
+        assertThat(result.getPrecioUnitario()).isEqualByComparingTo(PRECIO_VENTA);
+        assertThat(result.getSubtotal()).isEqualByComparingTo(PRECIO_VENTA);
+    }
+
+    @Test
     void editarItemRecalculaSubtotalDelCarrito() {
         ItemCarrito[] guardado = new ItemCarrito[1];
         when(itemCarritoRepository.save(any())).thenAnswer(invocation -> {
@@ -131,6 +156,7 @@ class ItemCarritoServiceImplTest {
         when(itemCarritoRepository.findByCarritoId("carrito-1")).thenAnswer(invocation -> List.of(guardado[0]));
         when(carritoRepository.findById("carrito-1")).thenReturn(Optional.of(carrito));
         when(carritoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(productoRepository.findById("producto-1")).thenReturn(Optional.of(producto));
 
         ItemCarritoDTO dto = new ItemCarritoDTO();
         dto.setId("item-1");
@@ -141,10 +167,11 @@ class ItemCarritoServiceImplTest {
 
         ItemCarritoDTO result = service.update(dto);
 
-        assertThat(result.getSubtotal()).isEqualByComparingTo(new BigDecimal("300000"));
+        // El precio se resuelve desde la base de datos (120000), no desde el DTO del cliente.
+        assertThat(result.getSubtotal()).isEqualByComparingTo(new BigDecimal("360000"));
         ArgumentCaptor<Carrito> captor = ArgumentCaptor.forClass(Carrito.class);
         verify(carritoRepository).save(captor.capture());
-        assertThat(captor.getValue().getSubtotal()).isEqualByComparingTo(new BigDecimal("300000"));
+        assertThat(captor.getValue().getSubtotal()).isEqualByComparingTo(new BigDecimal("360000"));
     }
 
     @Test

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getEntity as getPedido, partialUpdateEntity as partialUpdatePedido } from 'app/entities/pedido/pedido.reducer';
+import { getEntity as getPedido } from 'app/entities/pedido/pedido.reducer';
 import { getEntities as getItemsPedido } from 'app/entities/item-pedido/item-pedido.reducer';
 import { getEntities as getPagos } from 'app/entities/pago/pago.reducer';
 import { getEntities as getEnvios } from 'app/entities/envio/envio.reducer';
@@ -17,6 +17,8 @@ import ErrorAlert from 'app/landing/components/ErrorAlert';
 import OrderCancelModal from 'app/landing/components/OrderCancelModal';
 import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS, PAYMENT_STATUS_LABELS, SHIPPING_STATUS_LABELS } from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
+import { downloadFacturaPdf } from 'app/landing/utils/invoice';
 
 export const OrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -50,11 +52,11 @@ export const OrderDetailPage = () => {
     if (!id) return;
     setIsCancelling(true);
     try {
-      await dispatch(partialUpdatePedido({ id, estado: 'CANCELLED' }));
+      await axios.post(`api/pedidos/${id}/cancelar`);
       toast.success('Pedido cancelado correctamente');
       loadPedido();
-    } catch {
-      toast.error('No pudimos cancelar el pedido. Inténtalo de nuevo.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'No pudimos cancelar el pedido. Inténtalo de nuevo.'));
     } finally {
       setIsCancelling(false);
       setShowCancelModal(false);
@@ -65,16 +67,7 @@ export const OrderDetailPage = () => {
     if (!factura?.id) return;
     setIsDownloadingFactura(true);
     try {
-      const response = await axios.get<Blob>(`api/facturas/${factura.id}/pdf`, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(response.data);
-      const link = document.createElement('a');
-      const filename = `${factura.prefijo || 'FAC'}-${factura.id}.pdf`;
-      link.href = url;
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      await downloadFacturaPdf(factura.id, factura.prefijo);
     } catch {
       window.location.href = `api/facturas/${factura.id}/download`;
     } finally {

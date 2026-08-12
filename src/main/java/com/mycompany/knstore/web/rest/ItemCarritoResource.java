@@ -58,7 +58,11 @@ public class ItemCarritoResource {
         if (itemCarritoDTO.getId() != null) {
             throw new BadRequestAlertException("A new itemCarrito cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        itemCarritoDTO = itemCarritoService.save(itemCarritoDTO);
+        try {
+            itemCarritoDTO = itemCarritoService.save(itemCarritoDTO);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "itemcarritoinvalido");
+        }
         return ResponseEntity.created(new URI("/api/item-carritos/" + itemCarritoDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, itemCarritoDTO.getId()))
             .body(itemCarritoDTO);
@@ -94,7 +98,11 @@ public class ItemCarritoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        itemCarritoDTO = itemCarritoService.update(itemCarritoDTO);
+        try {
+            itemCarritoDTO = itemCarritoService.update(itemCarritoDTO);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "itemcarritoinvalido");
+        }
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, itemCarritoDTO.getId()))
             .body(itemCarritoDTO);
@@ -131,7 +139,12 @@ public class ItemCarritoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<ItemCarritoDTO> result = itemCarritoService.partialUpdate(itemCarritoDTO);
+        Optional<ItemCarritoDTO> result;
+        try {
+            result = itemCarritoService.partialUpdate(itemCarritoDTO);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "itemcarritoinvalido");
+        }
 
         return ResponseUtil.wrapOrNotFound(
             result,

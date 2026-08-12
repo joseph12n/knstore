@@ -63,7 +63,7 @@ public class PagoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPagoDto(#pagoDTO)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<PagoDTO> createPago(@Valid @RequestBody PagoDTO pagoDTO) throws URISyntaxException {
         LOG.debug("REST request to save Pago : {}", pagoDTO);
         if (pagoDTO.getId() != null) {
@@ -86,9 +86,7 @@ public class PagoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessPagoId(#id) and @resourceAccessService.canAccessPagoDto(#pagoDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<PagoDTO> updatePago(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody PagoDTO pagoDTO
@@ -123,9 +121,7 @@ public class PagoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessPagoId(#id) and @resourceAccessService.canAccessPagoDto(#pagoDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<PagoDTO> partialUpdatePago(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody PagoDTO pagoDTO
@@ -198,7 +194,7 @@ public class PagoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPagoId(#id)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<Void> deletePago(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Pago : {}", id);
         pagoService.delete(id);
@@ -238,11 +234,15 @@ public class PagoResource {
     /**
      * {@code POST  /pagos/callback} : process a payment gateway callback (idempotent).
      *
+     * <p>Endpoint server-to-server: solo accesible por administracion, la pasarela de
+     * pagos (real o simulada) notifica el resultado. Los clientes no pueden forzar la
+     * aprobacion o el rechazo de pagos, ni propios ni ajenos.</p>
+     *
      * @param request the callback payload.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the pagoDTO.
      */
     @PostMapping("/callback")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_CLIENTE')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<PagoDTO> procesarCallback(@Valid @RequestBody CallbackPagoRequestDTO request) {
         LOG.debug("REST request to process payment callback : {}", request);
         try {

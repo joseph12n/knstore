@@ -16,6 +16,7 @@ import useDebounce from 'app/landing/hooks/useDebounce';
 import useCart from 'app/landing/hooks/useCart';
 import { IProductoStorefront } from 'app/landing/model/storefront.model';
 import { CATALOG_PAGE_SIZE } from 'app/landing/utils/constants';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
 
 const SEARCH_PAGE_SIZE = CATALOG_PAGE_SIZE;
 
@@ -30,6 +31,7 @@ export const SearchPage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
 
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -56,7 +58,8 @@ export const SearchPage = () => {
     marcas: rawMarcas,
     loading: catalogLoading,
     errorMessage: catalogErrorMessage,
-  } = useCatalog({ page: 0, size: 100, sort: 'nombre,asc' });
+    retry: retryCatalog,
+  } = useCatalog({ page: 0, size: 100, sort: 'nombre,asc', loadOnMount: false });
   const categorias = rawCategorias ?? [];
   const marcas = rawMarcas ?? [];
 
@@ -65,25 +68,31 @@ export const SearchPage = () => {
   }, [debouncedQuery]);
 
   useEffect(() => {
+    const controller = new AbortController();
     const loadSearchResults = async () => {
       setLoading(true);
       setError(null);
       try {
         const page = activePage - 1;
         const requestUrl = `api/productos/search?q=${encodeURIComponent(debouncedQuery.trim())}&page=${page}&size=${SEARCH_PAGE_SIZE}&sort=nombre,asc`;
-        const response = await axios.get<IProductoStorefront[]>(requestUrl);
+        const response = await axios.get<IProductoStorefront[]>(requestUrl, { signal: controller.signal });
         setSearchResults(response.data.map(p => ({ ...p, imagenes: p.imagenes ?? [] })));
         setTotalItems(parseInt(response.headers['x-total-count'] || `${response.data.length}`, 10));
-      } catch (err: any) {
-        const message = err?.response?.data?.message || err?.message || 'Error desconocido';
-        setError(`No pudimos realizar la búsqueda: ${message}`);
+      } catch (axiosError) {
+        if (axios.isCancel(axiosError)) {
+          return;
+        }
+        setError(`No pudimos realizar la búsqueda: ${getApiErrorMessage(axiosError)}`);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
     loadSearchResults();
-  }, [debouncedQuery, activePage]);
+    return () => controller.abort();
+  }, [debouncedQuery, activePage, retryKey]);
 
   const resultados = useMemo(() => {
     let list = [...searchResults];
@@ -108,7 +117,17 @@ export const SearchPage = () => {
   }, [searchResults, selectedCategory, selectedBrand, sortBy]);
 
   const isLoading = loading || catalogLoading;
-  const hasError = error || catalogErrorMessage;
+  const hasError = (error || catalogErrorMessage) && searchResults.length === 0;
+
+  const handleRetry = () => {
+    if (error) {
+      setActivePage(1);
+      setRetryKey(key => key + 1);
+    }
+    if (catalogErrorMessage) {
+      retryCatalog();
+    }
+  };
 
   return (
     <Container className="py-4 kn-fade-in">
@@ -180,7 +199,10 @@ export const SearchPage = () => {
           {isLoading ? (
             <LoadingSpinner />
           ) : hasError ? (
-            <ErrorAlert message={error || catalogErrorMessage || 'No pudimos cargar los productos. Inténtalo de nuevo.'} />
+            <ErrorAlert
+              message={error || catalogErrorMessage || 'No pudimos cargar los productos. Inténtalo de nuevo.'}
+              onRetry={handleRetry}
+            />
           ) : resultados.length === 0 ? (
             <EmptyState title="No encontramos resultados" description="Intenta con otros términos o ajusta los filtros." />
           ) : (

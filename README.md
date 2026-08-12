@@ -95,18 +95,31 @@ Para garantizar la integridad de las operaciones, el sistema restringe las funci
 
 ## 🚀 Desarrollo local
 
-### Base de datos (MongoDB replica set)
+### Base de datos (MongoDB)
 
-El checkout usa transacciones multi-documento, por lo que MongoDB debe correr como **replica set de un nodo**. El archivo `src/main/docker/mongodb.yml` levanta el replica set `rs0` (con su contenedor de inicialización) automáticamente:
+El proyecto mantiene **dos versiones** del contenedor de MongoDB:
+
+| Archivo                                  | Modo                                          | Uso                                                                                           |
+| ---------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `src/main/docker/mongodb.yml`            | Standalone (puerto `27018`)                   | **Versión EC2 / DNS** (`app.knstore.duckdns.org`); compatible con el flujo sin transacciones. |
+| `src/main/docker/mongodb-replicaset.yml` | Replica set `rs0` de un nodo (puerto `27018`) | **Desarrollo local** con transacciones reales (checkout atómico).                             |
+
+**Replica set (recomendado para desarrollo local):** el checkout usa transacciones multi-documento, por lo que MongoDB debe correr como **replica set de un nodo**:
 
 ```bash
-docker compose -f src/main/docker/services.yml up -d --wait
+docker compose -f src/main/docker/mongodb-replicaset.yml up -d --wait
 ```
 
 - La URI de desarrollo ya incluye `?replicaSet=rs0&retryWrites=true&directConnection=true` (`application-dev.yml`, puerto `27018`).
 - Spring Boot 4 inicia el compose automáticamente al levantar la aplicación en `dev`.
-- Verificación: `docker exec knstore-mongodb-1 mongosh --quiet mongodb://localhost:27017/admin --eval 'rs.status().members'` debe mostrar un nodo `PRIMARY`.
+- Verificación: `docker exec knstore-mongodb-1 mongosh --quiet mongodb://localhost:27017/admin --eval 'db.hello().isWritablePrimary'` debe devolver `true`.
 - El seed del catálogo demo (`knstore.seed.catalog=true`) se ejecuta al arrancar en desarrollo; es idempotente y no contamina producción.
+
+**Standalone (EC2/DNS):** si se despliega en la EC2 para `app.knstore.duckdns.org` (sin transacciones):
+
+```bash
+docker compose -f src/main/docker/mongodb.yml up -d
+```
 
 ### Aplicación
 
