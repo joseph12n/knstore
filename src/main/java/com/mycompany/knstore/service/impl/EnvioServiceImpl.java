@@ -13,6 +13,7 @@ import com.mycompany.knstore.service.EnvioService;
 import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.dto.EnvioDTO;
 import com.mycompany.knstore.service.mapper.EnvioMapper;
+import com.mycompany.knstore.service.util.InMemoryPageUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Envio}.
@@ -93,15 +95,14 @@ public class EnvioServiceImpl implements EnvioService {
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
             return getCurrentAccountId()
                 .map(cuentaId -> {
-                    LinkedList<EnvioDTO> envios = pedidoRepository
+                    List<EnvioDTO> envios = pedidoRepository
                         .findByCuentaId(cuentaId, Pageable.unpaged())
                         .getContent()
                         .stream()
                         .flatMap(pedido -> envioRepository.findByPedidoId(pedido.getId(), Pageable.unpaged()).getContent().stream())
                         .map(envioMapper::toDto)
                         .collect(Collectors.toCollection(LinkedList::new));
-                    Page<EnvioDTO> page = new PageImpl<>(envios, pageable, envios.size());
-                    return page;
+                    return InMemoryPageUtils.paginar(envios, pageable);
                 })
                 .orElse(Page.empty(pageable));
         }
@@ -135,6 +136,7 @@ public class EnvioServiceImpl implements EnvioService {
     }
 
     @Override
+    @Transactional
     public EnvioDTO asignarTracking(String id, String transportadora, String numeroRastreo) {
         LOG.debug("Request to assign tracking to Envio : {}", id);
         Envio envio = envioRepository.findById(id).orElseThrow(() -> new IllegalStateException("Envio no encontrado"));
@@ -146,6 +148,7 @@ public class EnvioServiceImpl implements EnvioService {
     }
 
     @Override
+    @Transactional
     public EnvioDTO cambiarEstado(String id, EstadoEnvio nuevoEstado) {
         LOG.debug("Request to change estado of Envio : {} -> {}", id, nuevoEstado);
         Envio envio = envioRepository.findById(id).orElseThrow(() -> new IllegalStateException("Envio no encontrado"));
@@ -164,6 +167,7 @@ public class EnvioServiceImpl implements EnvioService {
     }
 
     @Override
+    @Transactional
     public EnvioDTO marcarDevolucion(String id) {
         LOG.debug("Request to mark Envio as devuelto : {}", id);
         Envio envio = envioRepository.findById(id).orElseThrow(() -> new IllegalStateException("Envio no encontrado"));

@@ -9,6 +9,8 @@ import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CarritoService;
 import com.mycompany.knstore.service.dto.CarritoDTO;
 import com.mycompany.knstore.service.mapper.CarritoMapper;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Carrito}.
@@ -108,8 +111,14 @@ public class CarritoServiceImpl implements CarritoService {
     }
 
     @Override
+    @Transactional
     public void vaciar(String id) {
         LOG.debug("Request to vaciar items del Carrito : {}", id);
         itemCarritoRepository.deleteAll(itemCarritoRepository.findByCarritoId(id));
+        carritoRepository.findById(id).ifPresent(carrito -> {
+            carrito.setSubtotal(BigDecimal.ZERO);
+            carrito.setFechaActualizacion(Instant.now());
+            carritoRepository.save(carrito);
+        });
     }
 }

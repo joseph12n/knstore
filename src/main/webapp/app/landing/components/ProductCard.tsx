@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Badge, Card } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 import { IProductoStorefront } from 'app/landing/model/storefront.model';
@@ -93,17 +91,6 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
               -{discountPercent}%
             </Badge>
           ) : null}
-          <button
-            type="button"
-            className="btn btn-light btn-sm position-absolute bottom-0 end-0 m-2 rounded-circle z-3"
-            aria-label="Añadir a favoritos"
-            onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <FontAwesomeIcon icon={faHeart} />
-          </button>
         </div>
       </Link>
       <Card.Body className="d-flex flex-column p-3">

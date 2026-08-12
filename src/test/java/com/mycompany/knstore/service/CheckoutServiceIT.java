@@ -265,7 +265,6 @@ class CheckoutServiceIT {
         CheckoutItemDTO item = new CheckoutItemDTO();
         item.setProductoId(producto.getId());
         item.setCantidad(cantidad);
-        item.setPrecioUnitario(new BigDecimal("100000.00"));
 
         CheckoutRequestDTO request = new CheckoutRequestDTO();
         request.setDireccionId(direccion.getId());
@@ -329,12 +328,16 @@ class CheckoutServiceIT {
     }
 
     @Test
-    void precioModificadoDesdeElCarritoEsRechazado() {
-        CheckoutRequestDTO request = requestDeCompra(1);
-        request.getItems().get(0).setPrecioUnitario(new BigDecimal("50000.00"));
+    void elPrecioDelClienteEsIgnoradoElServidorUsaElDeLaBaseDeDatos() {
+        // El checkout ya no acepta precioUnitario del cliente: el precio de venta
+        // se resuelve siempre desde el producto en base de datos.
+        CheckoutResultDTO result = checkoutService.checkout(cuenta, requestDeCompra(1));
 
-        assertThatThrownBy(() -> checkoutService.checkout(cuenta, request)).isInstanceOf(CheckoutException.class);
-        assertThat(pedidoRepository.count()).isZero();
+        Pedido pedido = pedidoRepository.findById(result.getPedido().getId()).orElseThrow();
+        List<ItemPedido> items = itemPedidoRepository.findByPedidoId(pedido.getId());
+        assertThat(items).hasSize(1);
+        assertThat(items.get(0).getPrecioUnitario()).isEqualByComparingTo(new BigDecimal("100000.00"));
+        assertThat(pedido.getTotal()).isEqualByComparingTo(new BigDecimal("128900.00"));
     }
 
     @Test

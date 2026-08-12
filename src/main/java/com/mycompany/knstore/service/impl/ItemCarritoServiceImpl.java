@@ -136,7 +136,8 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
     }
 
     private ItemCarrito guardarConTotales(ItemCarrito itemCarrito) {
-        completarPrecioUnitarioSiFalta(itemCarrito);
+        validarCantidad(itemCarrito);
+        resolverPrecioDesdeProducto(itemCarrito);
         itemCarrito.setSubtotal(calcularSubtotal(itemCarrito));
         itemCarrito = itemCarritoRepository.save(itemCarrito);
         if (itemCarrito.getCarrito() != null) {
@@ -145,18 +146,27 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
         return itemCarrito;
     }
 
-    private void completarPrecioUnitarioSiFalta(ItemCarrito itemCarrito) {
-        if (itemCarrito.getPrecioUnitario() != null) {
-            return;
+    private void validarCantidad(ItemCarrito itemCarrito) {
+        if (itemCarrito.getCantidad() == null || itemCarrito.getCantidad() < 1) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor a cero");
         }
+    }
+
+    /**
+     * El precio unitario nunca se toma del cliente: se resuelve siempre desde el
+     * producto en base de datos para impedir la manipulacion de precios.
+     */
+    private void resolverPrecioDesdeProducto(ItemCarrito itemCarrito) {
         if (itemCarrito.getProducto() == null || itemCarrito.getProducto().getId() == null) {
-            return;
+            throw new IllegalArgumentException("El producto es obligatorio");
         }
-        productoRepository
+        Producto producto = productoRepository
             .findById(itemCarrito.getProducto().getId())
-            .map(Producto::getPrecio)
-            .filter(precio -> precio.getPrecioVenta() != null)
-            .ifPresent(precio -> itemCarrito.setPrecioUnitario(precio.getPrecioVenta()));
+            .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+        if (producto.getPrecio() == null || producto.getPrecio().getPrecioVenta() == null) {
+            throw new IllegalArgumentException("El producto no tiene precio de venta configurado");
+        }
+        itemCarrito.setPrecioUnitario(producto.getPrecio().getPrecioVenta());
     }
 
     private BigDecimal calcularSubtotal(ItemCarrito itemCarrito) {

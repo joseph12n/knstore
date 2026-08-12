@@ -10,7 +10,9 @@ import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.FacturaService;
 import com.mycompany.knstore.service.dto.FacturaDTO;
 import com.mycompany.knstore.service.mapper.FacturaMapper;
+import com.mycompany.knstore.service.util.InMemoryPageUtils;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -89,7 +91,7 @@ public class FacturaServiceImpl implements FacturaService {
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
             return getCurrentAccountId()
                 .map(cuentaId -> {
-                    LinkedList<FacturaDTO> facturas = pedidoRepository
+                    List<FacturaDTO> facturas = pedidoRepository
                         .findByCuentaId(cuentaId, Pageable.unpaged())
                         .getContent()
                         .stream()
@@ -102,8 +104,7 @@ public class FacturaServiceImpl implements FacturaService {
                         )
                         .map(facturaMapper::toDto)
                         .collect(Collectors.toCollection(LinkedList::new));
-                    Page<FacturaDTO> page = new PageImpl<>(facturas, pageable, facturas.size());
-                    return page;
+                    return InMemoryPageUtils.paginar(facturas, pageable);
                 })
                 .orElse(Page.empty(pageable));
         }

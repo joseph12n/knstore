@@ -163,6 +163,19 @@ class PagoFlujoResourceIT {
         productoInventarioRepository.deleteAll();
     }
 
+    private void autenticarComo(String userId, String rol) {
+        Instant now = Instant.now();
+        Jwt jwt = Jwt.withTokenValue("token")
+            .issuedAt(now)
+            .expiresAt(now.plusSeconds(60))
+            .claim(SecurityUtils.USER_ID_CLAIM, userId)
+            .header("alg", "none")
+            .build();
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(jwt, "token", List.of(new SimpleGrantedAuthority(rol))));
+        SecurityContextHolder.setContext(context);
+    }
+
     @Test
     @WithMockUser(roles = "ADMIN")
     void flujoCompletoIniciarCallbackHistorialYReembolso() throws Exception {
@@ -294,18 +307,7 @@ class PagoFlujoResourceIT {
         cuentaRepository.save(cuenta);
 
         // Principal JWT con el claim userId para que el checkout resuelva la cuenta autenticada.
-        Instant now = Instant.now();
-        Jwt jwt = Jwt.withTokenValue("token")
-            .issuedAt(now)
-            .expiresAt(now.plusSeconds(60))
-            .claim(SecurityUtils.USER_ID_CLAIM, user.getId())
-            .header("alg", "none")
-            .build();
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(
-            new UsernamePasswordAuthenticationToken(jwt, "token", List.of(new SimpleGrantedAuthority(AuthoritiesConstants.CLIENTE)))
-        );
-        SecurityContextHolder.setContext(context);
+        autenticarComo(user.getId(), AuthoritiesConstants.CLIENTE);
 
         Map<String, Object> checkoutRequest = Map.of(
             "direccionId",
@@ -317,7 +319,7 @@ class PagoFlujoResourceIT {
             "notasCliente",
             "pago aprobado desde el checkout",
             "items",
-            List.of(Map.of("productoId", producto.getId(), "cantidad", 1, "precioUnitario", new BigDecimal("100000.00")))
+            List.of(Map.of("productoId", producto.getId(), "cantidad", 1))
         );
 
         String checkoutResponse = mockMvc
@@ -350,20 +352,26 @@ class PagoFlujoResourceIT {
             .andExpect(jsonPath("$.referenciaPasarela").value(pago.getReferenciaPasarela()));
 
         assertThat(pagoRepository.findByPedidoId(pedidoId, org.springframework.data.domain.Pageable.unpaged()).getContent()).hasSize(1);
+    }
 
-        // Un callback posterior con otro estado no revierte el pago aprobado.
+    @Test
+    @WithMockUser(roles = "CLIENTE")
+    void clienteNoPuedeInvocarElCallbackDeLaPasarela() throws Exception {
+        Pago pago = new Pago();
+        pago.setEstado(EstadoPago.PENDING);
+        pago.setMonto(new BigDecimal("128900.00"));
+        pago.setMetodoPago(MetodoPago.NEQUI);
+        pago.setReferenciaPasarela("SIM-CLIENTE-PROHIBIDO");
+        pago.setPedido(pedido);
+        pagoRepository.save(pago);
+
         mockMvc
             .perform(
                 post("/api/pagos/callback")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        om.writeValueAsBytes(
-                            Map.of("referencia", pago.getReferenciaPasarela(), "estado", "REJECTED", "monto", pago.getMonto())
-                        )
-                    )
+                    .content(om.writeValueAsBytes(Map.of("referencia", "SIM-CLIENTE-PROHIBIDO", "estado", "APPROVED", "monto", 128900.00)))
             )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.estado").value("APPROVED"));
+            .andExpect(status().isForbidden());
     }
 
     @Test

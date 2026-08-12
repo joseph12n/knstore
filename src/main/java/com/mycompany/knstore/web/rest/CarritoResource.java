@@ -75,9 +75,7 @@ public class CarritoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessCarritoId(#id) and @resourceAccessService.canAccessCarritoDto(#carritoDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<CarritoDTO> updateCarrito(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody CarritoDTO carritoDTO
@@ -112,9 +110,7 @@ public class CarritoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessCarritoId(#id) and @resourceAccessService.canAccessCarritoDto(#carritoDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<CarritoDTO> partialUpdateCarrito(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody CarritoDTO carritoDTO
@@ -171,7 +167,7 @@ public class CarritoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessCarritoId(#id)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<Void> deleteCarrito(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Carrito : {}", id);
         carritoService.delete(id);

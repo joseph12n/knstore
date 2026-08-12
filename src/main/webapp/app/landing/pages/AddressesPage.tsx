@@ -15,7 +15,7 @@ import {
 import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import { IDireccion } from 'app/shared/model/direccion.model';
 import AddressCard from 'app/landing/components/AddressCard';
-import AddressForm from 'app/landing/components/AddressForm';
+import AddressForm, { AddressFormData } from 'app/landing/components/AddressForm';
 import DeleteConfirmModal from 'app/landing/components/DeleteConfirmModal';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 
@@ -74,7 +74,7 @@ export const AddressesPage = () => {
     setEditingAddress(undefined);
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: AddressFormData) => {
     if (!cuenta?.id) {
       toast.error('Primero debes completar tu perfil para registrar direcciones.');
       return;
