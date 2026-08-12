@@ -7,7 +7,6 @@ import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.ItemPedidoRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
-import com.mycompany.knstore.repository.ProductoInventarioRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.HistorialEstadoService;
@@ -32,6 +31,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Pedido}.
@@ -49,8 +49,6 @@ public class PedidoServiceImpl implements PedidoService {
 
     private final ItemPedidoRepository itemPedidoRepository;
 
-    private final ProductoInventarioRepository productoInventarioRepository;
-
     private final MongoTemplate mongoTemplate;
 
     private final PedidoMapper pedidoMapper;
@@ -61,7 +59,6 @@ public class PedidoServiceImpl implements PedidoService {
         PedidoRepository pedidoRepository,
         CuentaRepository cuentaRepository,
         ItemPedidoRepository itemPedidoRepository,
-        ProductoInventarioRepository productoInventarioRepository,
         MongoTemplate mongoTemplate,
         PedidoMapper pedidoMapper,
         HistorialEstadoService historialEstadoService
@@ -69,7 +66,6 @@ public class PedidoServiceImpl implements PedidoService {
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
         this.itemPedidoRepository = itemPedidoRepository;
-        this.productoInventarioRepository = productoInventarioRepository;
         this.mongoTemplate = mongoTemplate;
         this.pedidoMapper = pedidoMapper;
         this.historialEstadoService = historialEstadoService;
@@ -95,6 +91,7 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional
     public Optional<PedidoDTO> partialUpdate(PedidoDTO pedidoDTO) {
         LOG.debug("Request to partially update Pedido : {}", pedidoDTO);
 
@@ -115,17 +112,17 @@ public class PedidoServiceImpl implements PedidoService {
             .map(pedidoMapper::toDto);
     }
 
+    /**
+     * Restaura el stock de los ítems de un pedido con un incremento atómico
+     * (findAndModify), de modo que cancelaciones concurrentes no dupliquen stock.
+     */
     private void restaurarStock(String pedidoId) {
         List<ItemPedido> items = itemPedidoRepository.findByPedidoId(pedidoId);
         for (ItemPedido item : items) {
             if (item.getProducto() != null && item.getProducto().getInventario() != null) {
-                ProductoInventario inventario = productoInventarioRepository
-                    .findById(item.getProducto().getInventario().getId())
-                    .orElse(null);
-                if (inventario != null) {
-                    inventario.setStock(inventario.getStock() + item.getCantidad());
-                    productoInventarioRepository.save(inventario);
-                }
+                String inventarioId = item.getProducto().getInventario().getId();
+                Update update = new Update().inc("stock", item.getCantidad());
+                mongoTemplate.updateFirst(new Query(Criteria.where("id").is(inventarioId)), update, ProductoInventario.class);
             }
         }
     }
@@ -177,6 +174,7 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional
     public PedidoDTO cambiarEstado(String id, EstadoPedido nuevoEstado) {
         LOG.debug("Request to change estado of Pedido : {} -> {}", id, nuevoEstado);
         Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new IllegalStateException("Pedido no encontrado"));
@@ -191,6 +189,10 @@ public class PedidoServiceImpl implements PedidoService {
             estadoAnterior != null ? estadoAnterior.name() : null,
             nuevoEstado.name()
         );
+        // La cancelacion siempre restaura el stock, sea por el endpoint del cliente o de administracion.
+        if (nuevoEstado == EstadoPedido.CANCELLED) {
+            restaurarStock(id);
+        }
         return pedidoMapper.toDto(pedido);
     }
 
@@ -198,18 +200,7 @@ public class PedidoServiceImpl implements PedidoService {
         if (anterior == null || nuevo == null) {
             throw new IllegalStateException("El estado del pedido es obligatorio");
         }
-        if (anterior.equals(nuevo)) {
-            return;
-        }
-        boolean valida = switch (anterior) {
-            case PENDING -> nuevo == EstadoPedido.CONFIRMED || nuevo == EstadoPedido.CANCELLED;
-            case CONFIRMED -> nuevo == EstadoPedido.SHIPPED || nuevo == EstadoPedido.CANCELLED;
-            case SHIPPED -> nuevo == EstadoPedido.DELIVERED;
-            case DELIVERED -> nuevo == EstadoPedido.RETURNED;
-            case PROCESSING -> nuevo == EstadoPedido.CANCELLED || nuevo == EstadoPedido.SHIPPED;
-            case RETURNED, CANCELLED -> false;
-        };
-        if (!valida) {
+        if (!anterior.puedeTransicionarA(nuevo)) {
             throw new IllegalStateException("Transicion invalida de " + anterior.name() + " a " + nuevo.name());
         }
     }

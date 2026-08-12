@@ -1,16 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, Card, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getFacturas } from 'app/entities/factura/factura.reducer';
-import { getEntities as getPagos } from 'app/entities/pago/pago.reducer';
-import { getEntities as getPedidos } from 'app/entities/pedido/pedido.reducer';
-import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import { IFactura } from 'app/shared/model/factura.model';
+import useCuentaActual from 'app/landing/hooks/useCuentaActual';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import EmptyState from 'app/landing/components/EmptyState';
 import Pagination from 'app/landing/components/Pagination';
@@ -20,13 +17,10 @@ const ITEMS_PER_PAGE = 10;
 
 export const InvoicesPage = () => {
   const dispatch = useAppDispatch();
-  const account = useAppSelector(state => state.authentication.account);
+  const { account } = useCuentaActual();
   const facturas = useAppSelector(state => state.factura.entities) ?? [];
   const totalItems = useAppSelector(state => state.factura.totalItems ?? 0);
-  const pagos = useAppSelector(state => state.pago.entities) ?? [];
-  const pedidos = useAppSelector(state => state.pedido.entities) ?? [];
-  const cuenta = useAppSelector(state => state.cuenta.entity);
-  const loading = useAppSelector(state => state.factura.loading || state.pago.loading || state.pedido.loading || state.cuenta.loading);
+  const loading = useAppSelector(state => state.factura.loading);
 
   const [activePage, setActivePage] = useState(1);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -54,42 +48,15 @@ export const InvoicesPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getSession());
-    if (account.login) {
-      dispatch(getCuentaByLogin(account.login));
-    }
-    return () => {
-      dispatch(resetCuenta());
-    };
-  }, [dispatch, account.login]);
-
-  useEffect(() => {
-    // TODO backend: agregar filtro por cuentaId para paginar facturas del usuario directamente.
-    dispatch(getPedidos({ page: 0, size: 1000, sort: 'numeroPedido,desc' }));
-    dispatch(getPagos({ page: 0, size: 1000, sort: 'id,desc' }));
-  }, [dispatch]);
-
-  useEffect(() => {
+    // El backend pagina y filtra por la cuenta del cliente autenticado.
     dispatch(getFacturas({ page: activePage - 1, size: ITEMS_PER_PAGE, sort: 'id,desc' }));
-  }, [dispatch, activePage]);
-
-  const pedidosUsuarioIds = useMemo(() => new Set(pedidos.filter(p => p.cuenta?.id === cuenta?.id).map(p => p.id)), [pedidos, cuenta]);
-
-  const pagosUsuarioIds = useMemo(
-    () => new Set(pagos.filter(p => p.pedido?.id && pedidosUsuarioIds.has(p.pedido.id)).map(p => p.id)),
-    [pagos, pedidosUsuarioIds],
-  );
-
-  const facturasUsuario = useMemo(
-    () => facturas.filter(f => f.pago?.id && pagosUsuarioIds.has(f.pago.id)).sort((a, b) => (b.id || '').localeCompare(a.id || '')),
-    [facturas, pagosUsuarioIds],
-  );
+  }, [dispatch, activePage, account.login]);
 
   if (loading) {
     return <LoadingSpinner fullScreen />;
   }
 
-  if (facturasUsuario.length === 0) {
+  if (facturas.length === 0) {
     return (
       <div className="kn-fade-in">
         <h1 className="h2 fw-bold mb-4">Mis facturas</h1>
@@ -123,7 +90,7 @@ export const InvoicesPage = () => {
               </tr>
             </thead>
             <tbody>
-              {facturasUsuario.map(factura => (
+              {facturas.map(factura => (
                 <tr key={factura.id}>
                   <td className="fw-semibold">{factura.prefijo || factura.id}</td>
                   <td>

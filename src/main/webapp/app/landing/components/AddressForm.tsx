@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 
 import { IDireccion } from 'app/shared/model/direccion.model';
 
-interface AddressFormData {
+export interface AddressFormData {
   direccion: string;
   barrio: string;
   localidad: string;

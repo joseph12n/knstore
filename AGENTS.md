@@ -137,6 +137,12 @@ Para `Cuenta`, `Direccion`, `Carrito`, `Pedido`, `ItemCarrito`, `ItemPedido`, `P
 - `CLIENTE`: solo puede leer/escribir/borrar sus propios recursos.
 - `USER`: acceso denegado a endpoints protegidos.
 
+### 5.3 Endpoints de negocio (seguridad por diseño)
+
+- `POST /api/pagos/callback` es **server-to-server**: solo `ADMIN`/`MANAGER` (la pasarela notifica). El cliente paga vía `POST /api/pagos/iniciar`, que con la pasarela simulada auto-aprueba en el servidor.
+- `POST /api/pedidos/{id}/cancelar`: cancelación con máquina de estados + restauración de stock, disponible para el propietario y administración. Los PATCH/PUT de `Pedido`/`Pago`/`Carrito`/`Factura`/`Envio`/`ItemPedido` son solo `ADMIN`/`MANAGER` (anti mass-assignment).
+- **Precios siempre server-side**: checkout e `ItemCarrito` ignoran cualquier `precioUnitario` del cliente; se resuelven desde `Producto.precio.precioVenta` en BD.
+
 ---
 
 ## 6. Requerimientos funcionales (resumen)
@@ -157,7 +163,7 @@ Para `Cuenta`, `Direccion`, `Carrito`, `Pedido`, `ItemCarrito`, `ItemPedido`, `P
 | ------ | ------------------------------ | ------- |
 | RF-033 | Editar datos del perfil propio | Parcial |
 
-\* _La UI del carrito y sincronización server/localStorage existen; el checkout completo y operaciones de pedido/pago/envío/factura están pendientes._
+\* _Pendientes conocidos de calidad (backlog): N+1 en listados de CLIENTE (Pago/Envio/Factura) y en `ResourceAccessService`, `fetchProductos` del carrito limitado a 1000, filtros de búsqueda aplicados solo a la página actual, consecutivos diarios en pedidos/facturas._
 
 ---
 
@@ -285,6 +291,9 @@ npm run java:docker                                 # Imagen con Jib
 - `src/main/webapp/app/app.tsx` y `routes.tsx`: enrutamiento y layout dual.
 - `src/main/webapp/app/landing/`: tienda pública y panel de cliente.
 - `src/main/webapp/app/dashboard/index.tsx`: punto de entrada del panel admin.
+- `src/main/java/com/mycompany/knstore/service/util/InMemoryPageUtils.java`: paginación en memoria para listados anidados de CLIENTE.
+- `src/main/webapp/app/landing/hooks/useCuentaActual.ts` y `utils/apiError.ts`: patrones compartidos del panel de cliente (carga de cuenta, errores Axios tipados).
+- `src/main/webapp/app/landing/services/checkout.service.ts`: payload y llamadas del checkout (precio siempre server-side).
 
 ---
 

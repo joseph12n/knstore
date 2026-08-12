@@ -7,16 +7,14 @@ interface HeroBannerProps {
   subtitle?: string;
   ctaText?: string;
   ctaLink?: string;
-  backgroundImage?: string;
 }
 
-export const HeroBanner = ({ title, subtitle, ctaText = 'Ver colección', ctaLink = '/buscar', backgroundImage }: HeroBannerProps) => (
+export const HeroBanner = ({ title, subtitle, ctaText = 'Ver colección', ctaLink = '/buscar' }: HeroBannerProps) => (
   <section
     className="position-relative d-flex align-items-center text-white overflow-hidden"
     style={{
       minHeight: 'clamp(280px, 50vh, 520px)',
       backgroundColor: 'var(--kn-color-primary)',
-      backgroundImage: backgroundImage ? `linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.45)), url(${backgroundImage})` : undefined,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     }}

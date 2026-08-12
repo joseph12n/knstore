@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -6,12 +6,16 @@ import { useNavigate } from 'react-router';
 
 interface SearchBoxProps {
   initialValue?: string;
-  variant?: 'default' | 'compact';
 }
 
-export const SearchBox = ({ initialValue = '', variant = 'default' }: SearchBoxProps) => {
+export const SearchBox = ({ initialValue = '' }: SearchBoxProps) => {
   const [query, setQuery] = useState(initialValue);
   const navigate = useNavigate();
+
+  // Sincroniza el input cuando la query cambia desde fuera (navegacion /buscar?q=...).
+  useEffect(() => {
+    setQuery(initialValue);
+  }, [initialValue]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +26,7 @@ export const SearchBox = ({ initialValue = '', variant = 'default' }: SearchBoxP
   };
 
   return (
-    <Form onSubmit={handleSubmit} className={variant === 'compact' ? 'w-auto' : 'w-100'}>
+    <Form onSubmit={handleSubmit} className="w-100">
       <InputGroup>
         <Form.Control
           type="search"
@@ -30,7 +34,6 @@ export const SearchBox = ({ initialValue = '', variant = 'default' }: SearchBoxP
           aria-label="Buscar productos"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          className={variant === 'compact' ? 'border-end-0' : ''}
         />
         <button type="submit" className="btn btn-primary" aria-label="Buscar">
           <FontAwesomeIcon icon={faSearch} />

@@ -17,10 +17,3 @@ export interface CartItem {
   cantidad: number;
   precioUnitario: number;
 }
-
-export interface CheckoutState {
-  direccion?: string;
-  metodoEnvio?: string;
-  metodoPago?: string;
-  notas?: string;
-}

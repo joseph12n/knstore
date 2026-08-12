@@ -1,5 +1,6 @@
 package com.mycompany.knstore.web.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.domain.Factura;
 import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.repository.FacturaRepository;
@@ -12,7 +13,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,16 +54,20 @@ public class FacturaResource {
 
     private final FacturaMapper facturaMapper;
 
+    private final ObjectMapper objectMapper;
+
     public FacturaResource(
         FacturaService facturaService,
         FacturaRepository facturaRepository,
         FacturaPdfService facturaPdfService,
-        FacturaMapper facturaMapper
+        FacturaMapper facturaMapper,
+        ObjectMapper objectMapper
     ) {
         this.facturaService = facturaService;
         this.facturaRepository = facturaRepository;
         this.facturaPdfService = facturaPdfService;
         this.facturaMapper = facturaMapper;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -74,7 +78,7 @@ public class FacturaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaDto(#facturaDTO)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<FacturaDTO> createFactura(@Valid @RequestBody FacturaDTO facturaDTO) throws URISyntaxException {
         LOG.debug("REST request to save Factura : {}", facturaDTO);
         if (facturaDTO.getId() != null) {
@@ -97,9 +101,7 @@ public class FacturaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessFacturaId(#id) and @resourceAccessService.canAccessFacturaDto(#facturaDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<FacturaDTO> updateFactura(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody FacturaDTO facturaDTO
@@ -134,9 +136,7 @@ public class FacturaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessFacturaId(#id) and @resourceAccessService.canAccessFacturaDto(#facturaDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<FacturaDTO> partialUpdateFactura(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody FacturaDTO facturaDTO
@@ -197,18 +197,18 @@ public class FacturaResource {
      */
     @GetMapping("/{id}/download")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
-    public ResponseEntity<byte[]> downloadFactura(@PathVariable("id") String id) {
+    public ResponseEntity<byte[]> downloadFactura(@PathVariable("id") String id) throws java.io.IOException {
         LOG.debug("REST request to download Factura : {}", id);
         FacturaDTO facturaDTO = facturaService
             .findOne(id)
             .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
 
         String filename = "factura-" + (facturaDTO.getPrefijo() != null ? facturaDTO.getPrefijo() + "-" : "") + id + ".json";
-        byte[] content = facturaDTO.toString().getBytes(StandardCharsets.UTF_8);
+        byte[] content = objectMapper.writeValueAsBytes(facturaDTO);
 
         return ResponseEntity.ok()
             .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
-            .header("Content-Type", "application/json;charset=UTF-8")
+            .contentType(MediaType.APPLICATION_JSON)
             .body(content);
     }
 
@@ -245,7 +245,7 @@ public class FacturaResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<Void> deleteFactura(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Factura : {}", id);
         facturaService.delete(id);

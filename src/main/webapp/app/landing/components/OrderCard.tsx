@@ -30,7 +30,7 @@ export const OrderCard = ({ pedido, onCancel }: OrderCardProps) => {
         <div className="d-flex flex-wrap justify-content-between gap-3 mb-3">
           <div>
             <div className="text-muted small">Fecha</div>
-            <div>{pedido.id ? dayjs().format('DD/MM/YYYY') : '-'}</div>
+            <div>{pedido.createdDate ? dayjs(pedido.createdDate).format('DD/MM/YYYY') : '-'}</div>
           </div>
           <div>
             <div className="text-muted small">Total</div>

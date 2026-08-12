@@ -216,6 +216,23 @@ class PagoServiceImplTest {
     }
 
     @Test
+    void callbackDePedidoCanceladoRechazaElPagoSinConfirmar() {
+        Pedido pedido = pedidoPendiente();
+        pedido.setEstado(EstadoPedido.CANCELLED);
+        Pago pago = pagoPendiente("pg-1", "SIM-123", new BigDecimal("120000.00"), pedido);
+        when(pagoRepository.findByReferenciaPasarela("SIM-123")).thenReturn(Optional.of(pago));
+        when(pagoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // La pasarela simbolica aprueba siempre, pero la maquina de estados del pedido lo impide.
+        PagoDTO result = service.procesarCallback("SIM-123", "APPROVED", new BigDecimal("120000.00"), null);
+
+        assertThat(result.getEstado()).isEqualTo(EstadoPago.REJECTED);
+        assertThat(result.getDescripcionRespuesta()).contains("cancelado");
+        assertThat(pedido.getEstado()).isEqualTo(EstadoPedido.CANCELLED);
+        verify(pedidoRepository, never()).save(any());
+    }
+
+    @Test
     void callbackDeReferenciaDesconocidaLanzaExcepcion() {
         when(pagoRepository.findByReferenciaPasarela("DESCONOCIDA")).thenReturn(Optional.empty());
 

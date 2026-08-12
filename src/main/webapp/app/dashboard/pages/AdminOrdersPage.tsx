@@ -12,14 +12,24 @@ import { EstadoPedido } from 'app/shared/model/enumerations/estado-pedido.model'
 
 type EstadoPedidoKey = keyof typeof EstadoPedido;
 
-const VALID_TRANSITIONS: Record<EstadoPedidoKey, EstadoPedidoKey[]> = {
+export const VALID_TRANSITIONS: Record<EstadoPedidoKey, EstadoPedidoKey[]> = {
+  // Espejo de la maquina de estados del backend (EstadoPedido.puedeTransicionarA).
   PENDING: ['CONFIRMED', 'CANCELLED'],
-  CONFIRMED: ['PROCESSING', 'CANCELLED'],
+  CONFIRMED: ['SHIPPED', 'CANCELLED'],
   PROCESSING: ['SHIPPED', 'CANCELLED'],
-  SHIPPED: ['DELIVERED', 'RETURNED'],
+  SHIPPED: ['DELIVERED'],
   DELIVERED: ['RETURNED'],
   CANCELLED: [],
   RETURNED: [],
+};
+
+export const getNombreCliente = (pedido: IPedido): string => {
+  const cuenta = pedido.cuenta;
+  if (!cuenta) {
+    return pedido.cuenta?.user?.login || '-';
+  }
+  const nombres = [cuenta.primerNombre, cuenta.segundoNombre, cuenta.primerApellido, cuenta.segundoApellido].filter(Boolean).join(' ');
+  return nombres || cuenta.user?.login || '-';
 };
 
 const AdminOrdersPage = () => {
@@ -75,7 +85,7 @@ const AdminOrdersPage = () => {
                 {pedidos.map(pedido => (
                   <tr key={pedido.id}>
                     <td className="fw-semibold">#{pedido.numeroPedido || pedido.id}</td>
-                    <td>{pedido.cuenta?.nombres || pedido.cuenta?.user?.login || '-'}</td>
+                    <td>{getNombreCliente(pedido)}</td>
                     <td>{formatCOP(pedido.total)}</td>
                     <td>
                       <Badge bg={ORDER_STATUS_COLORS[pedido.estado || 'PENDING'] || 'secondary'}>

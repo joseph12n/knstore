@@ -16,6 +16,7 @@ import useDebounce from 'app/landing/hooks/useDebounce';
 import useCart from 'app/landing/hooks/useCart';
 import { IProductoStorefront } from 'app/landing/model/storefront.model';
 import { CATALOG_PAGE_SIZE } from 'app/landing/utils/constants';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
 
 const SEARCH_PAGE_SIZE = CATALOG_PAGE_SIZE;
 
@@ -77,12 +78,11 @@ export const SearchPage = () => {
         const response = await axios.get<IProductoStorefront[]>(requestUrl, { signal: controller.signal });
         setSearchResults(response.data.map(p => ({ ...p, imagenes: p.imagenes ?? [] })));
         setTotalItems(parseInt(response.headers['x-total-count'] || `${response.data.length}`, 10));
-      } catch (err: any) {
-        if (axios.isCancel(err)) {
+      } catch (axiosError) {
+        if (axios.isCancel(axiosError)) {
           return;
         }
-        const message = err?.response?.data?.message || err?.message || 'Error desconocido';
-        setError(`No pudimos realizar la búsqueda: ${message}`);
+        setError(`No pudimos realizar la búsqueda: ${getApiErrorMessage(axiosError)}`);
       } finally {
         if (!controller.signal.aborted) {
           setLoading(false);
