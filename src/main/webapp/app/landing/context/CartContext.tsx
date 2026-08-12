@@ -289,7 +289,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
 
       // Wait for the initial server cart load before mutating so the load does not overwrite the new item
       if (!initializedRef.current) {
-        if (!initPromiseRef.current) {
+        if (initPromiseRef.current === null) {
           void loadServerCart();
         }
         await initPromiseRef.current;

@@ -156,13 +156,7 @@ public class EnvioServiceImpl implements EnvioService {
         validarTransicionEnvio(estadoAnterior, nuevoEstado);
         envio.setEstado(nuevoEstado);
         envio = envioRepository.save(envio);
-        historialEstadoService.registrar(
-            "ENVIO",
-            envio.getId(),
-            "estado",
-            estadoAnterior != null ? estadoAnterior.name() : null,
-            nuevoEstado.name()
-        );
+        historialEstadoService.registrar("ENVIO", envio.getId(), "estado", estadoAnterior.name(), nuevoEstado.name());
         return envioMapper.toDto(envio);
     }
 
