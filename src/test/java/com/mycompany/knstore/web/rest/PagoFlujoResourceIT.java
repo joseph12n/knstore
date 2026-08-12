@@ -14,16 +14,29 @@ import com.mycompany.knstore.domain.Direccion;
 import com.mycompany.knstore.domain.Factura;
 import com.mycompany.knstore.domain.Pago;
 import com.mycompany.knstore.domain.Pedido;
+import com.mycompany.knstore.domain.Producto;
+import com.mycompany.knstore.domain.ProductoInventario;
+import com.mycompany.knstore.domain.ProductoPrecio;
+import com.mycompany.knstore.domain.User;
 import com.mycompany.knstore.domain.enumeration.EstadoPago;
 import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.domain.enumeration.MetodoPago;
 import com.mycompany.knstore.domain.enumeration.TipoServicioEnvio;
+import com.mycompany.knstore.domain.enumeration.UbicacionBodega;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.DireccionRepository;
 import com.mycompany.knstore.repository.FacturaRepository;
 import com.mycompany.knstore.repository.PagoRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
+import com.mycompany.knstore.repository.ProductoInventarioRepository;
+import com.mycompany.knstore.repository.ProductoPrecioRepository;
+import com.mycompany.knstore.repository.ProductoRepository;
+import com.mycompany.knstore.repository.UserRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
+import com.mycompany.knstore.security.SecurityUtils;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +45,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -65,6 +83,18 @@ class PagoFlujoResourceIT {
     private FacturaRepository facturaRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
+
+    @Autowired
+    private ProductoPrecioRepository productoPrecioRepository;
+
+    @Autowired
+    private ProductoInventarioRepository productoInventarioRepository;
+
+    @Autowired
     private MongoTemplate mongoTemplate;
 
     private Cuenta cuenta;
@@ -76,7 +106,7 @@ class PagoFlujoResourceIT {
     @BeforeEach
     void setUp() {
         cuenta = new Cuenta();
-        cuenta.setNumDocumento("DOC-FLUJO");
+        cuenta.setNumDocumento("1234567890");
         cuenta.setPrimerNombre("Flujo");
         cuenta.setSegundoNombre("De");
         cuenta.setPrimerApellido("Test");
@@ -121,11 +151,16 @@ class PagoFlujoResourceIT {
 
     @AfterEach
     void tearDown() {
+        SecurityContextHolder.clearContext();
         facturaRepository.deleteAll();
         pagoRepository.deleteAll();
         pedidoRepository.deleteAll();
         direccionRepository.deleteAll();
         cuentaRepository.deleteAll();
+        userRepository.deleteAll();
+        productoRepository.deleteAll();
+        productoPrecioRepository.deleteAll();
+        productoInventarioRepository.deleteAll();
     }
 
     @Test
@@ -171,6 +206,164 @@ class PagoFlujoResourceIT {
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.estado").value("REFUNDED"));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void iniciarPagoDobleEsIdempotenteYCallbackRechazadoNoReverte() throws Exception {
+        String primeraRespuesta = mockMvc
+            .perform(
+                post("/api/pagos/iniciar")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(Map.of("pedidoId", pedido.getId())))
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value("APPROVED"))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        String referencia = om.readTree(primeraRespuesta).get("referenciaPasarela").asText();
+
+        // Segundo iniciar: no reprocesa, devuelve el mismo pago aprobado.
+        mockMvc
+            .perform(
+                post("/api/pagos/iniciar")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(Map.of("pedidoId", pedido.getId())))
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value("APPROVED"))
+            .andExpect(jsonPath("$.referenciaPasarela").value(referencia));
+
+        List<Pago> pagos = pagoRepository.findByPedidoId(pedido.getId(), org.springframework.data.domain.Pageable.unpaged()).getContent();
+        assertThat(pagos).hasSize(1);
+
+        // Un callback externo con estado REJECTED no puede bajar un pago ya aprobado.
+        mockMvc
+            .perform(
+                post("/api/pagos/callback")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(Map.of("referencia", referencia, "estado", "REJECTED", "monto", 128900.00)))
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value("APPROVED"));
+
+        Pago persistido = pagoRepository.findByReferenciaPasarela(referencia).orElseThrow();
+        assertThat(persistido.getEstado()).isEqualTo(EstadoPago.APPROVED);
+        assertThat(persistido.getCodigoAutorizacion()).startsWith("AUT-");
+    }
+
+    @Test
+    void checkoutCreaElPagoAprobadoYElIniciarPosteriorNoReprocesa() throws Exception {
+        ProductoPrecio precio = new ProductoPrecio();
+        precio.setPrecioCompra(new BigDecimal("50000.00"));
+        precio.setPrecioVenta(new BigDecimal("100000.00"));
+        precio.setPrecioAdicional(BigDecimal.ZERO);
+        precio.setGanancia(new BigDecimal("50000.00"));
+        precio = productoPrecioRepository.save(precio);
+
+        ProductoInventario inventario = new ProductoInventario();
+        inventario.setStock(5);
+        inventario.setStockMinimo(1);
+        inventario.setUbicacionBodega(UbicacionBodega.BODEGA_PRINCIPAL);
+        inventario.setGarantiaMeses(6);
+        inventario = productoInventarioRepository.save(inventario);
+
+        Producto producto = new Producto();
+        producto.setNombre("Tenis Checkout");
+        producto.setSlug("tenis-checkout");
+        producto.setSku("TC-1");
+        producto.setColor("Negro");
+        producto.setTalla("40");
+        producto.setUnidadMedida("Par");
+        producto.setDestacado(false);
+        producto.setActivo(true);
+        producto.setPrecio(precio);
+        producto.setInventario(inventario);
+        producto = productoRepository.save(producto);
+
+        User user = new User();
+        user.setId("user-flujo-checkout");
+        user.setLogin("flujo-checkout");
+        user.setPassword("x".repeat(60));
+        user.setActivated(true);
+        user.setEmail("flujo-checkout@test.com");
+        userRepository.save(user);
+        cuenta.setUser(user);
+        cuentaRepository.save(cuenta);
+
+        // Principal JWT con el claim userId para que el checkout resuelva la cuenta autenticada.
+        Instant now = Instant.now();
+        Jwt jwt = Jwt.withTokenValue("token")
+            .issuedAt(now)
+            .expiresAt(now.plusSeconds(60))
+            .claim(SecurityUtils.USER_ID_CLAIM, user.getId())
+            .header("alg", "none")
+            .build();
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(
+            new UsernamePasswordAuthenticationToken(jwt, "token", List.of(new SimpleGrantedAuthority(AuthoritiesConstants.CLIENTE)))
+        );
+        SecurityContextHolder.setContext(context);
+
+        Map<String, Object> checkoutRequest = Map.of(
+            "direccionId",
+            direccion.getId(),
+            "metodoPago",
+            MetodoPago.NEQUI.name(),
+            "tipoServicioEnvio",
+            TipoServicioEnvio.ESTANDAR.name(),
+            "notasCliente",
+            "pago aprobado desde el checkout",
+            "items",
+            List.of(Map.of("productoId", producto.getId(), "cantidad", 1, "precioUnitario", new BigDecimal("100000.00")))
+        );
+
+        String checkoutResponse = mockMvc
+            .perform(post("/api/pedidos/checkout").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(checkoutRequest)))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+        String pedidoId = om.readTree(checkoutResponse).get("pedido").get("id").asText();
+
+        // El pago nace APPROVED directamente desde el checkout, en la misma transaccion.
+        List<Pago> pagos = pagoRepository.findByPedidoId(pedidoId, org.springframework.data.domain.Pageable.unpaged()).getContent();
+        assertThat(pagos).hasSize(1);
+        Pago pago = pagos.get(0);
+        assertThat(pago.getEstado()).isEqualTo(EstadoPago.APPROVED);
+        assertThat(pago.getReferenciaPasarela()).startsWith("SIM-");
+        assertThat(pago.getCodigoAutorizacion()).startsWith("AUT-");
+        assertThat(pago.getFechaPago()).isNotNull();
+        assertThat(pago.getMonto()).isEqualByComparingTo(new BigDecimal("109900.00"));
+
+        // /iniciar posterior es idempotente: mismo pago, sin reprocesar ni duplicar.
+        mockMvc
+            .perform(
+                post("/api/pagos/iniciar")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(Map.of("pedidoId", pedidoId)))
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value("APPROVED"))
+            .andExpect(jsonPath("$.referenciaPasarela").value(pago.getReferenciaPasarela()));
+
+        assertThat(pagoRepository.findByPedidoId(pedidoId, org.springframework.data.domain.Pageable.unpaged()).getContent()).hasSize(1);
+
+        // Un callback posterior con otro estado no revierte el pago aprobado.
+        mockMvc
+            .perform(
+                post("/api/pagos/callback")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        om.writeValueAsBytes(
+                            Map.of("referencia", pago.getReferenciaPasarela(), "estado", "REJECTED", "monto", pago.getMonto())
+                        )
+                    )
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.estado").value("APPROVED"));
     }
 
     @Test

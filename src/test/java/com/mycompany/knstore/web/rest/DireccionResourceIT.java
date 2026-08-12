@@ -50,14 +50,14 @@ class DireccionResourceIT {
     private static final Boolean DEFAULT_ACTIVO = false;
     private static final Boolean UPDATED_ACTIVO = true;
 
-    private static final String DEFAULT_TELEFONO_CONTACTO = "AAAAAAAAAA";
-    private static final String UPDATED_TELEFONO_CONTACTO = "BBBBBBBBBB";
+    private static final String DEFAULT_TELEFONO_CONTACTO = "1234567890";
+    private static final String UPDATED_TELEFONO_CONTACTO = "2234567890";
 
     private static final String DEFAULT_DESTINATARIO = "AAAAAAAAAA";
     private static final String UPDATED_DESTINATARIO = "BBBBBBBBBB";
 
-    private static final String DEFAULT_CODIGO_POSTAL = "AAAAAAAAAA";
-    private static final String UPDATED_CODIGO_POSTAL = "BBBBBBBBBB";
+    private static final String DEFAULT_CODIGO_POSTAL = "110111";
+    private static final String UPDATED_CODIGO_POSTAL = "220222";
 
     private static final String ENTITY_API_URL = "/api/direccions";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -282,6 +282,110 @@ class DireccionResourceIT {
         long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         direccion.setCodigoPostal(null);
+
+        // Create the Direccion, which fails.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createDireccionWithTelefonoContactoConLetras() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with letters
+        direccion.setTelefonoContacto("12345ABC");
+
+        // Create the Direccion, which fails.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createDireccionWithDestinatarioConDigitos() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with digits
+        direccion.setDestinatario("Ana123");
+
+        // Create the Direccion, which fails.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createDireccionWithDireccionSoloNumeros() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with only numbers
+        direccion.setDireccion("12345");
+
+        // Create the Direccion, which fails.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createDireccionWithDireccionConLetrasYNumerosEsValido() throws Exception {
+        long databaseSizeBeforeCreate = getRepositoryCount();
+        // set the field with letters and numbers
+        direccion.setDireccion("Calle 1 #2-3");
+
+        // Create the Direccion, which succeeds.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+        var returnedDireccionDTO = om.readValue(
+            restDireccionMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            DireccionDTO.class
+        );
+
+        // Validate the Direccion in the database
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+
+        insertedDireccion = direccionMapper.toEntity(returnedDireccionDTO);
+    }
+
+    @Test
+    void createDireccionWithMunicipioConDigitos() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with digits, only letters are allowed
+        direccion.setMunicipio("12345");
+
+        // Create the Direccion, which fails.
+        DireccionDTO direccionDTO = direccionMapper.toDto(direccion);
+
+        restDireccionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(direccionDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createDireccionWithDepartamentoConDigitos() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with digits, only letters are allowed
+        direccion.setDepartamento("Cundinamarca2026");
 
         // Create the Direccion, which fails.
         DireccionDTO direccionDTO = direccionMapper.toDto(direccion);

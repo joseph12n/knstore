@@ -67,7 +67,7 @@ class PagoServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        paymentGateway = new SimulatedPaymentGateway("");
+        paymentGateway = new SimulatedPaymentGateway();
         service = new PagoServiceImpl(
             pagoRepository,
             pedidoRepository,
@@ -167,17 +167,52 @@ class PagoServiceImplTest {
     }
 
     @Test
-    void callbackConMontoIncoherenteRechazaElPago() {
+    void callbackConMontoIncoherenteRechazaElPagoSoloPorMonto() {
         Pedido pedido = pedidoPendiente();
         Pago pago = pagoPendiente("pg-1", "SIM-123", new BigDecimal("120000.00"), pedido);
         when(pagoRepository.findByReferenciaPasarela("SIM-123")).thenReturn(Optional.of(pago));
         when(pagoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
+        // La pasarela simbolica aprueba siempre, pero el monto no coincide con el pedido.
         PagoDTO result = service.procesarCallback("SIM-123", "APPROVED", new BigDecimal("1000.00"), null);
 
         assertThat(result.getEstado()).isEqualTo(EstadoPago.REJECTED);
         assertThat(result.getDescripcionRespuesta()).contains("monto no coincide");
         verify(pedidoRepository, never()).save(any());
+    }
+
+    @Test
+    void callbackConEstadoRechazadoNoBajaUnPagoYaAprobado() {
+        Pedido pedido = pedidoPendiente();
+        Pago pago = pagoPendiente("pg-1", "SIM-123", new BigDecimal("120000.00"), pedido);
+        pago.setEstado(EstadoPago.APPROVED);
+        pago.setCodigoAutorizacion("AUT-X1");
+        when(pagoRepository.findByReferenciaPasarela("SIM-123")).thenReturn(Optional.of(pago));
+
+        PagoDTO result = service.procesarCallback("SIM-123", "REJECTED", new BigDecimal("120000.00"), null);
+
+        assertThat(result.getEstado()).isEqualTo(EstadoPago.APPROVED);
+        assertThat(result.getCodigoAutorizacion()).isEqualTo("AUT-X1");
+        verify(pagoRepository, never()).save(any());
+        verify(pedidoRepository, never()).save(any());
+    }
+
+    @Test
+    void dobleIniciarPagoNoReprocesaUnPagoYaAprobado() {
+        Pedido pedido = pedidoPendiente();
+        Pago pago = pagoPendiente("pg-1", "SIM-123", new BigDecimal("120000.00"), pedido);
+        pago.setEstado(EstadoPago.APPROVED);
+        pago.setCodigoAutorizacion("AUT-X1");
+        pago.setFechaPago(java.time.Instant.now());
+        when(pedidoRepository.findById("p-1")).thenReturn(Optional.of(pedido));
+        when(pagoRepository.findByPedidoId(eq("p-1"), any(Pageable.class))).thenReturn(new PageImpl<>(java.util.List.of(pago)));
+
+        PagoDTO result = service.iniciarPago("p-1");
+
+        assertThat(result.getEstado()).isEqualTo(EstadoPago.APPROVED);
+        assertThat(result.getReferenciaPasarela()).isEqualTo("SIM-123");
+        assertThat(result.getCodigoAutorizacion()).isEqualTo("AUT-X1");
+        verify(pagoRepository, never()).save(any());
     }
 
     @Test

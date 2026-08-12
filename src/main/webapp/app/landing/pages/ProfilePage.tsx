@@ -216,18 +216,30 @@ export const ProfilePage = () => {
                   <Form.Control
                     type="text"
                     isInvalid={!!errors.primerNombre}
-                    {...register('primerNombre', { required: 'El primer nombre es obligatorio.' })}
+                    {...register('primerNombre', {
+                      required: 'El primer nombre es obligatorio.',
+                      pattern: {
+                        value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                        message: 'Solo se permiten letras.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.primerNombre?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Segundo nombre</Form.Label>
+                  <Form.Label>Segundo nombre *</Form.Label>
                   <Form.Control
                     type="text"
                     isInvalid={!!errors.segundoNombre}
-                    {...register('segundoNombre', { required: 'El segundo nombre es obligatorio.' })}
+                    {...register('segundoNombre', {
+                      required: 'El segundo nombre es obligatorio.',
+                      pattern: {
+                        value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                        message: 'Solo se permiten letras.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.segundoNombre?.message}</Form.Control.Feedback>
                 </Form.Group>
@@ -238,18 +250,30 @@ export const ProfilePage = () => {
                   <Form.Control
                     type="text"
                     isInvalid={!!errors.primerApellido}
-                    {...register('primerApellido', { required: 'El primer apellido es obligatorio.' })}
+                    {...register('primerApellido', {
+                      required: 'El primer apellido es obligatorio.',
+                      pattern: {
+                        value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                        message: 'Solo se permiten letras.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.primerApellido?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Segundo apellido</Form.Label>
+                  <Form.Label>Segundo apellido *</Form.Label>
                   <Form.Control
                     type="text"
                     isInvalid={!!errors.segundoApellido}
-                    {...register('segundoApellido', { required: 'El segundo apellido es obligatorio.' })}
+                    {...register('segundoApellido', {
+                      required: 'El segundo apellido es obligatorio.',
+                      pattern: {
+                        value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                        message: 'Solo se permiten letras.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.segundoApellido?.message}</Form.Control.Feedback>
                 </Form.Group>
@@ -277,7 +301,13 @@ export const ProfilePage = () => {
                   <Form.Control
                     type="text"
                     isInvalid={!!errors.numDocumento}
-                    {...register('numDocumento', { required: 'El número de documento es obligatorio.' })}
+                    {...register('numDocumento', {
+                      required: 'El número de documento es obligatorio.',
+                      pattern: {
+                        value: /^[0-9]+$/,
+                        message: 'Solo se permiten números.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.numDocumento?.message}</Form.Control.Feedback>
                 </Form.Group>
@@ -301,8 +331,16 @@ export const ProfilePage = () => {
                   <Form.Label>Fecha de nacimiento</Form.Label>
                   <Form.Control
                     type="date"
+                    min={dayjs().subtract(100, 'year').format('YYYY-MM-DD')}
+                    max={dayjs().format('YYYY-MM-DD')}
                     isInvalid={!!errors.fechaNacimiento}
-                    {...register('fechaNacimiento', { required: 'La fecha de nacimiento es obligatoria.' })}
+                    {...register('fechaNacimiento', {
+                      required: 'La fecha de nacimiento es obligatoria.',
+                      validate: v =>
+                        !v ||
+                        (!dayjs(v).isAfter(dayjs()) && !dayjs(v).isBefore(dayjs().subtract(100, 'year'))) ||
+                        'La fecha de nacimiento no puede ser futura ni indicar más de 100 años.',
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.fechaNacimiento?.message}</Form.Control.Feedback>
                 </Form.Group>
@@ -315,7 +353,13 @@ export const ProfilePage = () => {
                   <Form.Control
                     type="tel"
                     isInvalid={!!errors.celular}
-                    {...register('celular', { required: 'El celular es obligatorio.' })}
+                    {...register('celular', {
+                      required: 'El celular es obligatorio.',
+                      pattern: {
+                        value: /^[0-9]{7,15}$/,
+                        message: 'Debe tener entre 7 y 15 dígitos.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.celular?.message}</Form.Control.Feedback>
                 </Form.Group>
@@ -328,7 +372,13 @@ export const ProfilePage = () => {
                   <Form.Control
                     type="tel"
                     isInvalid={!!errors.telefono}
-                    {...register('telefono', { required: 'El teléfono es obligatorio.' })}
+                    {...register('telefono', {
+                      required: 'El teléfono es obligatorio.',
+                      pattern: {
+                        value: /^[0-9]{7,15}$/,
+                        message: 'Debe tener entre 7 y 15 dígitos.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.telefono?.message}</Form.Control.Feedback>
                 </Form.Group>

@@ -3,6 +3,7 @@ package com.mycompany.knstore.service.impl;
 import com.mycompany.knstore.domain.Carrito;
 import com.mycompany.knstore.repository.CarritoRepository;
 import com.mycompany.knstore.repository.CuentaRepository;
+import com.mycompany.knstore.repository.ItemCarritoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CarritoService;
@@ -28,11 +29,19 @@ public class CarritoServiceImpl implements CarritoService {
 
     private final CuentaRepository cuentaRepository;
 
+    private final ItemCarritoRepository itemCarritoRepository;
+
     private final CarritoMapper carritoMapper;
 
-    public CarritoServiceImpl(CarritoRepository carritoRepository, CuentaRepository cuentaRepository, CarritoMapper carritoMapper) {
+    public CarritoServiceImpl(
+        CarritoRepository carritoRepository,
+        CuentaRepository cuentaRepository,
+        ItemCarritoRepository itemCarritoRepository,
+        CarritoMapper carritoMapper
+    ) {
         this.carritoRepository = carritoRepository;
         this.cuentaRepository = cuentaRepository;
+        this.itemCarritoRepository = itemCarritoRepository;
         this.carritoMapper = carritoMapper;
     }
 
@@ -96,5 +105,11 @@ public class CarritoServiceImpl implements CarritoService {
     public void delete(String id) {
         LOG.debug("Request to delete Carrito : {}", id);
         carritoRepository.deleteById(id);
+    }
+
+    @Override
+    public void vaciar(String id) {
+        LOG.debug("Request to vaciar items del Carrito : {}", id);
+        itemCarritoRepository.deleteAll(itemCarritoRepository.findByCarritoId(id));
     }
 }

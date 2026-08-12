@@ -19,6 +19,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -151,7 +152,15 @@ public class UserResource {
         if (existingUser.isPresent() && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
-        Optional<AdminUserDTO> updatedUser = userService.updateUser(userDTO);
+        Optional<AdminUserDTO> updatedUser;
+        try {
+            updatedUser = userService.updateUser(userDTO);
+        } catch (DuplicateKeyException e) {
+            if (e.getMessage() != null && e.getMessage().contains("unique_user_login")) {
+                throw new LoginAlreadyUsedException();
+            }
+            throw new EmailAlreadyUsedException();
+        }
 
         return ResponseUtil.wrapOrNotFound(
             updatedUser,
@@ -190,7 +199,7 @@ public class UserResource {
     @GetMapping("/users/{login}")
     public ResponseEntity<AdminUserDTO> getUser(@PathVariable("login") @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         LOG.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
+        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login.toLowerCase()).map(AdminUserDTO::new));
     }
 
     /**
@@ -202,7 +211,7 @@ public class UserResource {
     @DeleteMapping("/users/{login}")
     public ResponseEntity<Void> deleteUser(@PathVariable("login") @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         LOG.debug("REST request to delete User: {}", login);
-        userService.deleteUser(login);
+        userService.deleteUser(login.toLowerCase());
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
             .build();

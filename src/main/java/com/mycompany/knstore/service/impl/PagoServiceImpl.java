@@ -176,17 +176,22 @@ public class PagoServiceImpl implements PagoService {
             .findByPedidoId(pedidoId, org.springframework.data.domain.Pageable.unpaged())
             .getContent()
             .stream()
-            .filter(existing -> EstadoPago.PENDING.equals(existing.getEstado()))
             .findFirst()
-            .orElseGet(() -> {
-                Pago nuevo = new Pago();
-                nuevo.setPedido(pedido);
-                nuevo.setMonto(MoneyUtils.normalizar(pedido.getTotal()));
-                nuevo.setMetodoPago(com.mycompany.knstore.domain.enumeration.MetodoPago.NEQUI);
-                nuevo.setEstado(EstadoPago.PENDING);
-                nuevo.setIntentos(0);
-                return nuevo;
-            });
+            .orElse(null);
+
+        // Idempotencia: si el pago ya quedo resuelto (APPROVED u otro estado final), no se reprocesa.
+        if (pago != null && esEstadoFinal(pago.getEstado())) {
+            return pagoMapper.toDto(pago);
+        }
+
+        if (pago == null) {
+            pago = new Pago();
+            pago.setPedido(pedido);
+            pago.setMonto(MoneyUtils.normalizar(pedido.getTotal()));
+            pago.setMetodoPago(com.mycompany.knstore.domain.enumeration.MetodoPago.NEQUI);
+            pago.setEstado(EstadoPago.PENDING);
+            pago.setIntentos(0);
+        }
 
         pago.setIntentos((pago.getIntentos() == null ? 0 : pago.getIntentos()) + 1);
         EstadoPago estadoAnterior = pago.getEstado();
@@ -216,8 +221,8 @@ public class PagoServiceImpl implements PagoService {
             .findByReferenciaPasarela(referencia)
             .orElseThrow(() -> new IllegalArgumentException("Referencia de pago no encontrada"));
 
-        // Idempotencia: un pago ya resuelto no se reprocesa.
-        if (EstadoPago.APPROVED.equals(pago.getEstado()) || EstadoPago.REJECTED.equals(pago.getEstado())) {
+        // Idempotencia: un pago ya resuelto no se reprocesa ni se revierte con un callback externo.
+        if (esEstadoFinal(pago.getEstado())) {
             return pagoMapper.toDto(pago);
         }
 
@@ -361,6 +366,10 @@ public class PagoServiceImpl implements PagoService {
         } catch (Exception e) {
             LOG.warn("No se pudo generar o enviar la factura {}: {}", factura.getNumero(), e.getMessage());
         }
+    }
+
+    private boolean esEstadoFinal(EstadoPago estado) {
+        return estado != null && !EstadoPago.PENDING.equals(estado);
     }
 
     private Optional<String> getCurrentAccountId() {

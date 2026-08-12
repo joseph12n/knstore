@@ -10,12 +10,14 @@ import { IProducto } from 'app/shared/model/producto.model';
 
 const CART_STORAGE_KEY = 'knstore-cart';
 
+export type AddItemResult = { ok: true } | { ok: false; reason: 'no-cuenta' | 'error' };
+
 interface CartContextValue {
   items: CartItem[];
   total: number;
   count: number;
   loading: boolean;
-  addItem: (producto: IProductoStorefront, cantidad?: number) => Promise<void>;
+  addItem: (producto: IProductoStorefront, cantidad?: number) => Promise<AddItemResult>;
   updateQuantity: (itemId: string, cantidad: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -98,10 +100,19 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
   const [localItems, setLocalItems] = useState<CartItem[]>(() => loadLocalCart());
   const [serverItems, setServerItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [initialized, setInitialized] = useState<boolean>(false);
 
+  const serverItemsRef = useRef<CartItem[]>([]);
+  const initializedRef = useRef(false);
+  const initPromiseRef = useRef<Promise<void> | null>(null);
   const carritoIdRef = useRef<string | undefined>(undefined);
+  const carritoPromiseRef = useRef<{ cuentaId: string; promise: Promise<ICarrito> } | null>(null);
   const mergingRef = useRef(false);
+  const prevAuthenticatedRef = useRef(isAuthenticated);
+
+  const applyServerItems = useCallback((next: CartItem[]) => {
+    serverItemsRef.current = next;
+    setServerItems(next);
+  }, []);
 
   // Persist local cart changes for anonymous users
   useEffect(() => {
@@ -121,120 +132,140 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
     return () => window.removeEventListener('storage', handleStorage);
   }, [isAuthenticated]);
 
-  // Reset server cart state when auth changes
+  // On logout, clear anonymous leftovers so the cart does not "resurrect"
   useEffect(() => {
-    if (!isAuthenticated) {
-      setServerItems([]);
-      setInitialized(false);
+    const wasAuthenticated = prevAuthenticatedRef.current;
+    prevAuthenticatedRef.current = isAuthenticated;
+    if (wasAuthenticated && !isAuthenticated) {
+      clearLocalCart();
+      setLocalItems([]);
+      applyServerItems([]);
+      initializedRef.current = false;
       carritoIdRef.current = undefined;
+      carritoPromiseRef.current = null;
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, applyServerItems]);
+
+  const findOrCreateCarritoInflight = useCallback((cuentaId: string): Promise<ICarrito> => {
+    if (carritoPromiseRef.current?.cuentaId === cuentaId) {
+      return carritoPromiseRef.current.promise;
+    }
+    const promise = findOrCreateCarrito(cuentaId).finally(() => {
+      if (carritoPromiseRef.current?.promise === promise) {
+        carritoPromiseRef.current = null;
+      }
+    });
+    carritoPromiseRef.current = { cuentaId, promise };
+    return promise;
+  }, []);
 
   const loadServerCart = useCallback(async () => {
-    if (!isAuthenticated || !login || initialized || mergingRef.current) {
+    if (!isAuthenticated || !login || initializedRef.current || mergingRef.current) {
       return;
     }
 
-    let cancelled = false;
     setLoading(true);
-
-    try {
-      const [cuenta, productos] = await Promise.all([findCuentaByLogin(login), fetchProductos()]);
-      if (!cuenta?.id || cancelled) {
-        setLoading(false);
-        return;
-      }
-
-      const carrito = await findOrCreateCarrito(cuenta.id);
-      if (!carrito.id) {
-        setLoading(false);
-        return;
-      }
-      carritoIdRef.current = carrito.id;
-      const itemsBelongingToCart = await fetchItemCarritos(carrito.id);
-
-      const productosMap = new Map(productos.map(p => [p.id, p]));
-      const loadedItems = itemsBelongingToCart
-        .map(item => {
-          const producto = productosMap.get(item.producto?.id ?? '');
-          if (!producto) return undefined;
-          return {
-            id: item.id,
-            producto: toStorefrontProducto(producto),
-            cantidad: item.cantidad ?? 1,
-            precioUnitario: item.precioUnitario ?? producto.precio?.precioVenta ?? 0,
-          };
-        })
-        .filter((item): item is NonNullable<typeof item> => item !== undefined);
-
-      // Merge localStorage cart into server cart
-      const local = loadLocalCart();
-      if (local.length > 0 && !mergingRef.current) {
-        mergingRef.current = true;
-        const merged = [...loadedItems];
-        for (const localItem of local) {
-          const existing = merged.find(item => item.producto.id === localItem.producto.id);
-          if (existing?.id) {
-            existing.cantidad += localItem.cantidad;
-            await axios.put(`api/item-carritos/${existing.id}`, {
-              id: existing.id,
-              cantidad: existing.cantidad,
-              precioUnitario: existing.precioUnitario,
-              carrito: { id: carrito.id },
-              producto: { id: existing.producto.id },
-            });
-          } else {
-            const response = await axios.post<IItemCarrito>('api/item-carritos', {
-              cantidad: localItem.cantidad,
-              precioUnitario: localItem.precioUnitario,
-              carrito: { id: carrito.id },
-              producto: { id: localItem.producto.id },
-            });
-            merged.push({
-              id: response.data.id,
-              producto: localItem.producto,
-              cantidad: localItem.cantidad,
-              precioUnitario: localItem.precioUnitario,
-            });
-          }
+    const promise = (async () => {
+      try {
+        const [cuenta, productos] = await Promise.all([findCuentaByLogin(login), fetchProductos()]);
+        if (!cuenta?.id) {
+          return;
         }
-        clearLocalCart();
-        setServerItems(merged);
-      } else {
-        setServerItems(loadedItems);
-      }
-    } catch (error) {
-      handleCartError('No se pudo cargar el carrito', error);
-      setServerItems([]);
-    } finally {
-      if (!cancelled) {
+
+        const carrito = await findOrCreateCarritoInflight(cuenta.id);
+        if (!carrito.id) {
+          return;
+        }
+        carritoIdRef.current = carrito.id;
+        const itemsBelongingToCart = await fetchItemCarritos(carrito.id);
+
+        const productosMap = new Map(productos.map(p => [p.id, p]));
+        const loadedItems = itemsBelongingToCart
+          .map(item => {
+            const producto = productosMap.get(item.producto?.id ?? '');
+            if (!producto) return undefined;
+            return {
+              id: item.id,
+              producto: toStorefrontProducto(producto),
+              cantidad: item.cantidad ?? 1,
+              precioUnitario: item.precioUnitario ?? producto.precio?.precioVenta ?? 0,
+            };
+          })
+          .filter((item): item is NonNullable<typeof item> => item !== undefined);
+
+        // Merge localStorage cart into server cart
+        const local = loadLocalCart();
+        if (local.length > 0) {
+          mergingRef.current = true;
+          const merged = [...loadedItems];
+          for (const localItem of local) {
+            const existing = merged.find(item => item.producto.id === localItem.producto.id);
+            if (existing?.id) {
+              existing.cantidad += localItem.cantidad;
+              await axios.put(`api/item-carritos/${existing.id}`, {
+                id: existing.id,
+                cantidad: existing.cantidad,
+                precioUnitario: existing.precioUnitario,
+                carrito: { id: carrito.id },
+                producto: { id: existing.producto.id },
+              });
+            } else {
+              const response = await axios.post<IItemCarrito>('api/item-carritos', {
+                cantidad: localItem.cantidad,
+                precioUnitario: localItem.precioUnitario,
+                carrito: { id: carrito.id },
+                producto: { id: localItem.producto.id },
+              });
+              merged.push({
+                id: response.data.id,
+                producto: localItem.producto,
+                cantidad: localItem.cantidad,
+                precioUnitario: localItem.precioUnitario,
+              });
+            }
+          }
+          clearLocalCart();
+          applyServerItems(merged);
+        } else {
+          applyServerItems(loadedItems);
+        }
+      } catch (error) {
+        handleCartError('No se pudo cargar el carrito', error);
+        applyServerItems([]);
+      } finally {
         setLoading(false);
-        setInitialized(true);
+        initializedRef.current = true;
+        mergingRef.current = false;
+      }
+    })();
+    initPromiseRef.current = promise;
+    try {
+      await promise;
+    } finally {
+      if (initPromiseRef.current === promise) {
+        initPromiseRef.current = null;
       }
     }
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isAuthenticated, login, initialized]);
+  }, [isAuthenticated, login, findOrCreateCarritoInflight, applyServerItems]);
 
   useEffect(() => {
-    loadServerCart();
+    void loadServerCart();
   }, [loadServerCart]);
 
   const refresh = useCallback(async () => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !login) {
       setLocalItems(loadLocalCart());
       return;
     }
-    setInitialized(false);
+    mergingRef.current = false;
+    initializedRef.current = false;
     await loadServerCart();
-  }, [isAuthenticated, loadServerCart]);
+  }, [isAuthenticated, login, loadServerCart]);
 
   const items = useMemo(() => (isAuthenticated ? serverItems : localItems), [isAuthenticated, serverItems, localItems]);
 
   const addItem = useCallback(
-    async (producto: IProductoStorefront, cantidad = 1) => {
+    async (producto: IProductoStorefront, cantidad = 1): Promise<AddItemResult> => {
       const precioUnitario = producto.precio?.precioVenta || 0;
 
       if (!isAuthenticated) {
@@ -253,13 +284,22 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
             },
           ];
         });
-        return;
+        return { ok: true };
       }
 
-      const existing = serverItems.find(item => item.producto.id === producto.id);
+      // Wait for the initial server cart load before mutating so the load does not overwrite the new item
+      if (!initializedRef.current) {
+        if (!initPromiseRef.current) {
+          void loadServerCart();
+        }
+        await initPromiseRef.current;
+      }
+
+      const existing = serverItemsRef.current.find(item => item.producto.id === producto.id);
       if (existing?.id) {
         const newCantidad = existing.cantidad + cantidad;
-        setServerItems(prev => prev.map(item => (item.id === existing.id ? { ...item, cantidad: newCantidad } : item)));
+        const previousCantidad = existing.cantidad;
+        applyServerItems(serverItemsRef.current.map(item => (item.id === existing.id ? { ...item, cantidad: newCantidad } : item)));
         try {
           await axios.put(`api/item-carritos/${existing.id}`, {
             id: existing.id,
@@ -268,37 +308,38 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
             carrito: { id: carritoIdRef.current },
             producto: { id: producto.id },
           });
+          return { ok: true };
         } catch (error) {
+          applyServerItems(serverItemsRef.current.map(item => (item.id === existing.id ? { ...item, cantidad: previousCantidad } : item)));
           handleCartError('No se pudo actualizar la cantidad en el carrito', error);
-        }
-      } else {
-        if (!login) return;
-        try {
-          const cuenta = await findCuentaByLogin(login);
-          if (!cuenta?.id) return;
-          const carrito = await findOrCreateCarrito(cuenta.id);
-          carritoIdRef.current = carrito.id;
-          const response = await axios.post<IItemCarrito>('api/item-carritos', {
-            cantidad,
-            precioUnitario,
-            carrito: { id: carrito.id },
-            producto: { id: producto.id },
-          });
-          setServerItems(prev => [
-            ...prev,
-            {
-              id: response.data.id,
-              producto,
-              cantidad,
-              precioUnitario,
-            },
-          ]);
-        } catch (error) {
-          handleCartError('No se pudo agregar el producto al carrito', error);
+          return { ok: false, reason: 'error' };
         }
       }
+
+      if (!login) {
+        return { ok: false, reason: 'no-cuenta' };
+      }
+      try {
+        const cuenta = await findCuentaByLogin(login);
+        if (!cuenta?.id) {
+          return { ok: false, reason: 'no-cuenta' };
+        }
+        const carrito = await findOrCreateCarritoInflight(cuenta.id);
+        carritoIdRef.current = carrito.id;
+        const response = await axios.post<IItemCarrito>('api/item-carritos', {
+          cantidad,
+          precioUnitario,
+          carrito: { id: carrito.id },
+          producto: { id: producto.id },
+        });
+        applyServerItems([...serverItemsRef.current, { id: response.data.id, producto, cantidad, precioUnitario }]);
+        return { ok: true };
+      } catch (error) {
+        handleCartError('No se pudo agregar el producto al carrito', error);
+        return { ok: false, reason: 'error' };
+      }
     },
-    [isAuthenticated, serverItems, login],
+    [isAuthenticated, login, loadServerCart, findOrCreateCarritoInflight, applyServerItems],
   );
 
   const updateQuantity = useCallback(
@@ -310,10 +351,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
         return;
       }
 
-      const item = serverItems.find(i => i.id === itemId);
+      const item = serverItemsRef.current.find(i => i.id === itemId);
       if (!item?.id) return;
+      const previousCantidad = item.cantidad;
 
-      setServerItems(prev => prev.map(i => (i.id === itemId ? { ...i, cantidad: normalizedCantidad } : i)));
+      applyServerItems(serverItemsRef.current.map(i => (i.id === itemId ? { ...i, cantidad: normalizedCantidad } : i)));
       try {
         await axios.put(`api/item-carritos/${item.id}`, {
           id: item.id,
@@ -323,10 +365,11 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
           producto: { id: item.producto.id },
         });
       } catch (error) {
+        applyServerItems(serverItemsRef.current.map(i => (i.id === itemId ? { ...i, cantidad: previousCantidad } : i)));
         handleCartError('No se pudo actualizar la cantidad', error);
       }
     },
-    [isAuthenticated, serverItems],
+    [isAuthenticated, applyServerItems],
   );
 
   const removeItem = useCallback(
@@ -336,14 +379,19 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
         return;
       }
 
-      setServerItems(prev => prev.filter(item => item.id !== itemId));
+      const removed = serverItemsRef.current.find(i => i.id === itemId);
+      const removedIndex = serverItemsRef.current.findIndex(i => i.id === itemId);
+      applyServerItems(serverItemsRef.current.filter(item => item.id !== itemId));
       try {
         await axios.delete(`api/item-carritos/${itemId}`);
       } catch (error) {
+        if (removed && removedIndex >= 0) {
+          applyServerItems([...serverItemsRef.current.slice(0, removedIndex), removed, ...serverItemsRef.current.slice(removedIndex)]);
+        }
         handleCartError('No se pudo eliminar el producto del carrito', error);
       }
     },
-    [isAuthenticated],
+    [isAuthenticated, applyServerItems],
   );
 
   const clearCart = useCallback(async () => {
@@ -352,14 +400,24 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
       return;
     }
 
-    const itemsToDelete = [...serverItems];
-    setServerItems([]);
-    try {
-      await Promise.all(itemsToDelete.map(item => (item.id ? axios.delete(`api/item-carritos/${item.id}`) : Promise.resolve())));
-    } catch (error) {
-      handleCartError('No se pudo vaciar el carrito', error);
+    const carritoId = carritoIdRef.current;
+    const itemsBeforeClear = [...serverItemsRef.current];
+    applyServerItems([]);
+    if (!carritoId) {
+      return;
     }
-  }, [isAuthenticated, serverItems]);
+    try {
+      await axios.delete(`api/carritos/${carritoId}/items`);
+    } catch (error) {
+      const axiosError = error as { response?: { status?: number } } | undefined;
+      if (axiosError?.response?.status === 403 || axiosError?.response?.status === 404) {
+        // El carrito del servidor ya está vacío o el recurso no existe: el carrito local ya quedó limpio.
+        return;
+      }
+      applyServerItems(itemsBeforeClear);
+      toast.error('No se pudo vaciar el carrito. Inténtalo de nuevo.');
+    }
+  }, [isAuthenticated, applyServerItems]);
 
   const total = useMemo(() => items.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0), [items]);
   const count = useMemo(() => items.reduce((sum, item) => sum + item.cantidad, 0), [items]);

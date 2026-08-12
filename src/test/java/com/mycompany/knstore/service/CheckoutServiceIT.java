@@ -10,6 +10,7 @@ import com.mycompany.knstore.domain.CategoriaIVA;
 import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.domain.Direccion;
 import com.mycompany.knstore.domain.Envio;
+import com.mycompany.knstore.domain.Factura;
 import com.mycompany.knstore.domain.ItemCarrito;
 import com.mycompany.knstore.domain.ItemPedido;
 import com.mycompany.knstore.domain.Marca;
@@ -29,6 +30,7 @@ import com.mycompany.knstore.repository.CarritoRepository;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.DireccionRepository;
 import com.mycompany.knstore.repository.EnvioRepository;
+import com.mycompany.knstore.repository.FacturaRepository;
 import com.mycompany.knstore.repository.ItemCarritoRepository;
 import com.mycompany.knstore.repository.ItemPedidoRepository;
 import com.mycompany.knstore.repository.PagoRepository;
@@ -75,6 +77,9 @@ class CheckoutServiceIT {
 
     @Autowired
     private EnvioRepository envioRepository;
+
+    @Autowired
+    private FacturaRepository facturaRepository;
 
     @Autowired
     private CuentaRepository cuentaRepository;
@@ -192,6 +197,7 @@ class CheckoutServiceIT {
         cuentaRepository.deleteAll();
         envioRepository.deleteAll();
         pagoRepository.deleteAll();
+        facturaRepository.deleteAll();
         itemPedidoRepository.deleteAll();
         pedidoRepository.deleteAll();
         productoRepository.deleteAll();
@@ -205,8 +211,8 @@ class CheckoutServiceIT {
 
     private Cuenta crearCuenta(String login) {
         Cuenta cuenta = new Cuenta();
-        cuenta.setNumDocumento("DOC-" + login);
-        cuenta.setPrimerNombre(login);
+        cuenta.setNumDocumento("1" + Integer.toUnsignedString(login.hashCode()));
+        cuenta.setPrimerNombre("Cliente");
         cuenta.setSegundoNombre("Segundo");
         cuenta.setPrimerApellido("Test");
         cuenta.setSegundoApellido("Apellido");
@@ -270,11 +276,12 @@ class CheckoutServiceIT {
     }
 
     @Test
-    void flujoFelizCreaPedidoItemsPagoYEnvioPendientesYVaciaElCarrito() {
+    void flujoFelizCreaPedidoItemsPagoAprobadoYEnvioPendientesYVaciaElCarrito() {
         CheckoutResultDTO result = checkoutService.checkout(cuenta, requestDeCompra(1));
 
         Pedido pedido = pedidoRepository.findById(result.getPedido().getId()).orElseThrow();
-        assertThat(pedido.getEstado()).isEqualTo(EstadoPedido.PENDING);
+        // El pago se aprueba de inmediato, por lo que el pedido nace confirmado.
+        assertThat(pedido.getEstado()).isEqualTo(EstadoPedido.CONFIRMED);
         assertThat(pedido.getSubtotal()).isEqualByComparingTo(new BigDecimal("100000.00"));
         assertThat(pedido.getIvaTotal()).isEqualByComparingTo(new BigDecimal("19000.00"));
         assertThat(pedido.getCostoEnvio()).isEqualByComparingTo(new BigDecimal("9900.00"));
@@ -285,13 +292,25 @@ class CheckoutServiceIT {
         assertThat(items.get(0).getSubtotal()).isEqualByComparingTo(new BigDecimal("100000.00"));
 
         Pago pago = pagoRepository.findByPedidoId(pedido.getId(), org.springframework.data.domain.Pageable.unpaged()).getContent().get(0);
-        assertThat(pago.getEstado()).isEqualTo(EstadoPago.PENDING);
+        assertThat(pago.getEstado()).isEqualTo(EstadoPago.APPROVED);
+        assertThat(pago.getReferenciaPasarela()).startsWith("SIM-");
+        assertThat(pago.getCodigoAutorizacion()).startsWith("AUT-");
+        assertThat(pago.getFechaPago()).isNotNull();
+        assertThat(pago.getIntentos()).isEqualTo(1);
+        assertThat(pago.getMonto()).isEqualByComparingTo(new BigDecimal("128900.00"));
 
         Envio envio = envioRepository
             .findByPedidoId(pedido.getId(), org.springframework.data.domain.Pageable.unpaged())
             .getContent()
             .get(0);
         assertThat(envio.getEstado()).isEqualTo(com.mycompany.knstore.domain.enumeration.EstadoEnvio.PENDING);
+
+        Factura factura = facturaRepository
+            .findByPagoId(pago.getId(), org.springframework.data.domain.Pageable.unpaged())
+            .getContent()
+            .get(0);
+        assertThat(factura.getNumero()).startsWith("FE-");
+        assertThat(factura.getTotal()).isEqualByComparingTo(new BigDecimal("128900.00"));
 
         assertThat(productoInventarioRepository.findById(inventario.getId()).orElseThrow().getStock()).isEqualTo(9);
         assertThat(itemCarritoRepository.findByCarritoId(carrito.getId())).isEmpty();

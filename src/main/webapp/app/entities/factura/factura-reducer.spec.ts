@@ -95,7 +95,7 @@ describe('Entities reducer tests', () => {
         'some message',
         state => {
           expect(state).toMatchObject({
-            errorMessage: null,
+            errorMessage: 'error message',
             updateSuccess: false,
             updating: false,
           });

@@ -205,6 +205,34 @@ async function seed() {
   let creados = 0;
   let actualizados = 0;
 
+  // URLs reales de fotos de zapatillas (Unsplash), rotadas de forma determinista por modelo/color
+  const unplashPhotoIds = [
+    '1542291026-7eec264c27ff',
+    '1549298916-b41d501d3772',
+    '1595950653106-6c9ebd614d3a',
+    '1600185365483-26d7a4cc7519',
+    '1560769629-975ec94e6a86',
+    '1543508282-6319a3e2621f',
+    '1525966222134-fcfa99b8ae77',
+    '1606107557195-0e29a4b5b4aa',
+    '1514989940723-e8e51635b782',
+    '1595341888016-a392ef81b7de',
+    '1584735175315-9d5df2399cd6',
+    '1608256246200-53e635b5b65f',
+    '1600185365926-3a2ce3cdb9eb',
+    '1547949003-9792a18a2601',
+    '1560343090-f0409e92791a',
+    '1544005313-94ddf0286df2',
+    '1607522370275-f14206abe5d3',
+    '1571731956672-f2b94d7dd0cb',
+    '1596703263926-eb0762ee17e4',
+    '1583394838336-acd977736f90',
+    '1600269452121-4f2416e55c28',
+    '1608231387042-66d1773070a5',
+    '1599491235138-4b88e3bb461b',
+    '1590805481395-931d40b52507',
+  ];
+
   for (const modelo of modelos) {
     const marca = marcas.find(m => m.nombre === modelo.marca);
     const categoria = categorias.find(c => c.nombre === modelo.categoria);
@@ -285,10 +313,11 @@ async function seed() {
           categoriaIva: { id: categoriaIva.id },
         });
 
-        // Imagen placeholder
+        // Imagen principal con URL real (Unsplash), consistente con la migración del backend
         await create('/producto-imagens', {
-          imagenContentType: 'image/png',
-          imagenAlt: nombre,
+          imagenContentType: 'image/jpeg',
+          imagenUrl: `https://images.unsplash.com/photo-${unplashPhotoIds[(modelos.indexOf(modelo) * colores.length + colores.indexOf(color)) % unplashPhotoIds.length]}?w=800&q=80&fm=jpg&fit=crop`,
+          imagenAlt: `${modelo.marca} ${modelo.nombre} color ${color.toLowerCase()}`,
           esPrincipal: true,
           producto: { id: producto.id },
         });

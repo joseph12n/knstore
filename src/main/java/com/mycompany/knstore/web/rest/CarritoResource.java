@@ -179,4 +179,18 @@ public class CarritoResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id))
             .build();
     }
+
+    /**
+     * {@code DELETE  /carritos/:id/items} : vaciar todos los items del "id" carrito sin eliminar el carrito.
+     *
+     * @param id the id of the carrito whose items will be deleted.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping("/{id}/items")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessCarritoId(#id)")
+    public ResponseEntity<Void> vaciarItemsCarrito(@PathVariable("id") String id) {
+        LOG.debug("REST request to vaciar items del Carrito : {}", id);
+        carritoService.vaciar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

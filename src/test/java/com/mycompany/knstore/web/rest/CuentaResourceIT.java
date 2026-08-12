@@ -48,8 +48,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @WithMockUser(roles = { "ADMIN", "MANAGER" })
 class CuentaResourceIT {
 
-    private static final String DEFAULT_NUM_DOCUMENTO = "AAAAAAAAAA";
-    private static final String UPDATED_NUM_DOCUMENTO = "BBBBBBBBBB";
+    private static final String DEFAULT_NUM_DOCUMENTO = "1234567890";
+    private static final String UPDATED_NUM_DOCUMENTO = "2234567890";
 
     private static final String DEFAULT_PRIMER_NOMBRE = "AAAAAAAAAA";
     private static final String UPDATED_PRIMER_NOMBRE = "BBBBBBBBBB";
@@ -69,11 +69,11 @@ class CuentaResourceIT {
     private static final LocalDate DEFAULT_FECHA_NACIMIENTO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA_NACIMIENTO = LocalDate.now(ZoneId.systemDefault());
 
-    private static final String DEFAULT_CELULAR = "AAAAAAAAAA";
-    private static final String UPDATED_CELULAR = "BBBBBBBBBB";
+    private static final String DEFAULT_CELULAR = "1234567890";
+    private static final String UPDATED_CELULAR = "2234567890";
 
-    private static final String DEFAULT_TELEFONO = "AAAAAAAAAA";
-    private static final String UPDATED_TELEFONO = "BBBBBBBBBB";
+    private static final String DEFAULT_TELEFONO = "1234567890";
+    private static final String UPDATED_TELEFONO = "2234567890";
 
     private static final byte[] DEFAULT_FOTO_PERFIL = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_FOTO_PERFIL = TestUtil.createByteArray(1, "1");
@@ -113,6 +113,8 @@ class CuentaResourceIT {
     private Cuenta cuenta;
 
     private Cuenta insertedCuenta;
+
+    private Cuenta insertedOtherCuenta;
 
     /**
      * Create an entity for this test.
@@ -183,6 +185,10 @@ class CuentaResourceIT {
         if (insertedCuenta != null) {
             cuentaRepository.delete(insertedCuenta);
             insertedCuenta = null;
+        }
+        if (insertedOtherCuenta != null) {
+            cuentaRepository.delete(insertedOtherCuenta);
+            insertedOtherCuenta = null;
         }
         userRepository.deleteAll();
     }
@@ -273,6 +279,227 @@ class CuentaResourceIT {
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createCuentaWithCelularConLetras() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with letters
+        cuenta.setCelular("12345ABC");
+
+        // Create the Cuenta, which fails.
+        CuentaDTO cuentaDTO = cuentaMapper.toDto(cuenta);
+
+        restCuentaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cuentaDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createCuentaWithPrimerNombreConDigitos() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with digits
+        cuenta.setPrimerNombre("Juan123");
+
+        // Create the Cuenta, which fails.
+        CuentaDTO cuentaDTO = cuentaMapper.toDto(cuenta);
+
+        restCuentaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cuentaDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createCuentaWithFechaNacimientoFutura() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with a future date
+        cuenta.setFechaNacimiento(LocalDate.now().plusDays(1));
+
+        // Create the Cuenta, which fails.
+        CuentaDTO cuentaDTO = cuentaMapper.toDto(cuenta);
+
+        restCuentaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cuentaDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createCuentaWithFechaNacimientoMayor100Anios() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field with a date older than 100 years
+        cuenta.setFechaNacimiento(LocalDate.now().minusYears(101));
+
+        // Create the Cuenta, which fails.
+        CuentaDTO cuentaDTO = cuentaMapper.toDto(cuenta);
+
+        restCuentaMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cuentaDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    void createCuentaWithFechaNacimientoLimiteInclusivo() throws Exception {
+        long databaseSizeBeforeCreate = getRepositoryCount();
+        // set the field with the inclusive lower bound (exactly 100 years ago)
+        cuenta.setFechaNacimiento(LocalDate.now().minusYears(100));
+
+        // Create the Cuenta, which succeeds.
+        CuentaDTO cuentaDTO = cuentaMapper.toDto(cuenta);
+        var returnedCuentaDTO = om.readValue(
+            restCuentaMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cuentaDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            CuentaDTO.class
+        );
+
+        // Validate the Cuenta in the database
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+
+        insertedCuenta = cuentaMapper.toEntity(returnedCuentaDTO);
+    }
+
+    @Test
+    void createCuentaWithNombresConAcentosEsValido() throws Exception {
+        long databaseSizeBeforeCreate = getRepositoryCount();
+        // set the fields with accents, apostrophe and spaces
+        cuenta.setPrimerNombre("María del Pilar");
+        cuenta.setPrimerApellido("O'Brian");
+
+        // Create the Cuenta, which succeeds.
+        CuentaDTO cuentaDTO = cuentaMapper.toDto(cuenta);
+        var returnedCuentaDTO = om.readValue(
+            restCuentaMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cuentaDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            CuentaDTO.class
+        );
+
+        // Validate the Cuenta in the database
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+
+        insertedCuenta = cuentaMapper.toEntity(returnedCuentaDTO);
+    }
+
+    @Test
+    void partialUpdateCuentaWithSegundoNombreConDigitos() throws Exception {
+        // Initialize the database
+        insertedCuenta = cuentaRepository.save(cuenta);
+
+        // Update the cuenta using partial update with a segundoNombre containing digits
+        Cuenta partialUpdatedCuenta = new Cuenta();
+        partialUpdatedCuenta.setId(cuenta.getId());
+
+        partialUpdatedCuenta
+            .numDocumento(cuenta.getNumDocumento())
+            .primerNombre(cuenta.getPrimerNombre())
+            .segundoNombre("Nombre2")
+            .primerApellido(cuenta.getPrimerApellido())
+            .segundoApellido(cuenta.getSegundoApellido())
+            .genero(cuenta.getGenero())
+            .fechaNacimiento(cuenta.getFechaNacimiento())
+            .celular(cuenta.getCelular())
+            .telefono(cuenta.getTelefono())
+            .activo(cuenta.getActivo());
+        partialUpdatedCuenta.setUser(cuenta.getUser());
+        partialUpdatedCuenta.setTipoDocumento(cuenta.getTipoDocumento());
+
+        restCuentaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedCuenta.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(om.writeValueAsBytes(partialUpdatedCuenta))
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void putCuentaWithCelularConLetras() throws Exception {
+        // Initialize the database
+        insertedCuenta = cuentaRepository.save(cuenta);
+
+        // Update the cuenta with a celular containing letters
+        Cuenta updatedCuenta = cuentaRepository.findById(cuenta.getId()).orElseThrow();
+        updatedCuenta.setCelular("12345ABC");
+        CuentaDTO cuentaDTO = cuentaMapper.toDto(updatedCuenta);
+
+        restCuentaMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, cuentaDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(cuentaDTO))
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void partialUpdateCuentaWithCelularConLetras() throws Exception {
+        // Initialize the database
+        insertedCuenta = cuentaRepository.save(cuenta);
+
+        // Update the cuenta using partial update with a celular containing letters
+        Cuenta partialUpdatedCuenta = new Cuenta();
+        partialUpdatedCuenta.setId(cuenta.getId());
+
+        partialUpdatedCuenta
+            .numDocumento(cuenta.getNumDocumento())
+            .primerNombre(cuenta.getPrimerNombre())
+            .segundoNombre(cuenta.getSegundoNombre())
+            .primerApellido(cuenta.getPrimerApellido())
+            .segundoApellido(cuenta.getSegundoApellido())
+            .genero(cuenta.getGenero())
+            .fechaNacimiento(cuenta.getFechaNacimiento())
+            .celular("12345ABC")
+            .telefono(cuenta.getTelefono())
+            .activo(cuenta.getActivo());
+        partialUpdatedCuenta.setUser(cuenta.getUser());
+        partialUpdatedCuenta.setTipoDocumento(cuenta.getTipoDocumento());
+
+        restCuentaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedCuenta.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(om.writeValueAsBytes(partialUpdatedCuenta))
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void partialUpdateCuentaWithDocumentoDuplicado() throws Exception {
+        // Initialize the database
+        insertedCuenta = cuentaRepository.save(cuenta);
+
+        // A second cuenta with a different document number for the same tipo documento
+        Cuenta otherCuenta = createEntity();
+        otherCuenta.setId(UUID.randomUUID().toString());
+        otherCuenta.setNumDocumento("9999999999");
+        otherCuenta.setUser(cuenta.getUser());
+        otherCuenta.setTipoDocumento(cuenta.getTipoDocumento());
+        insertedOtherCuenta = cuentaRepository.save(otherCuenta);
+
+        // PATCH the second cuenta to reuse the document number of the first one
+        CuentaDTO otherDTO = cuentaMapper.toDto(otherCuenta);
+        otherDTO.setNumDocumento(cuenta.getNumDocumento());
+
+        restCuentaMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, otherCuenta.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(om.writeValueAsBytes(otherDTO))
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("error.documentoduplicado"));
     }
 
     @Test
@@ -457,11 +684,20 @@ class CuentaResourceIT {
         partialUpdatedCuenta.setId(cuenta.getId());
 
         partialUpdatedCuenta
+            .numDocumento(cuenta.getNumDocumento())
+            .primerNombre(cuenta.getPrimerNombre())
+            .segundoNombre(cuenta.getSegundoNombre())
+            .primerApellido(cuenta.getPrimerApellido())
+            .segundoApellido(cuenta.getSegundoApellido())
             .genero(UPDATED_GENERO)
-            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
+            .fechaNacimiento(cuenta.getFechaNacimiento())
+            .celular(cuenta.getCelular())
+            .telefono(cuenta.getTelefono())
             .fotoPerfil(UPDATED_FOTO_PERFIL)
             .fotoPerfilContentType(UPDATED_FOTO_PERFIL_CONTENT_TYPE)
             .activo(UPDATED_ACTIVO);
+        partialUpdatedCuenta.setUser(cuenta.getUser());
+        partialUpdatedCuenta.setTipoDocumento(cuenta.getTipoDocumento());
 
         restCuentaMockMvc
             .perform(
@@ -501,6 +737,8 @@ class CuentaResourceIT {
             .fotoPerfil(UPDATED_FOTO_PERFIL)
             .fotoPerfilContentType(UPDATED_FOTO_PERFIL_CONTENT_TYPE)
             .activo(UPDATED_ACTIVO);
+        partialUpdatedCuenta.setUser(cuenta.getUser());
+        partialUpdatedCuenta.setTipoDocumento(cuenta.getTipoDocumento());
 
         restCuentaMockMvc
             .perform(
