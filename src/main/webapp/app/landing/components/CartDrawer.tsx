@@ -59,7 +59,7 @@ export const CartDrawer = ({ show, onHide }: CartDrawerProps) => {
                     <div key={item.id} className="kn-cart-drawer__item d-flex gap-3 p-2 rounded">
                       <Link to={`/productos/${item.producto.slug}`} onClick={onHide} className="flex-shrink-0">
                         <img
-                          src={buildImageUrl(imagen?.imagenContentType, imagen?.imagen)}
+                          src={buildImageUrl(imagen?.imagenContentType, imagen?.imagen, undefined, imagen?.imagenUrl)}
                           alt={item.producto.nombre}
                           className="rounded"
                           style={{ width: '80px', height: '100px', objectFit: 'cover' }}

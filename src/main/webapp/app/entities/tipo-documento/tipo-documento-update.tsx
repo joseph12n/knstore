@@ -87,6 +87,7 @@ export const TipoDocumentoUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                   maxLength: { value: 10, message: 'Este campo no puede superar más de 10 caracteres.' },
                 }}
               />
@@ -98,6 +99,7 @@ export const TipoDocumentoUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                   maxLength: { value: 60, message: 'Este campo no puede superar más de 60 caracteres.' },
                 }}
               />

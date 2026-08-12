@@ -14,6 +14,7 @@ public class CategoriaDTO implements Serializable {
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String nombre;
 
     @NotNull

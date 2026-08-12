@@ -23,11 +23,13 @@ public class TipoDocumento implements Serializable {
 
     @NotNull
     @Size(max = 10)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("sigla")
     private String sigla;
 
     @NotNull
     @Size(max = 60)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("nombre_tipo")
     private String nombreTipo;
 

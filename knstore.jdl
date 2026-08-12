@@ -191,6 +191,7 @@ entity ProductoImagen {
   imagen     ImageBlob required
   imagenAlt  String    maxlength(200)
   esPrincipal Boolean  required
+  imagenUrl  String    maxlength(1000)
 }
 
 entity EtiquetaProducto {

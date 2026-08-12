@@ -18,7 +18,8 @@ export const StoreHome = () => {
     productos: rawProductos,
     loading,
     errorMessage,
-  } = useCatalog({ page: 0, size: 12, sort: 'nombre,asc' });
+    retry,
+  } = useCatalog({ page: 0, size: 100, sort: 'nombre,asc', loadOnMount: false });
   const categorias = rawCategorias ?? [];
   const productos = rawProductos ?? [];
 
@@ -33,6 +34,12 @@ export const StoreHome = () => {
         ctaText="Explorar ahora"
         ctaLink="/buscar"
       />
+
+      {errorMessage && productos.length === 0 && (
+        <Container className="pt-4">
+          <ErrorAlert message="No pudimos cargar los productos. Inténtalo de nuevo." onRetry={retry} />
+        </Container>
+      )}
 
       {/* Categorías */}
       <section className="py-5">
@@ -81,9 +88,7 @@ export const StoreHome = () => {
           </div>
           {loading ? (
             <LoadingSpinner />
-          ) : errorMessage ? (
-            <ErrorAlert message="No pudimos cargar los productos. Inténtalo de nuevo." />
-          ) : destacados.length === 0 ? (
+          ) : errorMessage && productos.length === 0 ? null : destacados.length === 0 ? (
             <EmptyState title="Aún no hay productos destacados" />
           ) : (
             <Row className="g-4">
@@ -108,7 +113,7 @@ export const StoreHome = () => {
           </div>
           {loading ? (
             <LoadingSpinner />
-          ) : (
+          ) : errorMessage && productos.length === 0 ? null : (
             <Row className="g-4">
               {novedades.map(producto => (
                 <Col key={producto.id} xs={6} md={4} lg={3}>

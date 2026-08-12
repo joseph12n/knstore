@@ -52,7 +52,13 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
               type="text"
               placeholder="Nombre de quien recibe"
               isInvalid={!!errors.destinatario}
-              {...register('destinatario', { required: 'El destinatario es obligatorio.' })}
+              {...register('destinatario', {
+                required: 'El destinatario es obligatorio.',
+                pattern: {
+                  value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                  message: 'Solo se permiten letras.',
+                },
+              })}
             />
             <Form.Control.Feedback type="invalid">{errors.destinatario?.message}</Form.Control.Feedback>
           </Form.Group>
@@ -64,7 +70,13 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
               type="text"
               placeholder="Calle, número, apartamento, torre"
               isInvalid={!!errors.direccion}
-              {...register('direccion', { required: 'La dirección es obligatoria.' })}
+              {...register('direccion', {
+                required: 'La dirección es obligatoria.',
+                pattern: {
+                  value: /.*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ].*/,
+                  message: 'La dirección debe contener al menos una letra.',
+                },
+              })}
             />
             <Form.Control.Feedback type="invalid">{errors.direccion?.message}</Form.Control.Feedback>
           </Form.Group>
@@ -72,13 +84,29 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
         <Col md={6} className="mb-3">
           <Form.Group>
             <Form.Label>Barrio</Form.Label>
-            <Form.Control type="text" placeholder="Barrio" {...register('barrio')} />
+            <Form.Control
+              type="text"
+              placeholder="Barrio"
+              isInvalid={!!errors.barrio}
+              {...register('barrio', {
+                pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
+              })}
+            />
+            <Form.Control.Feedback type="invalid">{errors.barrio?.message}</Form.Control.Feedback>
           </Form.Group>
         </Col>
         <Col md={6} className="mb-3">
           <Form.Group>
             <Form.Label>Localidad</Form.Label>
-            <Form.Control type="text" placeholder="Localidad" {...register('localidad')} />
+            <Form.Control
+              type="text"
+              placeholder="Localidad"
+              isInvalid={!!errors.localidad}
+              {...register('localidad', {
+                pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
+              })}
+            />
+            <Form.Control.Feedback type="invalid">{errors.localidad?.message}</Form.Control.Feedback>
           </Form.Group>
         </Col>
         <Col md={6} className="mb-3">
@@ -88,7 +116,10 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
               type="text"
               placeholder="Municipio"
               isInvalid={!!errors.municipio}
-              {...register('municipio', { required: 'El municipio es obligatorio.' })}
+              {...register('municipio', {
+                required: 'El municipio es obligatorio.',
+                pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
+              })}
             />
             <Form.Control.Feedback type="invalid">{errors.municipio?.message}</Form.Control.Feedback>
           </Form.Group>
@@ -100,7 +131,10 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
               type="text"
               placeholder="Departamento"
               isInvalid={!!errors.departamento}
-              {...register('departamento', { required: 'El departamento es obligatorio.' })}
+              {...register('departamento', {
+                required: 'El departamento es obligatorio.',
+                pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
+              })}
             />
             <Form.Control.Feedback type="invalid">{errors.departamento?.message}</Form.Control.Feedback>
           </Form.Group>
@@ -115,8 +149,8 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
               {...register('telefonoContacto', {
                 required: 'El teléfono de contacto es obligatorio.',
                 pattern: {
-                  value: /^\d{7,}$/,
-                  message: 'El teléfono debe tener al menos 7 dígitos.',
+                  value: /^\d{7,15}$/,
+                  message: 'Debe tener entre 7 y 15 dígitos.',
                 },
               })}
             />
@@ -130,7 +164,13 @@ export const AddressForm = ({ initialData, onSubmit, onCancel, isSubmitting = fa
               type="text"
               placeholder="Código postal"
               isInvalid={!!errors.codigoPostal}
-              {...register('codigoPostal', { required: 'El código postal es obligatorio.' })}
+              {...register('codigoPostal', {
+                required: 'El código postal es obligatorio.',
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: 'Solo se permiten números.',
+                },
+              })}
             />
             <Form.Control.Feedback type="invalid">{errors.codigoPostal?.message}</Form.Control.Feedback>
           </Form.Group>

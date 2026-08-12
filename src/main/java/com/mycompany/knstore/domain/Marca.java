@@ -22,6 +22,7 @@ public class Marca implements Serializable {
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("nombre")
     private String nombre;
 

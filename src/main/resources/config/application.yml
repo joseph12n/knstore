@@ -96,18 +96,19 @@ mongock:
 knstore:
   payment:
     gateway:
-      # Pasarela activa: "simulated" para desarrollo y pruebas.
+      # Pasarela activa: "simulated" para desarrollo y pruebas. Aprueba siempre
+      # de forma simbolica; una pasarela real sera otra implementacion de PaymentGateway.
       type: simulated
-      simulated:
-        # Resultado forzado para pruebas (approve | reject). Vacío = usar el estado del payload.
-        result: ''
 
 spring:
   application:
     name: knstore
   docker:
     compose:
-      enabled: true
+      # Desactivado: Mongo se gestiona manualmente con docker compose (existen dos versiones:
+      # mongodb.yml standalone y mongodb-replicaset.yml rs0). La auto-deteccion de Spring Boot 4
+      # no resuelve el mapeo de puertos de los contenedores ya levantados.
+      enabled: false
       lifecycle-management: start-only
       file: src/main/docker/services.yml
   profiles:

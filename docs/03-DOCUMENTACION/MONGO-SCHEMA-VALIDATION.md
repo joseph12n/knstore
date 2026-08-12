@@ -585,6 +585,10 @@ Entidad: `ProductoImagen`
       "es_principal": {
         "bsonType": "bool"
       },
+      "imagen_url": {
+        "bsonType": "string",
+        "maxLength": 1000
+      },
       "producto": {
         "bsonType": "object",
         "required": ["$id"],
@@ -598,6 +602,8 @@ Entidad: `ProductoImagen`
   }
 }
 ```
+
+> **Nota sobre `imagen` vs `imagen_url`:** ambos campos son alternativas a nivel de uso, no excluyentes en el schema. `imagen` (`binData`) almacena el archivo subido localmente y `imagen_url` referencia una imagen remota (p. ej. Unsplash). En el frontend la URL tiene prioridad sobre el `binData` cuando ambos están presentes (`buildImageUrl`); el seed y la migración `catalog-seed-images-migration` solo asignan `imagen_url` cuando `imagen` está vacía, para no sobrescribir subidas manuales.
 
 ---
 

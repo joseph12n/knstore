@@ -24,24 +24,29 @@ public class Direccion extends AbstractAuditingEntity<String> {
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = ".*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ].*", message = "La dirección debe contener al menos una letra")
     @Field("direccion")
     private String direccion;
 
     @Size(max = 100)
+    @Pattern(regexp = "^$|^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("barrio")
     private String barrio;
 
     @Size(max = 100)
+    @Pattern(regexp = "^$|^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("localidad")
     private String localidad;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("municipio")
     private String municipio;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("departamento")
     private String departamento;
 
@@ -51,16 +56,19 @@ public class Direccion extends AbstractAuditingEntity<String> {
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[0-9]{7,15}$")
     @Field("telefono_contacto")
     private String telefonoContacto;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("destinatario")
     private String destinatario;
 
     @NotNull
     @Size(max = 20)
+    @Pattern(regexp = "^[0-9]{1,20}$")
     @Field("codigo_postal")
     private String codigoPostal;
 

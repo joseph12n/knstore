@@ -114,11 +114,23 @@ export const createEntitySlice = <T, Reducers extends SliceCaseReducers<EntitySt
        * while calling `createEntitySlice`
        * */
       if (!skipRejectionHandling) {
-        builder.addMatcher(isRejectedAction, state => {
+        builder.addMatcher(isRejectedAction, (state, action) => {
+          if (!action.type.startsWith(`${name}/`)) {
+            return;
+          }
+          const rejected = action as {
+            payload?: { message?: string };
+            error?: { message?: string };
+          };
           state.loading = false;
           state.updating = false;
           state.updateSuccess = false;
-          state.errorMessage = null;
+          state.errorMessage = rejected.payload?.message ?? rejected.error?.message ?? null;
+        });
+        builder.addMatcher(isFulfilledAction, (state, action) => {
+          if (action.type.startsWith(`${name}/`)) {
+            state.errorMessage = null;
+          }
         });
       }
     },

@@ -3,11 +3,11 @@ name: knstore
 services:
   mongodb:
     extends:
-      file: ./mongodb.yml
+      file: ./mongodb-replicaset.yml
       service: mongodb
   mongodb-init:
     extends:
-      file: ./mongodb.yml
+      file: ./mongodb-replicaset.yml
       service: mongodb-init
 networks:
   knstore:
@@ -15,3 +15,5 @@ networks:
 volumes:
   knstore-mongodb-data:
     name: knstore-mongodb-data
+  knstore-mongodb-config:
+    name: knstore-mongodb-config

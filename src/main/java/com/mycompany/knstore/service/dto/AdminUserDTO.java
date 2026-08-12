@@ -26,9 +26,11 @@ public class AdminUserDTO implements Serializable {
     private String login;
 
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String firstName;
 
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String lastName;
 
     @Email

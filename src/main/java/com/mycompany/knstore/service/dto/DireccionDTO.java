@@ -14,20 +14,25 @@ public class DireccionDTO implements Serializable {
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = ".*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ].*", message = "La dirección debe contener al menos una letra")
     private String direccion;
 
     @Size(max = 100)
+    @Pattern(regexp = "^$|^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String barrio;
 
     @Size(max = 100)
+    @Pattern(regexp = "^$|^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String localidad;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String municipio;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String departamento;
 
     @NotNull
@@ -35,14 +40,17 @@ public class DireccionDTO implements Serializable {
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[0-9]{7,15}$")
     private String telefonoContacto;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String destinatario;
 
     @NotNull
     @Size(max = 20)
+    @Pattern(regexp = "^[0-9]{1,20}$")
     private String codigoPostal;
 
     @NotNull

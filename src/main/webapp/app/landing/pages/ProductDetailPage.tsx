@@ -79,22 +79,34 @@ export const ProductDetailPage = () => {
   const precioVenta = producto.precio?.precioVenta || 0;
   const hasStock = stock > 0;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!hasStock) {
       toast.error('Producto sin stock disponible.');
-      return;
+      return false;
     }
     if (quantity > stock) {
       toast.error(`Solo hay ${stock} unidades disponibles.`);
-      return;
+      return false;
     }
-    onAddToCart(producto, quantity);
-    toast.success('Producto añadido al carrito');
+    const result = await onAddToCart(producto, quantity);
+    if (result.ok) {
+      toast.success('Producto añadido al carrito');
+      return true;
+    }
+    if (result.reason === 'no-cuenta') {
+      toast.warn('Completa tu perfil para poder agregar productos al carrito.');
+      navigate('/mi-cuenta/perfil/editar');
+    } else {
+      toast.error('No se pudo agregar el producto al carrito.');
+    }
+    return false;
   };
 
-  const handleBuyNow = () => {
-    handleAddToCart();
-    navigate('/carrito');
+  const handleBuyNow = async () => {
+    const added = await handleAddToCart();
+    if (added) {
+      navigate('/carrito');
+    }
   };
 
   return (
@@ -121,7 +133,12 @@ export const ProductDetailPage = () => {
               <div className="rounded overflow-hidden position-relative" style={{ aspectRatio: '1/1', backgroundColor: '#f8f9fa' }}>
                 {productoImagenes.length > 0 ? (
                   <img
-                    src={buildImageUrl(productoImagenes[selectedImage]?.imagenContentType, productoImagenes[selectedImage]?.imagen)}
+                    src={buildImageUrl(
+                      productoImagenes[selectedImage]?.imagenContentType,
+                      productoImagenes[selectedImage]?.imagen,
+                      undefined,
+                      productoImagenes[selectedImage]?.imagenUrl,
+                    )}
                     alt={producto.nombre}
                     className="w-100 h-100 object-fit-cover"
                   />
@@ -148,7 +165,7 @@ export const ProductDetailPage = () => {
                       style={{ width: '72px', height: '72px' }}
                     >
                       <img
-                        src={buildImageUrl(img.imagenContentType, img.imagen)}
+                        src={buildImageUrl(img.imagenContentType, img.imagen, undefined, img.imagenUrl)}
                         alt={`${producto.nombre} ${idx + 1}`}
                         className="w-100 h-100 object-fit-cover"
                       />

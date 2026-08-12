@@ -82,15 +82,21 @@ export const ProductoImagenUpdate = () => {
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew && <ValidatedField name="id" required readOnly id="producto-imagen-id" label="ID" validate={{ required: true }} />}
-              <ValidatedBlobField
-                label="Imagen"
-                id="producto-imagen-imagen"
-                name="imagen"
-                data-cy="imagen"
-                isImage
-                accept="image/*"
+              <ValidatedBlobField label="Imagen" id="producto-imagen-imagen" name="imagen" data-cy="imagen" isImage accept="image/*" />
+              <ValidatedField
+                label="URL de imagen (opcional)"
+                id="producto-imagen-imagenUrl"
+                name="imagenUrl"
+                data-cy="imagenUrl"
+                type="text"
                 validate={{
-                  required: { value: true, message: 'Este campo es obligatorio.' },
+                  maxLength: { value: 1000, message: 'Este campo no puede superar más de 1000 caracteres.' },
+                  validate(value, formValues) {
+                    if (value || formValues?.imagen) {
+                      return true;
+                    }
+                    return 'Carga un archivo de imagen o una URL de imagen.';
+                  },
                 }}
               />
               <ValidatedField

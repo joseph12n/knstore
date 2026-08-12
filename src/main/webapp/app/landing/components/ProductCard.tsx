@@ -1,19 +1,21 @@
 import React, { useMemo, useState } from 'react';
 import { Badge, Card } from 'react-bootstrap';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 import { IProductoStorefront } from 'app/landing/model/storefront.model';
+import type { AddItemResult } from 'app/landing/context/CartContext';
 import { buildImageUrl, calculateDiscountPercent, formatCOP, truncateText } from 'app/landing/utils/format';
 
 interface ProductCardProps {
   producto: IProductoStorefront;
-  onAddToCart?: (producto: IProductoStorefront) => void;
+  onAddToCart?: (producto: IProductoStorefront) => Promise<AddItemResult>;
 }
 
 export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
 
   const imagenPrincipal = useMemo(() => producto.imagenes?.find(img => img.esPrincipal) || producto.imagenes?.[0], [producto.imagenes]);
@@ -27,7 +29,7 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
   // TODO backend: agregar campo precioAnterior/base si se requiere mostrar descuento real.
   const discountPercent = calculateDiscountPercent(producto.precio?.precioCompra, precioVenta);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -37,8 +39,16 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
       return;
     }
 
-    onAddToCart?.(producto);
-    toast.success('Producto añadido al carrito');
+    if (!onAddToCart) return;
+    const result = await onAddToCart(producto);
+    if (result.ok) {
+      toast.success('Producto añadido al carrito');
+    } else if (result.reason === 'no-cuenta') {
+      toast.warn('Completa tu perfil para poder agregar productos al carrito.');
+      navigate('/mi-cuenta/perfil/editar');
+    } else {
+      toast.error('No se pudo agregar el producto al carrito.');
+    }
   };
 
   return (
@@ -50,7 +60,7 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
       <Link to={`/productos/${producto.slug}`} className="text-decoration-none">
         <div className="position-relative overflow-hidden" style={{ aspectRatio: '3/4', backgroundColor: '#f8f9fa' }}>
           <img
-            src={buildImageUrl(imagenPrincipal?.imagenContentType, imagenPrincipal?.imagen)}
+            src={buildImageUrl(imagenPrincipal?.imagenContentType, imagenPrincipal?.imagen, undefined, imagenPrincipal?.imagenUrl)}
             alt={producto.nombre}
             className="w-100 h-100 object-fit-cover kn-img-transition"
             style={{
@@ -62,7 +72,7 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
           />
           {imagenSecundaria && (
             <img
-              src={buildImageUrl(imagenSecundaria.imagenContentType, imagenSecundaria.imagen)}
+              src={buildImageUrl(imagenSecundaria.imagenContentType, imagenSecundaria.imagen, undefined, imagenSecundaria.imagenUrl)}
               alt={`${producto.nombre} - vista alternativa`}
               className="w-100 h-100 object-fit-cover kn-img-transition"
               style={{

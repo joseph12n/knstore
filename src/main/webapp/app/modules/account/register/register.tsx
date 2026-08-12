@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 
 import { toast } from 'react-toastify';
 
+import { translateErrorKey } from 'app/config/notification-middleware';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
 
@@ -28,6 +29,7 @@ export const RegisterPage = () => {
   const updatePassword = event => setPassword(event.target.value);
 
   const successMessage = useAppSelector(state => state.register.successMessage);
+  const errorMessage = useAppSelector(state => state.register.errorMessage);
 
   useEffect(() => {
     if (successMessage) {
@@ -46,6 +48,11 @@ export const RegisterPage = () => {
       </Row>
       <Row className="justify-content-center">
         <Col md="8">
+          {errorMessage && (
+            <Alert variant="danger" data-cy="registerError">
+              {translateErrorKey(errorMessage)}
+            </Alert>
+          )}
           <ValidatedForm id="register-form" onSubmit={handleValidSubmit}>
             <ValidatedField
               name="username"

@@ -25,8 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Servicio de checkout atómico. Crea pedido, ítems, pago (simbólico), envío y factura
- * en una sola operación, además de decrementar stock y vaciar el carrito del cliente.
+ * Servicio de checkout atómico. Crea pedido, ítems, pago aprobado (simbólico),
+ * envío y factura en una sola operación, además de decrementar stock y vaciar
+ * el carrito del cliente.
  */
 @Service
 @Transactional
@@ -55,6 +56,8 @@ public class CheckoutService {
 
     private final HistorialEstadoService historialEstadoService;
 
+    private final PagoService pagoService;
+
     public CheckoutService(
         PedidoRepository pedidoRepository,
         ItemPedidoRepository itemPedidoRepository,
@@ -69,7 +72,8 @@ public class CheckoutService {
         MongoTemplate mongoTemplate,
         PedidoMapper pedidoMapper,
         ItemPedidoMapper itemPedidoMapper,
-        HistorialEstadoService historialEstadoService
+        HistorialEstadoService historialEstadoService,
+        PagoService pagoService
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
@@ -85,6 +89,7 @@ public class CheckoutService {
         this.pedidoMapper = pedidoMapper;
         this.itemPedidoMapper = itemPedidoMapper;
         this.historialEstadoService = historialEstadoService;
+        this.pagoService = pagoService;
     }
 
     public CheckoutPreviewDTO preview(Cuenta cuenta, CheckoutRequestDTO request) {
@@ -188,7 +193,8 @@ public class CheckoutService {
             }
         }
 
-        // Crear pago inicial en estado PENDING; la pasarela lo resuelve por callback
+        // Crear pago del pedido; la pasarela simbolica lo aprueba de inmediato
+        // en la misma transaccion (APPROVED + codigo de autorizacion + factura).
         Pago pago = new Pago();
         pago.setMetodoPago(request.getMetodoPago());
         pago.setEstado(EstadoPago.PENDING);
@@ -209,6 +215,12 @@ public class CheckoutService {
         envio = envioRepository.save(envio);
         pedido.setEnvio(envio);
         pedidoRepository.save(pedido);
+
+        // Aprobacion simbolica inmediata: el pago queda APPROVED en este mismo checkout.
+        // Se ejecuta al final para no pisar la aprobacion con los guardados previos del pedido.
+        pagoService.iniciarPago(pedido.getId());
+        // Recargar el pedido para reflejar el estado CONFIRMED aprobado por la pasarela.
+        pedido = pedidoRepository.findById(pedido.getId()).orElseThrow();
 
         // Vaciar carrito del usuario
         vaciarCarrito(cuenta);
