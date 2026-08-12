@@ -18,6 +18,7 @@ import OrderCancelModal from 'app/landing/components/OrderCancelModal';
 import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS, PAYMENT_STATUS_LABELS, SHIPPING_STATUS_LABELS } from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
 import { getApiErrorMessage } from 'app/landing/utils/apiError';
+import { downloadFacturaPdf } from 'app/landing/utils/invoice';
 
 export const OrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -66,16 +67,7 @@ export const OrderDetailPage = () => {
     if (!factura?.id) return;
     setIsDownloadingFactura(true);
     try {
-      const response = await axios.get<Blob>(`api/facturas/${factura.id}/pdf`, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(response.data);
-      const link = document.createElement('a');
-      const filename = `${factura.prefijo || 'FAC'}-${factura.id}.pdf`;
-      link.href = url;
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      await downloadFacturaPdf(factura.id, factura.prefijo);
     } catch {
       window.location.href = `api/facturas/${factura.id}/download`;
     } finally {

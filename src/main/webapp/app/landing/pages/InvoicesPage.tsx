@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Badge, Button, Card, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import dayjs from 'dayjs';
-import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntities as getFacturas } from 'app/entities/factura/factura.reducer';
@@ -12,6 +11,7 @@ import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import EmptyState from 'app/landing/components/EmptyState';
 import Pagination from 'app/landing/components/Pagination';
 import { formatCOP } from 'app/landing/utils/format';
+import { downloadFacturaPdf } from 'app/landing/utils/invoice';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -29,16 +29,7 @@ export const InvoicesPage = () => {
     if (!factura.id) return;
     setDownloadingId(factura.id);
     try {
-      const response = await axios.get<Blob>(`api/facturas/${factura.id}/pdf`, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(response.data);
-      const link = document.createElement('a');
-      const filename = `${factura.prefijo || 'FAC'}-${factura.id}.pdf`;
-      link.href = url;
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      await downloadFacturaPdf(factura.id, factura.prefijo);
     } catch {
       // fall back to legacy JSON download
       window.location.href = `api/facturas/${factura.id}/download`;

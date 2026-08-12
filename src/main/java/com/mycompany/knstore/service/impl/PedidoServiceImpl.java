@@ -182,13 +182,7 @@ public class PedidoServiceImpl implements PedidoService {
         validarTransicionPedido(estadoAnterior, nuevoEstado);
         pedido.setEstado(nuevoEstado);
         pedido = pedidoRepository.save(pedido);
-        historialEstadoService.registrar(
-            "PEDIDO",
-            pedido.getId(),
-            "estado",
-            estadoAnterior != null ? estadoAnterior.name() : null,
-            nuevoEstado.name()
-        );
+        historialEstadoService.registrar("PEDIDO", pedido.getId(), "estado", estadoAnterior.name(), nuevoEstado.name());
         // La cancelacion siempre restaura el stock, sea por el endpoint del cliente o de administracion.
         if (nuevoEstado == EstadoPedido.CANCELLED) {
             restaurarStock(id);

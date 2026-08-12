@@ -171,8 +171,10 @@ export const ProfilePage = () => {
       <Card>
         <Card.Body className="p-4">
           <div className="d-flex align-items-center gap-3 mb-4">
-            <div
-              className="rounded-circle d-flex align-items-center justify-content-center position-relative flex-shrink-0"
+            <button
+              type="button"
+              aria-label="Cambiar foto de perfil"
+              className="rounded-circle d-flex align-items-center justify-content-center position-relative flex-shrink-0 border-0 p-0"
               style={{
                 width: '80px',
                 height: '80px',
@@ -197,7 +199,7 @@ export const ProfilePage = () => {
               >
                 <FontAwesomeIcon icon={faCamera} size="xs" />
               </div>
-            </div>
+            </button>
             <div>
               <h5 className="fw-bold mb-0">
                 {cuenta?.primerNombre || account.firstName} {cuenta?.primerApellido || account.lastName}

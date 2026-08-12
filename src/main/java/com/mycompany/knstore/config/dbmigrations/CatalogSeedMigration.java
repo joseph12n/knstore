@@ -279,7 +279,8 @@ public class CatalogSeedMigration {
             .replaceAll("\\p{M}", "")
             .toLowerCase()
             .replaceAll("[^a-z0-9]+", "-")
-            .replaceAll("(^-|-$)", "");
+            .replaceAll("^-+", "")
+            .replaceAll("-+$", "");
     }
 
     private record PrecioModelo(BigDecimal precioVenta, BigDecimal precioCompra) {}

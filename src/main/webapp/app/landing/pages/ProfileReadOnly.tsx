@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faPhone, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router';
 import dayjs from 'dayjs';
 
-import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getSession } from 'app/shared/reducers/authentication';
-import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
+import useCuentaActual from 'app/landing/hooks/useCuentaActual';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
+import ProfileHeaderCard from 'app/landing/components/ProfileHeaderCard';
 
 const buildImageSrc = (contentType?: string | null, base64?: string | null) => {
   if (!base64) return undefined;
@@ -17,21 +16,7 @@ const buildImageSrc = (contentType?: string | null, base64?: string | null) => {
 
 export const ProfileReadOnly = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
-  const account = useAppSelector(state => state.authentication.account);
-  const cuenta = useAppSelector(state => state.cuenta.entity);
-  const loading = useAppSelector(state => state.cuenta.loading);
-
-  useEffect(() => {
-    dispatch(getSession());
-    if (account.login) {
-      dispatch(getCuentaByLogin(account.login));
-    }
-    return () => {
-      dispatch(resetCuenta());
-    };
-  }, [dispatch, account.login]);
+  const { account, cuenta, loading } = useCuentaActual();
 
   if (loading) {
     return <LoadingSpinner fullScreen />;
@@ -50,28 +35,7 @@ export const ProfileReadOnly = () => {
 
       <Row className="g-4">
         <Col lg={4}>
-          <Card className="text-center p-4">
-            <Card.Body>
-              <div
-                className="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
-                style={{
-                  width: '140px',
-                  height: '140px',
-                  backgroundColor: 'var(--kn-color-surface)',
-                  color: 'var(--kn-color-text)',
-                  backgroundImage: previewImage ? `url(${previewImage})` : undefined,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              >
-                {!previewImage && <FontAwesomeIcon icon={faUser} size="4x" />}
-              </div>
-              <h5 className="fw-bold mb-1">
-                {cuenta?.primerNombre || account.firstName} {cuenta?.primerApellido || account.lastName}
-              </h5>
-              <p className="text-muted small mb-0">{account.email}</p>
-            </Card.Body>
-          </Card>
+          <ProfileHeaderCard cuenta={cuenta} account={account} avatarSize={140} fotoPerfil={previewImage} />
         </Col>
 
         <Col lg={8}>
