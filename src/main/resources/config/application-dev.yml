@@ -31,19 +31,21 @@ spring:
     serialization:
       indent-output: true
   mail:
-    host: sandbox.smtp.mailtrap.io
-    port: 2525
-    username: ${MAILTRAP_USERNAME:04c07e60417777}
-    password: ${MAILTRAP_PASSWORD:e3693d93b104f9}
+    # SMTP de Gmail para pruebas de envio real (contraseña de aplicacion).
+    # Se puede sobrescribir con SPRING_MAIL_USERNAME / SPRING_MAIL_PASSWORD.
+    host: smtp.gmail.com
+    port: 587
+    username: ${SPRING_MAIL_USERNAME:knstorecheckout@gmail.com}
+    password: ${SPRING_MAIL_PASSWORD:ktjpalnmzmavwwzo}
     properties:
       mail:
-        transport:
-          protocol: smtp
         smtp:
           auth: true
           starttls:
             enable: true
             required: true
+        transport:
+          protocol: smtp
         debug: true
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
