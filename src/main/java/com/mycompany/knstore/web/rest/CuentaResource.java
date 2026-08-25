@@ -70,6 +70,12 @@ public class CuentaResource {
         if (cuentaDTO.getId() != null) {
             throw new BadRequestAlertException("A new cuenta cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (cuentaDTO.getUser() == null) {
+            throw new BadRequestAlertException("El usuario de la cuenta es obligatorio", ENTITY_NAME, "userrequerido");
+        }
+        if (cuentaDTO.getTipoDocumento() == null) {
+            throw new BadRequestAlertException("El tipo de documento es obligatorio", ENTITY_NAME, "tipodocumentorequerido");
+        }
 
         // A client can only create a Cuenta for themselves and only if they do not already have one.
         if (

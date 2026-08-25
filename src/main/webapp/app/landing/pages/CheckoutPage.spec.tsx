@@ -67,10 +67,16 @@ const mockPost = (pagoEstado = 'APPROVED') => {
       return Promise.resolve({ data: PREVIEW });
     }
     if (String(url).endsWith('api/pedidos/checkout')) {
-      return Promise.resolve({ data: { pedido: { id: 'pedido-1', numeroPedido: 'PED-1' } } });
+      // RF-076: el checkout ya devuelve el pago resultante (pasarela simulada).
+      return Promise.resolve({
+        data: {
+          pedido: { id: 'pedido-1', numeroPedido: 'PED-1' },
+          pago: { id: 'pago-1', estado: pagoEstado, descripcionRespuesta: 'Pago procesado' },
+        },
+      });
     }
     if (String(url).endsWith('api/pagos/iniciar')) {
-      return Promise.resolve({ data: { estado: pagoEstado, descripcionRespuesta: 'Pago aprobado' } });
+      return Promise.resolve({ data: { id: 'pago-1', estado: pagoEstado, descripcionRespuesta: 'Pago aprobado' } });
     }
     return Promise.resolve({ data: {} });
   });
@@ -161,8 +167,8 @@ describe('CheckoutPage', () => {
     expect(Object.keys(payload.items[0])).not.toContain('precioUnitario');
   });
 
-  it('pago aprobado limpia el carrito y navega al detalle del pedido', async () => {
-    mockPost('APPROVED');
+  it('pago aprobado usa el pago del checkout sin llamar a iniciarPago y navega al detalle', async () => {
+    const postMock = mockPost('APPROVED');
     renderCheckout();
     await flush();
 
@@ -176,6 +182,41 @@ describe('CheckoutPage', () => {
     await flush();
 
     expect(mocks.refresh).toHaveBeenCalled();
+    // RF-076: el pago viene dentro de la respuesta del checkout, no se repite la llamada.
+    expect(postMock.mock.calls.filter(c => String(c[0]).endsWith('api/pagos/iniciar'))).toHaveLength(0);
+    await waitFor(() => {
+      expect(mocks.navigate).toHaveBeenCalledWith('/mi-cuenta/pedidos/pedido-1');
+    });
+  });
+
+  it('si el checkout no devuelve pago, intenta iniciarPago por compatibilidad', async () => {
+    const postMock = vi.spyOn(axios, 'post').mockImplementation((url: string) => {
+      if (String(url).endsWith('api/pedidos/preview')) {
+        return Promise.resolve({ data: PREVIEW });
+      }
+      if (String(url).endsWith('api/pedidos/checkout')) {
+        return Promise.resolve({ data: { pedido: { id: 'pedido-1', numeroPedido: 'PED-1' } } });
+      }
+      if (String(url).endsWith('api/pagos/iniciar')) {
+        return Promise.resolve({ data: { id: 'pago-1', estado: 'APPROVED', descripcionRespuesta: 'Pago aprobado' } });
+      }
+      return Promise.resolve({ data: {} });
+    });
+    renderCheckout();
+    await flush();
+
+    await goToStep(3);
+    await waitFor(() => {
+      const confirmBtn = screen.getByRole('button', { name: 'Confirmar pedido' }) as HTMLButtonElement;
+      expect(confirmBtn.disabled).toBe(false);
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Confirmar pedido' }));
+    await flush();
+
+    const iniciarPagoCall = postMock.mock.calls.find(c => String(c[0]).endsWith('api/pagos/iniciar'));
+    expect(iniciarPagoCall).toBeTruthy();
+    expect(iniciarPagoCall![1]).toEqual({ pedidoId: 'pedido-1' });
     await waitFor(() => {
       expect(mocks.navigate).toHaveBeenCalledWith('/mi-cuenta/pedidos/pedido-1');
     });

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -446,5 +447,70 @@ class PagoFlujoResourceIT {
                     .content(om.writeValueAsBytes(Map.of("motivo", "otra vez")))
             )
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void clienteVeSoloSusPagosEnElListado() throws Exception {
+        User userPropio = new User();
+        userPropio.setId("user-listado-pago");
+        userPropio.setLogin("cliente-listado-pago");
+        userPropio.setPassword("x".repeat(60));
+        userPropio.setActivated(true);
+        userPropio.setEmail("cliente-listado-pago@test.com");
+        userRepository.save(userPropio);
+        cuenta.setUser(userPropio);
+        cuentaRepository.save(cuenta);
+
+        Pago pagoPropio = new Pago();
+        pagoPropio.setEstado(EstadoPago.APPROVED);
+        pagoPropio.setMonto(new BigDecimal("128900.00"));
+        pagoPropio.setMetodoPago(MetodoPago.NEQUI);
+        pagoPropio.setReferenciaPasarela("SIM-LISTADO-PROPIO");
+        pagoPropio.setPedido(pedido);
+        pagoPropio = pagoRepository.save(pagoPropio);
+
+        // Otra cuenta con su propio pedido y pago: no debe aparecer en el listado.
+        Cuenta otraCuenta = new Cuenta();
+        otraCuenta.setNumDocumento("9876543210");
+        otraCuenta.setPrimerNombre("Otro");
+        otraCuenta.setSegundoNombre("Usuario");
+        otraCuenta.setPrimerApellido("De");
+        otraCuenta.setSegundoApellido("Prueba");
+        otraCuenta.setGenero(com.mycompany.knstore.domain.enumeration.Genero.MASCULINO);
+        otraCuenta.setFechaNacimiento(java.time.LocalDate.of(1990, 1, 1));
+        otraCuenta.setCelular("3004445566");
+        otraCuenta.setTelefono("6014445566");
+        otraCuenta.setTipoDocumento(cuenta.getTipoDocumento());
+        otraCuenta.setActivo(true);
+        otraCuenta = cuentaRepository.save(otraCuenta);
+
+        Pedido pedidoAjeno = new Pedido();
+        pedidoAjeno.setNumeroPedido("PED-TEST-000002");
+        pedidoAjeno.setEstado(EstadoPedido.PENDING);
+        pedidoAjeno.setSubtotal(new BigDecimal("50000.00"));
+        pedidoAjeno.setIvaTotal(new BigDecimal("9500.00"));
+        pedidoAjeno.setCostoEnvio(BigDecimal.ZERO);
+        pedidoAjeno.setDescuento(BigDecimal.ZERO);
+        pedidoAjeno.setTotal(new BigDecimal("59500.00"));
+        pedidoAjeno.setDireccion(direccion);
+        pedidoAjeno.setCuenta(otraCuenta);
+        pedidoAjeno = pedidoRepository.save(pedidoAjeno);
+
+        Pago pagoAjeno = new Pago();
+        pagoAjeno.setEstado(EstadoPago.PENDING);
+        pagoAjeno.setMonto(new BigDecimal("59500.00"));
+        pagoAjeno.setMetodoPago(MetodoPago.NEQUI);
+        pagoAjeno.setReferenciaPasarela("SIM-LISTADO-AJENO");
+        pagoAjeno.setPedido(pedidoAjeno);
+        pagoAjeno = pagoRepository.save(pagoAjeno);
+
+        autenticarComo(userPropio.getId(), AuthoritiesConstants.CLIENTE);
+
+        mockMvc
+            .perform(get("/api/pagos").param("page", "0").param("size", "10").param("sort", "id,asc"))
+            .andExpect(status().isOk())
+            .andExpect(header().string("X-Total-Count", "1"))
+            .andExpect(jsonPath("$[0].id").value(pagoPropio.getId()))
+            .andExpect(jsonPath("$[0].estado").value("APPROVED"));
     }
 }

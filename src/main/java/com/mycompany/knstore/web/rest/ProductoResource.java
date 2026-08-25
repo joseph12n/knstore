@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,9 +18,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -36,6 +39,8 @@ public class ProductoResource {
     private static final Logger LOG = LoggerFactory.getLogger(ProductoResource.class);
 
     private static final String ENTITY_NAME = "producto";
+
+    private static final int MAX_PRODUCTOS_POR_IDS = 200;
 
     @Value("${jhipster.clientApp.name:knstore}")
     private String applicationName;
@@ -162,6 +167,40 @@ public class ProductoResource {
     }
 
     /**
+     * {@code GET  /productos/por-ids} : get the productos by their ids (RNF-029).
+     * Usado por el carrito para materializar los productos en lote; maximo
+     * {@value #MAX_PRODUCTOS_POR_IDS} ids.
+     *
+     * @param ids lista de ids separada por comas, ej. {@code ids=a,b,c}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of productos in body,
+     * or with status {@code 400 (Bad Request)} si el parametro es invalido o supera el maximo.
+     */
+    @GetMapping("/por-ids")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<ProductoDTO>> getAllProductosPorIds(@RequestParam("ids") String ids) {
+        LOG.debug("REST request to get Productos by ids : {}", ids);
+        List<String> idsLista;
+        try {
+            idsLista = Arrays.stream(ids.split(","))
+                .map(String::trim)
+                .filter(id -> !id.isEmpty())
+                .toList();
+        } catch (IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El parametro ids es invalido", ex);
+        }
+        if (idsLista.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El parametro ids no puede estar vacio");
+        }
+        if (idsLista.size() > MAX_PRODUCTOS_POR_IDS) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Se permiten como maximo " + MAX_PRODUCTOS_POR_IDS + " ids por peticion"
+            );
+        }
+        return ResponseEntity.ok().body(productoService.findAllByIds(idsLista));
+    }
+
+    /**
      * {@code GET  /productos/search} : search active productos by query.
      *
      * @param query the search query.
@@ -172,10 +211,12 @@ public class ProductoResource {
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<ProductoDTO>> searchProductos(
         @RequestParam(name = "q", required = false, defaultValue = "") String query,
+        @RequestParam(name = "categoriaId", required = false) String categoriaId,
+        @RequestParam(name = "marcaId", required = false) String marcaId,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         LOG.debug("REST request to search Productos : {}", query);
-        Page<ProductoDTO> page = productoService.searchActive(query.trim(), pageable);
+        Page<ProductoDTO> page = productoService.searchActive(query.trim(), categoriaId, marcaId, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

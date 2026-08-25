@@ -13,16 +13,15 @@ import com.mycompany.knstore.service.EnvioService;
 import com.mycompany.knstore.service.HistorialEstadoService;
 import com.mycompany.knstore.service.dto.EnvioDTO;
 import com.mycompany.knstore.service.mapper.EnvioMapper;
-import com.mycompany.knstore.service.util.InMemoryPageUtils;
-import java.util.LinkedList;
+import com.mycompany.knstore.service.util.MongoIdUtils;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,16 +92,19 @@ public class EnvioServiceImpl implements EnvioService {
     public Page<EnvioDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Envios");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            // RNF-028: una consulta para los pedidos de la cuenta y una consulta
+            // en lote para sus envios (sin N+1 ni paginacion en memoria).
             return getCurrentAccountId()
                 .map(cuentaId -> {
-                    List<EnvioDTO> envios = pedidoRepository
+                    List<String> pedidoIds = pedidoRepository
                         .findByCuentaId(cuentaId, Pageable.unpaged())
                         .getContent()
                         .stream()
-                        .flatMap(pedido -> envioRepository.findByPedidoId(pedido.getId(), Pageable.unpaged()).getContent().stream())
-                        .map(envioMapper::toDto)
-                        .collect(Collectors.toCollection(LinkedList::new));
-                    return InMemoryPageUtils.paginar(envios, pageable);
+                        .map(Pedido::getId)
+                        .toList();
+                    return envioRepository
+                        .findByPedidoIdIn(MongoIdUtils.toObjectIds(pedidoIds), withSort(pageable))
+                        .map(envioMapper::toDto);
                 })
                 .orElse(Page.empty(pageable));
         }
@@ -113,20 +115,31 @@ public class EnvioServiceImpl implements EnvioService {
     public Optional<EnvioDTO> findOne(String id) {
         LOG.debug("Request to get Envio : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            // RNF-028: el envio se resuelve por id y el ownership con una sola
+            // consulta del pedido (2 consultas constantes, sin recorrer listas).
             return getCurrentAccountId()
-                .flatMap(cuentaId ->
-                    pedidoRepository
-                        .findByCuentaId(cuentaId, Pageable.unpaged())
-                        .getContent()
-                        .stream()
-                        .map(pedido -> envioRepository.findByIdAndPedidoId(id, pedido.getId()))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .findFirst()
-                )
+                .flatMap(cuentaId -> envioRepository.findById(id).filter(envio -> pedidoPerteneceACuenta(envio.getPedido(), cuentaId)))
                 .map(envioMapper::toDto);
         }
         return envioRepository.findById(id).map(envioMapper::toDto);
+    }
+
+    private boolean pedidoPerteneceACuenta(Pedido pedido, String cuentaId) {
+        if (pedido == null || pedido.getId() == null) {
+            return false;
+        }
+        return pedidoRepository.findByIdAndCuentaId(pedido.getId(), cuentaId).isPresent();
+    }
+
+    /**
+     * Si el {@link Pageable} no trae orden, se aplica un sort determinista por id
+     * descendente para que la paginacion en lote sea estable.
+     */
+    private Pageable withSort(Pageable pageable) {
+        if (pageable.getSort().isUnsorted()) {
+            return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "id"));
+        }
+        return pageable;
     }
 
     @Override

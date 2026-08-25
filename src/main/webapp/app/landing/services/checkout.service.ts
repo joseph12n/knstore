@@ -22,8 +22,17 @@ export interface CheckoutPreview {
   total: number;
 }
 
+export interface CheckoutPagoInfo {
+  id?: string;
+  estado?: string;
+  descripcionRespuesta?: string;
+}
+
 export interface CheckoutResponse {
   pedido: { id: string; numeroPedido?: string };
+  // RF-076: se incluye cuando la pasarela (simulada) procesa el pago dentro
+  // del checkout, evitando una segunda llamada a /api/pagos/iniciar.
+  pago?: CheckoutPagoInfo;
 }
 
 export interface IniciarPagoResponse {

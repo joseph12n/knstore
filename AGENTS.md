@@ -154,16 +154,18 @@ Para `Cuenta`, `Direccion`, `Carrito`, `Pedido`, `ItemCarrito`, `ItemPedido`, `P
 - RF-042 a RF-046: carrito (agregar, consultar, modificar, eliminar, vaciar) con recálculo automático de subtotales.
 - RF-047 a RF-053: checkout atómico con preview de totales, reglas de envío (gratis ≥ $150.000), listado/detalle de pedidos y cancelación con máquina de estados.
 - RF-054 a RF-069: pasarela de pagos abstracta (simulada configurable), callback idempotente, reembolsos, facturación real con consecutivo, PDF con QR y envío por correo; endpoints de operación de envíos (tracking, estado, devolución, pendientes).
+- RF-070 a RF-076: filtros server-side en buscador, búsqueda por marca, orden por precio server-side (`Producto.precioVenta` denormalizado), edición del perfil propio (RF-033 completado), pago en resultado del checkout y botón "Pagar ahora". Detalle en `docs/REQUERIMIENTOS_PENDIENTES.md`.
+- RNF-027 a RNF-031: índice de texto MongoDB, eliminación de N+1 (listados CLIENTE, ownership y catálogo por lotes), endpoint `GET /api/productos/por-ids` para el carrito, consecutivos diarios atómicos (colección `secuencias`, `SecuenciaService`) y `/management/prometheus` protegido.
 - Seed automático del catálogo en desarrollo (`knstore.seed.catalog=true`).
 - MongoDB en replica set para transacciones reales.
 
 ### Pendientes / parciales
 
-| ID     | Requerimiento                  | Estado  |
-| ------ | ------------------------------ | ------- |
-| RF-033 | Editar datos del perfil propio | Parcial |
+| ID  | Requerimiento                                               | Estado |
+| --- | ----------------------------------------------------------- | ------ |
+| —   | Barrido RF-072→RNF-031 implementado 2026-08-24 (sin commit) | ✅     |
 
-\* _Pendientes conocidos de calidad (backlog): N+1 en listados de CLIENTE (Pago/Envio/Factura) y en `ResourceAccessService`, `fetchProductos` del carrito limitado a 1000, filtros de búsqueda aplicados solo a la página actual, consecutivos diarios en pedidos/facturas._
+\* _Pendientes conocidos de calidad (backlog): `ItemCarritoResourceIT` (4 tests CRUD autogenerados) fallan preexistentes desde que se blindó el precio server-side (productos ficticios, `400 error.itemcarritoinvalido`); contadores viejos `pedido_sequence`/`factura_sequence` huérfanos (cleanup opcional). Detalle completo en `docs/REQUERIMIENTOS_PENDIENTES.md`._
 
 ---
 
@@ -291,9 +293,10 @@ npm run java:docker                                 # Imagen con Jib
 - `src/main/webapp/app/app.tsx` y `routes.tsx`: enrutamiento y layout dual.
 - `src/main/webapp/app/landing/`: tienda pública y panel de cliente.
 - `src/main/webapp/app/dashboard/index.tsx`: punto de entrada del panel admin.
-- `src/main/java/com/mycompany/knstore/service/util/InMemoryPageUtils.java`: paginación en memoria para listados anidados de CLIENTE.
+- `src/main/java/com/mycompany/knstore/service/util/MongoIdUtils.java`: conversión String→ObjectId para consultas batch sobre `@DBRef` (`ref.$id` guardado como ObjectId).
+- `src/main/java/com/mycompany/knstore/service/SecuenciaService.java`: consecutivos diarios atómicos (colección `secuencias`, `findAndModify` + `$inc`).
 - `src/main/webapp/app/landing/hooks/useCuentaActual.ts` y `utils/apiError.ts`: patrones compartidos del panel de cliente (carga de cuenta, errores Axios tipados).
-- `src/main/webapp/app/landing/services/checkout.service.ts`: payload y llamadas del checkout (precio siempre server-side).
+- `src/main/webapp/app/landing/services/checkout.service.ts`: payload y llamadas del checkout (precio siempre server-side; el resultado incluye `pago`).
 
 ---
 

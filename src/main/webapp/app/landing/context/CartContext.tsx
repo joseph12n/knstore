@@ -74,8 +74,13 @@ const fetchItemCarritos = async (carritoId: string): Promise<IItemCarrito[]> => 
   return response.data.filter(item => item.carrito?.id === carritoId);
 };
 
-const fetchProductos = async (): Promise<IProducto[]> => {
-  const response = await axios.get<IProducto[]>('api/productos?size=1000&eagerload=true');
+const fetchProductosPorIds = async (ids: string[]): Promise<IProducto[]> => {
+  // RNF-029: se traen solo los productos que están en el carrito del servidor,
+  // no el catálogo completo. El endpoint es público y acepta max 200 ids.
+  if (ids.length === 0) {
+    return [];
+  }
+  const response = await axios.get<IProducto[]>(`api/productos/por-ids?ids=${encodeURIComponent(ids.join(','))}`);
   return response.data;
 };
 
@@ -167,7 +172,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
     setLoading(true);
     const promise = (async () => {
       try {
-        const [cuenta, productos] = await Promise.all([findCuentaByLogin(login), fetchProductos()]);
+        const cuenta = await findCuentaByLogin(login);
         if (!cuenta?.id) {
           return;
         }
@@ -179,6 +184,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children, isAuthenti
         carritoIdRef.current = carrito.id;
         const itemsBelongingToCart = await fetchItemCarritos(carrito.id);
 
+        // RNF-029: se piden solo los productos de los items del carrito
+        // (orden original del servidor, mapeando por id).
+        const ids = itemsBelongingToCart.map(item => item.producto?.id).filter((valor): valor is string => !!valor);
+        const productos = ids.length > 0 ? await fetchProductosPorIds(ids) : [];
         const productosMap = new Map(productos.map(p => [p.id, p]));
         const loadedItems = itemsBelongingToCart
           .map(item => {

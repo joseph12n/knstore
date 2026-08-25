@@ -17,7 +17,7 @@
     },
     "servers": [
         {
-            "url": "https://app.knstore.freeddns.org",
+            "url": "https://app.knstore.duckdns.org",
             "description": "Production server (allowed in CORS dev config)"
         },
         {

@@ -67,17 +67,43 @@ const ActionsConsumer = ({ producto = PRODUCTO, cantidad = 1 }: { producto?: IPr
 const flush = () => new Promise(resolve => setTimeout(resolve, 50));
 
 const mockServerWithItem = () => {
-  vi.spyOn(axios, 'get').mockImplementation((url: string) => {
-    if (String(url).startsWith('api/cuentas')) return Promise.resolve({ data: [CUENTA] });
-    if (String(url).startsWith('api/carritos')) return Promise.resolve({ data: [{ id: 'carrito-1' }] });
-    if (String(url).startsWith('api/item-carritos'))
+  const productUrls: string[] = [];
+  const getMock = vi.fn((url: string) => {
+    const u = String(url);
+    if (u.startsWith('api/cuentas')) return Promise.resolve({ data: [CUENTA] });
+    if (u.startsWith('api/carritos')) return Promise.resolve({ data: [{ id: 'carrito-1' }] });
+    if (u.startsWith('api/item-carritos'))
       return Promise.resolve({
         data: [{ id: 'item-1', cantidad: 1, precioUnitario: 100000, producto: { id: 'prod-1' }, carrito: { id: 'carrito-1' } }],
       });
-    if (String(url).startsWith('api/productos')) return Promise.resolve({ data: [PRODUCTO] });
+    if (u.startsWith('api/productos')) {
+      productUrls.push(u);
+      return Promise.resolve({ data: [PRODUCTO] });
+    }
     return Promise.resolve({ data: [] });
   });
+  vi.spyOn(axios, 'get').mockImplementation(getMock);
+  return { getMock, productUrls };
 };
+
+// RNF-029: helper con producto solo en /por-ids y sin fallback para el catalogo completo.
+const mockServerConPorIds = (itemCarritos: unknown[] = []) => {
+  const productUrls: string[] = [];
+  vi.spyOn(axios, 'get').mockImplementation((url: string) => {
+    const u = String(url);
+    if (u.startsWith('api/cuentas')) return Promise.resolve({ data: [CUENTA] });
+    if (u.startsWith('api/carritos')) return Promise.resolve({ data: [{ id: 'carrito-1' }] });
+    if (u.startsWith('api/item-carritos')) return Promise.resolve({ data: itemCarritos });
+    if (u.startsWith('api/productos')) {
+      productUrls.push(u);
+      return Promise.resolve({ data: [PRODUCTO] });
+    }
+    return Promise.resolve({ data: [] });
+  });
+  return { productUrls };
+};
+
+const ITEM_CARRITO = { id: 'item-1', cantidad: 1, precioUnitario: 100000, producto: { id: 'prod-1' }, carrito: { id: 'carrito-1' } };
 
 describe('CartContext anonymous user', () => {
   beforeEach(() => {
@@ -161,6 +187,42 @@ describe('CartContext authenticated user', () => {
     });
     expect(screen.getByTestId('items').textContent).toBe('0');
     expect(postMock).not.toHaveBeenCalled();
+  });
+
+  it('loads server cart products only by ids and never fetches the full catalog (RNF-029)', async () => {
+    const { productUrls } = mockServerConPorIds([ITEM_CARRITO]);
+
+    render(
+      <CartProvider isAuthenticated={true} login="usuario">
+        <TestConsumer />
+      </CartProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('items').textContent).toBe('1');
+    });
+
+    expect(productUrls).toHaveLength(1);
+    expect(productUrls[0]).toContain('api/productos/por-ids');
+    expect(productUrls[0]).toContain('ids=prod-1');
+    expect(productUrls.some(u => u.includes('size=1000'))).toBe(false);
+  });
+
+  it('does not call productos/por-ids when the server cart has no items', async () => {
+    const { productUrls } = mockServerConPorIds([]);
+
+    render(
+      <CartProvider isAuthenticated={true} login="usuario">
+        <TestConsumer />
+      </CartProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('items').textContent).toBe('0');
+    });
+    await flush();
+
+    expect(productUrls).toHaveLength(0);
   });
 
   it('adds a product and reflects it for an authenticated user with Cuenta', async () => {

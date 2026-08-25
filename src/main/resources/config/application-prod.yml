@@ -20,6 +20,9 @@ logging:
     com.mycompany.knstore: INFO
 
 management:
+  # RNF-031: /management/** (incluido prometheus si se expone) queda protegido
+  # por SecurityConfiguration para ADMIN/MANAGER; en produccion el export
+  # prometheus de las metricas esta deshabilitado.
   prometheus:
     metrics:
       export:

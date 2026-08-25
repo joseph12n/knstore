@@ -62,10 +62,8 @@ public class CuentaDTO implements Serializable {
     @NotNull
     private Boolean activo;
 
-    @NotNull
     private UserDTO user;
 
-    @NotNull
     private TipoDocumentoDTO tipoDocumento;
 
     public String getId() {

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { Button, Col, Collapse, Container, Form, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +19,15 @@ import { CATALOG_PAGE_SIZE } from 'app/landing/utils/constants';
 import { getApiErrorMessage } from 'app/landing/utils/apiError';
 
 const SEARCH_PAGE_SIZE = CATALOG_PAGE_SIZE;
+
+// RF-072: la ordenacion es server-side; cada opcion del dropdown mapea al
+// parametro sort que soporta GET /api/productos/search.
+const SEARCH_SORTS: Record<string, string> = {
+  relevance: 'nombre,asc',
+  priceAsc: 'precioVenta,asc',
+  priceDesc: 'precioVenta,desc',
+  nameAsc: 'nombre,asc',
+};
 
 export const SearchPage = () => {
   const { addItem: onAddToCart } = useCart();
@@ -74,7 +83,11 @@ export const SearchPage = () => {
       setError(null);
       try {
         const page = activePage - 1;
-        const requestUrl = `api/productos/search?q=${encodeURIComponent(debouncedQuery.trim())}&page=${page}&size=${SEARCH_PAGE_SIZE}&sort=nombre,asc`;
+        const filters = [
+          selectedCategory ? `&categoriaId=${encodeURIComponent(selectedCategory)}` : '',
+          selectedBrand ? `&marcaId=${encodeURIComponent(selectedBrand)}` : '',
+        ].join('');
+        const requestUrl = `api/productos/search?q=${encodeURIComponent(debouncedQuery.trim())}&page=${page}&size=${SEARCH_PAGE_SIZE}&sort=${SEARCH_SORTS[sortBy]}${filters}`;
         const response = await axios.get<IProductoStorefront[]>(requestUrl, { signal: controller.signal });
         setSearchResults(response.data.map(p => ({ ...p, imagenes: p.imagenes ?? [] })));
         setTotalItems(parseInt(response.headers['x-total-count'] || `${response.data.length}`, 10));
@@ -92,29 +105,9 @@ export const SearchPage = () => {
 
     loadSearchResults();
     return () => controller.abort();
-  }, [debouncedQuery, activePage, retryKey]);
+  }, [debouncedQuery, activePage, retryKey, selectedCategory, selectedBrand, sortBy]);
 
-  const resultados = useMemo(() => {
-    let list = [...searchResults];
-
-    if (selectedCategory) {
-      list = list.filter(p => p.categoria?.id === selectedCategory || p.subcategoria?.id === selectedCategory);
-    }
-
-    if (selectedBrand) {
-      list = list.filter(p => p.marca?.id === selectedBrand);
-    }
-
-    if (sortBy === 'priceAsc') {
-      list.sort((a, b) => (a.precio?.precioVenta || 0) - (b.precio?.precioVenta || 0));
-    } else if (sortBy === 'priceDesc') {
-      list.sort((a, b) => (b.precio?.precioVenta || 0) - (a.precio?.precioVenta || 0));
-    } else if (sortBy === 'nameAsc') {
-      list.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
-    }
-
-    return list;
-  }, [searchResults, selectedCategory, selectedBrand, sortBy]);
+  const resultados = searchResults;
 
   const isLoading = loading || catalogLoading;
   const hasError = (error || catalogErrorMessage) && searchResults.length === 0;

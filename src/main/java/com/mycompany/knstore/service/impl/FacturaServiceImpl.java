@@ -1,6 +1,8 @@
 package com.mycompany.knstore.service.impl;
 
 import com.mycompany.knstore.domain.Factura;
+import com.mycompany.knstore.domain.Pago;
+import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.FacturaRepository;
 import com.mycompany.knstore.repository.PagoRepository;
@@ -10,16 +12,15 @@ import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.FacturaService;
 import com.mycompany.knstore.service.dto.FacturaDTO;
 import com.mycompany.knstore.service.mapper.FacturaMapper;
-import com.mycompany.knstore.service.util.InMemoryPageUtils;
-import java.util.LinkedList;
+import com.mycompany.knstore.service.util.MongoIdUtils;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -89,22 +90,24 @@ public class FacturaServiceImpl implements FacturaService {
     public Page<FacturaDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Facturas");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            // RNF-028: pedidos de la cuenta, pagos en lote y facturas en lote:
+            // 3 consultas constantes en lugar del recorrido anidado N^2.
             return getCurrentAccountId()
                 .map(cuentaId -> {
-                    List<FacturaDTO> facturas = pedidoRepository
+                    List<String> pedidoIds = pedidoRepository
                         .findByCuentaId(cuentaId, Pageable.unpaged())
                         .getContent()
                         .stream()
-                        .flatMap(pedido ->
-                            pagoRepository
-                                .findByPedidoId(pedido.getId(), Pageable.unpaged())
-                                .getContent()
-                                .stream()
-                                .flatMap(pago -> facturaRepository.findByPagoId(pago.getId(), Pageable.unpaged()).getContent().stream())
-                        )
-                        .map(facturaMapper::toDto)
-                        .collect(Collectors.toCollection(LinkedList::new));
-                    return InMemoryPageUtils.paginar(facturas, pageable);
+                        .map(Pedido::getId)
+                        .toList();
+                    List<String> pagoIds = pagoRepository
+                        .findByPedidoIdIn(MongoIdUtils.toObjectIds(pedidoIds))
+                        .stream()
+                        .map(Pago::getId)
+                        .toList();
+                    return facturaRepository
+                        .findByPagoIdIn(MongoIdUtils.toObjectIds(pagoIds), withSort(pageable))
+                        .map(facturaMapper::toDto);
                 })
                 .orElse(Page.empty(pageable));
         }
@@ -115,26 +118,39 @@ public class FacturaServiceImpl implements FacturaService {
     public Optional<FacturaDTO> findOne(String id) {
         LOG.debug("Request to get Factura : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            // RNF-028: la factura se resuelve por id y el ownership con pago y
+            // pedido por id (consultas constantes, sin recorrer listas).
             return getCurrentAccountId()
                 .flatMap(cuentaId ->
-                    pedidoRepository
-                        .findByCuentaId(cuentaId, Pageable.unpaged())
-                        .getContent()
-                        .stream()
-                        .flatMap(pedido ->
-                            pagoRepository
-                                .findByPedidoId(pedido.getId(), Pageable.unpaged())
-                                .getContent()
-                                .stream()
-                                .map(pago -> facturaRepository.findByIdAndPagoId(id, pago.getId()))
-                        )
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .findFirst()
+                    facturaRepository
+                        .findById(id)
+                        .filter(factura -> factura.getPago() != null && factura.getPago().getId() != null)
+                        .filter(factura -> {
+                            Pedido pedido = pagoRepository.findById(factura.getPago().getId()).map(Pago::getPedido).orElse(null);
+                            return pedidoPerteneceACuenta(pedido, cuentaId);
+                        })
                 )
                 .map(facturaMapper::toDto);
         }
         return facturaRepository.findById(id).map(facturaMapper::toDto);
+    }
+
+    private boolean pedidoPerteneceACuenta(Pedido pedido, String cuentaId) {
+        if (pedido == null || pedido.getId() == null) {
+            return false;
+        }
+        return pedidoRepository.findByIdAndCuentaId(pedido.getId(), cuentaId).isPresent();
+    }
+
+    /**
+     * Si el {@link Pageable} no trae orden, se aplica un sort determinista por id
+     * descendente para que la paginacion en lote sea estable.
+     */
+    private Pageable withSort(Pageable pageable) {
+        if (pageable.getSort().isUnsorted()) {
+            return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "id"));
+        }
+        return pageable;
     }
 
     @Override

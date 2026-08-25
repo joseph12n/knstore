@@ -31,10 +31,10 @@ spring:
     serialization:
       indent-output: true
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: kn.store.pruebas2026@gmail.com
-    password: brgejmttqyqwtzst
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: ${MAILTRAP_USERNAME:04c07e60417777}
+    password: ${MAILTRAP_PASSWORD:e3693d93b104f9}
     properties:
       mail:
         transport:

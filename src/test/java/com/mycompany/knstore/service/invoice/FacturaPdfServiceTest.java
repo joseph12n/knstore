@@ -6,20 +6,27 @@ import static org.mockito.Mockito.when;
 
 import com.mycompany.knstore.domain.Factura;
 import com.mycompany.knstore.domain.Pedido;
+import com.mycompany.knstore.service.SecuenciaService;
 import java.math.BigDecimal;
 import java.time.Instant;
-import org.bson.Document;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
 @ExtendWith(MockitoExtension.class)
 class FacturaPdfServiceTest {
 
     @Mock
-    private MongoTemplate mongoTemplate;
+    private SecuenciaService secuenciaService;
+
+    private FacturaPdfService service;
+
+    @BeforeEach
+    void setUp() {
+        service = new FacturaPdfService(secuenciaService);
+    }
 
     private Factura factura(String numero) {
         Factura factura = new Factura();
@@ -35,10 +42,8 @@ class FacturaPdfServiceTest {
 
     @Test
     void consecutivoSeGeneraConFormatoEsperado() {
-        Document sequence = new Document("seq", 7L);
-        when(mongoTemplate.findAndModify(any(), any(), any(), any(), any(String.class))).thenReturn(sequence);
+        when(secuenciaService.siguienteConsecutivo("FE")).thenReturn("FE-000007");
 
-        FacturaPdfService service = new FacturaPdfService(mongoTemplate);
         String consecutivo = service.generarConsecutivo("FE");
 
         assertThat(consecutivo).isEqualTo("FE-000007");
@@ -46,7 +51,6 @@ class FacturaPdfServiceTest {
 
     @Test
     void payloadDeValidacionContieneNumeroFechaTotalYHash() {
-        FacturaPdfService service = new FacturaPdfService(mongoTemplate);
         Factura factura = factura("FE-000001");
 
         String payload = service.generarPayloadValidacion(factura);
@@ -59,7 +63,6 @@ class FacturaPdfServiceTest {
 
     @Test
     void generarPdfProduceBytesValidos() {
-        FacturaPdfService service = new FacturaPdfService(mongoTemplate);
         Pedido pedido = new Pedido();
         pedido.setId("p-1");
 

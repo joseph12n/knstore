@@ -1,5 +1,6 @@
 package com.mycompany.knstore.service.impl;
 
+import com.mycompany.knstore.domain.Producto;
 import com.mycompany.knstore.domain.ProductoPrecio;
 import com.mycompany.knstore.repository.ProductoPrecioRepository;
 import com.mycompany.knstore.service.ProductoPrecioService;
@@ -14,6 +15,10 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,9 +33,16 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
 
     private final ProductoPrecioMapper productoPrecioMapper;
 
-    public ProductoPrecioServiceImpl(ProductoPrecioRepository productoPrecioRepository, ProductoPrecioMapper productoPrecioMapper) {
+    private final MongoTemplate mongoTemplate;
+
+    public ProductoPrecioServiceImpl(
+        ProductoPrecioRepository productoPrecioRepository,
+        ProductoPrecioMapper productoPrecioMapper,
+        MongoTemplate mongoTemplate
+    ) {
         this.productoPrecioRepository = productoPrecioRepository;
         this.productoPrecioMapper = productoPrecioMapper;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
@@ -67,7 +79,30 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
         productoPrecio.setPrecioVenta(MoneyUtils.normalizar(productoPrecio.getPrecioVenta()));
         productoPrecio.setPrecioAdicional(MoneyUtils.normalizar(productoPrecio.getPrecioAdicional()));
         calcularGanancia(productoPrecio);
-        return productoPrecioRepository.save(productoPrecio);
+        ProductoPrecio guardado = productoPrecioRepository.save(productoPrecio);
+        sincronizarPrecioVentaEnProducto(guardado);
+        return guardado;
+    }
+
+    /**
+     * RF-072: mantiene el campo denormalizado {@code producto.precio_venta}
+     * sincronizado con el precio de venta del producto_precio para permitir
+     * ordenamiento server-side por precio (el DBRef no vive en el documento
+     * producto). Solo actua si el precio tiene un producto asociado; de lo
+     * contrario es no-op (la migracion realiza el backfill inicial).
+     */
+    private void sincronizarPrecioVentaEnProducto(ProductoPrecio productoPrecio) {
+        if (
+            productoPrecio.getProducto() == null || productoPrecio.getProducto().getId() == null || productoPrecio.getPrecioVenta() == null
+        ) {
+            return;
+        }
+        BigDecimal valorNormalizado = MoneyUtils.normalizar(productoPrecio.getPrecioVenta());
+        mongoTemplate.updateFirst(
+            new Query(Criteria.where("_id").is(productoPrecio.getProducto().getId())),
+            new Update().set("precio_venta", valorNormalizado),
+            Producto.class
+        );
     }
 
     private void calcularGanancia(ProductoPrecio productoPrecio) {

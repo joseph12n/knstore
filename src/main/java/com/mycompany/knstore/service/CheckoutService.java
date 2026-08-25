@@ -9,11 +9,8 @@ import com.mycompany.knstore.service.util.MoneyUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -34,8 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class CheckoutService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CheckoutService.class);
-
-    private static final String PEDIDO_SEQUENCE_COLLECTION = "pedido_sequence";
 
     private static final BigDecimal UMBRAL_ENVIO_GRATIS = new BigDecimal("150000");
 
@@ -58,6 +53,8 @@ public class CheckoutService {
 
     private final PagoService pagoService;
 
+    private final SecuenciaService secuenciaService;
+
     public CheckoutService(
         PedidoRepository pedidoRepository,
         ItemPedidoRepository itemPedidoRepository,
@@ -73,7 +70,8 @@ public class CheckoutService {
         PedidoMapper pedidoMapper,
         ItemPedidoMapper itemPedidoMapper,
         HistorialEstadoService historialEstadoService,
-        PagoService pagoService
+        PagoService pagoService,
+        SecuenciaService secuenciaService
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
@@ -90,6 +88,7 @@ public class CheckoutService {
         this.itemPedidoMapper = itemPedidoMapper;
         this.historialEstadoService = historialEstadoService;
         this.pagoService = pagoService;
+        this.secuenciaService = secuenciaService;
     }
 
     public CheckoutPreviewDTO preview(Cuenta cuenta, CheckoutRequestDTO request) {
@@ -219,15 +218,17 @@ public class CheckoutService {
 
         // Aprobacion simbolica inmediata: el pago queda APPROVED en este mismo checkout.
         // Se ejecuta al final para no pisar la aprobacion con los guardados previos del pedido.
-        pagoService.iniciarPago(pedido.getId());
+        PagoDTO pagoAprobado = pagoService.iniciarPago(pedido.getId());
         // Recargar el pedido para reflejar el estado CONFIRMED aprobado por la pasarela.
         pedido = pedidoRepository.findById(pedido.getId()).orElseThrow();
 
         // Vaciar carrito del usuario
         vaciarCarrito(cuenta);
 
+        // RF-076: el pago aprobado viaja en el resultado del checkout (misma transaccion).
         CheckoutResultDTO result = new CheckoutResultDTO();
         result.setPedido(pedidoMapper.toDto(pedido));
+        result.setPago(pagoAprobado);
         return result;
     }
 
@@ -329,15 +330,6 @@ public class CheckoutService {
     }
 
     private String generarNumeroPedido() {
-        String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String sequenceKey = "PED-" + fecha;
-
-        Query query = new Query(Criteria.where("_id").is(sequenceKey));
-        Update update = new Update().inc("seq", 1);
-        FindAndModifyOptions options = new FindAndModifyOptions().upsert(true).returnNew(true);
-        Document sequence = mongoTemplate.findAndModify(query, update, options, Document.class, PEDIDO_SEQUENCE_COLLECTION);
-
-        long seq = sequence != null ? ((Number) sequence.get("seq")).longValue() : 1L;
-        return "PED-%s-%06d".formatted(fecha, seq);
+        return secuenciaService.siguientePedido();
     }
 }

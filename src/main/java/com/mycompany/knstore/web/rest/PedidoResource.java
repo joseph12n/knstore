@@ -4,6 +4,7 @@ import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CheckoutException;
 import com.mycompany.knstore.service.CheckoutService;
@@ -288,18 +289,26 @@ public class PedidoResource {
 
     /**
      * {@code POST  /pedidos/:id/cancelar} : cancel a pedido. Disponible para el cliente
-     * propietario del pedido (PENDING, CONFIRMED o PROCESSING) y para administracion.
+     * propietario del pedido (dentro de la ventana de 1 hora desde la compra, y con
+     * reembolso simbolico automatico si el pago habia sido aprobado) y para administracion.
      * La maquina de estados y la restauracion del stock se validan en el servicio.
      *
      * @param id the id of the pedido.
+     * @param request motivo opcional de la cancelacion.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated pedidoDTO.
      */
     @PostMapping("/{id}/cancelar")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPedidoId(#id)")
-    public ResponseEntity<PedidoDTO> cancelarPedido(@PathVariable("id") String id) {
+    public ResponseEntity<PedidoDTO> cancelarPedido(
+        @PathVariable("id") String id,
+        @RequestBody(required = false) CancelarPedidoRequest request
+    ) {
         LOG.debug("REST request to cancel Pedido : {}", id);
         try {
-            PedidoDTO result = pedidoService.cambiarEstado(id, EstadoPedido.CANCELLED);
+            String motivo = request != null ? request.motivo() : null;
+            PedidoDTO result = SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)
+                ? pedidoService.cancelarPedidoCliente(id, motivo)
+                : pedidoService.cambiarEstado(id, EstadoPedido.CANCELLED);
             return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
                 .body(result);
@@ -307,6 +316,9 @@ public class PedidoResource {
             throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "transicioninvalida");
         }
     }
+
+    /** DTO for cancel request. */
+    public record CancelarPedidoRequest(@jakarta.validation.constraints.Size(max = 500) String motivo) {}
 
     /**
      * {@code POST  /pedidos/checkout} : Procesa un checkout atómico simbólico.

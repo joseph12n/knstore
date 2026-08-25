@@ -1,5 +1,12 @@
 package com.mycompany.knstore.service;
 
+import com.mycompany.knstore.domain.Carrito;
+import com.mycompany.knstore.domain.Envio;
+import com.mycompany.knstore.domain.Factura;
+import com.mycompany.knstore.domain.ItemCarrito;
+import com.mycompany.knstore.domain.ItemPedido;
+import com.mycompany.knstore.domain.Pago;
+import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.repository.CarritoRepository;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.DireccionRepository;
@@ -20,6 +27,7 @@ import com.mycompany.knstore.service.dto.ItemCarritoDTO;
 import com.mycompany.knstore.service.dto.ItemPedidoDTO;
 import com.mycompany.knstore.service.dto.PagoDTO;
 import com.mycompany.knstore.service.dto.PedidoDTO;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
@@ -58,19 +66,30 @@ public class ResourceAccessService {
         this.facturaRepository = facturaRepository;
     }
 
+    /**
+     * RF-073: el cliente puede editar su propia cuenta mandando solo el id en el
+     * DTO (sin repetir el login del usuario); si no trae id, se valida el login
+     * del usuario del DTO como antes. Las relaciones se preservan en el servicio.
+     */
     public boolean canAccessCuentaDto(CuentaDTO cuentaDTO) {
         if (isAdminOrManager()) {
             return true;
         }
-        if (!isCliente()) {
+        if (!isCliente() || cuentaDTO == null) {
             return false;
         }
-        if (cuentaDTO == null || cuentaDTO.getUser() == null || cuentaDTO.getUser().getLogin() == null) {
-            return false;
+        if (cuentaDTO.getId() != null) {
+            Optional<String> userId = SecurityUtils.getCurrentUserId();
+            if (userId.isPresent() && cuentaRepository.findByIdAndUserId(cuentaDTO.getId(), userId.orElseThrow()).isPresent()) {
+                return true;
+            }
         }
-        return getCurrentUserLogin()
-            .map(login -> login.equalsIgnoreCase(cuentaDTO.getUser().getLogin()))
-            .orElse(false);
+        if (cuentaDTO.getUser() != null && cuentaDTO.getUser().getLogin() != null) {
+            return getCurrentUserLogin()
+                .map(login -> login.equalsIgnoreCase(cuentaDTO.getUser().getLogin()))
+                .orElse(false);
+        }
+        return false;
     }
 
     public boolean canAccessCuentaId(String id) {
@@ -139,6 +158,10 @@ public class ResourceAccessService {
         return canAccessCarritoId(itemCarritoDTO.getCarrito().getId());
     }
 
+    /**
+     * RNF-028: valida ownership en un numero constante de consultas, subiendo en
+     * la cadena item -> carrito -> cuenta sin recorrer listas de la cuenta.
+     */
     public boolean canAccessItemCarritoId(String id) {
         if (isAdminOrManager()) {
             return true;
@@ -146,14 +169,16 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                carritoRepository
-                    .findByCuentaId(cuentaId)
-                    .stream()
-                    .map(carrito -> carrito.getId())
-                    .anyMatch(carritoId -> itemCarritoRepository.findByIdAndCarritoId(id, carritoId).isPresent())
-            )
+        Optional<String> cuentaId = getCurrentAccountId();
+        if (cuentaId.isEmpty()) {
+            return false;
+        }
+        return itemCarritoRepository
+            .findById(id)
+            .map(ItemCarrito::getCarrito)
+            .map(Carrito::getId)
+            .filter(Objects::nonNull)
+            .map(carritoId -> carritoRepository.findByIdAndCuentaId(carritoId, cuentaId.orElseThrow()).isPresent())
             .orElse(false);
     }
 
@@ -167,6 +192,9 @@ public class ResourceAccessService {
         return canAccessPedidoId(itemPedidoDTO.getPedido().getId());
     }
 
+    /**
+     * RNF-028: item -> pedido -> cuenta con consultas por id (sin N+1).
+     */
     public boolean canAccessItemPedidoId(String id) {
         if (isAdminOrManager()) {
             return true;
@@ -174,15 +202,16 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                pedidoRepository
-                    .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                    .getContent()
-                    .stream()
-                    .map(pedido -> pedido.getId())
-                    .anyMatch(pedidoId -> itemPedidoRepository.findByIdAndPedidoId(id, pedidoId).isPresent())
-            )
+        Optional<String> cuentaId = getCurrentAccountId();
+        if (cuentaId.isEmpty()) {
+            return false;
+        }
+        return itemPedidoRepository
+            .findById(id)
+            .map(ItemPedido::getPedido)
+            .map(Pedido::getId)
+            .filter(Objects::nonNull)
+            .map(pedidoId -> pedidoRepository.findByIdAndCuentaId(pedidoId, cuentaId.orElseThrow()).isPresent())
             .orElse(false);
     }
 
@@ -196,6 +225,9 @@ public class ResourceAccessService {
         return canAccessPedidoId(pagoDTO.getPedido().getId());
     }
 
+    /**
+     * RNF-028: pago -> pedido -> cuenta con consultas por id (sin N+1).
+     */
     public boolean canAccessPagoId(String id) {
         if (isAdminOrManager()) {
             return true;
@@ -203,15 +235,16 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                pedidoRepository
-                    .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                    .getContent()
-                    .stream()
-                    .map(pedido -> pedido.getId())
-                    .anyMatch(pedidoId -> pagoRepository.findByIdAndPedidoId(id, pedidoId).isPresent())
-            )
+        Optional<String> cuentaId = getCurrentAccountId();
+        if (cuentaId.isEmpty()) {
+            return false;
+        }
+        return pagoRepository
+            .findById(id)
+            .map(Pago::getPedido)
+            .map(Pedido::getId)
+            .filter(Objects::nonNull)
+            .map(pedidoId -> pedidoRepository.findByIdAndCuentaId(pedidoId, cuentaId.orElseThrow()).isPresent())
             .orElse(false);
     }
 
@@ -225,6 +258,9 @@ public class ResourceAccessService {
         return canAccessPedidoId(envioDTO.getPedido().getId());
     }
 
+    /**
+     * RNF-028: envio -> pedido -> cuenta con consultas por id (sin N+1).
+     */
     public boolean canAccessEnvioId(String id) {
         if (isAdminOrManager()) {
             return true;
@@ -232,15 +268,16 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                pedidoRepository
-                    .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                    .getContent()
-                    .stream()
-                    .map(pedido -> pedido.getId())
-                    .anyMatch(pedidoId -> envioRepository.findByIdAndPedidoId(id, pedidoId).isPresent())
-            )
+        Optional<String> cuentaId = getCurrentAccountId();
+        if (cuentaId.isEmpty()) {
+            return false;
+        }
+        return envioRepository
+            .findById(id)
+            .map(Envio::getPedido)
+            .map(Pedido::getId)
+            .filter(Objects::nonNull)
+            .map(pedidoId -> pedidoRepository.findByIdAndCuentaId(pedidoId, cuentaId.orElseThrow()).isPresent())
             .orElse(false);
     }
 
@@ -254,6 +291,9 @@ public class ResourceAccessService {
         return canAccessPagoId(facturaDTO.getPago().getId());
     }
 
+    /**
+     * RNF-028: factura -> pago -> pedido -> cuenta con consultas por id (sin N+1).
+     */
     public boolean canAccessFacturaId(String id) {
         if (isAdminOrManager()) {
             return true;
@@ -261,21 +301,23 @@ public class ResourceAccessService {
         if (!isCliente() || id == null) {
             return false;
         }
-        return getCurrentAccountId()
-            .map(cuentaId ->
-                pedidoRepository
-                    .findByCuentaId(cuentaId, org.springframework.data.domain.Pageable.unpaged())
-                    .getContent()
-                    .stream()
-                    .map(pedido -> pedido.getId())
-                    .anyMatch(pedidoId ->
-                        pagoRepository
-                            .findByPedidoId(pedidoId, org.springframework.data.domain.Pageable.unpaged())
-                            .getContent()
-                            .stream()
-                            .map(pago -> pago.getId())
-                            .anyMatch(pagoId -> facturaRepository.findByIdAndPagoId(id, pagoId).isPresent())
-                    )
+        Optional<String> cuentaId = getCurrentAccountId();
+        if (cuentaId.isEmpty()) {
+            return false;
+        }
+        return facturaRepository
+            .findById(id)
+            .map(Factura::getPago)
+            .map(Pago::getId)
+            .filter(Objects::nonNull)
+            .map(pagoId ->
+                pagoRepository
+                    .findById(pagoId)
+                    .map(Pago::getPedido)
+                    .map(Pedido::getId)
+                    .filter(Objects::nonNull)
+                    .map(pedidoId -> pedidoRepository.findByIdAndCuentaId(pedidoId, cuentaId.orElseThrow()).isPresent())
+                    .orElse(false)
             )
             .orElse(false);
     }

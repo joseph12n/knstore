@@ -62,8 +62,10 @@ export const CuentaUpdate = () => {
       ...values,
       user: isCliente
         ? cuentaEntity?.user || { id: account.id, login: account.login }
-        : users.find(it => it.id.toString() === values.user?.toString()),
-      tipoDocumento: tipoDocumentos.find(it => it.id.toString() === values.tipoDocumento?.toString()),
+        : (users.find(it => it.id.toString() === values.user?.toString()) ?? (!isNew ? cuentaEntity?.user : undefined)),
+      tipoDocumento:
+        tipoDocumentos.find(it => it.id.toString() === values.tipoDocumento?.toString()) ??
+        (!isNew ? cuentaEntity?.tipoDocumento : undefined),
     };
 
     if (isNew) {
