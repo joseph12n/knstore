@@ -302,6 +302,7 @@ npm run java:docker                                 # Imagen con Jib
 
 ## 12. Notas para el agente
 
+- **PRIMERO:** leer `docs/ESTADO_SESION.md` (handoff con estado git/docker/quirks del trabajo activo).
 - Antes de modificar `entities/`, `modules/` o `shared/` consultar si es realmente necesario; es código autogenerado.
 - Al trabajar en el landing, preferir hooks `useCart` y `useCatalog` en lugar de repetir lógica de fetching.
 - Mantener responsividad; probar desde 360px.
