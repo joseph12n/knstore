@@ -2,7 +2,7 @@
 name: knstore
 services:
   app:
-    image: knstore:latest
+    image: eljoseph12/knstore:2.0.1
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=dev,api-docs,secret-samples
@@ -27,11 +27,17 @@ services:
         condition: service_healthy
   mongodb:
     extends:
-      file: ./mongodb.yml
+      file: ./mongodb-replicaset.yml
       service: mongodb
+  mongodb-init:
+    extends:
+      file: ./mongodb-replicaset.yml
+      service: mongodb-init
 networks:
   knstore:
     name: knstore
 volumes:
   knstore-mongodb-data:
     name: knstore-mongodb-data
+  knstore-mongodb-config:
+    name: knstore-mongodb-config
