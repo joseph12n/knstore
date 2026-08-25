@@ -1,0 +1,74 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1787101980390,1403,AUTH adminUser,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1548,286,1,1,https://app.knstore.duckdns.org/api/authenticate,1396,0,1131
+1787101981811,180,AUTH managerUser,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1558,288,1,1,https://app.knstore.duckdns.org/api/authenticate,180,0,0
+1787101981993,184,AUTH clientAUser,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1564,290,1,1,https://app.knstore.duckdns.org/api/authenticate,183,0,0
+1787101982179,271,AUTH clientBUser,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1564,290,1,1,https://app.knstore.duckdns.org/api/authenticate,271,0,0
+1787101982453,464,AUTH userUser,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1542,285,1,1,https://app.knstore.duckdns.org/api/authenticate,463,0,0
+1787101982919,213,ADMIN GET reference categoria,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1351,483,1,1,https://app.knstore.duckdns.org/api/categorias?page=0&size=1,213,0,0
+1787101983138,87,ADMIN GET reference subcategoria,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1595,501,1,1,https://app.knstore.duckdns.org/api/subcategorias?page=0&size=1&eagerload=true,87,0,0
+1787101983227,94,ADMIN GET reference marca,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1129,465,1,1,https://app.knstore.duckdns.org/api/marcas,93,0,0
+1787101983324,85,ADMIN GET reference IVA,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1019,473,1,1,https://app.knstore.duckdns.org/api/categoria-ivas,85,0,0
+1787101983410,84,ADMIN GET reference tipo documento,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1121,474,1,1,https://app.knstore.duckdns.org/api/tipo-documentos,84,0,0
+1787101983496,98,ADMIN GET reference producto,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,3104,497,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=1&eagerload=true,97,0,0
+1787101983598,90,ADMIN POST categoria temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1340,654,1,1,https://app.knstore.duckdns.org/api/categorias,90,0,0
+1787101983692,228,ADMIN PUT categoria temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1284,710,1,1,https://app.knstore.duckdns.org/api/categorias/6a85031f1a69e7ed4125ac96,228,0,0
+1787101983921,82,ADMIN POST subcategoria temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1497,709,1,1,https://app.knstore.duckdns.org/api/subcategorias,82,0,0
+1787101984007,94,ADMIN PUT subcategoria temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1429,737,1,1,https://app.knstore.duckdns.org/api/subcategorias/6a85031f1a69e7ed4125ac97,93,0,0
+1787101984102,104,ADMIN POST categoria IVA temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1242,591,1,1,https://app.knstore.duckdns.org/api/categoria-ivas,104,0,0
+1787101984207,90,ADMIN PUT categoria IVA temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1191,657,1,1,https://app.knstore.duckdns.org/api/categoria-ivas/6a8503201a69e7ed4125ac98,89,0,0
+1787101984297,107,ADMIN POST marca temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1227,583,1,1,https://app.knstore.duckdns.org/api/marcas,106,0,0
+1787101984405,87,ADMIN PUT marca temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1191,656,1,1,https://app.knstore.duckdns.org/api/marcas/6a8503201a69e7ed4125ac99,87,0,0
+1787101984494,126,ADMIN POST tipo documento temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1265,613,1,1,https://app.knstore.duckdns.org/api/tipo-documentos,125,0,0
+1787101984623,92,ADMIN PUT tipo documento temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1207,673,1,1,https://app.knstore.duckdns.org/api/tipo-documentos/6a8503201a69e7ed4125ac9a,92,0,0
+1787101984716,92,ADMIN POST producto temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1948,950,1,1,https://app.knstore.duckdns.org/api/productos,92,0,0
+1787101984812,237,ADMIN PUT producto temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1909,1022,1,1,https://app.knstore.duckdns.org/api/productos/6a8503201a69e7ed4125ac9b,237,0,0
+1787101985050,120,ADMIN POST precio temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1263,598,1,1,https://app.knstore.duckdns.org/api/producto-precios,120,0,0
+1787101985171,88,ADMIN PUT precio temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1201,655,1,1,https://app.knstore.duckdns.org/api/producto-precios/6a8503211a69e7ed4125ac9c,88,0,0
+1787101985261,258,ADMIN POST inventario temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1272,615,1,1,https://app.knstore.duckdns.org/api/producto-inventarios,258,0,0
+1787101985520,224,ADMIN PUT inventario temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1206,672,1,1,https://app.knstore.duckdns.org/api/producto-inventarios/6a8503211a69e7ed4125ac9d,224,0,0
+1787101985745,514,ADMIN POST imagen temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1662,708,1,1,https://app.knstore.duckdns.org/api/producto-imagens,513,0,0
+1787101986261,120,ADMIN PUT imagen temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1609,773,1,1,https://app.knstore.duckdns.org/api/producto-imagens/6a8503221a69e7ed4125ac9e,120,0,0
+1787101986382,135,ADMIN POST etiqueta temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1553,610,1,1,https://app.knstore.duckdns.org/api/etiqueta-productos,134,0,0
+1787101986519,90,ADMIN PUT etiqueta temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1492,670,1,1,https://app.knstore.duckdns.org/api/etiqueta-productos/6a8503221a69e7ed4125ac9f,90,0,0
+1787101986611,211,ADMIN POST usuario temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1540,718,1,1,https://app.knstore.duckdns.org/api/admin/users,210,0,0
+1787101986824,85,ADMIN PUT usuario temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1476,737,1,1,https://app.knstore.duckdns.org/api/admin/users,85,0,0
+1787101986911,175,ADMIN POST cuenta temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1656,890,1,1,https://app.knstore.duckdns.org/api/cuentas,175,0,0
+1787101987087,90,ADMIN PUT cuenta temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1611,954,1,1,https://app.knstore.duckdns.org/api/cuentas/6a8503221a69e7ed4125aca1,90,0,0
+1787101987179,105,ADMIN POST direccion temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1741,796,1,1,https://app.knstore.duckdns.org/api/direccions,105,0,0
+1787101987286,84,ADMIN PUT direccion temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1696,863,1,1,https://app.knstore.duckdns.org/api/direccions/6a8503231a69e7ed4125aca2,83,0,0
+1787101987371,88,ADMIN POST carrito temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1547,577,1,1,https://app.knstore.duckdns.org/api/carritos,88,0,0
+1787101987461,82,ADMIN PUT carrito temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1494,634,1,1,https://app.knstore.duckdns.org/api/carritos/6a8503231a69e7ed4125aca3,82,0,0
+1787101987544,101,ADMIN POST item carrito temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1667,663,1,1,https://app.knstore.duckdns.org/api/item-carritos,101,0,0
+1787101987646,99,ADMIN PUT item carrito temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1608,719,1,1,https://app.knstore.duckdns.org/api/item-carritos/6a8503231a69e7ed4125aca4,99,0,0
+1787101987746,85,ADMIN POST pedido temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1980,760,1,1,https://app.knstore.duckdns.org/api/pedidos,84,0,0
+1787101987833,88,ADMIN PUT pedido temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1902,819,1,1,https://app.knstore.duckdns.org/api/pedidos/6a8503231a69e7ed4125aca5,88,0,0
+1787101987923,125,ADMIN POST item pedido temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,2029,813,1,1,https://app.knstore.duckdns.org/api/item-pedidos,125,0,0
+1787101988050,84,ADMIN PUT item pedido temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1979,747,1,1,https://app.knstore.duckdns.org/api/item-pedidos/6a8503231a69e7ed4125aca6,83,0,0
+1787101988134,97,ADMIN POST pago temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1662,623,1,1,https://app.knstore.duckdns.org/api/pagos,97,0,0
+1787101988233,132,ADMIN PUT pago temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1611,679,1,1,https://app.knstore.duckdns.org/api/pagos/6a8503241a69e7ed4125aca7,132,0,0
+1787101988367,97,ADMIN POST envio temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1705,715,1,1,https://app.knstore.duckdns.org/api/envios,96,0,0
+1787101988467,137,ADMIN PUT envio temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1663,781,1,1,https://app.knstore.duckdns.org/api/envios/6a8503241a69e7ed4125aca8,137,0,0
+1787101988605,102,ADMIN POST factura temporal,201,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1673,691,1,1,https://app.knstore.duckdns.org/api/facturas,102,0,0
+1787101988709,90,ADMIN PUT factura temporal,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1619,747,1,1,https://app.knstore.duckdns.org/api/facturas/6a8503241a69e7ed4125aca9,90,0,0
+1787101988801,80,ADMIN DELETE factura temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1009,578,1,1,https://app.knstore.duckdns.org/api/facturas/6a8503241a69e7ed4125aca9,0,0,0
+1787101988883,81,ADMIN DELETE envio temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1007,576,1,1,https://app.knstore.duckdns.org/api/envios/6a8503241a69e7ed4125aca8,0,0,0
+1787101988966,81,ADMIN DELETE pago temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1006,575,1,1,https://app.knstore.duckdns.org/api/pagos/6a8503241a69e7ed4125aca7,0,0,0
+1787101989048,212,ADMIN DELETE item pedido temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1012,582,1,1,https://app.knstore.duckdns.org/api/item-pedidos/6a8503231a69e7ed4125aca6,0,0,0
+1787101989261,124,ADMIN DELETE pedido temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1008,577,1,1,https://app.knstore.duckdns.org/api/pedidos/6a8503231a69e7ed4125aca5,0,0,0
+1787101989387,93,ADMIN DELETE item carrito temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1013,583,1,1,https://app.knstore.duckdns.org/api/item-carritos/6a8503231a69e7ed4125aca4,0,0,0
+1787101989481,84,ADMIN DELETE carrito temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1009,578,1,1,https://app.knstore.duckdns.org/api/carritos/6a8503231a69e7ed4125aca3,0,0,0
+1787101989566,81,ADMIN DELETE direccion temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1011,580,1,1,https://app.knstore.duckdns.org/api/direccions/6a8503231a69e7ed4125aca2,0,0,0
+1787101989649,79,ADMIN DELETE cuenta temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1008,577,1,1,https://app.knstore.duckdns.org/api/cuentas/6a8503221a69e7ed4125aca1,0,0,0
+1787101989729,79,ADMIN DELETE usuario temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,998,577,1,1,https://app.knstore.duckdns.org/api/admin/users/jmeter_crud_BDFHJKLP,0,0,0
+1787101989808,79,ADMIN DELETE etiqueta temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1018,588,1,1,https://app.knstore.duckdns.org/api/etiqueta-productos/6a8503221a69e7ed4125ac9f,0,0,0
+1787101989889,86,ADMIN DELETE imagen temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1016,586,1,1,https://app.knstore.duckdns.org/api/producto-imagens/6a8503221a69e7ed4125ac9e,0,0,0
+1787101989977,92,ADMIN DELETE producto temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1010,579,1,1,https://app.knstore.duckdns.org/api/productos/6a8503201a69e7ed4125ac9b,0,0,0
+1787101990071,99,ADMIN DELETE subcategoria temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1014,583,1,1,https://app.knstore.duckdns.org/api/subcategorias/6a85031f1a69e7ed4125ac97,0,0,0
+1787101990172,111,ADMIN DELETE categoria temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1011,580,1,1,https://app.knstore.duckdns.org/api/categorias/6a85031f1a69e7ed4125ac96,0,0,0
+1787101990285,83,ADMIN DELETE IVA temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1014,584,1,1,https://app.knstore.duckdns.org/api/categoria-ivas/6a8503201a69e7ed4125ac98,0,0,0
+1787101990369,85,ADMIN DELETE marca temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1007,576,1,1,https://app.knstore.duckdns.org/api/marcas/6a8503201a69e7ed4125ac99,0,0,0
+1787101990456,90,ADMIN DELETE tipo documento temporal,204,,Produccion - CRUD lifecycle y permisos 1-1,,true,,1015,585,1,1,https://app.knstore.duckdns.org/api/tipo-documentos/6a8503201a69e7ed4125ac9a,0,0,0
+1787101990548,80,MANAGER POST autoridad - 403 esperado,403,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1126,569,1,1,https://app.knstore.duckdns.org/api/authorities,80,0,0
+1787101990970,98,CLIENTE A GET cuenta propia,200,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1478,499,1,1,https://app.knstore.duckdns.org/api/cuentas/6a8500181a69e7ed4125ac70,98,0,0
+1787101991070,91,CLIENTE B GET cuenta ajena - 403 esperado,403,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1168,499,1,1,https://app.knstore.duckdns.org/api/cuentas/6a8500181a69e7ed4125ac70,91,0,0
+1787101991165,164,USER GET cuentas protegidas - 403 esperado,403,,Produccion - CRUD lifecycle y permisos 1-1,text,true,,1118,477,1,1,https://app.knstore.duckdns.org/api/cuentas?page=0&size=1,164,0,0

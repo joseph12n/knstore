@@ -70,6 +70,18 @@ public interface PedidoService {
     PedidoDTO cambiarEstado(String id, EstadoPedido nuevoEstado);
 
     /**
+     * Cancela un pedido como CLIENTE dentro de la ventana de 1 hora desde la compra
+     * (RNF-032) y, si el pago habia sido aprobado, solicita el reembolso simbolico
+     * de forma atomica con la cancelacion.
+     *
+     * @param id id del pedido.
+     * @param motivo motivo opcional de la cancelacion (se usa como motivo del reembolso).
+     * @return el pedido actualizado.
+     * @throws IllegalStateException si el plazo vencio o la transicion no es valida.
+     */
+    PedidoDTO cancelarPedidoCliente(String id, String motivo);
+
+    /**
      * Delete the "id" pedido.
      *
      * @param id the id of the entity.

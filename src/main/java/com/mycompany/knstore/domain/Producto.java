@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.data.annotation.Id;
@@ -73,6 +74,14 @@ public class Producto extends AbstractAuditingEntity<String> {
     @DBRef
     @Field("precio")
     private ProductoPrecio precio;
+
+    /**
+     * Precio de venta denormalizado con 2 decimales (RNF-026) para permitir
+     * ordenamiento por precio server-side, ya que {@code precio} es un
+     * {@code @DBRef} cuyo documento no vive en producto (RF-072).
+     */
+    @Field("precio_venta")
+    private BigDecimal precioVenta;
 
     @DBRef
     @Field("inventario")
@@ -269,6 +278,19 @@ public class Producto extends AbstractAuditingEntity<String> {
     public Producto precio(ProductoPrecio productoPrecio) {
         this.setPrecio(productoPrecio);
         return this;
+    }
+
+    public BigDecimal getPrecioVenta() {
+        return this.precioVenta;
+    }
+
+    public Producto precioVenta(BigDecimal precioVenta) {
+        this.setPrecioVenta(precioVenta);
+        return this;
+    }
+
+    public void setPrecioVenta(BigDecimal precioVenta) {
+        this.precioVenta = precioVenta;
     }
 
     public ProductoInventario getInventario() {

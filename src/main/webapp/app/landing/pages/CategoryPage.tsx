@@ -1,16 +1,23 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { Breadcrumb, Button, Col, Collapse, Container, Form, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router';
+import axios from 'axios';
 
 import ProductCard from 'app/landing/components/ProductCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import ErrorAlert from 'app/landing/components/ErrorAlert';
 import EmptyState from 'app/landing/components/EmptyState';
+import Pagination from 'app/landing/components/Pagination';
 import { useCatalog } from 'app/landing/hooks/useCatalog';
 import useCart from 'app/landing/hooks/useCart';
+import { IProductoStorefront } from 'app/landing/model/storefront.model';
+import { CATALOG_PAGE_SIZE } from 'app/landing/utils/constants';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
+
+const CATEGORY_PAGE_SIZE = CATALOG_PAGE_SIZE;
 
 export const CategoryPage = () => {
   const { addItem: onAddToCart } = useCart();
@@ -18,17 +25,21 @@ export const CategoryPage = () => {
   const {
     categorias: rawCategorias,
     subcategorias: rawSubcategorias,
-    productos: rawProductos,
-    loading,
-    errorMessage,
-    retry,
+    loading: catalogLoading,
+    errorMessage: catalogErrorMessage,
+    retry: retryCatalog,
   } = useCatalog({ page: 0, size: 100, sort: 'nombre,asc', loadOnMount: false });
   const categorias = rawCategorias ?? [];
   const subcategorias = rawSubcategorias ?? [];
-  const productos = rawProductos ?? [];
 
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('nombre,asc');
+  const [activePage, setActivePage] = useState(1);
+  const [categoriaProductos, setCategoriaProductos] = useState<IProductoStorefront[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
 
   const categoria = useMemo(() => categorias.find(c => c.slug === categoriaSlug), [categorias, categoriaSlug]);
   const subcategoria = useMemo(
@@ -36,45 +47,75 @@ export const CategoryPage = () => {
     [subcategorias, subcategoriaSlug, categoriaSlug],
   );
 
-  const productosFiltrados = useMemo(() => {
-    if (!categoria) return [];
-    return productos.filter(p => {
-      const matchCategoria = p.categoria?.slug === categoriaSlug;
-      const matchSubcategoria = subcategoriaSlug ? p.subcategoria?.slug === subcategoriaSlug : true;
-      return matchCategoria && matchSubcategoria;
-    });
-  }, [productos, categoriaSlug, subcategoriaSlug, categoria]);
-
-  const productosOrdenados = useMemo(() => {
-    const list = [...productosFiltrados];
-    const [field, direction] = sortBy.split(',');
-    list.sort((a, b) => {
-      let comparison = 0;
-      if (field === 'nombre') {
-        comparison = (a.nombre || '').localeCompare(b.nombre || '', 'es');
-      } else if (field === 'precioVenta') {
-        comparison = (a.precio?.precioVenta || 0) - (b.precio?.precioVenta || 0);
-      }
-      return direction === 'desc' ? -comparison : comparison;
-    });
-    return list;
-  }, [productosFiltrados, sortBy]);
-
   const subcategoriasDeCategoria = useMemo(
     () => subcategorias.filter(s => s.categoria?.slug === categoriaSlug),
     [subcategorias, categoriaSlug],
   );
 
-  if (errorMessage && productos.length === 0) {
-    return (
-      <Container className="py-5">
-        <ErrorAlert message="No pudimos cargar los productos. Inténtalo de nuevo." onRetry={retry} />
-      </Container>
-    );
+  useEffect(() => {
+    setActivePage(1);
+  }, [categoriaSlug, subcategoriaSlug]);
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    setActivePage(1);
+  };
+
+  useEffect(() => {
+    if (!categoria?.id) {
+      return;
+    }
+    const controller = new AbortController();
+
+    const loadProductos = async () => {
+      setLoading(true);
+      setErrorMessage(null);
+      try {
+        const page = activePage - 1;
+        // RF-072: orden y filtro por categoria/subcategoria se resuelven
+        // server-side en GET /api/productos/search (es publico).
+        const filter = subcategoria?.id
+          ? `&subcategoriaId=${encodeURIComponent(subcategoria.id)}`
+          : `&categoriaId=${encodeURIComponent(categoria.id)}`;
+        const requestUrl = `api/productos/search?page=${page}&size=${CATEGORY_PAGE_SIZE}&sort=${encodeURIComponent(sortBy)}${filter}`;
+        const response = await axios.get<IProductoStorefront[]>(requestUrl, { signal: controller.signal });
+        setCategoriaProductos(response.data.map(p => ({ ...p, imagenes: p.imagenes ?? [] })));
+        setTotalItems(parseInt(response.headers['x-total-count'] || `${response.data.length}`, 10));
+      } catch (axiosError) {
+        if (axios.isCancel(axiosError)) {
+          return;
+        }
+        setErrorMessage(`No pudimos cargar los productos de esta categoría: ${getApiErrorMessage(axiosError)}`);
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadProductos();
+    return () => controller.abort();
+  }, [categoria?.id, subcategoria?.id, activePage, sortBy, retryKey]);
+
+  const handleRetry = () => {
+    if (errorMessage) {
+      setRetryKey(key => key + 1);
+    }
+    if (catalogErrorMessage) {
+      retryCatalog();
+    }
+  };
+
+  if (catalogLoading && !categoria) {
+    return <LoadingSpinner fullScreen />;
   }
 
-  if (loading && productos.length === 0) {
-    return <LoadingSpinner fullScreen />;
+  if (catalogErrorMessage && !categoria) {
+    return (
+      <Container className="py-5">
+        <ErrorAlert message="No pudimos cargar la tienda. Inténtalo de nuevo." onRetry={retryCatalog} />
+      </Container>
+    );
   }
 
   if (!categoria) {
@@ -83,6 +124,18 @@ export const CategoryPage = () => {
         <EmptyState title="Categoría no encontrada" description="La categoría que buscas no existe o no está disponible." />
       </Container>
     );
+  }
+
+  if (errorMessage && categoriaProductos.length === 0) {
+    return (
+      <Container className="py-5">
+        <ErrorAlert message={errorMessage} onRetry={handleRetry} />
+      </Container>
+    );
+  }
+
+  if (loading && categoriaProductos.length === 0) {
+    return <LoadingSpinner fullScreen />;
   }
 
   return (
@@ -129,7 +182,7 @@ export const CategoryPage = () => {
                 <h5 className="fw-bold mb-3">Filtros</h5>
                 <Form.Group className="mb-3">
                   <Form.Label className="small fw-semibold">Ordenar por</Form.Label>
-                  <Form.Select aria-label="Ordenar por" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                  <Form.Select aria-label="Ordenar por" value={sortBy} onChange={e => handleSortChange(e.target.value)}>
                     <option value="nombre,asc">Nombre A-Z</option>
                     <option value="nombre,desc">Nombre Z-A</option>
                     <option value="precioVenta,asc">Precio: menor a mayor</option>
@@ -142,7 +195,11 @@ export const CategoryPage = () => {
           </Collapse>
         </Col>
         <Col lg={9}>
-          {productosOrdenados.length === 0 ? (
+          {loading ? (
+            <LoadingSpinner />
+          ) : errorMessage ? (
+            <ErrorAlert message={errorMessage} onRetry={handleRetry} />
+          ) : categoriaProductos.length === 0 ? (
             <EmptyState
               title="No hay productos en esta categoría"
               description="Prueba con otra categoría o vuelve más tarde."
@@ -153,13 +210,16 @@ export const CategoryPage = () => {
               }
             />
           ) : (
-            <Row className="g-4">
-              {productosOrdenados.map(producto => (
-                <Col key={producto.id} xs={6} md={4} lg={4} xl={3}>
-                  <ProductCard producto={producto} onAddToCart={onAddToCart} />
-                </Col>
-              ))}
-            </Row>
+            <>
+              <Row className="g-4">
+                {categoriaProductos.map(producto => (
+                  <Col key={producto.id} xs={6} md={4} lg={4} xl={3}>
+                    <ProductCard producto={producto} onAddToCart={onAddToCart} />
+                  </Col>
+                ))}
+              </Row>
+              <Pagination activePage={activePage} itemsPerPage={CATEGORY_PAGE_SIZE} totalItems={totalItems} onPageChange={setActivePage} />
+            </>
           )}
         </Col>
       </Row>

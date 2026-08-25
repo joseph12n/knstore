@@ -207,6 +207,7 @@ class CheckoutServiceIT {
         mongoTemplate.dropCollection("categoria");
         mongoTemplate.dropCollection("marca");
         mongoTemplate.dropCollection("categoriaiva");
+        mongoTemplate.dropCollection("secuencias");
     }
 
     private Cuenta crearCuenta(String login) {
@@ -297,6 +298,12 @@ class CheckoutServiceIT {
         assertThat(pago.getFechaPago()).isNotNull();
         assertThat(pago.getIntentos()).isEqualTo(1);
         assertThat(pago.getMonto()).isEqualByComparingTo(new BigDecimal("128900.00"));
+
+        // RF-076: el pago aprobado viaja en el resultado del checkout (misma transaccion).
+        assertThat(result.getPago()).isNotNull();
+        assertThat(result.getPago().getEstado()).isEqualTo(EstadoPago.APPROVED);
+        assertThat(result.getPago().getId()).isEqualTo(pago.getId());
+        assertThat(result.getPago().getPedido().getId()).isEqualTo(pedido.getId());
 
         Envio envio = envioRepository
             .findByPedidoId(pedido.getId(), org.springframework.data.domain.Pageable.unpaged())
