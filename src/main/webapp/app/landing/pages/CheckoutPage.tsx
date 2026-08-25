@@ -161,8 +161,13 @@ export const CheckoutPage = () => {
         throw new Error('No se pudo crear el pedido');
       }
 
-      // Iniciar pago contra la pasarela simulada; el pago nace aprobado desde el checkout.
-      const pago = await iniciarPago(pedidoCreado.id);
+      // RF-076: el pago nace dentro del checkout (pasarela simulada), así que ya
+      // no hace falta una segunda llamada. Si el servidor aún no devuelve el pago,
+      // se usa iniciarPago solo como compatibilidad.
+      let pago = result.pago;
+      if (!pago) {
+        pago = await iniciarPago(pedidoCreado.id);
+      }
 
       // El backend ya vacio el carrito del servidor al crear el pedido:
       // se sincroniza el carrito local en ambas ramas para evitar duplicados.

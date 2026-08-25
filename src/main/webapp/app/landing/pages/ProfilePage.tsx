@@ -20,6 +20,7 @@ import { saveAccountSettings, reset as resetSettings } from 'app/modules/account
 import { ICuenta } from 'app/shared/model/cuenta.model';
 import { Genero } from 'app/shared/model/enumerations/genero.model';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
 
 interface ProfileFormData {
   primerNombre: string;
@@ -116,8 +117,11 @@ export const ProfilePage = () => {
     try {
       const tipoDocumento = data.tipoDocumentoId ? { id: data.tipoDocumentoId } : null;
 
+      // RF-073: se envian solo los campos editables del formulario. El `user`
+      // no se incluye: el BACKEND lo preserva si llega nulo (anticipo
+      // mass-assignment) y el email no es editable desde aqui.
       const payload: ICuenta = {
-        ...cuenta,
+        id: cuenta?.id,
         primerNombre: data.primerNombre,
         segundoNombre: data.segundoNombre || undefined,
         primerApellido: data.primerApellido,
@@ -129,7 +133,6 @@ export const ProfilePage = () => {
         telefono: data.telefono || undefined,
         activo: true,
         tipoDocumento,
-        user: { id: account.id, login: account.login },
       };
 
       if (imageFile) {
@@ -138,9 +141,10 @@ export const ProfilePage = () => {
       }
 
       if (cuenta?.id) {
-        await dispatch(updateCuenta({ ...payload, id: cuenta.id }));
+        await dispatch(updateCuenta(payload)).unwrap();
       } else {
-        await dispatch(createCuenta(payload));
+        // En creacion el backend exige conocer el usuario y el tipo de documento.
+        await dispatch(createCuenta({ ...payload, user: { id: account.id, login: account.login } })).unwrap();
       }
 
       dispatch(
@@ -151,10 +155,16 @@ export const ProfilePage = () => {
         }),
       );
 
+      // Refresca la cuenta en el store para que la vista de solo lectura y la
+      // cabecera del panel muestren los datos recien guardados.
+      if (account.login) {
+        dispatch(getCuentaByLogin(account.login));
+      }
+
       toast.success('Perfil actualizado correctamente.');
       navigate('/mi-cuenta/perfil');
-    } catch {
-      toast.error('No pudimos actualizar tu perfil. Inténtalo de nuevo.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'No pudimos actualizar tu perfil. Inténtalo de nuevo.'));
     } finally {
       setIsSubmitting(false);
     }

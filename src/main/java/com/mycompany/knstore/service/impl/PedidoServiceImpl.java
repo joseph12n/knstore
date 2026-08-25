@@ -3,29 +3,33 @@ package com.mycompany.knstore.service.impl;
 import com.mycompany.knstore.domain.ItemPedido;
 import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.domain.ProductoInventario;
+import com.mycompany.knstore.domain.enumeration.EstadoPago;
 import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.ItemPedidoRepository;
+import com.mycompany.knstore.repository.PagoRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.HistorialEstadoService;
+import com.mycompany.knstore.service.PagoService;
 import com.mycompany.knstore.service.PedidoService;
+import com.mycompany.knstore.service.SecuenciaService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.service.mapper.PedidoMapper;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,7 +45,8 @@ public class PedidoServiceImpl implements PedidoService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PedidoServiceImpl.class);
 
-    private static final String PEDIDO_SEQUENCE_COLLECTION = "pedido_sequence";
+    /** Ventana para cancelar un pedido como cliente (RNF-032: cancelacion + reembolso simbolico). */
+    private static final Duration VENTANA_CANCELACION_CLIENTE = Duration.ofHours(1);
 
     private final PedidoRepository pedidoRepository;
 
@@ -55,13 +60,22 @@ public class PedidoServiceImpl implements PedidoService {
 
     private final HistorialEstadoService historialEstadoService;
 
+    private final SecuenciaService secuenciaService;
+
+    private final PagoService pagoService;
+
+    private final PagoRepository pagoRepository;
+
     public PedidoServiceImpl(
         PedidoRepository pedidoRepository,
         CuentaRepository cuentaRepository,
         ItemPedidoRepository itemPedidoRepository,
         MongoTemplate mongoTemplate,
         PedidoMapper pedidoMapper,
-        HistorialEstadoService historialEstadoService
+        HistorialEstadoService historialEstadoService,
+        SecuenciaService secuenciaService,
+        PagoService pagoService,
+        PagoRepository pagoRepository
     ) {
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
@@ -69,6 +83,9 @@ public class PedidoServiceImpl implements PedidoService {
         this.mongoTemplate = mongoTemplate;
         this.pedidoMapper = pedidoMapper;
         this.historialEstadoService = historialEstadoService;
+        this.secuenciaService = secuenciaService;
+        this.pagoService = pagoService;
+        this.pagoRepository = pagoRepository;
     }
 
     @Override
@@ -190,6 +207,32 @@ public class PedidoServiceImpl implements PedidoService {
         return pedidoMapper.toDto(pedido);
     }
 
+    @Override
+    @Transactional
+    public PedidoDTO cancelarPedidoCliente(String id, String motivo) {
+        LOG.debug("Request to cancel Pedido as client : {}", id);
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new IllegalStateException("Pedido no encontrado"));
+        // RNF-032: la cancelacion del cliente solo es valida en la ventana de 1 hora
+        // desde la compra. Despues, cualquier gestion corresponde a administracion.
+        if (
+            pedido.getCreatedDate() == null ||
+            Duration.between(pedido.getCreatedDate(), Instant.now()).compareTo(VENTANA_CANCELACION_CLIENTE) > 0
+        ) {
+            throw new IllegalStateException("El plazo para cancelar es de 1 hora desde la compra");
+        }
+        // Reembolso simbolico: si el pago del pedido fue aprobado se reembolsa dentro
+        // de la misma transaccion (la pasarela simulada nunca transfiere dinero real).
+        String motivoReembolso = motivo != null && !motivo.isBlank() ? motivo : "Cancelacion solicitada por el cliente";
+        pagoRepository
+            .findByPedidoId(id, PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")))
+            .getContent()
+            .stream()
+            .filter(pago -> EstadoPago.APPROVED.equals(pago.getEstado()))
+            .findFirst()
+            .ifPresent(pago -> pagoService.reembolsar(pago.getId(), motivoReembolso));
+        return cambiarEstado(id, EstadoPedido.CANCELLED);
+    }
+
     private void validarTransicionPedido(EstadoPedido anterior, EstadoPedido nuevo) {
         if (anterior == null || nuevo == null) {
             throw new IllegalStateException("El estado del pedido es obligatorio");
@@ -212,15 +255,6 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     private String generarNumeroPedido() {
-        String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String sequenceKey = "PED-" + fecha;
-
-        Query query = new Query(Criteria.where("_id").is(sequenceKey));
-        Update update = new Update().inc("seq", 1);
-        FindAndModifyOptions options = new FindAndModifyOptions().upsert(true).returnNew(true);
-        Document sequence = mongoTemplate.findAndModify(query, update, options, Document.class, PEDIDO_SEQUENCE_COLLECTION);
-
-        long seq = sequence != null ? ((Number) sequence.get("seq")).longValue() : 1L;
-        return "PED-%s-%06d".formatted(fecha, seq);
+        return secuenciaService.siguientePedido();
     }
 }

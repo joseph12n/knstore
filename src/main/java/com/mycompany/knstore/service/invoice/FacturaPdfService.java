@@ -17,6 +17,7 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.mycompany.knstore.domain.Factura;
 import com.mycompany.knstore.domain.Pedido;
+import com.mycompany.knstore.service.SecuenciaService;
 import com.mycompany.knstore.service.util.MoneyUtils;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -28,11 +29,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HexFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.core.FindAndModifyOptions;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,37 +40,23 @@ public class FacturaPdfService {
 
     private static final Logger LOG = LoggerFactory.getLogger(FacturaPdfService.class);
 
-    private static final String FACTURA_SEQUENCE_COLLECTION = "factura_sequence";
-
     private static final DateTimeFormatter FECHA_FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final MongoTemplate mongoTemplate;
+    private final SecuenciaService secuenciaService;
 
-    public FacturaPdfService(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
+    public FacturaPdfService(SecuenciaService secuenciaService) {
+        this.secuenciaService = secuenciaService;
     }
 
     /**
-     * Genera el siguiente consecutivo de factura usando una coleccion contadora atomica.
+     * Genera el siguiente consecutivo de factura con el contador atómico
+     * unificado de {@link SecuenciaService} (RNF-030).
      *
      * @param prefijo prefijo de la factura (ej. "FE").
      * @return consecutivo en formato {@code PREFIJO-000001}.
      */
     public String generarConsecutivo(String prefijo) {
-        String sequenceKey = "FAC-" + java.time.LocalDate.now();
-        Query query = new Query(Criteria.where("_id").is(sequenceKey));
-        Update update = new Update().inc("seq", 1);
-        FindAndModifyOptions options = new FindAndModifyOptions().upsert(true).returnNew(true);
-        org.bson.Document sequence = mongoTemplate.findAndModify(
-            query,
-            update,
-            options,
-            org.bson.Document.class,
-            FACTURA_SEQUENCE_COLLECTION
-        );
-        long seq = sequence != null ? ((Number) sequence.get("seq")).longValue() : 1L;
-        String prefijoBase = prefijo == null || prefijo.isBlank() ? "FE" : prefijo;
-        return "%s-%06d".formatted(prefijoBase, seq);
+        return secuenciaService.siguienteConsecutivo(prefijo);
     }
 
     /**
