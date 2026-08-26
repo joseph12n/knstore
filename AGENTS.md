@@ -297,6 +297,8 @@ npm run java:docker                                 # Imagen con Jib
 - `src/main/java/com/mycompany/knstore/service/SecuenciaService.java`: consecutivos diarios atómicos (colección `secuencias`, `findAndModify` + `$inc`).
 - `src/main/webapp/app/landing/hooks/useCuentaActual.ts` y `utils/apiError.ts`: patrones compartidos del panel de cliente (carga de cuenta, errores Axios tipados).
 - `src/main/webapp/app/landing/services/checkout.service.ts`: payload y llamadas del checkout (precio siempre server-side; el resultado incluye `pago`).
+- `docs/knstore_stress_plan.jmx`: plan de estrés/rendimiento (sección 07, escenarios ES-01…ES-07 con cargas vía `-JN_S1…N_S7`).
+- `docs/jmeter/gen_informe.py` + `print_variant.py` + `pdf_build.py` + `generar_informe.sh`: pipeline de informes (HTML/PDF) desde `resultados.jtl`.
 
 ---
 
