@@ -1,0 +1,129 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1787705060680,818,CP-001 | Registro exitoso de usuario,201,,01 - PUBLICO (sin sesion) 1-1,,true,,898,363,1,1,https://app.knstore.duckdns.org/api/register,810,0,627
+1787705061799,97,CP-002 | Registro con correo duplicado,400,,01 - PUBLICO (sin sesion) 1-1,text,true,,1159,333,1,1,https://app.knstore.duckdns.org/api/register,97,0,0
+1787705061915,191,CP-004 | Inicio de sesion invalido,401,,01 - PUBLICO (sin sesion) 1-1,text,true,,1133,280,1,1,https://app.knstore.duckdns.org/api/authenticate,191,0,0
+1787705062132,75,CP-008 | Acceso sin token,401,,01 - PUBLICO (sin sesion) 1-1,,true,,974,139,1,1,https://app.knstore.duckdns.org/api/account,75,0,0
+1787705062221,165,CP-023 | Hashing bcrypt,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1578,271,1,1,https://app.knstore.duckdns.org/api/authenticate,164,0,0
+1787705062422,81,CP-024 | Vigencia JWT (30 dias),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1299,457,1,1,https://app.knstore.duckdns.org/api/account,80,0,0
+1787705062624,105,CP-025 | Validacion de entradas,400,,01 - PUBLICO (sin sesion) 1-1,text,true,,2754,233,1,1,https://app.knstore.duckdns.org/api/register,105,0,0
+1787705062754,74,CP-026 | Restriccion CORS,403,,01 - PUBLICO (sin sesion) 1-1,,true,,900,275,1,1,https://app.knstore.duckdns.org/api/categorias?page=0&size=1,74,0,0
+1787705062858,76,CP-027 | Diseno responsivo login,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,5911,133,1,1,https://app.knstore.duckdns.org/login,76,0,0
+1787705062962,99,CP-028 | Animaciones UI,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,5911,138,1,1,https://app.knstore.duckdns.org/index.html,98,0,0
+1787705063071,72,CP-029 | Mensajes de error claros,400,,01 - PUBLICO (sin sesion) 1-1,text,true,,1777,344,1,1,https://app.knstore.duckdns.org/api/register,71,0,0
+1787705063159,81,CP-030 | Listar categorias,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,2103,173,1,1,https://app.knstore.duckdns.org/api/categorias?page=0&size=20&eagerload=false,81,0,0
+1787705063286,80,CP-031 | Consultar categoria,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1101,167,1,1,https://app.knstore.duckdns.org/api/categorias/6a8def2f97425d373333a710,80,0,0
+1787705063381,89,CP-035 | Listar subcategorias,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,5469,176,1,1,https://app.knstore.duckdns.org/api/subcategorias?page=0&size=20&eagerload=false,88,0,0
+1787705063484,73,APOYO | Ingresar marcasant - id de la primera marca,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1129,168,1,1,https://app.knstore.duckdns.org/api/marcas?page=0&size=1&eagerload=false,73,0,0
+1787705063586,356,CP-043 | Busqueda full-text,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1158,172,1,1,https://app.knstore.duckdns.org/api/productos/search?q=zapato&page=0&size=10,356,0,0
+1787705063982,131,CP-044 | Listar productos paginados,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,14214,171,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=10&eagerload=true,131,0,0
+1787705064142,77,CP-045 | Consultar producto por slug,404,,01 - PUBLICO (sin sesion) 1-1,text,true,,1142,151,1,1,https://app.knstore.duckdns.org/api/productos/slug/NONE,76,0,0
+1787705064230,77,CP-046 | Filtrar por categoria,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1220,203,1,1,https://app.knstore.duckdns.org/api/productos/search?q=&categoriaId=6a8def2f97425d373333a710&page=0&size=10,76,0,0
+1787705064325,77,CP-047 | Filtrar por subcategoria,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1186,184,1,1,https://app.knstore.duckdns.org/api/productos/search?q=Deportivo%20Hombre&page=0&size=10,77,0,0
+1787705064421,79,CP-048 | Filtrar por marca,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1212,199,1,1,https://app.knstore.duckdns.org/api/productos/search?q=&marcaId=6a8def2f97425d373333a70d&page=0&size=10,79,0,0
+1787705064531,291,CP-049 | Filtrar por etiqueta,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,27031,171,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=20&eagerload=true,225,0,0
+1787705064898,282,CP-053 | Tiempo respuesta catalogo,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,27031,171,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=20&eagerload=true,218,0,0
+1787705065193,223,CP-054 | Paginacion obligatoria,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,26986,141,1,1,https://app.knstore.duckdns.org/api/productos,221,0,0
+1787705065437,80,CP-055 | Indices MongoDB,200,,01 - PUBLICO (sin sesion) 1-1,text,true,,1158,172,1,1,https://app.knstore.duckdns.org/api/productos/search?q=zapato&page=0&size=10,79,0,0
+1787705065534,906,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130197,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,489,0,0
+1787705066455,857,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130212,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,531,0,0
+1787705067323,868,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130248,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,601,0,0
+1787705068212,799,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130204,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,517,0,0
+1787705069021,650,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130226,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,454,0,0
+1787705069691,678,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130212,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,405,0,0
+1787705070387,688,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130212,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,424,0,0
+1787705071093,640,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130219,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,438,0,0
+1787705071746,602,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130226,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,405,0,0
+1787705072365,597,CP-056 | Escalabilidad catalogo (100k productos),200,,01 - PUBLICO (sin sesion) 1-1,text,true,,130212,173,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=100&eagerload=false,364,0,0
+1787705072982,342,APOYO | Login ADMIN,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1562,267,1,1,https://app.knstore.duckdns.org/api/authenticate,342,0,156
+1787705073347,92,CP-009 | Listar usuarios,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,2905,479,1,1,"https://app.knstore.duckdns.org/api/admin/users?page=0&size=5&sort=id,asc",92,0,0
+1787705073451,125,CP-010 | Consultar usuario por ID,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1278,459,1,1,https://app.knstore.duckdns.org/api/admin/users/admin,124,0,0
+1787705073599,179,CP-011 | Crear usuario por Admin,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1590,716,1,1,https://app.knstore.duckdns.org/api/admin/users,179,0,0
+1787705073802,364,CP-012 | Actualizar usuario,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1560,767,1,1,https://app.knstore.duckdns.org/api/admin/users/usc20260825194420@jmeter.knstore,364,0,0
+1787705074184,85,CP-013 | Eliminacion logica usuario,204,,02 - ADMIN (ROLE_ADMIN) 2-1,,true,,1024,572,1,1,https://app.knstore.duckdns.org/api/admin/users/usc20260825194420@jmeter.knstore,0,0,0
+1787705074284,91,CP-014 | Eliminacion fisica usuario,204,,02 - ADMIN (ROLE_ADMIN) 2-1,,true,,1024,572,1,1,https://app.knstore.duckdns.org/api/admin/users/usc20260825194420@jmeter.knstore,0,0,0
+1787705074391,82,CP-050 | Acceso panel admin,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1508,467,1,1,https://app.knstore.duckdns.org/api/admin/users?page=0&size=1,82,0,0
+1787705074502,302,CP-051 | CRUD desde interfaz,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,5124,480,1,1,https://app.knstore.duckdns.org/api/productos?page=0&size=3&eagerload=true,302,0,0
+1787705074825,77,CP-052 | Visualizar estado activo,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1399,482,1,1,https://app.knstore.duckdns.org/api/categorias?page=0&size=1&eagerload=false,77,0,0
+1787705074918,83,CP-032 | Crear categoria,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1333,630,1,1,https://app.knstore.duckdns.org/api/categorias,83,0,0
+1787705075029,421,CP-033 | Actualizar categoria,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1262,671,1,1,https://app.knstore.duckdns.org/api/categorias/6a8e36f20fd49952c07dac6e,421,0,0
+1787705075465,77,CP-036 | Crear subcategoria,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1476,671,1,1,https://app.knstore.duckdns.org/api/subcategorias,77,0,0
+1787705075579,79,CP-037 | Actualizar subcategoria,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1416,726,1,1,https://app.knstore.duckdns.org/api/subcategorias/6a8e36f30fd49952c07dac6f,79,0,0
+1787705075662,460,APOYO | Crear precio producto A,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1272,573,1,1,https://app.knstore.duckdns.org/api/producto-precios,460,0,0
+1787705076134,79,APOYO | Crear inventario producto A,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1274,600,1,1,https://app.knstore.duckdns.org/api/producto-inventarios,79,0,0
+1787705076231,80,CP-039 | Crear producto,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,2033,915,1,1,https://app.knstore.duckdns.org/api/productos,80,0,0
+1787705076366,177,CP-040 | Actualizar producto,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1986,1117,1,1,https://app.knstore.duckdns.org/api/productos/6a8e36f40fd49952c07dac72,177,0,0
+1787705076570,281,CP-041 | Calcular precio automatico,200,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1210,629,1,1,https://app.knstore.duckdns.org/api/producto-precios/6a8e36f30fd49952c07dac70,281,0,0
+1787705076859,127,APOYO | Crear precio producto B,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1272,573,1,1,https://app.knstore.duckdns.org/api/producto-precios,127,0,0
+1787705077028,128,APOYO | Crear inventario producto B (stock 2),201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1271,597,1,1,https://app.knstore.duckdns.org/api/producto-inventarios,128,0,0
+1787705077183,81,APOYO | Crear producto bajo stock (B) para CP-070,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,2036,918,1,1,https://app.knstore.duckdns.org/api/productos,80,0,0
+1787705077292,479,APOYO | Crear precio producto C,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1272,573,1,1,https://app.knstore.duckdns.org/api/producto-precios,479,0,0
+1787705077803,80,APOYO | Crear inventario producto C,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,1271,597,1,1,https://app.knstore.duckdns.org/api/producto-inventarios,79,0,0
+1787705077933,80,APOYO | Crear producto descartable (C) para CP-042,201,,02 - ADMIN (ROLE_ADMIN) 2-1,text,true,,2017,899,1,1,https://app.knstore.duckdns.org/api/productos,80,0,0
+1787705078043,79,CP-042 | Eliminar producto,204,,02 - ADMIN (ROLE_ADMIN) 2-1,,true,,1010,562,1,1,https://app.knstore.duckdns.org/api/productos/6a8e36f50fd49952c07dac78,0,0,0
+1787705078145,113,CP-038 | Eliminar subcategoria,204,,02 - ADMIN (ROLE_ADMIN) 2-1,,true,,1014,566,1,1,https://app.knstore.duckdns.org/api/subcategorias/6a8e36f30fd49952c07dac6f,0,0,0
+1787705078271,83,CP-034 | Eliminar categoria,204,,02 - ADMIN (ROLE_ADMIN) 2-1,,true,,1011,563,1,1,https://app.knstore.duckdns.org/api/categorias/6a8e36f20fd49952c07dac6e,0,0,0
+1787705078390,330,CP-003 | Inicio de sesion exitoso,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1578,271,1,1,https://app.knstore.duckdns.org/api/authenticate,330,0,157
+1787705078730,76,APOYO | Obtener id de usuario (cuenta),200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1299,457,1,1,https://app.knstore.duckdns.org/api/account,76,0,0
+1787705078837,79,APOYO | Tipos de documento,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1121,479,1,1,https://app.knstore.duckdns.org/api/tipo-documentos?page=0&size=5,79,0,0
+1787705078950,88,APOYO | Consultar cuenta propia,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1643,471,1,1,https://app.knstore.duckdns.org/api/cuentas?page=0&size=1,88,0,0
+1787705079130,83,APOYO | Consultar carrito propio,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1368,472,1,1,https://app.knstore.duckdns.org/api/carritos?page=0&size=5,83,0,0
+1787705079238,167,APOYO | Login borrar01,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1574,270,1,1,https://app.knstore.duckdns.org/api/authenticate,167,0,0
+1787705079424,76,APOYO | Id usuario borrar01,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1281,455,1,1,https://app.knstore.duckdns.org/api/account,76,0,0
+1787705079517,80,APOYO | Consultar cuenta borrar01,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1120,469,1,1,https://app.knstore.duckdns.org/api/cuentas?page=0&size=1,79,0,0
+1787705079625,83,APOYO | Crear cuenta borrar01,201,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1661,884,1,1,https://app.knstore.duckdns.org/api/cuentas,83,0,0
+1787705079730,72,CP-005 | Cierre de sesion,401,,03 - CLIENTE (ROLE_CLIENTE) 3-1,,true,,974,139,1,1,https://app.knstore.duckdns.org/api/account,72,0,0
+1787705079816,88,CP-006 | Verificacion automatica de sesion,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1299,457,1,1,https://app.knstore.duckdns.org/api/account,88,0,0
+1787705079924,204,CP-007 | Proteccion de rutas privadas,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,5506,471,1,1,https://app.knstore.duckdns.org/api/pedidos?page=0&size=5,204,0,0
+1787705080149,141,CP-015 | Consultar perfil propio,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1299,457,1,1,https://app.knstore.duckdns.org/api/account,141,0,0
+1787705080300,85,CP-016 | Eliminar perfil propio,204,,03 - CLIENTE (ROLE_CLIENTE) 3-1,,true,,1008,566,1,1,https://app.knstore.duckdns.org/api/cuentas/6a8e36f70fd49952c07dac79,0,0,0
+1787705080400,379,CP-017 | Editar perfil propio,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,,true,,898,630,1,1,https://app.knstore.duckdns.org/api/account,379,0,0
+1787705080787,84,CP-018 | Crear direccion,201,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1723,769,1,1,https://app.knstore.duckdns.org/api/direccions,84,0,0
+1787705080897,83,APOYO | Crear segunda direccion (D2) para checkout,201,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1724,770,1,1,https://app.knstore.duckdns.org/api/direccions,83,0,0
+1787705080990,100,CP-019 | Listar direcciones,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,7081,475,1,1,https://app.knstore.duckdns.org/api/direccions?page=0&size=10,100,0,0
+1787705081105,90,CP-020 | Editar direccion,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1666,824,1,1,https://app.knstore.duckdns.org/api/direccions/6a8e36f80fd49952c07dac7a,90,0,0
+1787705081209,148,CP-021 | Eliminar direccion,204,,03 - CLIENTE (ROLE_CLIENTE) 3-1,,true,,1011,571,1,1,https://app.knstore.duckdns.org/api/direccions/6a8e36f80fd49952c07dac7a,0,0,0
+1787705081374,186,CP-022 | Direccion predeterminada,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1668,585,1,1,https://app.knstore.duckdns.org/api/direccions/6a8e36f80fd49952c07dac7b/predeterminada,186,0,0
+1787705081567,120,CP-057 | Agregar producto al carrito,201,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1668,639,1,1,https://app.knstore.duckdns.org/api/item-carritos,119,0,0
+1787705081713,88,CP-058 | Consultar carrito,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1392,483,1,1,https://app.knstore.duckdns.org/api/carritos/6a8e06c297425d373333a928,88,0,0
+1787705081820,127,CP-059 | Modificar cantidad,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1610,695,1,1,https://app.knstore.duckdns.org/api/item-carritos/6a8e36f90fd49952c07dac7c,127,0,0
+1787705081962,102,CP-060 | Eliminar item,204,,03 - CLIENTE (ROLE_CLIENTE) 3-1,,true,,1013,574,1,1,https://app.knstore.duckdns.org/api/item-carritos/6a8e36f90fd49952c07dac7c,0,0,0
+1787705082069,93,CP-061 | Vaciar carrito,204,,03 - CLIENTE (ROLE_CLIENTE) 3-1,,true,,879,575,1,1,https://app.knstore.duckdns.org/api/carritos/6a8e06c297425d373333a928/items,0,0,0
+1787705082174,241,CP-062 | Confirmar checkout,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,2453,719,1,1,https://app.knstore.duckdns.org/api/pedidos/checkout,241,0,0
+1787705082455,87,CP-063 | Calcular total pedido,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1014,687,1,1,https://app.knstore.duckdns.org/api/pedidos/preview,87,0,0
+1787705082600,189,CP-068 | Consultar detalle pedido,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1818,482,1,1,https://app.knstore.duckdns.org/api/pedidos/6a8e36fa0fd49952c07dac7d,189,0,0
+1787705082812,183,CP-065 | Listar pedidos propios,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,9813,472,1,1,https://app.knstore.duckdns.org/api/pedidos?page=0&size=10,183,0,0
+1787705083003,123,CP-071 | Iniciar pago,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1688,555,1,1,https://app.knstore.duckdns.org/api/pagos/iniciar,123,0,0
+1787705083137,108,CP-072 | Procesar pago exitoso,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1561,480,1,1,https://app.knstore.duckdns.org/api/pagos/6a8e36fa0fd49952c07dac80,108,0,0
+1787705083257,98,CP-073 | Validar coherencia monto,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1561,480,1,1,https://app.knstore.duckdns.org/api/pagos/6a8e36fa0fd49952c07dac80,98,0,0
+1787705083384,430,CP-076 | Consultar pago propio,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,4338,469,1,1,https://app.knstore.duckdns.org/api/pagos?page=0&size=5,430,0,0
+1787705083832,101,CP-081 | Auditoria pagos,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1617,490,1,1,https://app.knstore.duckdns.org/api/pagos/6a8e36fa0fd49952c07dac80/historial,101,0,0
+1787705083952,83,CP-082 | Precisión monetaria,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1014,687,1,1,https://app.knstore.duckdns.org/api/pedidos/preview,83,0,0
+1787705084075,98,CP-069 | Atomicidad checkout,400,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1375,688,1,1,https://app.knstore.duckdns.org/api/pedidos/checkout,98,0,0
+1787705084193,186,CP-064 | Cancelar pedido valido,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1947,570,1,1,https://app.knstore.duckdns.org/api/pedidos/6a8e36fa0fd49952c07dac7d/cancelar,185,0,0
+1787705084386,353,CP-087 | Consultar tracking propio,200,,03 - CLIENTE (ROLE_CLIENTE) 3-1,text,true,,1850,483,1,1,"https://app.knstore.duckdns.org/api/envios?page=0&size=1&sort=id,desc",353,0,0
+1787705084765,365,APOYO | Login cliente por hilo,200,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-1,text,true,,1578,271,2,2,https://app.knstore.duckdns.org/api/authenticate,365,0,188
+1787705084962,381,APOYO | Login cliente por hilo,200,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-2,text,true,,1578,271,3,3,https://app.knstore.duckdns.org/api/authenticate,380,0,188
+1787705085164,422,APOYO | Login cliente por hilo,200,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-3,text,true,,1578,271,5,5,https://app.knstore.duckdns.org/api/authenticate,421,0,184
+1787705085354,240,CP-070 | Concurrencia stock (sin sobreventa),200,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-2,text,true,,2442,688,5,5,https://app.knstore.duckdns.org/api/pedidos/checkout,239,0,0
+1787705085364,327,APOYO | Login cliente por hilo,200,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-4,text,true,,1578,271,4,4,https://app.knstore.duckdns.org/api/authenticate,327,0,154
+1787705085599,89,CP-070 | Concurrencia stock (sin sobreventa),400,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-3,text,true,,1375,688,4,4,https://app.knstore.duckdns.org/api/pedidos/checkout,89,0,0
+1787705085703,82,CP-070 | Concurrencia stock (sin sobreventa),400,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-4,text,true,,1375,688,3,3,https://app.knstore.duckdns.org/api/pedidos/checkout,82,0,0
+1787705085564,314,APOYO | Login cliente por hilo,200,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-5,text,true,,1578,271,2,2,https://app.knstore.duckdns.org/api/authenticate,314,0,150
+1787705085148,786,CP-070 | Concurrencia stock (sin sobreventa),200,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-1,text,true,,2442,688,2,2,https://app.knstore.duckdns.org/api/pedidos/checkout,786,0,0
+1787705085892,87,CP-070 | Concurrencia stock (sin sobreventa),400,,04 - CONCURRENCIA (ROLE_CLIENTE - CP-070) 4-5,text,true,,1375,688,1,1,https://app.knstore.duckdns.org/api/pedidos/checkout,87,0,0
+1787705086007,330,APOYO | Login MANAGER,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1556,263,1,1,https://app.knstore.duckdns.org/api/authenticate,330,0,163
+1787705086354,167,APOYO | Login ADMIN (reembolso CP-074),200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1562,267,1,1,https://app.knstore.duckdns.org/api/authenticate,167,0,0
+1787705086530,227,CP-066 | Listar todos pedidos,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,18426,461,1,1,https://app.knstore.duckdns.org/api/pedidos?page=0&size=20,226,0,0
+1787705086767,90,CP-067 | Actualizar estado pedido,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1935,552,1,1,https://app.knstore.duckdns.org/api/pedidos/6a8e36fd0fd49952c07dac89/estado,90,0,0
+1787705086867,502,CP-077 | Generar factura automatica,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,34914,476,1,1,"https://app.knstore.duckdns.org/api/facturas?page=0&size=100&sort=id,desc",500,0,0
+1787705087387,93,CP-078 | Referencia unica factura,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1565,472,1,1,https://app.knstore.duckdns.org/api/facturas/6a8e36fa0fd49952c07dac85,93,0,0
+1787705087484,120,CP-079 | Consultar factura propia,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,5237,476,1,1,https://app.knstore.duckdns.org/api/facturas/6a8e36fa0fd49952c07dac85/pdf,120,0,0
+1787705087614,83,CP-083 | Crear envio,201,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1695,606,1,1,https://app.knstore.duckdns.org/api/envios,83,0,0
+1787705087740,88,CP-084 | Asignar tracking,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1668,602,1,1,https://app.knstore.duckdns.org/api/envios/6a8e36ff0fd49952c07dac9e/tracking,88,0,0
+1787705087835,92,CP-085 | Actualizar estado envio,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1671,554,1,1,https://app.knstore.duckdns.org/api/envios/6a8e36ff0fd49952c07dac9e/estado,92,0,0
+1787705087931,113,CP-086 | Registrar devolucion,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1669,566,1,1,https://app.knstore.duckdns.org/api/envios/6a8e36ff0fd49952c07dac9e/devolucion,113,0,0
+1787705088048,120,CP-088 | Listar envios pendientes,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,7400,471,1,1,https://app.knstore.duckdns.org/api/envios/pendientes?page=0&size=10,120,0,0
+1787705088177,98,CP-074 | Solicitar reembolso,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,1726,561,1,1,https://app.knstore.duckdns.org/api/pagos/6a8e36fd0fd49952c07dac8c/reembolso,98,0,0
+1787705088293,168,CP-075 | Historial pagos,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,13779,459,1,1,https://app.knstore.duckdns.org/api/pagos?page=0&size=20,168,0,0
+1787705088470,363,CP-080 | Listar facturas,200,,05 - MANAGER (ROLE_MANAGER) 5-1,text,true,,13485,462,1,1,https://app.knstore.duckdns.org/api/facturas?page=0&size=20,363,0,0
+1787705088852,234,V-070 | Verificacion stock sin sobreventa,200,,06 - VERIFICACION final (publico) 6-1,text,true,,1598,178,1,1,https://app.knstore.duckdns.org/api/productos/por-ids?ids=6a8e36f50fd49952c07dac75,234,0,153

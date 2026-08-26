@@ -1,0 +1,1773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+<hashTree>
+<TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="KN-Store ESTRES y Rendimiento" enabled="true">
+<stringProp name="TestPlan.comments">Plan de estres y rendimiento. Escenarios: catalogo, autenticacion, checkout, concurrencia (RNF-024) y soak. Cargas via -JN_S1..N_S5, ES_PAGE, S5_DUR.</stringProp>
+<boolProp name="TestPlan.functional_mode">false</boolProp>
+<boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+<elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments">
+<elementProp name="PROTOCOL" elementType="Argument">
+<stringProp name="Argument.name">PROTOCOL</stringProp>
+<stringProp name="Argument.value">https</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="HOST" elementType="Argument">
+<stringProp name="Argument.name">HOST</stringProp>
+<stringProp name="Argument.value">app.knstore.duckdns.org</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="PORT" elementType="Argument">
+<stringProp name="Argument.name">PORT</stringProp>
+<stringProp name="Argument.value">443</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="ADMIN_USER" elementType="Argument">
+<stringProp name="Argument.name">ADMIN_USER</stringProp>
+<stringProp name="Argument.value">admin@knstore.com</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="ADMIN_PWD" elementType="Argument">
+<stringProp name="Argument.name">ADMIN_PWD</stringProp>
+<stringProp name="Argument.value">123456</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="CLI_USER" elementType="Argument">
+<stringProp name="Argument.name">CLI_USER</stringProp>
+<stringProp name="Argument.value">cliente01@knstore.com</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="CLI_PWD" elementType="Argument">
+<stringProp name="Argument.name">CLI_PWD</stringProp>
+<stringProp name="Argument.value">123456</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="ts" elementType="Argument">
+<stringProp name="Argument.name">ts</stringProp>
+<stringProp name="Argument.value">${__time(yyyyMMddHHmmss)}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="N_S1" elementType="Argument">
+<stringProp name="Argument.name">N_S1</stringProp>
+<stringProp name="Argument.value">50</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="N_S2" elementType="Argument">
+<stringProp name="Argument.name">N_S2</stringProp>
+<stringProp name="Argument.value">40</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="N_S3" elementType="Argument">
+<stringProp name="Argument.name">N_S3</stringProp>
+<stringProp name="Argument.value">40</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="N_S4" elementType="Argument">
+<stringProp name="Argument.name">N_S4</stringProp>
+<stringProp name="Argument.value">50</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="N_S5" elementType="Argument">
+<stringProp name="Argument.name">N_S5</stringProp>
+<stringProp name="Argument.value">12</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="RAMPUP" elementType="Argument">
+<stringProp name="Argument.name">RAMPUP</stringProp>
+<stringProp name="Argument.value">10</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="S5_DUR" elementType="Argument">
+<stringProp name="Argument.name">S5_DUR</stringProp>
+<stringProp name="Argument.value">180</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="ES_PAGE" elementType="Argument">
+<stringProp name="Argument.name">ES_PAGE</stringProp>
+<stringProp name="Argument.value">0</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="N_S6" elementType="Argument">
+<stringProp name="Argument.name">N_S6</stringProp>
+<stringProp name="Argument.value">100</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="RAMP_S6" elementType="Argument">
+<stringProp name="Argument.name">RAMP_S6</stringProp>
+<stringProp name="Argument.value">2</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="N_S7" elementType="Argument">
+<stringProp name="Argument.name">N_S7</stringProp>
+<stringProp name="Argument.value">150</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+<elementProp name="RAMP_S7" elementType="Argument">
+<stringProp name="Argument.name">RAMP_S7</stringProp>
+<stringProp name="Argument.value">120</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</TestPlan>
+<hashTree>
+<ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+</ConfigTestElement>
+<hashTree/>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="PREP | Datos de estres (apoyos)" enabled="true">
+<stringProp name="TestPlan.comments">Prepara producto E (stock 5000), producto F (stock 15), categorias y direccion del cliente</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">1</stringProp>
+<stringProp name="ThreadGroup.ramp_time">1</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">1</stringProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Login ${ADMIN_USER}" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/authenticate</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;username&quot;:&quot;${ADMIN_USER}&quot;,&quot;password&quot;:&quot;${ADMIN_PWD}&quot;,&quot;rememberMe&quot;:true}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract admTok" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() == &#x27;200&#x27; : &#x27;login &#x27; + prev.getResponseCode()
+def j = new groovy.json.JsonSlurper().parseText(_r)
+vars.put(&#x27;admTok&#x27;, j.id_token)
+prev.setSuccessful(true)</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Extract categorias (catalogo)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/categorias?page=0&amp;size=1&amp;eagerload=false</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+if (props.get(&#x27;knstore.stress.catId&#x27;) == null &amp;&amp; j &amp;&amp; j.size() &gt; 0) { props.setProperty(&#x27;knstore.stress.catId&#x27;, j[0].id) }</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Extract subcategorias" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/subcategorias?page=0&amp;size=1&amp;eagerload=false</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+if (props.get(&#x27;knstore.stress.subId&#x27;) == null &amp;&amp; j &amp;&amp; j.size() &gt; 0) { props.setProperty(&#x27;knstore.stress.subId&#x27;, j[0].id) }</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Crear precio producto E (estres)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/producto-precios</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;precioCompra&quot;:30000,&quot;precioVenta&quot;:60000,&quot;precioAdicional&quot;:0}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${admTok}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+props.setProperty(&#x27;knstore.stress.precioE&#x27;, j.id)</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Crear inventario E (stock 5000)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/producto-inventarios</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;stock&quot;:5000,&quot;stockMinimo&quot;:50,&quot;ubicacionBodega&quot;:&quot;BODEGA_PRINCIPAL&quot;,&quot;garantiaMeses&quot;:0}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${admTok}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+props.setProperty(&#x27;knstore.stress.invE&#x27;, j.id)
+vars.put(&#x27;invE&#x27;, j.id)
+vars.put(&#x27;precioE&#x27;, props.get(&#x27;knstore.stress.precioE&#x27;))</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Crear producto E (estres)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;nombre&quot;:&quot;Producto E Estres&quot;,&quot;slug&quot;:&quot;producto-e-estres-${ts}&quot;,&quot;referencia&quot;:&quot;REF-E&quot;,&quot;sku&quot;:&quot;SKU-E-${ts}&quot;,&quot;color&quot;:&quot;Gris&quot;,&quot;talla&quot;:&quot;41&quot;,&quot;descripcion&quot;:&quot;Producto para pruebas de estres&quot;,&quot;destacado&quot;:false,&quot;activo&quot;:true,&quot;categoria&quot;:{&quot;id&quot;:&quot;${__property(knstore.stress.catId)}&quot;},&quot;subcategoria&quot;:{&quot;id&quot;:&quot;${__property(knstore.stress.subId)}&quot;},&quot;precio&quot;:{&quot;id&quot;:&quot;${precioE}&quot;},&quot;inventario&quot;:{&quot;id&quot;:&quot;${invE}&quot;}}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${admTok}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+vars.put(&#x27;prodE&#x27;, j.id)
+props.setProperty(&#x27;knstore.stress.prodE&#x27;, j.id)
+props.setProperty(&#x27;knstore.stress.slugE&#x27;, j.slug)
+vars.put(&#x27;catId&#x27;, j.categoria ? j.categoria.id : null)
+props.setProperty(&#x27;knstore.stress.catId&#x27;, j.categoria ? j.categoria.id : props.get(&#x27;knstore.stress.catId&#x27;))</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Crear precio F (concurrencia)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/producto-precios</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;precioCompra&quot;:25000,&quot;precioVenta&quot;:50000,&quot;precioAdicional&quot;:0}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${admTok}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+props.setProperty(&#x27;knstore.stress.precioF&#x27;, j.id)</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Crear inventario F (stock 15)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/producto-inventarios</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;stock&quot;:15,&quot;stockMinimo&quot;:0,&quot;ubicacionBodega&quot;:&quot;BODEGA_PRINCIPAL&quot;,&quot;garantiaMeses&quot;:0}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${admTok}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+vars.put(&#x27;invF&#x27;, j.id)
+vars.put(&#x27;precioF&#x27;, props.get(&#x27;knstore.stress.precioF&#x27;))</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Crear producto F (concurrencia)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;nombre&quot;:&quot;Producto F Concurrencia&quot;,&quot;slug&quot;:&quot;producto-f-conc-${ts}&quot;,&quot;referencia&quot;:&quot;REF-F&quot;,&quot;sku&quot;:&quot;SKU-F-${ts}&quot;,&quot;color&quot;:&quot;Azul&quot;,&quot;talla&quot;:&quot;40&quot;,&quot;descripcion&quot;:&quot;Producto para concurrencia&quot;,&quot;destacado&quot;:false,&quot;activo&quot;:true,&quot;categoria&quot;:{&quot;id&quot;:&quot;${__property(knstore.stress.catId)}&quot;},&quot;subcategoria&quot;:{&quot;id&quot;:&quot;${__property(knstore.stress.subId)}&quot;},&quot;precio&quot;:{&quot;id&quot;:&quot;${precioF}&quot;},&quot;inventario&quot;:{&quot;id&quot;:&quot;${invF}&quot;}}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${admTok}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+vars.put(&#x27;prodF&#x27;, j.id)
+props.setProperty(&#x27;knstore.stress.prodF&#x27;, j.id)</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Login ${CLI_USER}" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/authenticate</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;username&quot;:&quot;${CLI_USER}&quot;,&quot;password&quot;:&quot;${CLI_PWD}&quot;,&quot;rememberMe&quot;:true}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract cliTok" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() == &#x27;200&#x27; : &#x27;login &#x27; + prev.getResponseCode()
+def j = new groovy.json.JsonSlurper().parseText(_r)
+vars.put(&#x27;cliTok&#x27;, j.id_token)
+prev.setSuccessful(true)</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Direccion del cliente" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/direccions?page=0&amp;size=5</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${cliTok}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+if (j &amp;&amp; j.size() &gt; 0) { props.setProperty(&#x27;knstore.stress.dirId&#x27;, j[0].id) } else { throw new RuntimeException(&#x27;Sin direccion para el cliente; ejecutar la suite funcional CP-018/022 primero&#x27;) }</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ESTRES-01 | Catalogo (lectura publica)" enabled="true">
+<stringProp name="TestPlan.comments">RNF-007/RNF-022: catalogo bajo carga (P95 objetivo &lt; 500ms servidor). N_S1 via -J</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">${__P(N_S1,25)}</stringProp>
+<stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,10)}</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">1</stringProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01a Listado de productos" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos?page=${__P(ES_PAGE,0)}&amp;size=20&amp;eagerload=false</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-01a Listado de productos" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01b Busqueda full-text" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos/search?q=zapato&amp;page=0&amp;size=20</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-01b Busqueda full-text" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01c Categorias" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/categorias?page=0&amp;size=20&amp;eagerload=false</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-01c Categorias" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01d Producto por slug" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos/slug/${__property(knstore.stress.slugE, producto-e-estres)}</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-01d Producto por slug" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ESTRES-02 | Autenticacion (bcrypt)" enabled="true">
+<stringProp name="TestPlan.comments">Coste de la verificacion bcrypt bajo concurrencia. N_S2 via -J</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">${__P(N_S2,25)}</stringProp>
+<stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,10)}</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">1</stringProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-02 Login (bcrypt)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/authenticate</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;username&quot;:&quot;${CLI_USER}&quot;,&quot;password&quot;:&quot;${CLI_PWD}&quot;,&quot;rememberMe&quot;:true}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-02" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">assert prev.getResponseCode() == &#x27;200&#x27; : &#x27;login esperado 200, obtenido &#x27; + prev.getResponseCode()
+def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+assert j.id_token != null : &#x27;token no emitido&#x27;
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract token" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">vars.put(&#x27;tok&#x27;, new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString()).id_token)</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ESTRES-03 | Checkout (escritura)" enabled="true">
+<stringProp name="TestPlan.comments">Checkout atomico bajo carga de escritura; producto E con stock 5000 inicial. N_S3 via -J</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">${__P(N_S3,20)}</stringProp>
+<stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,10)}</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">1</stringProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-03a Login (hilo)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/authenticate</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;username&quot;:&quot;${CLI_USER}&quot;,&quot;password&quot;:&quot;${CLI_PWD}&quot;,&quot;rememberMe&quot;:true}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract tok" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">vars.put(&#x27;tok3&#x27;, new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString()).id_token)</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-03b Checkout" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/pedidos/checkout</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;direccionId&quot;:&quot;${__property(knstore.stress.dirId)}&quot;,&quot;metodoPago&quot;:&quot;CONTRA_ENTREGA&quot;,&quot;tipoServicioEnvio&quot;:&quot;ESTANDAR&quot;,&quot;notasCliente&quot;:&quot;Estres JMeter&quot;,&quot;items&quot;:[{&quot;productoId&quot;:&quot;${__property(knstore.stress.prodE)}&quot;,&quot;cantidad&quot;:1}]}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${tok3}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-03b Checkout" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ESTRES-04 | Concurrencia stock (RNF-024)" enabled="true">
+<stringProp name="TestPlan.comments">30 hilos simultaneos sobre producto F con stock 15: 15 ventas + 15 rechazos esperados</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">${__P(N_S4,30)}</stringProp>
+<stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,5)}</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">1</stringProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04a Login (hilo)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/authenticate</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;username&quot;:&quot;${CLI_USER}&quot;,&quot;password&quot;:&quot;${CLI_PWD}&quot;,&quot;rememberMe&quot;:true}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract tok" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">vars.put(&#x27;tok4&#x27;, new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString()).id_token)</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04b Checkout concurrente (stock 15)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/pedidos/checkout</stringProp>
+<stringProp name="HTTPSampler.method">POST</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+<collectionProp name="Arguments.arguments">
+<elementProp name="" elementType="HTTPArgument">
+<boolProp name="HTTPArgument.always_encode">false</boolProp>
+<stringProp name="Argument.value">{&quot;direccionId&quot;:&quot;${__property(knstore.stress.dirId)}&quot;,&quot;metodoPago&quot;:&quot;CONTRA_ENTREGA&quot;,&quot;tipoServicioEnvio&quot;:&quot;ESTANDAR&quot;,&quot;notasCliente&quot;:&quot;Concurrencia estres&quot;,&quot;items&quot;:[{&quot;productoId&quot;:&quot;${__property(knstore.stress.prodF)}&quot;,&quot;cantidad&quot;:1}]}</stringProp>
+<stringProp name="Argument.metadata">=</stringProp>
+</elementProp>
+</collectionProp>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+<collectionProp name="HeaderManager.headers">
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Content-Type</stringProp>
+<stringProp name="Header.value">application/json</stringProp>
+</elementProp>
+<elementProp name="" elementType="Header">
+<stringProp name="Header.name">Authorization</stringProp>
+<stringProp name="Header.value">Bearer ${tok4}</stringProp>
+</elementProp>
+</collectionProp>
+</HeaderManager>
+<hashTree/>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-04b Checkout concurrente (stock 1" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;,&#x27;400&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;,&#x27;400&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Log exito" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">if (prev.getResponseCode() == &#x27;200&#x27;) { log.info(&#x27;ES-04 venta exitosa hilo &#x27; + Thread.currentThread().getName()) } else { log.info(&#x27;ES-04 rechazo por stock (sin sobreventa): &#x27; + prev.getResponseDataAsString()) }</stringProp>
+</JSR223PostProcessor>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ESTRES-04v | Verificacion final" enabled="true">
+<stringProp name="TestPlan.comments">Comprueba que no hubo sobreventa</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">1</stringProp>
+<stringProp name="ThreadGroup.ramp_time">1</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">1</stringProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04v Verificacion stock final" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos/por-ids?ids=${__property(knstore.stress.prodF)}</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-04v Verificacion stock final" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert stock" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+if (j instanceof List &amp;&amp; j.size() &gt; 0) {
+  def stock = j[0].inventario?.stock
+  assert stock == 0 : &#x27;Se esperaba stock final 0 (15 vendidos), obtenido: &#x27; + stock
+  log.info(&#x27;RNF-024: stock final &#x27; + stock + &#x27; con 30 hilos y stock inicial 15&#x27;)
+} else { log.warn(&#x27;Producto F no encontrado&#x27;) }
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ESTRES-06 | Spike (inicio brusco)" enabled="true">
+<stringProp name="TestPlan.comments">Subida brusca de 100 hilos en 2s sobre el catalogo (busqueda de limite operativo). N_S6 via -J</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">${__P(N_S6,100)}</stringProp>
+<stringProp name="ThreadGroup.ramp_time">${__P(RAMP_S6,2)}</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">1</stringProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-06a Spike: listado" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos?page=0&amp;size=20&amp;eagerload=false</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-06a Spike: listado" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-06b Spike: busqueda" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos/search?q=zapato&amp;page=0&amp;size=20</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-06b Spike: busqueda" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ESTRES-07 | Escalado progresivo (limite)" enabled="true">
+<stringProp name="TestPlan.comments">Rampa gradual a 150 hilos en 120s: permite observar la curva de saturacion y el punto en que aparecen errores. N_S7 via -J</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">${__P(N_S7,150)}</stringProp>
+<stringProp name="ThreadGroup.ramp_time">${__P(RAMP_S7,120)}</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">1</stringProp>
+</elementProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-07a Escalado: listado" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos?page=0&amp;size=20&amp;eagerload=false</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-07a Escalado: listado" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-07b Escalado: busqueda" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos/search?q=zapato&amp;page=0&amp;size=20</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-07b Escalado: busqueda" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-07c Escalado: categorias" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/categorias?page=0&amp;size=20&amp;eagerload=false</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-07c Escalado: categorias" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ESTRES-05 | Soak corto" enabled="true">
+<stringProp name="TestPlan.comments">Resistencia: carga sostenida durante S5_DUR segundos (default 60)</stringProp>
+<stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+<stringProp name="ThreadGroup.num_threads">${__P(N_S5,8)}</stringProp>
+<stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,5)}</stringProp>
+<boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+<stringProp name="ThreadGroup.delayedStart">false</stringProp>
+<elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+<boolProp name="LoopController.continue_forever">false</boolProp>
+<stringProp name="LoopController.loops">-1</stringProp>
+</elementProp>
+<boolProp name="ThreadGroup.scheduler">true</boolProp>
+<stringProp name="ThreadGroup.duration">${__P(S5_DUR,180)}</stringProp>
+<stringProp name="ThreadGroup.delay">0</stringProp>
+</ThreadGroup>
+<hashTree>
+<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-05 Lectura sostenida (soak)" enabled="true">
+<stringProp name="TestPlan.comments"></stringProp>
+<stringProp name="HTTPSampler.domain">${HOST}</stringProp>
+<stringProp name="HTTPSampler.port">${PORT}</stringProp>
+<stringProp name="HTTPSampler.protocol">${PROTOCOL}</stringProp>
+<stringProp name="HTTPSampler.connect_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.response_timeout">30000</stringProp>
+<stringProp name="HTTPSampler.path">/api/productos?page=0&amp;size=20&amp;eagerload=false</stringProp>
+<stringProp name="HTTPSampler.method">GET</stringProp>
+<boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+<boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+<boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+<boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+<stringProp name="HTTPSampler.implementation">HttpClient4</stringProp>
+<stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+<elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+<collectionProp name="Arguments.arguments"/>
+</elementProp>
+</HTTPSamplerProxy>
+<hashTree>
+<JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert ES-05 Lectura sostenida (soak)" enabled="true">
+<stringProp name="scriptLanguage">groovy</stringProp>
+
+<stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&#x27;200&#x27;] : &#x27;Codigo esperado &#x27; + [&#x27;200&#x27;].toString() + &#x27;, obtenido &#x27; + prev.getResponseCode() + &#x27; | body: &#x27; + (_r.length()&gt;400? _r.substring(0,400) : _r)
+prev.setSuccessful(true)</stringProp>
+</JSR223Assertion>
+<hashTree/>
+<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+<ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+<boolProp name="ResultCollector.error_logging">false</boolProp>
+<objProp>
+<name>saveConfig</name>
+<value class="SampleSaveConfiguration">
+<time>true</time><latency>true</latency><timestamp>true</timestamp><success>true</success><label>true</label><code>true</code><message>true</message><threadName>true</threadName><dataType>true</dataType><encoding>false</encoding><assertions>true</assertions><subresults>true</subresults><responseData>false</responseData><samplerData>false</samplerData><xml>false</xml><fieldNames>true</fieldNames><responseHeaders>false</responseHeaders><requestHeaders>false</requestHeaders><responseDataOnError>false</responseDataOnError><saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage><assertionsResultsToSave>0</assertionsResultsToSave><bytes>true</bytes><sentBytes>true</sentBytes><url>true</url><threadCounts>true</threadCounts><idleTime>true</idleTime><connectTime>true</connectTime>
+</value>
+</objProp>
+<stringProp name="filename"></stringProp>
+</ResultCollector>
+<hashTree/>
+</hashTree>
+</hashTree>
+</hashTree>
+</hashTree>
+</jmeterTestPlan>
