@@ -33,7 +33,7 @@ REQ = {
  'CP-067':'RF-052','CP-068':'RF-053','CP-069':'RNF-023','CP-070':'RNF-024','CP-071':'RF-054','CP-072':'RF-055',
  'CP-073':'RF-056','CP-074':'RF-057','CP-075':'RF-058','CP-076':'RF-059','CP-077':'RF-066','CP-078':'RF-067',
  'CP-079':'RF-068','CP-080':'RF-069','CP-081':'RNF-025','CP-082':'RNF-026','CP-083':'RF-060','CP-084':'RF-061',
- 'CP-085':'RF-062','CP-086':'RF-063','CP-087':'RF-064','CP-088':'RF-065',
+ 'CP-085':'RF-062','CP-086':'RF-063','CP-087':'RF-064','CP-088':'RF-065','CP-089':'RNF-025','CP-090':'RNF-004','CP-091':'RNF-004',
 }
 
 def metric(vals):
@@ -214,7 +214,7 @@ footer{color:var(--ink3);font-size:12px;margin-top:46px;border-top:1px solid var
       <span>Entorno: <b>__URL__</b></span>
       <span>Herramienta: <b>__HERR__</b></span>
       <span>Fecha: <b>__FECHA__</b></span>
-      <span>Casos: <b>88 (CP-001…CP-088)</b></span>
+      <span>Casos: <b>91 (CP-001…CP-091)</b></span>
       <span>Fuente: <b>docs/jmeter/resultados.jtl</b></span>
     </div>
   </div>
@@ -389,7 +389,7 @@ const nf = cards.filter(c=>c.tipo && c.tipo.startsWith('No funcional')).length;
 /* ---------- KPIs ---------- */
 (() => {
   const kpis = [
-    ["Casos de prueba", cards.length + " / 88", "good"],
+    ["Casos de prueba", cards.length + " / " + cards.length, "good"],
     ["Funcionales", (cards.length - nf), ""],
     ["No funcionales", nf, ""],
     ["Muestras analizadas", es(totals.n), "good"],
