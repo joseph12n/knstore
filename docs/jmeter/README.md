@@ -5,6 +5,40 @@ Este README explica cómo instalar y ejecutar **todas las pruebas funcionales, d
 
 ---
 
+---
+
+## 0. Contexto de las pruebas (qué se probó)
+
+**Objetivo:** validar los requerimientos funcionales (RF-001…RF-069) y no funcionales (RNF-001…RNF-026) de KN-Store sobre el despliegue real, y explorar la durabilidad y el límite del aplicativo bajo carga.
+
+### 0.1 Pruebas funcionales (91 casos CP-001…CP-091, 6 secciones por rol)
+
+| Módulo | Casos | Qué cubre |
+|---|---|---|
+| Usuarios y sesión | CP-001…CP-029 | Registro (único por corrida), login/logout, sesión vigente, Gestión de usuarios por ADMIN (crear/actualizar/eliminar lógica y física), perfil propio, direcciones (CRUD + predeterminada) |
+| Catálogo | CP-030…CP-056 | Categorías, subcategorías, marcas, productos con precio/inventario/variantes, búsqueda full-text, filtros, detalle por slug y rendimiento del catálogo |
+| Carrito | CP-057…CP-061 | Agregar, consultar, modificar cantidad, eliminar ítem y vaciar (precios siempre server-side) |
+| Pedidos | CP-062…CP-070 | Checkout atómico (pedido+pago+envío+factura), totales, cancelación con máquina de estados, listados propios y administrativos, detalle e historial |
+| Pagos y facturación | CP-071…CP-082 | Iniciar pago, aprobación, coherencia de montos, reembolso (solo ADMIN), auditoría de pagos, factura automática con referencia única y PDF, precisión monetaria |
+| Envíos y logística | CP-083…CP-091 | Asignación de tracking, transiciones de estado, devolución, pendientes; **ownership cruzado** (CP-090/091: CLIENTE intentando acceder a recursos de otra cuenta → 403) e historial de pedido (CP-089) |
+
+### 0.2 Pruebas de seguridad y no funcionales
+
+- **Seguridad:** bcrypt (CP-023), JWT 30 días (CP-024), validación de entradas (CP-025), CORS (CP-026), acceso sin token (401), por rol y ownership (incluye cruzado).
+- **Rendimiento:** catálogo y búsqueda indexada (P95 objetivo < 500 ms), paginación obligatoria, escalabilidad parametrizable.
+- **Durabilidad:** escenarios ES-01…ES-07 (sección 07) — catálogo, bcrypt, checkout, concurrencia sin sobreventa (RNF-024), soak, spike y escalado gradual — con 3 rondas ejecutadas.
+
+### 0.3 Resultados de referencia
+
+| Ejecución | Muestras | Errores | Resumen |
+|---|---|---|---|
+| Funcional (91 casos + apoyos) | 6 800 | **0** | 91/91 casos PASA |
+| Estrés · Ronda 1 (base) | 1 112 | 0 | Todo verde |
+| Estrés · Ronda 2 (carga alta) | 7 320 | 0 | Estable, 21,5 req/s |
+| Estrés · Ronda 3 (límite) | 8 920 | 7 (0,08 %) | 99,92 % de éxito; saturación en spike (P95 3,8 s); sin sobreventa |
+
+> El detalle completo por caso y por escenario está en `informe_knstore.html` / `informe_knstore.pdf` (secciones 4-6).
+
 ## 1. Qué contiene la carpeta
 
 | Archivo | Descripción |

@@ -16,7 +16,7 @@ PORTADA = '''<header style="background:linear-gradient(160deg,#14304f,#1d4a75);c
     <tr style="border-top:1px solid #2f5780"><td style="padding:9px 10px 9px 0;color:#9fc3e8;width:190px">Entorno evaluado</td><td style="padding:9px 10px"><b>__URL__</b></td></tr>
     <tr style="border-top:1px solid #2f5780"><td style="padding:9px 10px 9px 0;color:#9fc3e8">Herramienta</td><td style="padding:9px 10px"><b>__HERR__</b></td></tr>
     <tr style="border-top:1px solid #2f5780"><td style="padding:9px 10px 9px 0;color:#9fc3e8">Fecha de ejecución</td><td style="padding:9px 10px"><b>__FECHA__</b></td></tr>
-    <tr style="border-top:1px solid #2f5780"><td style="padding:9px 10px 9px 0;color:#9fc3e8">Resultado</td><td style="padding:9px 10px"><b>88/88 casos OK · 0 errores</b></td></tr>
+    <tr style="border-top:1px solid #2f5780"><td style="padding:9px 10px 9px 0;color:#9fc3e8">Resultado</td><td style="padding:9px 10px"><b>91/91 casos OK · 0 errores</b></td></tr>
   </table>
   <div style="margin-top:20px;font-size:11.5px;color:#9fc3e8">Documento interactivo: el índice y el detalle por caso son navegables.<br>Generado a partir de la ejecución de Apache JMeter (docs/jmeter/resultados.jtl).</div>
 </header>
