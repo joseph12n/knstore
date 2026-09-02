@@ -310,3 +310,19 @@ npm run java:docker                                 # Imagen con Jib
 - Mantener responsividad; probar desde 360px.
 - Respetar ownership: cualquier endpoint nuevo para `CLIENTE` debe validar que el recurso pertenece al usuario autenticado.
 - Actualizar este `AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos.
+
+### 12.1 Commits y mirror — obligatorio
+
+Siempre que se pidan commits al agente, ejecutar el flujo completo (no dejar nada a medias):
+
+1. **Commit** en `knstore` (rama `main`) con Conventional Commits.
+2. **Push** a `origin` (`joseph12n/knstore`) → `main`.
+3. **Mirror**: copiar el estado exacto al repo local en `~/Documentos/2026-3311941-projects-grupo-06-knstore` (fetch del repo `knstore` + `git merge --ff-only`) y **push** a `origin` (`sena-students/2026-3311941-trimestre-5-2026-3311941-trimestre-5-documentat-joseph12n`) → `main`.
+4. **Branches unificadas:** en AMBOS repos, mantener las 6 ramas (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`) apuntadas a `main` — sin adelantos ni conflictos (push `main:<rama>` con `--force-with-lease` si la rama no es fast-forward; el contenido de ramas se incorpora a `main` vía squash).
+
+Reglas:
+
+- `knstore` es la fuente de verdad; sena-students es espejo. Nunca editar directamente en sena-students fuera del mirror.
+- Integrar trabajo de ramas (ej. lauraG) en `main` con squash para mantener la historia organizada.
+- Antes de reiniciar una rama, respaldar el tip en `refs/backup/<fecha>/<rama>` (local a los dos repos, no se sube).
+- Credenciales: PAT del usuario guardado en `~/.git-credentials` (helper `store`, permiso 600). Si un push falla por auth, pedir la credencial al usuario, no reinventar.
