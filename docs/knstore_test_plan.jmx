@@ -152,7 +152,7 @@
         <stringProp name="HTTPSampler.implementation"></stringProp>
       </ConfigTestElement>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="01 - PUBLICO (sin sesion)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="01 - PUBLICO (sin sesion)">
         <stringProp name="TestPlan.comments">Casos acceso publico/anónimo: CP-001,002,004,008,023-030,031,035,043-049,053-056. Depende de la semilla del catalogo.</stringProp>
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
@@ -164,7 +164,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-001 | Registro exitoso de usuario" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-001 | Registro exitoso de usuario">
           <stringProp name="TestPlan.comments">RF-001 registro usuario nuevo (email único por corrida)</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -209,7 +209,7 @@ prev.setSuccessful(true)
             <stringProp name="cacheKey">false</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -246,7 +246,7 @@ prev.setSuccessful(true)
             <stringProp name="filename"></stringProp>
           </ResultCollector>
           <hashTree/>
-          <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -283,7 +283,7 @@ prev.setSuccessful(true)
             <stringProp name="filename"></stringProp>
           </ResultCollector>
           <hashTree/>
-          <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+          <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -321,7 +321,7 @@ prev.setSuccessful(true)
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-002 | Registro con correo duplicado" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-002 | Registro con correo duplicado">
           <stringProp name="TestPlan.comments">RF-001 correo existente -&gt; mensaje de error</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -355,7 +355,7 @@ prev.setSuccessful(true)
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert CP-002" enabled="true">
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert CP-002">
             <stringProp name="scriptLanguage">groovy</stringProp>
             <stringProp name="script">def _r = prev.getResponseDataAsString()
 assert prev.getResponseCode() == &apos;400&apos; : &apos;Código esperado 400, obtenido &apos; + prev.getResponseCode() + &apos; | body: &apos; + (_r.length()&gt;500? _r.substring(0,500) : _r)
@@ -367,7 +367,7 @@ prev.setSuccessful(true)
             <stringProp name="cacheKey">false</stringProp>
           </JSR223Assertion>
           <hashTree/>
-          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -479,7 +479,7 @@ prev.setSuccessful(true)
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-004 | Inicio de sesion invalido" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-004 | Inicio de sesion invalido">
           <stringProp name="TestPlan.comments">RF-002 credenciales erroneas -&gt; acceso rechazado</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -1565,7 +1565,7 @@ prev.setSuccessful(true)
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-028 | Animaciones UI" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-028 | Animaciones UI">
           <stringProp name="TestPlan.comments">RNF-011 aproximacion HTTP: entrega del shell de la app (FPS se valida en navegador)</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -1670,7 +1670,7 @@ prev.setSuccessful(true)
             <stringProp name="filename"></stringProp>
           </ResultCollector>
           <hashTree/>
-          <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+          <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -3947,7 +3947,7 @@ assert prev.getTime() &lt;= 1000 : &apos;RNF-022: consulta estable; esta muestra
             <hashTree/>
           </hashTree>
         </hashTree>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report (Seccion 01)" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report (Seccion 01)">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -3984,7 +3984,7 @@ assert prev.getTime() &lt;= 1000 : &apos;RNF-022: consulta estable; esta muestra
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph (Seccion 01)" enabled="true">
+        <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph (Seccion 01)">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -4021,7 +4021,7 @@ assert prev.getTime() &lt;= 1000 : &apos;RNF-022: consulta estable; esta muestra
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph (Seccion 01)" enabled="true">
+        <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph (Seccion 01)">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -4059,9 +4059,8 @@ assert prev.getTime() &lt;= 1000 : &apos;RNF-022: consulta estable; esta muestra
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="02 - ADMIN (ROLE_ADMIN)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="02 - ADMIN (ROLE_ADMIN)">
         <stringProp name="TestPlan.comments">Casos administrativos: CP-009-014,050-052,032-034,036-038,039-042. Crea el catalogo de prueba compartido con otros modulos.</stringProp>
-        <stringProp name="ThreadGroup.delayedStart">false</stringProp>
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -9128,24 +9127,26 @@ prev.setSuccessful(true)
           </HeaderManager>
           <hashTree/>
           <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert APOYO | Direccion de borrar01 (CP-09" enabled="true">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="script">def _r = prev.getResponseDataAsString()
-assert prev.getResponseCode() in ['201'] : 'Codigo esperado ' + ['201'].toString() + ', obtenido ' + prev.getResponseCode() + ' | body: ' + (_r.length()>300? _r.substring(0,300) : _r)
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&apos;201&apos;] : &apos;Codigo esperado &apos; + [&apos;201&apos;].toString() + &apos;, obtenido &apos; + prev.getResponseCode() + &apos; | body: &apos; + (_r.length()&gt;300? _r.substring(0,300) : _r)
 prev.setSuccessful(true)
               </stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">false</stringProp>
-            </JSR223Assertion>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+          </JSR223Assertion>
           <hashTree/>
           <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Prop" enabled="true">
-  <stringProp name="scriptLanguage">groovy</stringProp>
-  <stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
-props.setProperty('knstore.dirBorrar', j.id)</stringProp>
-  <stringProp name="parameters"></stringProp>
-</JSR223PostProcessor>
-<hashTree/>
-<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+props.setProperty(&apos;knstore.dirBorrar&apos;, j.id)</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -9257,7 +9258,7 @@ props.setProperty('knstore.dirBorrar', j.id)</stringProp>
           </ResultCollector>
           <hashTree/>
         </hashTree>
-<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Checkout de borrar01 (CP-091)" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="APOYO | Checkout de borrar01 (CP-091)" enabled="true">
           <stringProp name="TestPlan.comments">apoyo</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -9296,24 +9297,26 @@ props.setProperty('knstore.dirBorrar', j.id)</stringProp>
           </HeaderManager>
           <hashTree/>
           <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert APOYO | Checkout de borrar01 (CP-091" enabled="true">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="script">def _r = prev.getResponseDataAsString()
-assert prev.getResponseCode() in ['200'] : 'Codigo esperado ' + ['200'].toString() + ', obtenido ' + prev.getResponseCode() + ' | body: ' + (_r.length()>300? _r.substring(0,300) : _r)
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&apos;200&apos;] : &apos;Codigo esperado &apos; + [&apos;200&apos;].toString() + &apos;, obtenido &apos; + prev.getResponseCode() + &apos; | body: &apos; + (_r.length()&gt;300? _r.substring(0,300) : _r)
 prev.setSuccessful(true)
               </stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">false</stringProp>
-            </JSR223Assertion>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+          </JSR223Assertion>
           <hashTree/>
           <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Prop" enabled="true">
-  <stringProp name="scriptLanguage">groovy</stringProp>
-  <stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
-props.setProperty('knstore.pedidoAjeno', j.pedido ? j.pedido.id : 'NONE')</stringProp>
-  <stringProp name="parameters"></stringProp>
-</JSR223PostProcessor>
-<hashTree/>
-<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+props.setProperty(&apos;knstore.pedidoAjeno&apos;, j.pedido ? j.pedido.id : &apos;NONE&apos;)</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -9425,7 +9428,7 @@ props.setProperty('knstore.pedidoAjeno', j.pedido ? j.pedido.id : 'NONE')</strin
           </ResultCollector>
           <hashTree/>
         </hashTree>
-<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-016 | Eliminar perfil propio" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-016 | Eliminar perfil propio" enabled="true">
           <stringProp name="TestPlan.comments">RF-032 se usa borrar01 (desechable; requiere recrearlo para reejecutar)</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -13294,8 +13297,7 @@ prev.setSuccessful(true)
           </ResultCollector>
           <hashTree/>
         </hashTree>
-
-<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-089 | Consultar historial de pedido" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-089 | Consultar historial de pedido" enabled="true">
           <stringProp name="TestPlan.comments">RNF-025 auditoria de pedido: historial de transiciones consultable por el propietario</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -13307,7 +13309,8 @@ prev.setSuccessful(true)
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -13333,25 +13336,27 @@ prev.setSuccessful(true)
           </HeaderManager>
           <hashTree/>
           <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert CP-089 | Consultar historial de pedi" enabled="true">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="script">def _r = prev.getResponseDataAsString()
-assert prev.getResponseCode() in ['200'] : 'Codigo esperado ' + ['200'].toString() + ', obtenido ' + prev.getResponseCode() + ' | body: ' + (_r.length()>300? _r.substring(0,300) : _r)
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&apos;200&apos;] : &apos;Codigo esperado &apos; + [&apos;200&apos;].toString() + &apos;, obtenido &apos; + prev.getResponseCode() + &apos; | body: &apos; + (_r.length()&gt;300? _r.substring(0,300) : _r)
 prev.setSuccessful(true)
               </stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">false</stringProp>
-            </JSR223Assertion>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+          </JSR223Assertion>
           <hashTree/>
           <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Extract" enabled="true">
-  <stringProp name="scriptLanguage">groovy</stringProp>
-  <stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
-assert j instanceof List &amp;&amp; j.size() > 0 : 'historial vacio'
-log.info('CP-089 transiciones: ' + j.size())</stringProp>
-  <stringProp name="parameters"></stringProp>
-</JSR223PostProcessor>
-<hashTree/>
-<ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def j = new groovy.json.JsonSlurper().parseText(prev.getResponseDataAsString())
+assert j instanceof List &amp;&amp; j.size() &gt; 0 : &apos;historial vacio&apos;
+log.info(&apos;CP-089 transiciones: &apos; + j.size())</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -13463,7 +13468,7 @@ log.info('CP-089 transiciones: ' + j.size())</stringProp>
           </ResultCollector>
           <hashTree/>
         </hashTree>
-<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-090 | Ownership cruzado: direccion ajena" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-090 | Ownership cruzado: direccion ajena" enabled="true">
           <stringProp name="TestPlan.comments">Seguridad: CLIENTE no puede eliminar direccion de otra cuenta (403 esperado)</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -13475,7 +13480,8 @@ log.info('CP-089 transiciones: ' + j.size())</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -13501,15 +13507,15 @@ log.info('CP-089 transiciones: ' + j.size())</stringProp>
           </HeaderManager>
           <hashTree/>
           <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert CP-090 | Ownership cruzado: direccio" enabled="true">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="script">def _r = prev.getResponseDataAsString()
-assert prev.getResponseCode() in ['403'] : 'Codigo esperado ' + ['403'].toString() + ', obtenido ' + prev.getResponseCode() + ' | body: ' + (_r.length()>300? _r.substring(0,300) : _r)
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&apos;403&apos;] : &apos;Codigo esperado &apos; + [&apos;403&apos;].toString() + &apos;, obtenido &apos; + prev.getResponseCode() + &apos; | body: &apos; + (_r.length()&gt;300? _r.substring(0,300) : _r)
 prev.setSuccessful(true)
               </stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">false</stringProp>
-            </JSR223Assertion>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+          </JSR223Assertion>
           <hashTree/>
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -13623,7 +13629,7 @@ prev.setSuccessful(true)
           </ResultCollector>
           <hashTree/>
         </hashTree>
-<HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-091 | Ownership cruzado: pedido ajeno" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-091 | Ownership cruzado: pedido ajeno" enabled="true">
           <stringProp name="TestPlan.comments">Seguridad: CLIENTE no puede consultar pedido de otra cuenta (403 esperado)</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
@@ -13635,7 +13641,8 @@ prev.setSuccessful(true)
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -13661,15 +13668,15 @@ prev.setSuccessful(true)
           </HeaderManager>
           <hashTree/>
           <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert CP-091 | Ownership cruzado: pedido a" enabled="true">
-              <stringProp name="scriptLanguage">groovy</stringProp>
-              <stringProp name="script">def _r = prev.getResponseDataAsString()
-assert prev.getResponseCode() in ['403'] : 'Codigo esperado ' + ['403'].toString() + ', obtenido ' + prev.getResponseCode() + ' | body: ' + (_r.length()>300? _r.substring(0,300) : _r)
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def _r = prev.getResponseDataAsString()
+assert prev.getResponseCode() in [&apos;403&apos;] : &apos;Codigo esperado &apos; + [&apos;403&apos;].toString() + &apos;, obtenido &apos; + prev.getResponseCode() + &apos; | body: &apos; + (_r.length()&gt;300? _r.substring(0,300) : _r)
 prev.setSuccessful(true)
               </stringProp>
-              <stringProp name="parameters"></stringProp>
-              <stringProp name="filename"></stringProp>
-              <stringProp name="cacheKey">false</stringProp>
-            </JSR223Assertion>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">false</stringProp>
+          </JSR223Assertion>
           <hashTree/>
           <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
@@ -13783,7 +13790,6 @@ prev.setSuccessful(true)
           </ResultCollector>
           <hashTree/>
         </hashTree>
-
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CP-087 | Consultar tracking propio" enabled="true">
           <stringProp name="TestPlan.comments">RF-064 estado visible (el tracking numerico se asigna en el modulo Manager)</stringProp>
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
@@ -16931,7 +16937,7 @@ log.info(&apos;RNF-024 stock final del producto B (stock inicial 2, 5 hilos): &a
         </ResultCollector>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | PREP datos" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | PREP datos">
         <stringProp name="TestPlan.comments">Prepara producto E (stock 5000), producto F (stock 15), categorias y direccion del cliente</stringProp>
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
@@ -17419,7 +17425,7 @@ if (j &amp;&amp; j.size() &gt; 0) { props.setProperty(&apos;knstore.stress.dirId
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-01 | Catalogo (lectura publica)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-01 | Catalogo (lectura publica)">
         <stringProp name="TestPlan.comments">RNF-007/RNF-022: catalogo bajo carga (P95 objetivo &lt; 500ms servidor). N_S1 via -J</stringProp>
         <stringProp name="ThreadGroup.num_threads">${__P(N_S1,25)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,10)}</stringProp>
@@ -17431,7 +17437,7 @@ if (j &amp;&amp; j.size() &gt; 0) { props.setProperty(&apos;knstore.stress.dirId
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01a Listado de productos" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01a Listado de productos">
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
@@ -17571,7 +17577,7 @@ prev.setSuccessful(true)</stringProp>
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01b Busqueda full-text" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01b Busqueda full-text">
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
@@ -17711,7 +17717,7 @@ prev.setSuccessful(true)</stringProp>
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01c Categorias" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01c Categorias">
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
@@ -17851,7 +17857,7 @@ prev.setSuccessful(true)</stringProp>
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01d Producto por slug" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-01d Producto por slug">
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
@@ -17992,7 +17998,7 @@ prev.setSuccessful(true)</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-02 | Autenticacion (bcrypt)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-02 | Autenticacion (bcrypt)">
         <stringProp name="TestPlan.comments">Coste de la verificacion bcrypt bajo concurrencia. N_S2 via -J</stringProp>
         <stringProp name="ThreadGroup.num_threads">${__P(N_S2,25)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,10)}</stringProp>
@@ -18004,7 +18010,7 @@ prev.setSuccessful(true)</stringProp>
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-02 Login (bcrypt)" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-02 Login (bcrypt)">
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
@@ -18056,7 +18062,7 @@ prev.setSuccessful(true)</stringProp>
             <stringProp name="cacheKey">false</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
-          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -18093,7 +18099,7 @@ prev.setSuccessful(true)</stringProp>
             <stringProp name="filename"></stringProp>
           </ResultCollector>
           <hashTree/>
-          <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -18130,7 +18136,7 @@ prev.setSuccessful(true)</stringProp>
             <stringProp name="filename"></stringProp>
           </ResultCollector>
           <hashTree/>
-          <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+          <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -18169,9 +18175,8 @@ prev.setSuccessful(true)</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-03 | Checkout (escritura)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-03 | Checkout (escritura)">
         <stringProp name="TestPlan.comments">Checkout atomico bajo carga de escritura; producto E con stock 5000 inicial. N_S3 via -J</stringProp>
-        <stringProp name="ThreadGroup.delayedStart">false</stringProp>
         <stringProp name="ThreadGroup.num_threads">${__P(N_S3,20)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,10)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -18384,9 +18389,8 @@ prev.setSuccessful(true)</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-04 | Concurrencia stock (RNF-024)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-04 | Concurrencia stock (RNF-024)">
         <stringProp name="TestPlan.comments">30 hilos simultaneos sobre producto F con stock 15: 15 ventas + 15 rechazos esperados</stringProp>
-        <stringProp name="ThreadGroup.delayedStart">false</stringProp>
         <stringProp name="ThreadGroup.num_threads">${__P(N_S4,30)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,5)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -18397,7 +18401,7 @@ prev.setSuccessful(true)</stringProp>
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04a Login (hilo)" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04a Login (hilo)">
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
@@ -18439,7 +18443,7 @@ prev.setSuccessful(true)</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04b Checkout concurrente (stock 15)" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04b Checkout concurrente (stock 15)">
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
@@ -18607,9 +18611,8 @@ prev.setSuccessful(true)</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-04v | Verificacion final" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-04v | Verificacion final">
         <stringProp name="TestPlan.comments">Comprueba que no hubo sobreventa</stringProp>
-        <stringProp name="ThreadGroup.delayedStart">false</stringProp>
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -18620,7 +18623,7 @@ prev.setSuccessful(true)</stringProp>
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04v Verificacion stock final" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="ES-04v Verificacion stock final">
           <intProp name="HTTPSampler.connect_timeout">30000</intProp>
           <intProp name="HTTPSampler.response_timeout">30000</intProp>
           <stringProp name="HTTPSampler.domain">${HOST}</stringProp>
@@ -18775,9 +18778,8 @@ prev.setSuccessful(true)</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-06 | Spike (inicio brusco)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-06 | Spike (inicio brusco)">
         <stringProp name="TestPlan.comments">Subida brusca de 100 hilos en 2s sobre el catalogo (busqueda de limite operativo). N_S6 via -J</stringProp>
-        <stringProp name="ThreadGroup.delayedStart">false</stringProp>
         <stringProp name="ThreadGroup.num_threads">${__P(N_S6,100)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RAMP_S6,2)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -19069,9 +19071,8 @@ prev.setSuccessful(true)</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-07 | Escalado progresivo (limite)" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-07 | Escalado progresivo (limite)">
         <stringProp name="TestPlan.comments">Rampa gradual a 150 hilos en 120s: permite observar la curva de saturacion y el punto en que aparecen errores. N_S7 via -J</stringProp>
-        <stringProp name="ThreadGroup.delayedStart">false</stringProp>
         <stringProp name="ThreadGroup.num_threads">${__P(N_S7,150)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RAMP_S7,120)}</stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
@@ -19503,9 +19504,8 @@ prev.setSuccessful(true)</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-05 | Soak corto" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="07 - ESTRES Y REND. | ESTRES-05 | Soak corto">
         <stringProp name="TestPlan.comments">Resistencia: carga sostenida durante S5_DUR segundos (default 60)</stringProp>
-        <stringProp name="ThreadGroup.delayedStart">false</stringProp>
         <stringProp name="ThreadGroup.num_threads">${__P(N_S5,8)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(RAMPUP,5)}</stringProp>
         <stringProp name="ThreadGroup.duration">${__P(S5_DUR,180)}</stringProp>
@@ -19697,7 +19697,7 @@ prev.setSuccessful(true)</stringProp>
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph (TODA LA SUITE)">
+      <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph (TODA LA SUITE)" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
