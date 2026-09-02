@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Generador del informe HTML de pruebas KN-Store (docs/jmeter/informe_knstore.html).
-Lee docs/jmeter/resultados.jtl (JMeter) + docs/knstore_test_plan.jmx para detalles por CP."""
+Lee docs/jmeter/resultados.jtl (JMeter) + docs/jmeter/knstore_test_plan.jmx para detalles por CP."""
 import csv, json, re
 from collections import OrderedDict
 
 JTL = '/home/joseph/Documentos/knstore/docs/jmeter/resultados.jtl'
-JMX = '/home/joseph/Documentos/knstore/docs/knstore_test_plan.jmx'
+JMX = '/home/joseph/Documentos/knstore/docs/jmeter/knstore_test_plan.jmx'
 OUT = '/home/joseph/Documentos/knstore/docs/jmeter/informe_knstore.html'
 
 SECT = OrderedDict([
@@ -233,7 +233,7 @@ footer{color:var(--ink3);font-size:12px;margin-top:46px;border-top:1px solid var
 <section id="proyecto">
   <h2>2. Alcance del proyecto y objetivo de las pruebas<small>Qué se validó y con qué criterios</small></h2>
   <div class="card">
-    <p style="margin-top:0"><b>KN-Store</b> es una plataforma de comercio electrónico desarrollada con Spring Boot (backend), MongoDB, React y JHipster, que incluye catálogo de productos, carrito, checkout atómico, pagos, facturación electrónica y logística de envíos. Las pruebas buscaron verificar los requerimientos funcionales (RF-001…RF-069) y no funcionales (RNF-001…RNF-026) documentados en <i>docs/plan_jmeter.md</i>.</p>
+    <p style="margin-top:0"><b>KN-Store</b> es una plataforma de comercio electrónico desarrollada con Spring Boot (backend), MongoDB, React y JHipster, que incluye catálogo de productos, carrito, checkout atómico, pagos, facturación electrónica y logística de envíos. Las pruebas buscaron verificar los requerimientos funcionales (RF-001…RF-069) y no funcionales (RNF-001…RNF-026) documentados en <i>docs/jmeter/plan_jmeter.md</i>.</p>
     <div class="badges">
       <span class="badge">Catálogo y búsqueda</span><span class="badge">Gestión de usuarios y roles</span>
       <span class="badge">Carrito y checkout</span><span class="badge">Pagos y facturación</span>
@@ -341,17 +341,17 @@ footer{color:var(--ink3);font-size:12px;margin-top:46px;border-top:1px solid var
 <section id="anexo">
   <h2>9. Anexos<small>Comandos de reproducción y artefactos generados</small></h2>
   <div class="card">
-    <p style="margin-top:0"><b>Estructura del plan JMeter</b> (<code>docs/knstore_test_plan.jmx</code>): 6 grupos por rol, 88 casos (CP-001…CP-088), 113 muestreadores en total (incluidos apoyos) y 288 listeners (3 por cada caso + resúmenes y gráficos de sección y de toda la suite).</p>
+    <p style="margin-top:0"><b>Estructura del plan JMeter</b> (<code>docs/jmeter/knstore_test_plan.jmx</code>): 6 grupos por rol, 88 casos (CP-001…CP-088), 113 muestreadores en total (incluidos apoyos) y 288 listeners (3 por cada caso + resúmenes y gráficos de sección y de toda la suite).</p>
     <p style="margin:0 0 4px"><b>Ejecución y generación de reportes:</b></p>
     <div class="code"># 1. Ejecutar toda la suite y generar el dashboard HTML oficial de JMeter
-jmeter -n -t docs/knstore_test_plan.jmx -l docs/jmeter/resultados.jtl -e -o docs/jmeter/informe-html
+jmeter -n -t docs/jmeter/knstore_test_plan.jmx -l docs/jmeter/resultados.jtl -e -o docs/jmeter/informe-html
 
 # 2. Regenerar este informe con los datos más recientes (desde la raíz del repo)
 python3 tools/?.py   # ver docs/ — los datos se leen de docs/jmeter/resultados.jtl
 
 # 3. Ejecutar solo resultados (sin dashboard) o ajustar la carga de CP-056
-jmeter -n -t docs/knstore_test_plan.jmx -l resultados.jtl -JCP056_LOOPS=100</div>
-    <p style="margin-bottom:0"><b>Artefactos:</b> <code>docs/jmeter/resultados.jtl</code> (datos crudos) · el dashboard oficial de JMeter (percentiles, peticiones/segundo y tiempos sobre tiempo) se puede regenerar con <code>-e -o</code> si se desea · <code>docs/knstore_test_plan.jmx</code> (plan) · <code>docs/plan_jmeter.md</code> (matriz de casos).</p>
+jmeter -n -t docs/jmeter/knstore_test_plan.jmx -l resultados.jtl -JCP056_LOOPS=100</div>
+    <p style="margin-bottom:0"><b>Artefactos:</b> <code>docs/jmeter/resultados.jtl</code> (datos crudos) · el dashboard oficial de JMeter (percentiles, peticiones/segundo y tiempos sobre tiempo) se puede regenerar con <code>-e -o</code> si se desea · <code>docs/jmeter/knstore_test_plan.jmx</code> (plan) · <code>docs/jmeter/plan_jmeter.md</code> (matriz de casos).</p>
   </div>
 </section>
 
@@ -547,7 +547,7 @@ const chartOf = (c) => {
     <li>Complementar con pruebas de carga (aumentar <b>CP056_LOOPS</b> y/o hilos) en un entorno aislado para validar el objetivo de 100.000 productos.</li>
     <li>Automatizar en CI la ejecución del plan (<code>jmeter -n …</code>) con el JTL como evidencia en cada entrega.</li>
     <li>Limpiar periódicamente los datos transitorios de prueba (usuarios cp001.*, productos «JMeter», pedidos de prueba) generados por la suite en el entorno.</li>
-    <li>Documentar en <code>docs/plan_jmeter.md</code> la trazabilidad ejecución→resultado con los valores de este informe.</li>
+    <li>Documentar en <code>docs/jmeter/plan_jmeter.md</code> la trazabilidad ejecución→resultado con los valores de este informe.</li>
   </ul>`;
 })();
 </script>

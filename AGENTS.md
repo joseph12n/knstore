@@ -154,7 +154,7 @@ Para `Cuenta`, `Direccion`, `Carrito`, `Pedido`, `ItemCarrito`, `ItemPedido`, `P
 - RF-042 a RF-046: carrito (agregar, consultar, modificar, eliminar, vaciar) con recálculo automático de subtotales.
 - RF-047 a RF-053: checkout atómico con preview de totales, reglas de envío (gratis ≥ $150.000), listado/detalle de pedidos y cancelación con máquina de estados.
 - RF-054 a RF-069: pasarela de pagos abstracta (simulada configurable), callback idempotente, reembolsos, facturación real con consecutivo, PDF con QR y envío por correo; endpoints de operación de envíos (tracking, estado, devolución, pendientes).
-- RF-070 a RF-076: filtros server-side en buscador, búsqueda por marca, orden por precio server-side (`Producto.precioVenta` denormalizado), edición del perfil propio (RF-033 completado), pago en resultado del checkout y botón "Pagar ahora". Detalle en `docs/REQUERIMIENTOS_PENDIENTES.md`.
+- RF-070 a RF-076: filtros server-side en buscador, búsqueda por marca, orden por precio server-side (`Producto.precioVenta` denormalizado), edición del perfil propio (RF-033 completado), pago en resultado del checkout y botón "Pagar ahora". Detalle en `docs/01-ANALYSIS/REQUERIMIENTOS_PENDIENTES.md`.
 - RNF-027 a RNF-031: índice de texto MongoDB, eliminación de N+1 (listados CLIENTE, ownership y catálogo por lotes), endpoint `GET /api/productos/por-ids` para el carrito, consecutivos diarios atómicos (colección `secuencias`, `SecuenciaService`) y `/management/prometheus` protegido.
 - Seed automático del catálogo en desarrollo (`knstore.seed.catalog=true`).
 - MongoDB en replica set para transacciones reales.
@@ -165,7 +165,7 @@ Para `Cuenta`, `Direccion`, `Carrito`, `Pedido`, `ItemCarrito`, `ItemPedido`, `P
 | --- | ----------------------------------------------------------- | ------ |
 | —   | Barrido RF-072→RNF-031 implementado 2026-08-24 (sin commit) | ✅     |
 
-\* _Pendientes conocidos de calidad (backlog): `ItemCarritoResourceIT` (4 tests CRUD autogenerados) fallan preexistentes desde que se blindó el precio server-side (productos ficticios, `400 error.itemcarritoinvalido`); contadores viejos `pedido_sequence`/`factura_sequence` huérfanos (cleanup opcional). Detalle completo en `docs/REQUERIMIENTOS_PENDIENTES.md`._
+\* _Pendientes conocidos de calidad (backlog): `ItemCarritoResourceIT` (4 tests CRUD autogenerados) fallan preexistentes desde que se blindó el precio server-side (productos ficticios, `400 error.itemcarritoinvalido`); contadores viejos `pedido_sequence`/`factura_sequence` huérfanos (cleanup opcional). Detalle completo en `docs/01-ANALYSIS/REQUERIMIENTOS_PENDIENTES.md`._
 
 ---
 
@@ -297,14 +297,14 @@ npm run java:docker                                 # Imagen con Jib
 - `src/main/java/com/mycompany/knstore/service/SecuenciaService.java`: consecutivos diarios atómicos (colección `secuencias`, `findAndModify` + `$inc`).
 - `src/main/webapp/app/landing/hooks/useCuentaActual.ts` y `utils/apiError.ts`: patrones compartidos del panel de cliente (carga de cuenta, errores Axios tipados).
 - `src/main/webapp/app/landing/services/checkout.service.ts`: payload y llamadas del checkout (precio siempre server-side; el resultado incluye `pago`).
-- `docs/knstore_stress_plan.jmx`: plan de estrés/rendimiento (sección 07, escenarios ES-01…ES-07 con cargas vía `-JN_S1…N_S7`).
+- `docs/jmeter/knstore_stress_plan.jmx`: plan de estrés/rendimiento (sección 07, escenarios ES-01…ES-07 con cargas vía `-JN_S1…N_S7`).
 - `docs/jmeter/gen_informe.py` + `print_variant.py` + `pdf_build.py` + `generar_informe.sh`: pipeline de informes (HTML/PDF) desde `resultados.jtl`.
 
 ---
 
 ## 12. Notas para el agente
 
-- **PRIMERO:** leer `docs/ESTADO_SESION.md` (handoff con estado git/docker/quirks del trabajo activo).
+- **PRIMERO:** leer `docs/03-DOCUMENTACION/ESTADO_SESION.md` (handoff con estado git/docker/quirks del trabajo activo).
 - Antes de modificar `entities/`, `modules/` o `shared/` consultar si es realmente necesario; es código autogenerado.
 - Al trabajar en el landing, preferir hooks `useCart` y `useCatalog` en lugar de repetir lógica de fetching.
 - Mantener responsividad; probar desde 360px.

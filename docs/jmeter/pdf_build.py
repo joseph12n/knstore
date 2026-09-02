@@ -9,7 +9,7 @@ from pypdf import PdfReader, PdfWriter
 BASE = os.path.dirname(os.path.abspath(__file__))
 HTML = os.path.join(BASE, 'informe_knstore_pdf.html')
 PDF = os.path.join(BASE, 'informe_knstore.pdf')
-PLAN = os.path.join(os.path.dirname(BASE), 'knstore_test_plan.jmx')
+PLAN = os.path.join(BASE, 'knstore_test_plan.jmx')
 
 shells = glob.glob(os.path.expanduser('~/.cache/ms-playwright/chromium_headless_shell-*/chrome-linux/headless_shell'))
 shell = (shells[0] if shells else 'headless_shell')
