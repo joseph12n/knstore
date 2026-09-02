@@ -87,5 +87,5 @@ Las 79 suites que ya existían siguen en verde, entre ellas:
 
 1. **Cobertura:** la capa de servicio (`service/impl` + `service`) queda 100% cubierta con pruebas unitarias; no quedan clases de negocio sin suite.
 2. **Calidad:** Mockito estricto evita stubs muertos; los tests verifican interacciones relevantes (verificaciones de guardado con captor, no solo el valor retornado).
-3. **Backlog conocido (preexistente, no relacionado con esta sesión):** `ItemCarritoResourceIT` (4 tests de integración) sigue fallando por el blindaje de precios server-side; requiere reescritura con productos reales. Ver `docs/REQUERIMIENTOS_PENDIENTES.md`.
+3. **Backlog conocido (preexistente, no relacionado con esta sesión):** `ItemCarritoResourceIT` (4 tests de integración) sigue fallando por el blindaje de precios server-side; requiere reescritura con productos reales. Ver `docs/01-ANALYSIS/REQUERIMIENTOS_PENDIENTES.md`.
 4. **Siguiente paso sugerido:** activar JaCoCo en CI para medir % de cobertura de líneas y priorizar `CheckoutService` (hoy solo tiene IT).

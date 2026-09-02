@@ -148,8 +148,8 @@
 
 ## Pruebas de estrés y rendimiento (Punto 07 del plan JMeter)
 
-> Matriz de los escenarios de estrés y rendimiento incluidos en el plan como sección **07** de `docs/knstore_stress_plan.jmx`
-> (también integrada como punto 07 de `docs/knstore_test_plan.jmx`). Cargas parametrizables con `-JN_S1…N_S7`, `-JS5_DUR`, `-JES_PAGE`.
+> Matriz de los escenarios de estrés y rendimiento incluidos en el plan como sección **07** de `docs/jmeter/knstore_stress_plan.jmx`
+> (también integrada como punto 07 de `docs/jmeter/knstore_test_plan.jmx`). Cargas parametrizables con `-JN_S1…N_S7`, `-JS5_DUR`, `-JES_PAGE`.
 
 | ID | Módulo / objetivo | Escenario | Carga (default → ronda 3) | Resultado esperado |
 |---|---|---|---|---|
@@ -174,9 +174,9 @@
 
 ```bash
 # Ronda de referencia por defecto
-jmeter -n -t docs/knstore_stress_plan.jmx -l docs/jmeter/stress/resultados_stress.jtl -e -o docs/jmeter/stress/informe-html
+jmeter -n -t docs/jmeter/knstore_stress_plan.jmx -l docs/jmeter/stress/resultados_stress.jtl -e -o docs/jmeter/stress/informe-html
 # Escalado manual (limite)
-jmeter -n -t docs/knstore_stress_plan.jmx -l resultados.jtl -JN_S1=150 -JN_S2=80 -JN_S3=80 -JN_S4=80 -JN_S6=150 -JN_S7=200 -JS5_DUR=600
+jmeter -n -t docs/jmeter/knstore_stress_plan.jmx -l resultados.jtl -JN_S1=150 -JN_S2=80 -JN_S3=80 -JN_S4=80 -JN_S6=150 -JN_S7=200 -JS5_DUR=600
 ```
 
 ---

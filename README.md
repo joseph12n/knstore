@@ -141,5 +141,5 @@ El repositorio incluye la batería completa de pruebas (funcionales, de segurida
 
 - [Informe de pruebas (HTML)](docs/jmeter/informe_knstore.html) · [Informe de pruebas (PDF)](docs/jmeter/informe_knstore.pdf) — 91 casos funcionales + 7 escenarios de estrés/rendimiento (3 rondas), todo en un solo documento navegable.
 - [Guía de implementación (Windows y Linux)](docs/jmeter/README.md) — instalación, usuarios de prueba, ejecución en GUI/CLI y personalización de cargas.
-- [Plan JMeter](docs/knstore_test_plan.jmx) (incluye la sección 07 de estrés) y [matriz de casos](docs/plan_jmeter.md) con resultados de la ejecución.
-- [Plan de estrés independiente](docs/knstore_stress_plan.jmx) y pipeline de informes en `docs/jmeter/` (`generar_informe.sh`).
+- [Plan JMeter](docs/jmeter/knstore_test_plan.jmx) (incluye la sección 07 de estrés) y [matriz de casos](docs/jmeter/plan_jmeter.md) con resultados de la ejecución.
+- [Plan de estrés independiente](docs/jmeter/knstore_stress_plan.jmx) y pipeline de informes en `docs/jmeter/` (`generar_informe.sh`).

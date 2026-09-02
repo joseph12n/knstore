@@ -43,9 +43,9 @@ Este README explica cómo instalar y ejecutar **todas las pruebas funcionales, d
 
 | Archivo | Descripción |
 |---|---|
-| `knstore_test_plan.jmx` (en `docs/`) | **Plan principal**: 88 casos funcionales (CP-001…CP-088) en secciones 01-06 por rol, más la **sección 07** de estrés y rendimiento (ES-01…ES-07). Cada caso conserva sus 3 reportes: *View Results Tree*, *Summary Report* y *Response Time Graph*. |
-| `knstore_stress_plan.jmx` (en `docs/`) | Plan **solo** de estrés/rendimiento (mismos escenarios de la sección 07, útil cuando no se quiere correr la parte funcional). |
-| `docs/plan_jmeter.md` | Matriz de casos de prueba (requisito, datos, resultado esperado) + tabla de escenarios de estrés y ejecuciones de referencia. |
+| `knstore_test_plan.jmx` (en `docs/jmeter/`) | **Plan principal**: 88 casos funcionales (CP-001…CP-088) en secciones 01-06 por rol, más la **sección 07** de estrés y rendimiento (ES-01…ES-07). Cada caso conserva sus 3 reportes: *View Results Tree*, *Summary Report* y *Response Time Graph*. |
+| `knstore_stress_plan.jmx` (en `docs/jmeter/`) | Plan **solo** de estrés/rendimiento (mismos escenarios de la sección 07, útil cuando no se quiere correr la parte funcional). |
+| `docs/jmeter/plan_jmeter.md` | Matriz de casos de prueba (requisito, datos, resultado esperado) + tabla de escenarios de estrés y ejecuciones de referencia. |
 | `docs/jmeter/resultados.jtl`, `stress/*.jtl` | Resultados de las ejecuciones de referencia (se regeneran al correr de nuevo). |
 | `docs/jmeter/informe_knstore.html` / `.pdf` | Informe final autogenerado (se regenera con `generar_informe.sh`, ver sección 6). |
 | `docs/jmeter/gen_informe.py`, `print_variant.py`, `pdf_build.py`, `generar_informe.sh` | Pipeline de generación del informe (opcional para quien solo ejecuta pruebas). |
@@ -143,7 +143,7 @@ Abrir el archivo `.jmx` en JMeter → árbol del Test Plan → **User Defined Va
 1. Iniciar JMeter:
    - **Windows:** `jmeter.bat` (desde `bin/` o con el path configurado).
    - **Linux:** `jmeter`.
-2. **Archivo → Abrir** → seleccionar `knstore_test_plan.jmx` (ubicado en `docs/`).
+2. **Archivo → Abrir** → seleccionar `knstore_test_plan.jmx` (ubicado en `docs/jmeter/`).
 3. Elegir qué ejecutar:
    - **Una sección:** clic sobre el Thread Group (ej. `01 - PUBLICO`, `07 - ESTRES...`) → **Ctrl+R**.
    - **Toda la suite (funcional + estrés):** clic sobre `KN-Store Test Web App` → **Ctrl+R**.
@@ -156,11 +156,11 @@ Si se ejecuta JMeter sin `JFreeChart` en `lib/`, agregar los JAR por línea de c
 
 ```powershell
 # Windows
-jmeter -Juser.classpath="C:\libs\jfreechart-1.0.19.jar;C:\libs\jcommon-1.0.24.jar" -t docs\knstore_test_plan.jmx
+jmeter -Juser.classpath="C:\libs\jfreechart-1.0.19.jar;C:\libs\jcommon-1.0.24.jar" -t docs\jmeter\knstore_test_plan.jmx
 ```
 ```bash
 # Linux
-jmeter -Juser.classpath="$HOME/libs/jfreechart-1.0.19.jar:$HOME/libs/jcommon-1.0.24.jar" -t docs/knstore_test_plan.jmx
+jmeter -Juser.classpath="$HOME/libs/jfreechart-1.0.19.jar:$HOME/libs/jcommon-1.0.24.jar" -t docs/jmeter/knstore_test_plan.jmx
 ```
 
 > Interfaz pequeña/grande en pantallas de alta resolución: arranca con `-Dsun.java2d.uiScale=1.5` (escala), p. ej. en Linux `JVM_ARGS="-Dsun.java2d.uiScale=1.5" jmeter`.
@@ -169,10 +169,10 @@ jmeter -Juser.classpath="$HOME/libs/jfreechart-1.0.19.jar:$HOME/libs/jcommon-1.0
 
 ```bash
 # Windows (PowerShell)
-jmeter -n -t docs\knstore_test_plan.jmx -l docs\jmeter\resultados.jtl -e -o docs\jmeter\informe-html
+jmeter -n -t docs\jmeter\knstore_test_plan.jmx -l docs\jmeter\resultados.jtl -e -o docs\jmeter\informe-html
 
 # Linux
-jmeter -n -t docs/knstore_test_plan.jmx -l docs/jmeter/resultados.jtl -e -o docs/jmeter/informe-html
+jmeter -n -t docs/jmeter/knstore_test_plan.jmx -l docs/jmeter/resultados.jtl -e -o docs/jmeter/informe-html
 ```
 
 - `-e -o` genera el **dashboard HTML oficial de JMeter** con todos los gráficos (percentiles, peticiones/segundo, tiempos sobre tiempo).
@@ -199,11 +199,11 @@ Ejemplos:
 
 ```bash
 # Solo estrés con cargas de "límite"
-jmeter -n -t docs/knstore_stress_plan.jmx -l resultados_stress.jtl \
+jmeter -n -t docs/jmeter/knstore_stress_plan.jmx -l resultados_stress.jtl \
        -JN_S1=150 -JN_S2=80 -JN_S3=80 -JN_S4=80 -JN_S6=150 -JN_S7=200 -JS5_DUR=600
 
 # En Windows (PowerShell), igual pero con rutas Windows:
-jmeter -n -t docs\knstore_stress_plan.jmx -l resultados_stress.jtl -JN_S1=100 -JS5_DUR=300
+jmeter -n -t docs\jmeter\knstore_stress_plan.jmx -l resultados_stress.jtl -JN_S1=100 -JS5_DUR=300
 ```
 
 **Notas importantes de la sección 07:**
@@ -255,6 +255,6 @@ Salidas: `docs/jmeter/informe_knstore.html` y `docs/jmeter/informe_knstore.pdf`.
 2. (Opcional) JFreeChart en `lib/` o via `-Juser.classpath`.
 3. Usuarios de prueba activos (sección 3).
 4. Despliegue accesible (o `HOST`/`PROTOCOL`/`PORT` apuntando al entorno propio).
-5. Abrir `docs/knstore_test_plan.jmx` → seleccionar el nodo raíz → **Ctrl+R** (funcional + estrés, ~10-15 min con cargas por defecto).
+5. Abrir `docs/jmeter/knstore_test_plan.jmx` → seleccionar el nodo raíz → **Ctrl+R** (funcional + estrés, ~10-15 min con cargas por defecto).
 6. Revisar: verificadores de muestra (VRT), Summary/RTG por caso y sección, y la verificación de stock en ES-04v.
 7. (Opcional) Generar informe HTML/PDF como en la sección 6.
