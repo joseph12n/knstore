@@ -40,13 +40,20 @@ export const truncateText = (text?: string | null, maxLength = 80): string => {
 export const buildImageUrl = (
   contentType?: string | null,
   base64?: string | null,
-  fallback = '/content/images/product-placeholder.svg',
+  fallback = '/content/images/product-placeholder.png',
+  imagenUrl?: string | null,
 ): string => {
-  if (!base64) {
-    return fallback;
+  if (imagenUrl) {
+    return imagenUrl;
   }
-  if (base64.startsWith('data:')) {
+  if (base64?.startsWith('data:')) {
     return base64;
   }
-  return `data:${contentType || 'image/jpeg'};base64,${base64}`;
+  if (base64?.startsWith('http')) {
+    return base64;
+  }
+  if (base64) {
+    return `data:${contentType || 'image/jpeg'};base64,${base64}`;
+  }
+  return fallback;
 };

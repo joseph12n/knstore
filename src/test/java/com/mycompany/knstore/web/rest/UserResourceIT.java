@@ -1,6 +1,7 @@
 package com.mycompany.knstore.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -12,6 +13,7 @@ import com.mycompany.knstore.repository.UserRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.service.dto.AdminUserDTO;
 import com.mycompany.knstore.service.mapper.UserMapper;
+import com.mycompany.knstore.web.rest.vm.ManagedUserVM;
 import java.util.*;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -106,7 +109,7 @@ class UserResourceIT {
     @Test
     void createUser() throws Exception {
         // Create the User
-        AdminUserDTO userDTO = new AdminUserDTO();
+        ManagedUserVM userDTO = new ManagedUserVM();
         userDTO.setLogin(DEFAULT_LOGIN);
         userDTO.setFirstName(DEFAULT_FIRSTNAME);
         userDTO.setLastName(DEFAULT_LASTNAME);
@@ -115,6 +118,7 @@ class UserResourceIT {
         userDTO.setImageUrl(DEFAULT_IMAGEURL);
         userDTO.setLangKey(DEFAULT_LANGKEY);
         userDTO.setAuthorities(Set.of(AuthoritiesConstants.USER));
+        userDTO.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
 
         var returnedUserDTO = om.readValue(
             restUserMockMvc
@@ -208,6 +212,19 @@ class UserResourceIT {
 
         // Validate the User in the database
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeCreate));
+    }
+
+    @Test
+    void saveUserWithDuplicateEmailThrowsDuplicateKeyException() throws Exception {
+        // Initialize the database with one user
+        userRepository.save(createEntity());
+
+        // A second user with the same (lowercase) email must be rejected by the unique index
+        User duplicateUser = createEntity();
+        duplicateUser.setLogin("johndoe2");
+        duplicateUser.setEmail(DEFAULT_EMAIL);
+
+        assertThatThrownBy(() -> userRepository.save(duplicateUser)).isInstanceOf(DuplicateKeyException.class);
     }
 
     @Test

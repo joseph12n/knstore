@@ -43,6 +43,17 @@ public class CuentaServiceImpl implements CuentaService {
     public CuentaDTO update(CuentaDTO cuentaDTO) {
         LOG.debug("Request to update Cuenta : {}", cuentaDTO);
         Cuenta cuenta = cuentaMapper.toEntity(cuentaDTO);
+        // Las relaciones user y tipoDocumento no son editables por PUT: si llegan nulas
+        // se preservan las existentes para evitar perder la vinculacion con el usuario.
+        Cuenta existing = cuentaRepository.findById(cuentaDTO.getId()).orElse(null);
+        if (existing != null) {
+            if (cuenta.getUser() == null) {
+                cuenta.setUser(existing.getUser());
+            }
+            if (cuenta.getTipoDocumento() == null) {
+                cuenta.setTipoDocumento(existing.getTipoDocumento());
+            }
+        }
         cuenta = cuentaRepository.save(cuenta);
         return cuentaMapper.toDto(cuenta);
     }

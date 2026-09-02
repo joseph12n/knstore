@@ -22,6 +22,9 @@ public class ProductoImagenDTO implements Serializable {
     @NotNull
     private Boolean esPrincipal;
 
+    @Size(max = 1000)
+    private String imagenUrl;
+
     private ProductoDTO producto;
 
     public String getId() {
@@ -64,6 +67,14 @@ public class ProductoImagenDTO implements Serializable {
         this.esPrincipal = esPrincipal;
     }
 
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
+
     public ProductoDTO getProducto() {
         return producto;
     }
@@ -101,6 +112,7 @@ public class ProductoImagenDTO implements Serializable {
             ", imagen='" + getImagen() + "'" +
             ", imagenAlt='" + getImagenAlt() + "'" +
             ", esPrincipal='" + getEsPrincipal() + "'" +
+            ", imagenUrl='" + getImagenUrl() + "'" +
             ", producto=" + getProducto() +
             "}";
     }

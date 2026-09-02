@@ -40,6 +40,10 @@ public class PagoDTO implements Serializable {
 
     private Instant fechaPago;
 
+    private Instant fechaReembolso;
+
+    private String motivoReembolso;
+
     @NotNull
     private PedidoDTO pedido;
 
@@ -113,6 +117,22 @@ public class PagoDTO implements Serializable {
 
     public void setFechaPago(Instant fechaPago) {
         this.fechaPago = fechaPago;
+    }
+
+    public Instant getFechaReembolso() {
+        return fechaReembolso;
+    }
+
+    public void setFechaReembolso(Instant fechaReembolso) {
+        this.fechaReembolso = fechaReembolso;
+    }
+
+    public String getMotivoReembolso() {
+        return motivoReembolso;
+    }
+
+    public void setMotivoReembolso(String motivoReembolso) {
+        this.motivoReembolso = motivoReembolso;
     }
 
     public PedidoDTO getPedido() {

@@ -92,12 +92,23 @@ mongock:
   migration-scan-package:
     - com.mycompany.knstore.config.dbmigrations
 
+# Propiedades especificas de KN-Store
+knstore:
+  payment:
+    gateway:
+      # Pasarela activa: "simulated" para desarrollo y pruebas. Aprueba siempre
+      # de forma simbolica; una pasarela real sera otra implementacion de PaymentGateway.
+      type: simulated
+
 spring:
   application:
     name: knstore
   docker:
     compose:
-      enabled: true
+      # Desactivado: Mongo se gestiona manualmente con docker compose (existen dos versiones:
+      # mongodb.yml standalone y mongodb-replicaset.yml rs0). La auto-deteccion de Spring Boot 4
+      # no resuelve el mapeo de puertos de los contenedores ya levantados.
+      enabled: false
       lifecycle-management: start-only
       file: src/main/docker/services.yml
   profiles:
@@ -111,6 +122,8 @@ spring:
         - api-docs
         # Uncomment to activate TLS for the dev profile
         #- tls
+      prod:
+        - secret-samples
   jmx:
     enabled: false
   messages:
@@ -178,7 +191,7 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: knstore@localhost
+    from: ${SPRING_MAIL_FROM:knstorecheckout@gmail.com}
   api-docs:
     default-include-pattern: /api/**
     management-include-pattern: /management/**

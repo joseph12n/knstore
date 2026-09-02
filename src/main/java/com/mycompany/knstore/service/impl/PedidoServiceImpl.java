@@ -1,13 +1,24 @@
 package com.mycompany.knstore.service.impl;
 
+import com.mycompany.knstore.domain.ItemPedido;
 import com.mycompany.knstore.domain.Pedido;
+import com.mycompany.knstore.domain.ProductoInventario;
+import com.mycompany.knstore.domain.enumeration.EstadoPago;
+import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.CuentaRepository;
+import com.mycompany.knstore.repository.ItemPedidoRepository;
+import com.mycompany.knstore.repository.PagoRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
+import com.mycompany.knstore.service.HistorialEstadoService;
+import com.mycompany.knstore.service.PagoService;
 import com.mycompany.knstore.service.PedidoService;
+import com.mycompany.knstore.service.SecuenciaService;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.service.mapper.PedidoMapper;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +27,15 @@ import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Pedido}.
@@ -27,22 +45,56 @@ public class PedidoServiceImpl implements PedidoService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PedidoServiceImpl.class);
 
+    /** Ventana para cancelar un pedido como cliente (RNF-032: cancelacion + reembolso simbolico). */
+    private static final Duration VENTANA_CANCELACION_CLIENTE = Duration.ofHours(1);
+
     private final PedidoRepository pedidoRepository;
 
     private final CuentaRepository cuentaRepository;
 
+    private final ItemPedidoRepository itemPedidoRepository;
+
+    private final MongoTemplate mongoTemplate;
+
     private final PedidoMapper pedidoMapper;
 
-    public PedidoServiceImpl(PedidoRepository pedidoRepository, CuentaRepository cuentaRepository, PedidoMapper pedidoMapper) {
+    private final HistorialEstadoService historialEstadoService;
+
+    private final SecuenciaService secuenciaService;
+
+    private final PagoService pagoService;
+
+    private final PagoRepository pagoRepository;
+
+    public PedidoServiceImpl(
+        PedidoRepository pedidoRepository,
+        CuentaRepository cuentaRepository,
+        ItemPedidoRepository itemPedidoRepository,
+        MongoTemplate mongoTemplate,
+        PedidoMapper pedidoMapper,
+        HistorialEstadoService historialEstadoService,
+        SecuenciaService secuenciaService,
+        PagoService pagoService,
+        PagoRepository pagoRepository
+    ) {
         this.pedidoRepository = pedidoRepository;
         this.cuentaRepository = cuentaRepository;
+        this.itemPedidoRepository = itemPedidoRepository;
+        this.mongoTemplate = mongoTemplate;
         this.pedidoMapper = pedidoMapper;
+        this.historialEstadoService = historialEstadoService;
+        this.secuenciaService = secuenciaService;
+        this.pagoService = pagoService;
+        this.pagoRepository = pagoRepository;
     }
 
     @Override
     public PedidoDTO save(PedidoDTO pedidoDTO) {
         LOG.debug("Request to save Pedido : {}", pedidoDTO);
         Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
+        if (pedido.getNumeroPedido() == null || pedido.getNumeroPedido().isBlank()) {
+            pedido.setNumeroPedido(generarNumeroPedido());
+        }
         pedido = pedidoRepository.save(pedido);
         return pedidoMapper.toDto(pedido);
     }
@@ -56,18 +108,40 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional
     public Optional<PedidoDTO> partialUpdate(PedidoDTO pedidoDTO) {
         LOG.debug("Request to partially update Pedido : {}", pedidoDTO);
 
         return pedidoRepository
             .findById(pedidoDTO.getId())
             .map(existingPedido -> {
+                EstadoPedido estadoAnterior = existingPedido.getEstado();
                 pedidoMapper.partialUpdate(existingPedido, pedidoDTO);
+
+                // Si el pedido pasa a CANCELLED, restaurar el stock de sus ítems
+                if (EstadoPedido.CANCELLED.equals(existingPedido.getEstado()) && !EstadoPedido.CANCELLED.equals(estadoAnterior)) {
+                    restaurarStock(existingPedido.getId());
+                }
 
                 return existingPedido;
             })
             .map(pedidoRepository::save)
             .map(pedidoMapper::toDto);
+    }
+
+    /**
+     * Restaura el stock de los ítems de un pedido con un incremento atómico
+     * (findAndModify), de modo que cancelaciones concurrentes no dupliquen stock.
+     */
+    private void restaurarStock(String pedidoId) {
+        List<ItemPedido> items = itemPedidoRepository.findByPedidoId(pedidoId);
+        for (ItemPedido item : items) {
+            if (item.getProducto() != null && item.getProducto().getInventario() != null) {
+                String inventarioId = item.getProducto().getInventario().getId();
+                Update update = new Update().inc("stock", item.getCantidad());
+                mongoTemplate.updateFirst(new Query(Criteria.where("id").is(inventarioId)), update, ProductoInventario.class);
+            }
+        }
     }
 
     @Override
@@ -117,6 +191,58 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
+    @Transactional
+    public PedidoDTO cambiarEstado(String id, EstadoPedido nuevoEstado) {
+        LOG.debug("Request to change estado of Pedido : {} -> {}", id, nuevoEstado);
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new IllegalStateException("Pedido no encontrado"));
+        EstadoPedido estadoAnterior = pedido.getEstado();
+        validarTransicionPedido(estadoAnterior, nuevoEstado);
+        pedido.setEstado(nuevoEstado);
+        pedido = pedidoRepository.save(pedido);
+        historialEstadoService.registrar("PEDIDO", pedido.getId(), "estado", estadoAnterior.name(), nuevoEstado.name());
+        // La cancelacion siempre restaura el stock, sea por el endpoint del cliente o de administracion.
+        if (nuevoEstado == EstadoPedido.CANCELLED) {
+            restaurarStock(id);
+        }
+        return pedidoMapper.toDto(pedido);
+    }
+
+    @Override
+    @Transactional
+    public PedidoDTO cancelarPedidoCliente(String id, String motivo) {
+        LOG.debug("Request to cancel Pedido as client : {}", id);
+        Pedido pedido = pedidoRepository.findById(id).orElseThrow(() -> new IllegalStateException("Pedido no encontrado"));
+        // RNF-032: la cancelacion del cliente solo es valida en la ventana de 1 hora
+        // desde la compra. Despues, cualquier gestion corresponde a administracion.
+        if (
+            pedido.getCreatedDate() == null ||
+            Duration.between(pedido.getCreatedDate(), Instant.now()).compareTo(VENTANA_CANCELACION_CLIENTE) > 0
+        ) {
+            throw new IllegalStateException("El plazo para cancelar es de 1 hora desde la compra");
+        }
+        // Reembolso simbolico: si el pago del pedido fue aprobado se reembolsa dentro
+        // de la misma transaccion (la pasarela simulada nunca transfiere dinero real).
+        String motivoReembolso = motivo != null && !motivo.isBlank() ? motivo : "Cancelacion solicitada por el cliente";
+        pagoRepository
+            .findByPedidoId(id, PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")))
+            .getContent()
+            .stream()
+            .filter(pago -> EstadoPago.APPROVED.equals(pago.getEstado()))
+            .findFirst()
+            .ifPresent(pago -> pagoService.reembolsar(pago.getId(), motivoReembolso));
+        return cambiarEstado(id, EstadoPedido.CANCELLED);
+    }
+
+    private void validarTransicionPedido(EstadoPedido anterior, EstadoPedido nuevo) {
+        if (anterior == null || nuevo == null) {
+            throw new IllegalStateException("El estado del pedido es obligatorio");
+        }
+        if (!anterior.puedeTransicionarA(nuevo)) {
+            throw new IllegalStateException("Transicion invalida de " + anterior.name() + " a " + nuevo.name());
+        }
+    }
+
+    @Override
     public void delete(String id) {
         LOG.debug("Request to delete Pedido : {}", id);
         pedidoRepository.deleteById(id);
@@ -126,5 +252,9 @@ public class PedidoServiceImpl implements PedidoService {
         return SecurityUtils.getCurrentUserId()
             .flatMap(cuentaRepository::findOneByUserId)
             .map(cuenta -> cuenta.getId());
+    }
+
+    private String generarNumeroPedido() {
+        return secuenciaService.siguientePedido();
     }
 }

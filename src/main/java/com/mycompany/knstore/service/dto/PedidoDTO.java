@@ -4,6 +4,7 @@ import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -20,6 +21,11 @@ public class PedidoDTO implements Serializable {
 
     @NotNull
     private EstadoPedido estado;
+
+    /**
+     * Fecha de creacion del pedido (campo de auditoria, solo lectura).
+     */
+    private Instant createdDate;
 
     @NotNull
     @DecimalMin(value = "0")
@@ -70,6 +76,14 @@ public class PedidoDTO implements Serializable {
 
     public void setNumeroPedido(String numeroPedido) {
         this.numeroPedido = numeroPedido;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
     }
 
     public EstadoPedido getEstado() {

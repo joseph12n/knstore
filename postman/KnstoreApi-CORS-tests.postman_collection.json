@@ -1,0 +1,311 @@
+{
+    "info": {
+        "_postman_id": "knstore-cors-tests-001",
+        "name": "Knstore API - CORS & Auth Tests",
+        "description": "Colección para validar el comportamiento del filtro CORS de Knstore junto con autenticación JWT. Ajusta las variables baseUrl/origin según el perfil activo (dev/prod).",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "01 Preflight - allowed origin (dev)",
+            "request": {
+                "method": "OPTIONS",
+                "header": [
+                    {
+                        "key": "Origin",
+                        "value": "{{origin}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Access-Control-Request-Method",
+                        "value": "GET",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Access-Control-Request-Headers",
+                        "value": "Authorization,Content-Type",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/categorias",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "categorias"
+                    ]
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status code is 200', function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('Access-Control-Allow-Origin matches origin', function () {",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Origin')).to.eql(pm.environment.get('origin'));",
+                            "});",
+                            "",
+                            "pm.test('Access-Control-Allow-Credentials is true', function () {",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Credentials')).to.eql('true');",
+                            "});",
+                            "",
+                            "pm.test('Access-Control-Allow-Methods includes GET', function () {",
+                            "    const methods = pm.response.headers.get('Access-Control-Allow-Methods');",
+                            "    pm.expect(methods).to.include('GET');",
+                            "});",
+                            "",
+                            "pm.test('Vary header contains Origin', function () {",
+                            "    pm.expect(pm.response.headers.get('Vary')).to.include('Origin');",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "02 GET public endpoint - allowed origin (dev)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Origin",
+                        "value": "{{origin}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/categorias",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "categorias"
+                    ]
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status code is 200', function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('Access-Control-Allow-Origin matches origin', function () {",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Origin')).to.eql(pm.environment.get('origin'));",
+                            "});",
+                            "",
+                            "pm.test('Access-Control-Allow-Credentials is true', function () {",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Credentials')).to.eql('true');",
+                            "});",
+                            "",
+                            "pm.test('Exposed headers include Authorization', function () {",
+                            "    const exposed = pm.response.headers.get('Access-Control-Expose-Headers') || '';",
+                            "    pm.expect(exposed.toLowerCase()).to.include('authorization');",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "03 GET public endpoint - blocked origin",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Origin",
+                        "value": "https://evil.example.com",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/categorias",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "categorias"
+                    ]
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status code is 200 (resource is public)', function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('Access-Control-Allow-Origin is absent for blocked origin', function () {",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Origin')).to.be.undefined;",
+                            "});",
+                            "",
+                            "pm.test('Access-Control-Allow-Credentials is absent', function () {",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Credentials')).to.be.undefined;",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "04 POST authenticate - obtain JWT",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "{{origin}}",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\",\n    \"rememberMe\": false\n}"
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/api/authenticate",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "authenticate"
+                    ]
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status code is 200', function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('Response contains id_token', function () {",
+                            "    const jsonData = pm.response.json();",
+                            "    pm.expect(jsonData).to.have.property('id_token');",
+                            "    pm.environment.set('jwtToken', jsonData.id_token);",
+                            "});",
+                            "",
+                            "pm.test('CORS headers are present for allowed origin', function () {",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Origin')).to.eql(pm.environment.get('origin'));",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Credentials')).to.eql('true');",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "05 GET /api/account - Bearer + CORS",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{jwtToken}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "{{origin}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{baseUrl}}/api/account",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "api",
+                        "account"
+                    ]
+                }
+            },
+            "response": [],
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Status code is 200 when authenticated', function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('CORS headers are present for allowed origin', function () {",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Origin')).to.eql(pm.environment.get('origin'));",
+                            "    pm.expect(pm.response.headers.get('Access-Control-Allow-Credentials')).to.eql('true');",
+                            "});",
+                            "",
+                            "pm.test('Response contains user login', function () {",
+                            "    const jsonData = pm.response.json();",
+                            "    pm.expect(jsonData).to.have.property('login');",
+                            "    pm.expect(jsonData.login).to.eql(pm.environment.get('username'));",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080",
+            "type": "string",
+            "description": "URL base del backend Knstore"
+        },
+        {
+            "key": "origin",
+            "value": "http://localhost:9000",
+            "type": "string",
+            "description": "Origen desde el que se simula la petición. Debe estar en jhipster.cors.allowed-origins"
+        },
+        {
+            "key": "username",
+            "value": "admin",
+            "type": "string",
+            "description": "Usuario para obtener JWT"
+        },
+        {
+            "key": "password",
+            "value": "admin",
+            "type": "string",
+            "description": "Contraseña para obtener JWT"
+        },
+        {
+            "key": "jwtToken",
+            "value": "",
+            "type": "string",
+            "description": "Token JWT generado automáticamente por el request de autenticación"
+        }
+    ]
+}

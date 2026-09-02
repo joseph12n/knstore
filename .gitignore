@@ -152,3 +152,8 @@ Desktop.ini
 ######################
 coverage/
 .nyc_output/
+
+######################
+# MongoDB backups
+######################
+knstore-backup-*.gz

@@ -14,31 +14,45 @@ public class CuentaDTO implements Serializable {
 
     private String id;
 
+    @NotNull
     @Size(max = 20)
+    @Pattern(regexp = "^[0-9]{1,20}$")
     private String numDocumento;
 
     @NotNull
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String primerNombre;
 
+    @NotNull
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String segundoNombre;
 
     @NotNull
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String primerApellido;
 
+    @NotNull
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String segundoApellido;
 
+    @NotNull
     private Genero genero;
 
+    @NotNull
     private LocalDate fechaNacimiento;
 
+    @NotNull
     @Size(max = 15)
+    @Pattern(regexp = "^[0-9]{7,15}$")
     private String celular;
 
+    @NotNull
     @Size(max = 15)
+    @Pattern(regexp = "^[0-9]{7,15}$")
     private String telefono;
 
     private byte[] fotoPerfil;
@@ -48,7 +62,6 @@ public class CuentaDTO implements Serializable {
     @NotNull
     private Boolean activo;
 
-    @NotNull
     private UserDTO user;
 
     private TipoDocumentoDTO tipoDocumento;
@@ -171,6 +184,14 @@ public class CuentaDTO implements Serializable {
 
     public void setTipoDocumento(TipoDocumentoDTO tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
+    }
+
+    @AssertTrue(message = "La fecha de nacimiento no puede ser futura ni indicar más de 100 años")
+    public boolean isFechaNacimientoValida() {
+        return (
+            fechaNacimiento == null ||
+            (!fechaNacimiento.isAfter(LocalDate.now()) && !fechaNacimiento.isBefore(LocalDate.now().minusYears(100)))
+        );
     }
 
     @Override

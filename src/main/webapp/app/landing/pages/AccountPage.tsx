@@ -1,26 +1,15 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faMapMarkerAlt, faShoppingBag, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faKey, faMapMarkerAlt, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 
-import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getSession } from 'app/shared/reducers/authentication';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import useCuentaActual from 'app/landing/hooks/useCuentaActual';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
+import ProfileHeaderCard from 'app/landing/components/ProfileHeaderCard';
 
 export const AccountPage = () => {
-  const dispatch = useAppDispatch();
-  const account = useAppSelector(state => state.authentication.account);
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
-  const loading = useAppSelector(state => state.cuenta.loading);
-
-  useEffect(() => {
-    dispatch(getSession());
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
-  }, [dispatch]);
-
-  const cuenta = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
+  const { account, cuenta, loading } = useCuentaActual();
 
   if (loading) {
     return <LoadingSpinner fullScreen />;
@@ -31,29 +20,12 @@ export const AccountPage = () => {
       <h1 className="h2 fw-bold mb-4">Mi cuenta</h1>
       <Row className="g-4">
         <Col md={4}>
-          <Card className="h-100 text-center p-3">
-            <Card.Body>
-              <div
-                className="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  backgroundColor: 'var(--kn-color-surface)',
-                  color: 'var(--kn-color-text)',
-                }}
-              >
-                <FontAwesomeIcon icon={faUser} size="2x" />
-              </div>
-              <h5 className="fw-bold">
-                {cuenta?.primerNombre || account.firstName} {cuenta?.primerApellido || account.lastName}
-              </h5>
-              <p className="text-muted mb-1">{account.email}</p>
-              <p className="text-muted small">{account.login}</p>
-              <Link to="/cuenta/perfil/editar" className="btn btn-outline-primary btn-sm mt-2">
-                Editar perfil
-              </Link>
-            </Card.Body>
-          </Card>
+          <ProfileHeaderCard cuenta={cuenta} account={account}>
+            <p className="text-muted small mb-0 mt-1">{account.login}</p>
+            <Link to="/mi-cuenta/perfil/editar" className="btn btn-outline-primary btn-sm mt-2">
+              Editar perfil
+            </Link>
+          </ProfileHeaderCard>
         </Col>
         <Col md={8}>
           <Row className="g-4">
@@ -63,7 +35,7 @@ export const AccountPage = () => {
                   <FontAwesomeIcon icon={faShoppingBag} size="2x" className="mb-3 text-muted" />
                   <h5 className="fw-bold">Mis pedidos</h5>
                   <p className="text-muted small">Consulta el estado y el historial de tus compras.</p>
-                  <Link to="/cuenta/pedidos" className="btn btn-primary btn-sm">
+                  <Link to="/mi-cuenta/pedidos" className="btn btn-primary btn-sm">
                     Ver pedidos
                   </Link>
                 </Card.Body>
@@ -75,7 +47,7 @@ export const AccountPage = () => {
                   <FontAwesomeIcon icon={faMapMarkerAlt} size="2x" className="mb-3 text-muted" />
                   <h5 className="fw-bold">Direcciones</h5>
                   <p className="text-muted small">Administra tus direcciones de envío.</p>
-                  <Link to="/cuenta/direcciones" className="btn btn-primary btn-sm">
+                  <Link to="/mi-cuenta/direcciones" className="btn btn-primary btn-sm">
                     Ver direcciones
                   </Link>
                 </Card.Body>
@@ -106,7 +78,7 @@ export const AccountPage = () => {
                   </div>
                 </Col>
               </Row>
-              <Button variant="outline-primary" size="sm" className="mt-3" as={Link as any} to="/cuenta/perfil/editar">
+              <Button variant="outline-primary" size="sm" className="mt-3" as={Link as any} to="/mi-cuenta/perfil/editar">
                 Editar información
               </Button>
             </Card.Body>
@@ -119,7 +91,7 @@ export const AccountPage = () => {
                 Seguridad
               </h5>
               <p className="text-muted small mb-3">Actualiza tu contraseña para mantener tu cuenta protegida.</p>
-              <Link to="/cuenta/seguridad" className="btn btn-outline-primary btn-sm">
+              <Link to="/mi-cuenta/seguridad" className="btn btn-outline-primary btn-sm">
                 Cambiar contraseña
               </Link>
             </Card.Body>

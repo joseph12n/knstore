@@ -70,7 +70,11 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
      * Resolve path prefix to static resources.
      */
     private String resolvePathPrefix() {
-        String fullExecutablePath = decode(this.getClass().getResource("").getPath(), StandardCharsets.UTF_8);
+        java.net.URL resource = this.getClass().getResource("");
+        if (resource == null) {
+            return "";
+        }
+        String fullExecutablePath = decode(resource.getPath(), StandardCharsets.UTF_8);
         String rootPath = Path.of(".").toUri().normalize().getPath();
         String extractedPath = fullExecutablePath.replace(rootPath, "");
         int extractionEndIndex = extractedPath.indexOf("target/");

@@ -8,7 +8,6 @@ import com.mycompany.knstore.service.ResourceAccessService;
 import com.mycompany.knstore.service.dto.CuentaDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -71,6 +70,12 @@ public class CuentaResource {
         if (cuentaDTO.getId() != null) {
             throw new BadRequestAlertException("A new cuenta cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (cuentaDTO.getUser() == null) {
+            throw new BadRequestAlertException("El usuario de la cuenta es obligatorio", ENTITY_NAME, "userrequerido");
+        }
+        if (cuentaDTO.getTipoDocumento() == null) {
+            throw new BadRequestAlertException("El tipo de documento es obligatorio", ENTITY_NAME, "tipodocumentorequerido");
+        }
 
         // A client can only create a Cuenta for themselves and only if they do not already have one.
         if (
@@ -78,12 +83,16 @@ public class CuentaResource {
             !SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.MANAGER)
         ) {
             Optional<String> currentUserId = SecurityUtils.getCurrentUserId();
-            if (currentUserId.isPresent() && cuentaRepository.findOneByUserId(currentUserId.get()).isPresent()) {
+            currentUserId.flatMap(cuentaRepository::findOneByUserId).ifPresent(existing -> {
                 throw new BadRequestAlertException("User already has a cuenta", ENTITY_NAME, "cuentaexists");
-            }
+            });
         }
 
-        cuentaDTO = cuentaService.save(cuentaDTO);
+        try {
+            cuentaDTO = cuentaService.save(cuentaDTO);
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            throw new BadRequestAlertException("El tipo y número de documento ya están registrados", ENTITY_NAME, "documentoduplicado");
+        }
         return ResponseEntity.created(new URI("/api/cuentas/" + cuentaDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, cuentaDTO.getId()))
             .body(cuentaDTO);
@@ -119,7 +128,11 @@ public class CuentaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        cuentaDTO = cuentaService.update(cuentaDTO);
+        try {
+            cuentaDTO = cuentaService.update(cuentaDTO);
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            throw new BadRequestAlertException("El tipo y número de documento ya están registrados", ENTITY_NAME, "documentoduplicado");
+        }
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, cuentaDTO.getId()))
             .body(cuentaDTO);
@@ -142,7 +155,7 @@ public class CuentaResource {
     )
     public ResponseEntity<CuentaDTO> partialUpdateCuenta(
         @PathVariable(value = "id", required = false) final String id,
-        @NotNull @RequestBody CuentaDTO cuentaDTO
+        @Valid @RequestBody CuentaDTO cuentaDTO
     ) throws URISyntaxException {
         LOG.debug("REST request to partial update Cuenta partially : {}, {}", id, cuentaDTO);
         if (cuentaDTO.getId() == null) {
@@ -156,7 +169,12 @@ public class CuentaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<CuentaDTO> result = cuentaService.partialUpdate(cuentaDTO);
+        Optional<CuentaDTO> result;
+        try {
+            result = cuentaService.partialUpdate(cuentaDTO);
+        } catch (org.springframework.dao.DuplicateKeyException e) {
+            throw new BadRequestAlertException("El tipo y número de documento ya están registrados", ENTITY_NAME, "documentoduplicado");
+        }
 
         return ResponseUtil.wrapOrNotFound(
             result,

@@ -70,14 +70,16 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.GET, "/api/subcategorias/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/marcas/**").permitAll()
-                    .requestMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                    .requestMatchers("/api/admin/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.MANAGER)
                     .requestMatchers("/api/**").authenticated()
-                    .requestMatchers("/v3/api-docs/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                    .requestMatchers("/v3/api-docs/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.MANAGER)
                     .requestMatchers("/management/health").permitAll()
                     .requestMatchers("/management/health/**").permitAll()
                     .requestMatchers("/management/info").permitAll()
-                    .requestMatchers("/management/prometheus").permitAll()
-                    .requestMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                    // RNF-031: las metricas internas (prometheus, beans, etc.) son
+                    // exclusivas de ADMIN/MANAGER; el matcher generico /management/**
+                    // las protege. No se permite prometheus de forma publica.
+                    .requestMatchers("/management/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.MANAGER)
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(exceptions ->

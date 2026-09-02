@@ -9,6 +9,17 @@
 
 ---
 
+## 📚 Documentación del apartado
+
+| Archivo                      | Descripción                                                      |
+| ---------------------------- | ---------------------------------------------------------------- |
+| `README.md`                  | Este archivo: presentación general del proyecto.                 |
+| `AGENTS.md`                  | Contexto del proyecto para asistentes de código (agentes de IA). |
+| `CONTRIBUTING.md`            | Guía de contribución y convenciones de commits.                  |
+| `MONGO-SCHEMA-VALIDATION.md` | Validación y esquema de MongoDB del dominio.                     |
+
+---
+
 ## 📌 Contexto del Proyecto
 
 ### Planteamiento del Problema
@@ -79,3 +90,56 @@ Para garantizar la integridad de las operaciones, el sistema restringe las funci
 1. **Administrador:** Acceso total al sistema, gestión global de usuarios, configuraciones críticas del negocio y auditoría.
 2. **Manager:** Gestión operativa del inventario, actualización de stock físico, administración de los servicios y control del estado de distribución.
 3. **Cliente:** Navegación interactiva del catálogo, gestión de perfil personal, generación de pedidos y recepción de notificaciones vía e-mail.
+
+---
+
+## 🚀 Desarrollo local
+
+### Base de datos (MongoDB)
+
+El proyecto mantiene **dos versiones** del contenedor de MongoDB:
+
+| Archivo                                  | Modo                                          | Uso                                                                                           |
+| ---------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `src/main/docker/mongodb.yml`            | Standalone (puerto `27018`)                   | **Versión EC2 / DNS** (`app.knstore.duckdns.org`); compatible con el flujo sin transacciones. |
+| `src/main/docker/mongodb-replicaset.yml` | Replica set `rs0` de un nodo (puerto `27018`) | **Desarrollo local** con transacciones reales (checkout atómico).                             |
+
+**Replica set (recomendado para desarrollo local):** el checkout usa transacciones multi-documento, por lo que MongoDB debe correr como **replica set de un nodo**:
+
+```bash
+docker compose -f src/main/docker/mongodb-replicaset.yml up -d --wait
+```
+
+- La URI de desarrollo ya incluye `?replicaSet=rs0&retryWrites=true&directConnection=true` (`application-dev.yml`, puerto `27018`).
+- Spring Boot 4 inicia el compose automáticamente al levantar la aplicación en `dev`.
+- Verificación: `docker exec knstore-mongodb-1 mongosh --quiet mongodb://localhost:27017/admin --eval 'db.hello().isWritablePrimary'` debe devolver `true`.
+- El seed del catálogo demo (`knstore.seed.catalog=true`) se ejecuta al arrancar en desarrollo; es idempotente y no contamina producción.
+
+**Standalone (EC2/DNS):** si se despliega en la EC2 para `app.knstore.duckdns.org` (sin transacciones):
+
+```bash
+docker compose -f src/main/docker/mongodb.yml up -d
+```
+
+### Aplicación
+
+```bash
+./npmw run backend:start   # Spring Boot (puerto 8080)
+./npmw run start           # Webpack dev server (puerto 9000)
+```
+
+### Pruebas
+
+```bash
+./mvnw clean verify        # Backend (Testcontainers levanta el replica set)
+npm test                   # Frontend
+```
+
+## Pruebas de calidad (JMeter)
+
+El repositorio incluye la batería completa de pruebas (funcionales, de seguridad y no funcionales) ejecutadas con **Apache JMeter 5.6.3**, junto con sus informes:
+
+- [Informe de pruebas (HTML)](docs/jmeter/informe_knstore.html) · [Informe de pruebas (PDF)](docs/jmeter/informe_knstore.pdf) — 91 casos funcionales + 7 escenarios de estrés/rendimiento (3 rondas), todo en un solo documento navegable.
+- [Guía de implementación (Windows y Linux)](docs/jmeter/README.md) — instalación, usuarios de prueba, ejecución en GUI/CLI y personalización de cargas.
+- [Plan JMeter](docs/jmeter/knstore_test_plan.jmx) (incluye la sección 07 de estrés) y [matriz de casos](docs/jmeter/plan_jmeter.md) con resultados de la ejecución.
+- [Plan de estrés independiente](docs/jmeter/knstore_stress_plan.jmx) y pipeline de informes en `docs/jmeter/` (`generar_informe.sh`).

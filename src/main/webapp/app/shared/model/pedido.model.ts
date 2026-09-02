@@ -6,6 +6,7 @@ export interface IPedido {
   id?: string;
   numeroPedido?: string;
   estado?: keyof typeof EstadoPedido;
+  createdDate?: string;
   subtotal?: number;
   descuento?: number | null;
   ivaTotal?: number | null;

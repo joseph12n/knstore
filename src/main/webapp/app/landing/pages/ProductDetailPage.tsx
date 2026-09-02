@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getEntities as getProductos } from 'app/entities/producto/producto.reducer';
+import { getEntityBySlug } from 'app/entities/producto/producto.reducer';
 import { IProductoStorefront } from 'app/landing/model/storefront.model';
 import { buildImageUrl, formatCOP } from 'app/landing/utils/format';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
@@ -22,17 +22,22 @@ export const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const productos = useAppSelector(state => state.producto.entities) ?? [];
+  const productoEntity = useAppSelector(state => state.producto.entity);
   const loading = useAppSelector(state => state.producto.loading);
   const errorMessage = useAppSelector(state => state.producto.errorMessage);
 
   useEffect(() => {
-    if (productos.length === 0) {
-      dispatch(getProductos({ page: 0, size: 100, sort: 'nombre,asc' }));
+    if (slug) {
+      dispatch(getEntityBySlug(slug));
     }
-  }, [dispatch, productos.length]);
+  }, [dispatch, slug]);
 
-  const producto = useMemo(() => productos.find(p => p.slug === slug), [productos, slug]) as IProductoStorefront | undefined;
+  const producto = useMemo<IProductoStorefront | undefined>(() => {
+    if (!productoEntity?.slug || productoEntity.slug !== slug) {
+      return undefined;
+    }
+    return { ...productoEntity, imagenes: productoEntity.imagenes ?? [] } as IProductoStorefront;
+  }, [productoEntity, slug]);
 
   const productoImagenes = useMemo(() => producto?.imagenes ?? [], [producto]);
 
@@ -42,7 +47,7 @@ export const ProductDetailPage = () => {
     }
   }, [producto]);
 
-  if (loading && productos.length === 0) {
+  if (loading && !productoEntity?.id) {
     return <LoadingSpinner fullScreen />;
   }
 
@@ -74,22 +79,34 @@ export const ProductDetailPage = () => {
   const precioVenta = producto.precio?.precioVenta || 0;
   const hasStock = stock > 0;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!hasStock) {
       toast.error('Producto sin stock disponible.');
-      return;
+      return false;
     }
     if (quantity > stock) {
       toast.error(`Solo hay ${stock} unidades disponibles.`);
-      return;
+      return false;
     }
-    onAddToCart(producto, quantity);
-    toast.success('Producto añadido al carrito');
+    const result = await onAddToCart(producto, quantity);
+    if (result.ok) {
+      toast.success('Producto añadido al carrito');
+      return true;
+    }
+    if (result.reason === 'no-cuenta') {
+      toast.warn('Completa tu perfil para poder agregar productos al carrito.');
+      navigate('/mi-cuenta/perfil/editar');
+    } else {
+      toast.error('No se pudo agregar el producto al carrito.');
+    }
+    return false;
   };
 
-  const handleBuyNow = () => {
-    handleAddToCart();
-    navigate('/carrito');
+  const handleBuyNow = async () => {
+    const added = await handleAddToCart();
+    if (added) {
+      navigate('/carrito');
+    }
   };
 
   return (
@@ -116,12 +133,17 @@ export const ProductDetailPage = () => {
               <div className="rounded overflow-hidden position-relative" style={{ aspectRatio: '1/1', backgroundColor: '#f8f9fa' }}>
                 {productoImagenes.length > 0 ? (
                   <img
-                    src={buildImageUrl(productoImagenes[selectedImage]?.imagenContentType, productoImagenes[selectedImage]?.imagen)}
+                    src={buildImageUrl(
+                      productoImagenes[selectedImage]?.imagenContentType,
+                      productoImagenes[selectedImage]?.imagen,
+                      undefined,
+                      productoImagenes[selectedImage]?.imagenUrl,
+                    )}
                     alt={producto.nombre}
                     className="w-100 h-100 object-fit-cover"
                   />
                 ) : (
-                  <img src="/content/images/product-placeholder.svg" alt={producto.nombre} className="w-100 h-100 object-fit-cover" />
+                  <img src="/content/images/product-placeholder.png" alt={producto.nombre} className="w-100 h-100 object-fit-cover" />
                 )}
                 {producto.destacado && (
                   <Badge bg="dark" className="position-absolute top-0 start-0 m-3 text-uppercase">
@@ -143,7 +165,7 @@ export const ProductDetailPage = () => {
                       style={{ width: '72px', height: '72px' }}
                     >
                       <img
-                        src={buildImageUrl(img.imagenContentType, img.imagen)}
+                        src={buildImageUrl(img.imagenContentType, img.imagen, undefined, img.imagenUrl)}
                         alt={`${producto.nombre} ${idx + 1}`}
                         className="w-100 h-100 object-fit-cover"
                       />

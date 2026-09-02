@@ -3,11 +3,14 @@ package com.mycompany.knstore.service.impl;
 import com.mycompany.knstore.domain.Carrito;
 import com.mycompany.knstore.repository.CarritoRepository;
 import com.mycompany.knstore.repository.CuentaRepository;
+import com.mycompany.knstore.repository.ItemCarritoRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CarritoService;
 import com.mycompany.knstore.service.dto.CarritoDTO;
 import com.mycompany.knstore.service.mapper.CarritoMapper;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Carrito}.
@@ -28,11 +32,19 @@ public class CarritoServiceImpl implements CarritoService {
 
     private final CuentaRepository cuentaRepository;
 
+    private final ItemCarritoRepository itemCarritoRepository;
+
     private final CarritoMapper carritoMapper;
 
-    public CarritoServiceImpl(CarritoRepository carritoRepository, CuentaRepository cuentaRepository, CarritoMapper carritoMapper) {
+    public CarritoServiceImpl(
+        CarritoRepository carritoRepository,
+        CuentaRepository cuentaRepository,
+        ItemCarritoRepository itemCarritoRepository,
+        CarritoMapper carritoMapper
+    ) {
         this.carritoRepository = carritoRepository;
         this.cuentaRepository = cuentaRepository;
+        this.itemCarritoRepository = itemCarritoRepository;
         this.carritoMapper = carritoMapper;
     }
 
@@ -96,5 +108,17 @@ public class CarritoServiceImpl implements CarritoService {
     public void delete(String id) {
         LOG.debug("Request to delete Carrito : {}", id);
         carritoRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void vaciar(String id) {
+        LOG.debug("Request to vaciar items del Carrito : {}", id);
+        itemCarritoRepository.deleteAll(itemCarritoRepository.findByCarritoId(id));
+        carritoRepository.findById(id).ifPresent(carrito -> {
+            carrito.setSubtotal(BigDecimal.ZERO);
+            carrito.setFechaActualizacion(Instant.now());
+            carritoRepository.save(carrito);
+        });
     }
 }

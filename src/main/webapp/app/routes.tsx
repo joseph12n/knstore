@@ -9,10 +9,14 @@ import Login from 'app/modules/login/login';
 import Logout from 'app/modules/login/logout';
 import PrivateRoute from 'app/shared/auth/private-route';
 import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
-import PageNotFound from 'app/shared/error/page-not-found';
 import { Authority } from 'app/shared/jhipster/constants';
 import LandingLayout from 'app/landing/components/LandingLayout';
-import StorefrontRoutes from 'app/landing/routes/StorefrontRoutes';
+import StoreHome from 'app/landing/pages/StoreHome';
+import CategoryPage from 'app/landing/pages/CategoryPage';
+import ProductDetailPage from 'app/landing/pages/ProductDetailPage';
+import SearchPage from 'app/landing/pages/SearchPage';
+import CartPage from 'app/landing/pages/CartPage';
+import CheckoutPage from 'app/landing/pages/CheckoutPage';
 import AccountRoutes from 'app/landing/routes/AccountRoutes';
 import { Admin, EntitiesRoutes } from 'app/dashboard';
 
@@ -21,7 +25,7 @@ const loading = <div>loading ...</div>;
 const Account = React.lazy(() => import(/* webpackChunkName: "account" */ 'app/modules/account'));
 
 const ADMIN_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER];
-const STORE_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE, Authority.USER];
+const CLIENT_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER, Authority.CLIENTE];
 const ACCOUNT_AUTHORITIES = [Authority.ADMIN, Authority.MANAGER];
 
 const AppRoutes = () => (
@@ -30,28 +34,27 @@ const AppRoutes = () => (
       <ErrorBoundaryRoutes>
         {/* Landing / tienda pública */}
         <Route element={<LandingLayout />}>
-          <Route index element={<StorefrontRoutes />} />
-          <Route path="categorias/:categoriaSlug/:subcategoriaSlug?" element={<StorefrontRoutes />} />
-          <Route path="productos/:slug" element={<StorefrontRoutes />} />
-          <Route path="buscar" element={<StorefrontRoutes />} />
-          <Route path="carrito" element={<StorefrontRoutes />} />
+          <Route index element={<StoreHome />} />
+          <Route path="categorias/:categoriaSlug/:subcategoriaSlug?/*" element={<CategoryPage />} />
+          <Route path="productos/:slug/*" element={<ProductDetailPage />} />
+          <Route path="buscar" element={<SearchPage />} />
+          <Route path="carrito" element={<CartPage />} />
           <Route
             path="checkout"
             element={
-              <PrivateRoute hasAnyAuthorities={STORE_AUTHORITIES}>
-                <StorefrontRoutes />
+              <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
+                <CheckoutPage />
               </PrivateRoute>
             }
           />
           {/*
-            NOTA: Esta ruta tiene prioridad sobre la entidad CRUD /cuenta/* generada por JHipster.
-            El CRUD admin de la entidad Cuenta queda oculto para usuarios que accedan por URL /cuenta.
-            Los administradores pueden gestionar cuentas desde el menú Entities > Cuenta, que apunta a la misma ruta.
+            Panel de cliente. El path /mi-cuenta evita colisión con el CRUD admin de la entidad Cuenta (/cuenta/*).
+            Los administradores gestionan cuentas desde el menú Entidades > Cuenta (/cuenta).
           */}
           <Route
-            path="cuenta/*"
+            path="mi-cuenta/*"
             element={
-              <PrivateRoute hasAnyAuthorities={STORE_AUTHORITIES}>
+              <PrivateRoute hasAnyAuthorities={CLIENT_AUTHORITIES}>
                 <AccountRoutes />
               </PrivateRoute>
             }
@@ -63,7 +66,7 @@ const AppRoutes = () => (
         <Route path="logout" element={<Logout />} />
         <Route path="account">
           {/* Panel de cuenta clásico de JHipster: solo ADMIN/MANAGER.
-              Los clientes usan su propio panel en /cuenta. */}
+              Los clientes usan su propio panel en /mi-cuenta. */}
           <Route
             path="*"
             element={
@@ -92,7 +95,6 @@ const AppRoutes = () => (
 
         {/* CRUD de entidades JHipster - cada ruta interna define sus propios permisos */}
         <Route path="*" element={<EntitiesRoutes />} />
-        <Route path="*" element={<PageNotFound />} />
       </ErrorBoundaryRoutes>
     </Suspense>
   </div>
