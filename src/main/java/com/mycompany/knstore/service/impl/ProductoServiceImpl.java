@@ -12,6 +12,7 @@ import com.mycompany.knstore.repository.*;
 import com.mycompany.knstore.service.ProductoService;
 import com.mycompany.knstore.service.dto.ProductoDTO;
 import com.mycompany.knstore.service.mapper.ProductoMapper;
+import com.mycompany.knstore.service.util.MoneyUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -93,6 +95,7 @@ public class ProductoServiceImpl implements ProductoService {
         LOG.debug("Request to save Producto : {}", productoDTO);
         Producto producto = productoMapper.toEntity(productoDTO);
         producto = productoRepository.save(producto);
+        sincronizarPrecioVentaDenormalizado(producto);
         return productoMapper.toDto(producto);
     }
 
@@ -101,6 +104,7 @@ public class ProductoServiceImpl implements ProductoService {
         LOG.debug("Request to update Producto : {}", productoDTO);
         Producto producto = productoMapper.toEntity(productoDTO);
         producto = productoRepository.save(producto);
+        sincronizarPrecioVentaDenormalizado(producto);
         return productoMapper.toDto(producto);
     }
 
@@ -116,7 +120,32 @@ public class ProductoServiceImpl implements ProductoService {
                 return existingProducto;
             })
             .map(productoRepository::save)
+            .map(producto -> {
+                sincronizarPrecioVentaDenormalizado(producto);
+                return producto;
+            })
             .map(productoMapper::toDto);
+    }
+
+    /**
+     * RF-072: persiste el precio de venta denormalizado ({@code precio_venta})
+     * a partir del {@code producto_precio} referenciado, para que el orden y
+     * los filtros por precio funcionen del lado del servidor.
+     */
+    private void sincronizarPrecioVentaDenormalizado(Producto producto) {
+        if (producto.getId() == null || producto.getPrecio() == null || producto.getPrecio().getId() == null) {
+            return;
+        }
+        productoPrecioRepository
+            .findById(producto.getPrecio().getId())
+            .filter(precio -> precio.getPrecioVenta() != null)
+            .ifPresent(precio ->
+                mongoTemplate.updateFirst(
+                    Query.query(Criteria.where("_id").is(producto.getId())),
+                    new Update().set("precio_venta", MoneyUtils.normalizar(precio.getPrecioVenta())),
+                    Producto.class
+                )
+            );
     }
 
     @Override
