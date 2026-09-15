@@ -282,6 +282,21 @@ node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # catálogo 
 
 > **Mongo:** `mongodb.yml`, `mongodb-replicaset.yml` y `app-prod.yml` usan replica set `rs0` porque el checkout usa transacciones reales; la app de producción se conecta con `SPRING_MONGODB_URI=...?replicaSet=rs0`. En local el puerto del replica set es `27018`.
 
+### Actualizar la versión en la EC2
+
+En el servidor solo se cambia la etiqueta de la imagen (el `docker-compose.yml` de `/home/ubuntu/knstore` es un enlace simbólico a `app-prod.yml`):
+
+```bash
+cd /home/ubuntu/knstore
+# editar app-prod.yml:  image: eljoseph12/knstore:X.Y.Z
+docker compose pull && docker compose up -d
+curl -s localhost:8080/management/health   # status UP
+```
+
+- **No tocar** `.env` (secretos), `mongodb-replicaset.yml` ni el `name: knstore`: cambiarlos recrea contenedores/volúmenes o rompe la conexión.
+- `docker-compose.legacy-dev.yml.bak` es el compose viejo con perfil `dev` (seed/prometheus); **no usarlo**.
+- Backups: `backup-mongo.sh` corre a las 03:00 (retención 7 días) en `/home/ubuntu/knstore/backups`.
+
 ---
 
 ## 10. Decisiones arquitectónicas clave
