@@ -14,11 +14,16 @@ import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Carrito;
 import com.mycompany.knstore.domain.ItemCarrito;
 import com.mycompany.knstore.domain.Producto;
+import com.mycompany.knstore.domain.ProductoPrecio;
+import com.mycompany.knstore.repository.CarritoRepository;
 import com.mycompany.knstore.repository.ItemCarritoRepository;
+import com.mycompany.knstore.repository.ProductoPrecioRepository;
+import com.mycompany.knstore.repository.ProductoRepository;
 import com.mycompany.knstore.service.ItemCarritoService;
 import com.mycompany.knstore.service.dto.ItemCarritoDTO;
 import com.mycompany.knstore.service.mapper.ItemCarritoMapper;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -53,6 +58,9 @@ class ItemCarritoResourceIT {
     private static final BigDecimal DEFAULT_SUBTOTAL = new BigDecimal(1);
     private static final BigDecimal UPDATED_SUBTOTAL = new BigDecimal(2);
 
+    private static final BigDecimal PRECIO_COMPRA = new BigDecimal("100000.00");
+    private static final BigDecimal PRECIO_VENTA = new BigDecimal("150000.00");
+
     private static final String ENTITY_API_URL = "/api/item-carritos";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -61,6 +69,15 @@ class ItemCarritoResourceIT {
 
     @Autowired
     private ItemCarritoRepository itemCarritoRepository;
+
+    @Autowired
+    private CarritoRepository carritoRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
+
+    @Autowired
+    private ProductoPrecioRepository productoPrecioRepository;
 
     @Mock
     private ItemCarritoRepository itemCarritoRepositoryMock;
@@ -77,6 +94,12 @@ class ItemCarritoResourceIT {
     private ItemCarrito itemCarrito;
 
     private ItemCarrito insertedItemCarrito;
+
+    private Carrito carrito;
+
+    private Producto producto;
+
+    private ProductoPrecio productoPrecio;
 
     /**
      * Create an entity for this test.
@@ -128,7 +151,20 @@ class ItemCarritoResourceIT {
 
     @BeforeEach
     void initTest() {
+        productoPrecio = productoPrecioRepository.save(new ProductoPrecio().precioCompra(PRECIO_COMPRA).precioVenta(PRECIO_VENTA));
+        producto = productoRepository.save(
+            new Producto()
+                .nombre("Producto de prueba carrito")
+                .slug("producto-carrito-" + UUID.randomUUID())
+                .sku("SKU-" + UUID.randomUUID())
+                .destacado(false)
+                .activo(true)
+                .precio(productoPrecio)
+        );
+        carrito = carritoRepository.save(new Carrito().subtotal(BigDecimal.ZERO).fechaActualizacion(Instant.now()));
         itemCarrito = createEntity();
+        itemCarrito.setProducto(producto);
+        itemCarrito.setCarrito(carrito);
     }
 
     @AfterEach
@@ -136,6 +172,18 @@ class ItemCarritoResourceIT {
         if (insertedItemCarrito != null) {
             itemCarritoRepository.delete(insertedItemCarrito);
             insertedItemCarrito = null;
+        }
+        if (carrito != null) {
+            carritoRepository.delete(carrito);
+            carrito = null;
+        }
+        if (producto != null) {
+            productoRepository.delete(producto);
+            producto = null;
+        }
+        if (productoPrecio != null) {
+            productoPrecioRepository.delete(productoPrecio);
+            productoPrecio = null;
         }
     }
 
@@ -158,6 +206,9 @@ class ItemCarritoResourceIT {
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
         var returnedItemCarrito = itemCarritoMapper.toEntity(returnedItemCarritoDTO);
         assertItemCarritoUpdatableFieldsEquals(returnedItemCarrito, getPersistedItemCarrito(returnedItemCarrito));
+
+        assertThat(returnedItemCarritoDTO.getPrecioUnitario()).isEqualByComparingTo(PRECIO_VENTA);
+        assertThat(returnedItemCarritoDTO.getSubtotal()).isEqualByComparingTo(PRECIO_VENTA.multiply(BigDecimal.valueOf(DEFAULT_CANTIDAD)));
 
         insertedItemCarrito = returnedItemCarrito;
     }
@@ -298,6 +349,7 @@ class ItemCarritoResourceIT {
 
         // Validate the ItemCarrito in the database
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        updatedItemCarrito.precioUnitario(PRECIO_VENTA).subtotal(PRECIO_VENTA.multiply(BigDecimal.valueOf(UPDATED_CANTIDAD)));
         assertPersistedItemCarritoToMatchAllProperties(updatedItemCarrito);
     }
 
@@ -384,6 +436,7 @@ class ItemCarritoResourceIT {
         // Validate the ItemCarrito in the database
 
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        partialUpdatedItemCarrito.precioUnitario(PRECIO_VENTA).subtotal(PRECIO_VENTA.multiply(BigDecimal.valueOf(UPDATED_CANTIDAD)));
         assertItemCarritoUpdatableFieldsEquals(
             createUpdateProxyForBean(partialUpdatedItemCarrito, itemCarrito),
             getPersistedItemCarrito(itemCarrito)
@@ -414,6 +467,7 @@ class ItemCarritoResourceIT {
         // Validate the ItemCarrito in the database
 
         assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        partialUpdatedItemCarrito.precioUnitario(PRECIO_VENTA).subtotal(PRECIO_VENTA.multiply(BigDecimal.valueOf(UPDATED_CANTIDAD)));
         assertItemCarritoUpdatableFieldsEquals(partialUpdatedItemCarrito, getPersistedItemCarrito(partialUpdatedItemCarrito));
     }
 
