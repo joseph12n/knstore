@@ -7,7 +7,7 @@
  * Ejemplos:
  *   node scripts/seed-demo-data.js
  *   node scripts/seed-demo-data.js http://localhost:8080
- *   node scripts/seed-demo-data.js https://app.knstore.freeddns.org
+ *   node scripts/seed-demo-data.js https://app.knstore.duckdns.org
  *
  * Variables de entorno:
  *   - KNSTORE_USERNAME  (default: admin)
