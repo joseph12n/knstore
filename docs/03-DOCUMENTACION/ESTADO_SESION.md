@@ -23,10 +23,10 @@
 
 ## 2. Calidad — todo verde
 
-- Unit 361/361 · IT 485/485 · Vitest 524/524 · `./mvnw verify` completo (modernizer incluido) · `tsc` limpio.
-- Cobertura backend (consolidada unit+IT): **70,2% líneas** / 40,8% ramas / 88,0% métodos / 194 clases.
+- Unit 363/363 · IT 485/485 · Vitest 524/524 · `./mvnw verify` completo (modernizer incluido) · `tsc` limpio.
+- Cobertura backend (consolidada unit+IT): **69,7% líneas** / 41,0% ramas / 194 clases.
 - Cobertura frontend: **49,46% líneas** sobre **70 archivos propios** (37 en 0%); excluye generado (`entities/modules/shared`) y aplica umbrales 45/35/40/45.
-- Informe visual: `docs/test_de_cobertura/informe-calidad/index.html` (vista general + técnica).
+- Informe visual: `docs/test_de_cobertura/informe-calidad/index.html` (vista general + técnica); se regenera con `python3 scripts/generar-informe-calidad.py`.
 
 ## 3. Producción — hardening aplicado
 
@@ -34,13 +34,15 @@
 - JWT exigido por `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET`; `secret-samples` fuera del perfil prod.
 - Usuarios demo solo en dev (`knstore.seed.demo-users`); en prod, BD vacía exige `KNSTORE_SECURITY_ADMIN_PASSWORD`.
 - `scripts/rotate-prod-users.js`: rota el admin y desactiva `user/manager/cliente`.
+- `scripts/seed-catalogo-real.js`: seed idempotente del catálogo real (12 marcas, 777 productos, imágenes, precios e inventario); probado en local con orden por precio asc/desc funcionando.
+- **H-07 corregido:** `precio_venta` no se sincronizaba por API porque `ProductoPrecioDTO` no expone `producto`; ahora `ProductoServiceImpl` denormaliza al guardar y `ProductoPrecioServiceImpl` resuelve la referencia inversa (`precio.$id`).
 - Smoke local con la imagen 3.0.0: home + `main.js` 200, health UP, login con admin nuevo 200, `admin/admin` y `cliente/cliente` 401, `/management/prometheus` 401, catálogo público 200, escritura admin 201.
 
 ## 4. Pendientes inmediatos
 
 1. **Desplegar en la EC2 (F4)** — requiere acceso SSH del responsable:
-   backup previo de Mongo, copiar `.env.example` → `.env`, `docker compose -f app-prod.yml pull && up -d`, verificar NPM/SSL, ejecutar `rotate-prod-users.js`, cargar catálogo real (`seed-demo-data.js` adaptado), programar cron de backups (`backups/backup-mongo/backup.sh`) y probar restore.
-2. **Rotar la app password de Gmail** en Google (la anterior quedó en el historial de git) y cargarla en `.env` y en el entorno local.
+   backup previo de Mongo, copiar `.env.example` → `.env`, `docker compose -f app-prod.yml pull && up -d`, verificar NPM/SSL, ejecutar `rotate-prod-users.js`, cargar catálogo real (`seed-catalogo-real.js`), programar cron de backups (`backups/backup-mongo/backup.sh`) y probar restore.
+2. **Regenerar la app password de Gmail**: las dos credenciales probadas por SMTP fallaron (535 Username and Password not accepted). Crear una nueva en https://myaccount.google.com/apppasswords con la cuenta `knstorecheckout@gmail.com` (2FA activo) y cargarla en el `.env` de la EC2.
 3. Backlog post-lanzamiento: specs de páginas del panel `/cuenta` y admin, casos negativos de Pedido/Envío/ItemCarrito/ResourceAccess (H-05: subir ramas de 41% a ~60%).
 
 ## 5. Entorno y quirks
