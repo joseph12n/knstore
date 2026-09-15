@@ -91,9 +91,9 @@ class CategoriaIVAServiceImplTest {
         Optional<CategoriaIVADTO> result = service.partialUpdate(cambios);
 
         assertThat(result).isPresent();
-        assertThat(result.get().getPorcentaje()).isEqualByComparingTo("5.00");
-        assertThat(result.get().getNombre()).isEqualTo("IVA 19");
-        assertThat(result.get().getEstado()).isEqualTo(EstadoIVA.ACTIVO);
+        assertThat(result.orElseThrow().getPorcentaje()).isEqualByComparingTo("5.00");
+        assertThat(result.orElseThrow().getNombre()).isEqualTo("IVA 19");
+        assertThat(result.orElseThrow().getEstado()).isEqualTo(EstadoIVA.ACTIVO);
     }
 
     @Test
@@ -122,10 +122,10 @@ class CategoriaIVAServiceImplTest {
         Optional<CategoriaIVADTO> result = service.findOne("iva-1");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getId()).isEqualTo("iva-1");
-        assertThat(result.get().getNombre()).isEqualTo("IVA 19");
-        assertThat(result.get().getPorcentaje()).isEqualByComparingTo("19.00");
-        assertThat(result.get().getEstado()).isEqualTo(EstadoIVA.ACTIVO);
+        assertThat(result.orElseThrow().getId()).isEqualTo("iva-1");
+        assertThat(result.orElseThrow().getNombre()).isEqualTo("IVA 19");
+        assertThat(result.orElseThrow().getPorcentaje()).isEqualByComparingTo("19.00");
+        assertThat(result.orElseThrow().getEstado()).isEqualTo(EstadoIVA.ACTIVO);
     }
 
     @Test
