@@ -116,11 +116,11 @@ class SubcategoriaServiceImplTest {
         Optional<SubcategoriaDTO> result = service.partialUpdate(cambios);
 
         assertThat(result).isPresent();
-        assertThat(result.get().getDescripcion()).isEqualTo("Descripcion nueva");
-        assertThat(result.get().getNombre()).isEqualTo("Tenis");
-        assertThat(result.get().getSlug()).isEqualTo("tenis");
-        assertThat(result.get().getActivo()).isTrue();
-        assertThat(result.get().getCategoria().getId()).isEqualTo("cat-1");
+        assertThat(result.orElseThrow().getDescripcion()).isEqualTo("Descripcion nueva");
+        assertThat(result.orElseThrow().getNombre()).isEqualTo("Tenis");
+        assertThat(result.orElseThrow().getSlug()).isEqualTo("tenis");
+        assertThat(result.orElseThrow().getActivo()).isTrue();
+        assertThat(result.orElseThrow().getCategoria().getId()).isEqualTo("cat-1");
     }
 
     @Test
@@ -153,10 +153,10 @@ class SubcategoriaServiceImplTest {
         Optional<SubcategoriaDTO> result = service.findOne("sub-1");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getId()).isEqualTo("sub-1");
-        assertThat(result.get().getNombre()).isEqualTo("Tenis");
-        assertThat(result.get().getCategoria().getId()).isEqualTo("cat-1");
-        assertThat(result.get().getCategoria().getNombre()).isEqualTo("Deportivos");
+        assertThat(result.orElseThrow().getId()).isEqualTo("sub-1");
+        assertThat(result.orElseThrow().getNombre()).isEqualTo("Tenis");
+        assertThat(result.orElseThrow().getCategoria().getId()).isEqualTo("cat-1");
+        assertThat(result.orElseThrow().getCategoria().getNombre()).isEqualTo("Deportivos");
         verify(subcategoriaRepository).findOneWithEagerRelationships("sub-1");
     }
 

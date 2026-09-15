@@ -154,7 +154,7 @@ class DireccionServiceImplTest {
             Optional<DireccionDTO> resultado = service.partialUpdate(dto);
 
             assertThat(resultado).isPresent();
-            assertThat(resultado.get().getMunicipio()).isEqualTo("Medellin");
+            assertThat(resultado.orElseThrow().getMunicipio()).isEqualTo("Medellin");
             ArgumentCaptor<Direccion> captor = ArgumentCaptor.forClass(Direccion.class);
             verify(direccionRepository).save(captor.capture());
             assertThat(captor.getValue().getDireccion()).isEqualTo("Calle 10 #5-25");
@@ -232,7 +232,7 @@ class DireccionServiceImplTest {
             Optional<DireccionDTO> resultado = service.findOne("dir-1");
 
             assertThat(resultado).isPresent();
-            assertThat(resultado.get().getId()).isEqualTo("dir-1");
+            assertThat(resultado.orElseThrow().getId()).isEqualTo("dir-1");
         }
     }
 

@@ -157,3 +157,9 @@ coverage/
 # MongoDB backups
 ######################
 knstore-backup-*.gz
+
+# Variables de entorno locales (secretos) — nunca commitear
+.env
+.env.local
+.env.*.local
+!.env.example

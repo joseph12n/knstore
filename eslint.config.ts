@@ -15,6 +15,7 @@ export default defineConfig(
     },
   },
   { ignores: ['src/main/docker/'] },
+  { ignores: ['docs/test_de_cobertura/'] },
   { ignores: ['target/classes/static/', 'target/'] },
   eslint.configs.recommended,
   {

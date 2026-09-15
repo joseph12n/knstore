@@ -1,55 +1,52 @@
-# ESTADO_SESION.md — Handoff para la próxima sesión (2026-08-25)
+# ESTADO_SESION.md — Handoff para la próxima sesión (2026-09-15)
 
-> ⚠️ OBLIGATORIO: esta sesión nueva debe LEER este archivo completo antes de tocar nada.
-> Resume el estado exacto del repo, entorno y decisiones del trabajo hasta `748140a`.
+> ⚠️ OBLIGATORIO: leer este archivo completo antes de tocar nada.
+> Resume el cierre de calidad (hallazgos H-01→H-06) y el hardening de producción previo al lanzamiento.
 
 ---
 
 ## 1. Git — estado
 
-- Rama actual: **main** @ `748140a` (push a `origin` joseph12n/knstore ✔ y mirror org SENA-PROJECTS ✔)
-- Últimos commits en main:
-  - `748140a feat(config): configurar smtp de gmail con app password y remitente de knstore`
-  - `9601819 fix(config): extender compose de la app para inicializar el replica set rs0`
-  - `e48f912 feat: integrar buscador, rendimiento y experiencia de compra del storefront` (squash único)
-  - `9d93c27 fix: resolver hallazgos de sonarqube...` (base original)
-- Rama **joseph** (`origin/joseph` = `0531906`): contiene los 9 commits seccionados del barrido RF-070→RNF-032 (NO está mergeada a main — main recibió todo via squash)
-- Mirrors: `origin` = joseph12n/knstore; org = SENA-PROJECTS/2026-3311941-projects-grupo-06-knstore (copia local en `~/Documentos/2026-3311941-projects-grupo-06-knstore`; sync manual: fetch `<repo>` + push `sync/main:main`)
+- Rama **main** con los commits de esta sesión:
+  - `72c7523` test(backend): corregir ITs de item carrito con producto y precio reales
+  - `c08a2b7` fix(backend): reemplazar optional.get por orelethrow en pruebas unitarias
+  - `8633cf9` test(frontend): medir cobertura del codigo propio y activar umbrales
+  - `f3d1971` feat(backend): desactivar usuarios demo en produccion y exigir admin por entorno
+  - `9da5fd2` feat(config): endurecer produccion con secretos por entorno y mongo replica set
+  - `22176f3` feat(config): agregar compose de produccion para la ec2
+  - `4a5eb99` feat(config): agregar rotacion de credenciales y corregir dominio del seed
+  - `3585797` docs: sincronizar requerimientos con la verificacion del sistema
+  - `86b8c18` docs: agregar informe de calidad y evidencia de cobertura
+- Push a `origin` y mirror a `sena-students` + unificación de ramas: ejecutados al cierre (ver AGENTS §12.1).
+- Imagen publicada en Docker Hub: **`eljoseph12/knstore:3.0.0`** y `:latest` (digest `sha256:bbc66825d63e...`).
+- `.vscode/` queda untracked por decisión de equipo.
 
-## 2. Entorno docker
+## 2. Calidad — todo verde
 
-- **Mongo dev**: `docker compose -f src/main/docker/services.yml up -d mongodb mongodb-init` → `127.0.0.1:27018`, **replica set rs0 OBLIGATORIO** (inicializado por `mongodb-init`; si apagaste el PC se cae, se relanza igual)
-- **App compose**: `docker compose -f src/main/docker/app.yml up -d` (app `:8080`, mongo rs0 + mongodb-init en la red `knstore`; usa imagen `knstore:latest`). Para port alternativo: override con `ports: 8086:8080`
-- Última validación: stack completo arriba con `mongodb-init: "replica set rs0 listo"`, `/management/health` 200, `/` y `main.*.js` 200
-- **Quirk Boot 4:** la URI de Mongo es `spring.mongodb.uri` → env **`SPRING_MONGODB_URI`** (¡NO `spring.data.mongodb.uri`; `SPRING_DATA_MONGODB_URI` NO aplica en esta imagen!). Con `--network host` + `SPRING_PROFILES_ACTIVE=dev` funciona usando `localhost:27018` del host
+- Unit 361/361 · IT 485/485 · Vitest 524/524 · `./mvnw verify` completo (modernizer incluido) · `tsc` limpio.
+- Cobertura backend (consolidada unit+IT): **70,2% líneas** / 40,8% ramas / 88,0% métodos / 194 clases.
+- Cobertura frontend: **49,46% líneas** sobre **70 archivos propios** (37 en 0%); excluye generado (`entities/modules/shared`) y aplica umbrales 45/35/40/45.
+- Informe visual: `docs/test_de_cobertura/informe-calidad/index.html` (vista general + técnica).
 
-## 3. SMTP (configurado y validado)
+## 3. Producción — hardening aplicado
 
-- Gmail `knstorecheckout@gmail.com` + app password (default en `application-dev.yml`; NUNCA en prod)
-- prod: `SPRING_MAIL_USERNAME` / `SPRING_MAIL_PASSWORD` por env; `jhipster.mail.from` → `${SPRING_MAIL_FROM:knstorecheckout@gmail.com}`; `base-url` prod → `https://app.knstore.duckdns.org`
-- ⚠️ Si el repo se hace público: revocar la app password en Google
+- `src/main/docker/app-prod.yml` + `.env.example` (secretos por entorno, Mongo rs0, perfil prod).
+- JWT exigido por `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET`; `secret-samples` fuera del perfil prod.
+- Usuarios demo solo en dev (`knstore.seed.demo-users`); en prod, BD vacía exige `KNSTORE_SECURITY_ADMIN_PASSWORD`.
+- `scripts/rotate-prod-users.js`: rota el admin y desactiva `user/manager/cliente`.
+- Smoke local con la imagen 3.0.0: home + `main.js` 200, health UP, login con admin nuevo 200, `admin/admin` y `cliente/cliente` 401, `/management/prometheus` 401, catálogo público 200, escritura admin 201.
 
-## 4. Quirks de MongoDB conocidos (no repetir diagnóstico)
+## 4. Pendientes inmediatos
 
-1. **`@DBRef` guarda `$id` como ObjectId** → las queries batch DEBEN usar `@Query("{ 'ref.$id': { $in: ?0 } }")` con `Collection<ObjectId>` y `MongoIdUtils.toObjectIds(...)`. La query derivada `findByXIdIn(String)` devuelve 0 resultados (bug/limitación Spring Data)
-2. **`findAndModify` + upsert**: el Update debe incluir `set("tipo")`/`set("fecha")` (si no, el índice único `(tipo,fecha)` explota E11000 null/null)
-3. Security: `/management/prometheus` protegido (ADMIN/MANAGER); endpoint `/api/productos/por-ids` público (máx 200 ids)
+1. **Desplegar en la EC2 (F4)** — requiere acceso SSH del responsable:
+   backup previo de Mongo, copiar `.env.example` → `.env`, `docker compose -f app-prod.yml pull && up -d`, verificar NPM/SSL, ejecutar `rotate-prod-users.js`, cargar catálogo real (`seed-demo-data.js` adaptado), programar cron de backups (`backups/backup-mongo/backup.sh`) y probar restore.
+2. **Rotar la app password de Gmail** en Google (la anterior quedó en el historial de git) y cargarla en `.env` y en el entorno local.
+3. Backlog post-lanzamiento: specs de páginas del panel `/cuenta` y admin, casos negativos de Pedido/Envío/ItemCarrito/ResourceAccess (H-05: subir ramas de 41% a ~60%).
 
-## 5. Builds y tests (comandos exactos)
+## 5. Entorno y quirks
 
-- Unit: `./mvnw -q -Dskip.npm=true -Dspotless.check.skip=true -Dcheckstyle.skip=true -Djacoco.skip=true -Dtest=XxxTest test`
-- ITs (Testcontainers): `./mvnw -Dskip.npm=true -Dspotless.check.skip=true -Dcheckstyle.skip=true -Djacoco.skip=true -Dtest=NoSuchUnitTest -Dsurefire.failIfNoSpecifiedTests=false verify -Dit.test='XxxIT'`
-- Frontend: `npx vitest run <spec>` · `npx tsc --noEmit` · `npx eslint --fix <files>` (siempre `--fix`: prettier es obligatorio vía husky)
-- Imagen: `./mvnw -ntp verify -DskipTests -Dskip.npm=false -Pdev,api-docs,webapp jib:dockerBuild` (¡`-Dskip.npm=false` imprescindible, sino el JAR viaja SIN frontend!)
-- `npx tsc`, lint y specs actuales: 66/66 verdes; unit backend 76+ y ITs 480+ verdes (última corrida)
-
-## 6. Pendientes / deuda conocida
-
-- `ItemCarritoResourceIT` (4 tests CRUD autogenerados): fallan PREEXISTENTES (`400 error.itemcarritoinvalido`) desde el blindaje de precios server-side (commit da066aa) — no arreglar sin reescribir los tests con productos reales
-- Contadores viejos `pedido_sequence`/`factura_sequence` huérfanos en BD (cleanup opcional; RNF-030 ya usa `secuencias`)
-- En la sesión pasada NO se limpió `/tmp/opencode/*` (logs/tokens temporales de debugging)
-
-## 7. Medioambiente del equipo
-
-- Se probó con Testcontainers `mongo:8.2.9`, docker engine OK
-- JHipster 9.1.0 / Spring Boot 4.0.6 / Java 21 / Node 24 / MongoDB 8.2.9 rs0
+- Mongo dev rs0: `docker compose -f src/main/docker/services.yml up -d --wait` → `127.0.0.1:27018`.
+- `my-mongo` (puerto 27017) es **standalone**: no usar para checkout (sin transacciones).
+- Boot 4: la URI de Mongo es `spring.mongodb.uri` → env **`SPRING_MONGODB_URI`**.
+- `verify` corre modernizer en fase `package`; ya no requiere `-Dmodernizer.skip`.
+- La imagen prod se construye con `-Pprod` (compila el frontend); verificar RAM antes (webpack es el pico).
