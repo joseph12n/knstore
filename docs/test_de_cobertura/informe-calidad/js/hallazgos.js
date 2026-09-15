@@ -100,6 +100,8 @@ window.ACCIONES = [
 ];
 
 window.METODOLOGIA = {
+  despliegue:
+    'Producción verificada el 2026-09-15: app.knstore.duckdns.org con la imagen 3.0.3 (perfil prod, MongoDB rs0, backups diarios 03:00), catálogo real de 777 productos con fotos y orden por precio operativo.',
   comandos: [
     './mvnw -Dskip.npm=true -Dspotless.check.skip=true -Dcheckstyle.skip=true verify  →  target/site/jacoco + jacoco-it',
     'java -jar org.jacoco.cli merge target/jacoco.exec target/jacoco-it.exec  →  target/site/jacoco-merged',
