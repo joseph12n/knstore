@@ -93,7 +93,7 @@
       },
       {
         clase: 'warn',
-        valor: String(D.hallazgos.filter(function (h) { return h.estado === 'Abierto'; }).length),
+        valor: String(window.HALLAZGOS.filter(function (h) { return h.estado === 'Abierto'; }).length),
         etiqueta: 'Hallazgos abiertos',
         detalle: 'Solo H-05 (cobertura de ramas) queda como backlog; el resto fue resuelto.'
       }
@@ -168,7 +168,7 @@
 
     var tbody = $('#tablaFallos tbody');
     if (tbody) {
-      tbody.innerHTML = D.fallos.map(function (f) {
+      tbody.innerHTML = window.FALLOS.map(function (f) {
         return '<tr>' +
           '<td><code>' + f.suite + '</code></td>' +
           '<td>' + f.test + '</td>' +
@@ -374,7 +374,7 @@
   function renderHallazgos() {
     var cont = $('#rejillaHallazgos');
     if (!cont) return;
-    cont.innerHTML = D.hallazgos.map(function (h) {
+    cont.innerHTML = window.HALLAZGOS.map(function (h) {
       var sev = h.sev.toLowerCase();
       var estado = h.estado === 'Resuelto'
         ? '<span class="chip chip--ok">Resuelto</span>'
@@ -396,7 +396,7 @@
   function renderPlan() {
     var lista = $('#listaPlan');
     if (!lista) return;
-    lista.innerHTML = D.acciones.map(function (a) {
+    lista.innerHTML = window.ACCIONES.map(function (a) {
       var estado = a.estado === 'Completado'
         ? '<span class="chip chip--ok">Completado</span>'
         : '<span class="chip chip--media">Pendiente</span>';
@@ -419,10 +419,10 @@
   function renderMetodologia() {
     var comandos = $('#listaComandos');
     if (comandos) {
-      comandos.innerHTML = D.metodologia.comandos.map(function (c) { return '<li>' + c + '</li>'; }).join('');
+      comandos.innerHTML = window.METODOLOGIA.comandos.map(function (c) { return '<li>' + c + '</li>'; }).join('');
     }
     var herramientas = $('#herramientas');
-    if (herramientas) herramientas.textContent = D.metodologia.herramientas;
+    if (herramientas) herramientas.textContent = window.METODOLOGIA.herramientas;
     var entorno = $('#entornoLista');
     if (entorno) {
       entorno.innerHTML = Object.keys(D.entorno).map(function (k) {
