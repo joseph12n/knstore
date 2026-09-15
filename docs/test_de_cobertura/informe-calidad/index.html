@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Informe de Calidad y Cobertura — KN-Store</title>
+  <meta name="description" content="Informe de calidad, pruebas automatizadas y cobertura de código del sistema KN-Store, con lectura para clientes y detalle técnico para desarrolladores." />
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
+<body>
+
+  <header class="cabecera">
+    <div class="contenedor">
+      <p class="eyebrow">KN-Store · Plataforma de e-commerce</p>
+      <h1>Informe de Calidad y Cobertura</h1>
+      <p class="subtitulo">
+        Resultado de las pruebas automatizadas y de la cobertura de código del sistema,
+        con una lectura sencilla para el negocio y el detalle técnico para el equipo de desarrollo.
+      </p>
+      <ul class="chips" id="chipsEntorno" aria-label="Entorno de ejecución"></ul>
+      <div class="conmutador" role="group" aria-label="Modo de lectura">
+        <button type="button" class="conmutador__boton activo" data-modo="cliente" aria-pressed="true">
+          Vista general <span class="conmutador__pista">para todo público</span>
+        </button>
+        <button type="button" class="conmutador__boton" data-modo="tecnico" aria-pressed="false">
+          Vista técnica <span class="conmutador__pista">desarrolladores</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="indice" aria-label="Secciones del informe">
+    <div class="contenedor indice__lista">
+      <a href="#resumen">Resumen</a>
+      <a href="#pruebas">Pruebas</a>
+      <a href="#cobertura">Cobertura</a>
+      <a href="#requisitos">Requisitos</a>
+      <a href="#hallazgos">Hallazgos</a>
+      <a href="#plan">Plan de acción</a>
+      <a href="#metodologia">Metodología</a>
+      <button type="button" id="btnImprimir" class="indice__imprimir">Imprimir / PDF</button>
+    </div>
+  </nav>
+
+  <main class="contenedor">
+
+    <!-- ============ RESUMEN ============ -->
+    <section id="resumen" class="seccion">
+      <header class="seccion__cabecera">
+        <h2>1. Resumen ejecutivo</h2>
+        <p class="seccion__intro solo-cliente">
+          En palabras simples: el sistema <strong>está construido y funcionando</strong>. Sus funciones
+          se probaron de forma automática y la gran mayoría pasa sin problemas. Las brechas que se
+          detallan abajo son de <em>refuerzo y mantenimiento</em>, no impiden operar la tienda.
+        </p>
+        <p class="seccion__intro solo-tecnico">
+          Consolidado de la corrida de pruebas del 2026-09-15 (JUnit 6 + Testcontainers + Vitest) y de
+          la cobertura JaCoCo unificada (unit + IT) sobre 194 clases del backend.
+        </p>
+      </header>
+      <div class="rejilla rejilla--kpi" id="rejillaKpis"></div>
+
+      <div class="tarjeta tarjeta--veredicto">
+        <h3>Veredicto general</h3>
+        <p id="veredictoTexto" class="solo-cliente"></p>
+        <p id="veredictoTexto2" class="solo-tecnico"></p>
+        <div class="semaforo" id="semaforo" aria-label="Semáforo de calidad"></div>
+      </div>
+    </section>
+
+    <!-- ============ PRUEBAS ============ -->
+    <section id="pruebas" class="seccion">
+      <header class="seccion__cabecera">
+        <h2>2. Resultado de las pruebas</h2>
+        <p class="seccion__intro solo-cliente">
+          Se ejecutaron <strong>1.370 pruebas automáticas</strong> que revisan el sistema de punta a
+          punta: registro de usuarios, catálogo, carrito, pagos, envíos y facturación.
+          <strong>Todas pasan</strong>: 846 del backend (Java) y 524 del frontend (React). Las 4
+          pruebas del carrito que fallaban quedaron corregidas y se listan abajo como evidencia.
+        </p>
+        <p class="seccion__intro solo-tecnico">
+          Backend: 361 pruebas unitarias (surefire) + 484 de integración (failsafe/Testcontainers) +
+          escenarios Cucumber. Frontend: 49 archivos de prueba Vitest, 524 pruebas, todas verdes.
+        </p>
+      </header>
+
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta tarjeta--centrada">
+          <h3>Tasa de éxito</h3>
+          <div class="dona" id="donaPruebas" role="img" aria-label="Tasa de éxito de las pruebas">
+            <div class="dona__centro">
+              <strong id="donaValor">—</strong>
+              <span>pruebas OK</span>
+            </div>
+          </div>
+          <p class="nota">1.370 ejecutadas (846 backend + 524 frontend) · 1.370 correctas · 0 fallos</p>
+        </div>
+        <div class="tarjeta">
+          <h3>Desglose por tipo de prueba</h3>
+          <ul class="lista-datos" id="desglosePruebas"></ul>
+          <div class="aviso aviso--ok solo-cliente">
+            <strong>¿Qué significa?</strong> Que el comportamiento principal del sistema está verificado
+            de forma automática: si algo se rompiera, la prueba lo avisaría antes de publicar cambios.
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subtitulo-bloque">Fallos detectados y resueltos <span class="chip chip--ok">4 corregidos</span></h3>
+      <div class="tabla-envoltura">
+        <table class="tabla" id="tablaFallos">
+          <caption class="visualmente-oculto">Detalle de las pruebas con fallo</caption>
+          <thead>
+            <tr><th>Archivo de prueba</th><th>Caso</th><th>Esperado</th><th>Obtenido</th><th>Línea</th><th>Estado</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="aviso aviso--info" id="explicacionFallos"></div>
+
+      <details class="plegable solo-tecnico">
+        <summary>Ver las 126 suites de prueba ejecutadas</summary>
+        <div class="tabla-envoltura tabla-envoltura--alta">
+          <table class="tabla tabla--compacta" id="tablaSuites">
+            <thead><tr><th>Suite</th><th class="num">OK</th><th class="num">Fallos</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============ COBERTURA ============ -->
+    <section id="cobertura" class="seccion">
+      <header class="seccion__cabecera">
+        <h2>3. Cobertura de código</h2>
+        <p class="seccion__intro solo-cliente">
+          La <strong>cobertura</strong> indica qué porcentaje del sistema fue ejercitado por las pruebas.
+          No mide si el sistema es bueno, sino <em>cuánto está siendo vigilado automáticamente</em>.
+          Un 70% es una base sana para un proyecto académico; el objetivo recomendado es 80%.
+        </p>
+        <p class="seccion__intro solo-tecnico">
+          Backend: JaCoCo 0.8.14 con reporte consolidado (merge de <code>jacoco.exec</code> y
+          <code>jacoco-it.exec</code>). Frontend: Vitest 4.1.7 con proveedor v8.
+        </p>
+      </header>
+
+      <div class="rejilla rejilla--2">
+        <article class="tarjeta">
+          <h3>Backend (Java · Spring Boot) <span class="chip chip--neutro">194 clases</span></h3>
+          <div id="barrasBackend" class="barras"></div>
+          <p class="nota">
+            Consolidado unit + IT. Los valores por separado son más bajos (unit 47,1% · IT 57,2% de
+            instrucciones): <strong>cada tipo de prueba cubre partes distintas</strong>, por eso se
+            recomienda ejecutar ambas.
+          </p>
+          <div id="modosBackend" class="mini-barras solo-tecnico"></div>
+        </article>
+        <article class="tarjeta">
+          <h3>Frontend (React · TypeScript) <span class="chip chip--neutro">49 archivos</span></h3>
+          <div id="barrasFrontend" class="barras"></div>
+          <p class="nota">
+            Cifra medida sobre los <strong>70 archivos de código propio</strong> (se excluye el código
+            generado por JHipster: entities/modules/shared). Ahora incluye las páginas sin prueba, por
+            eso el valor es más bajo y honesto: <strong>37 archivos aparecen en 0%</strong> y son la
+            lista de trabajo futura.
+          </p>
+          <ul class="chips chips--alerta" id="sinMedir"></ul>        </article>
+      </div>
+
+      <h3 class="subtitulo-bloque">Cobertura por módulo del backend</h3>
+      <div class="tabla-envoltura">
+        <table class="tabla" id="tablaPaquetes">
+          <caption class="visualmente-oculto">Cobertura por paquete del backend</caption>
+          <thead>
+            <tr>
+              <th>Módulo (paquete)</th>
+              <th class="num">Instrucciones</th>
+              <th class="num">Líneas</th>
+              <th class="num">Ramas</th>
+              <th class="num">Métodos</th>
+              <th>Distribución</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <h3 class="subtitulo-bloque">Cobertura por carpeta del frontend</h3>
+      <div class="tabla-envoltura">
+        <table class="tabla" id="tablaCarpetas">
+          <caption class="visualmente-oculto">Cobertura por carpeta del frontend</caption>
+          <thead>
+            <tr><th>Carpeta</th><th class="num">Sentencias</th><th class="num">Ramas</th><th class="num">Funciones</th><th class="num">Líneas</th><th>Distribución</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <details class="plegable" open>
+        <summary>Archivos del frontend con menor cobertura (los que más riesgo tienen)</summary>
+        <div class="tabla-envoltura">
+          <table class="tabla" id="tablaArchivosFront">
+            <thead><tr><th>Archivo</th><th class="num">Sentencias</th><th class="num">Ramas</th><th class="num">Líneas</th><th>Distribución</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="plegable solo-tecnico">
+        <summary>Detalle por clase del backend (194 clases, ordenable y con buscador)</summary>
+        <div class="controles-tabla">
+          <label class="buscador">
+            <span class="visualmente-oculto">Buscar clase</span>
+            <input type="search" id="buscarClase" placeholder="Buscar clase o paquete…" />
+          </label>
+          <span class="nota" id="contadorClases"></span>
+        </div>
+        <div class="tabla-envoltura tabla-envoltura--alta">
+          <table class="tabla tabla--compacta" id="tablaClases">
+            <thead>
+              <tr>
+                <th data-orden="n" class="ordenable">Clase</th>
+                <th data-orden="p" class="ordenable">Paquete</th>
+                <th data-orden="i" class="ordenable num asc">Instr. %</th>
+                <th data-orden="b" class="ordenable num">Ramas %</th>
+                <th data-orden="l" class="ordenable num">Líneas %</th>
+                <th>Distribución</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============ REQUISITOS ============ -->
+    <section id="requisitos" class="seccion">
+      <header class="seccion__cabecera">
+        <h2>4. Cumplimiento de requisitos</h2>
+        <p class="seccion__intro solo-cliente">
+          El sistema debía cumplir <strong>107 requisitos</strong> (funciones que debe hacer y
+          condiciones de calidad). La verificación contra el código confirma que
+          <strong>los 107 están implementados</strong>. Lo pendiente es actualizar el documento de
+          requisitos, que todavía muestra 46 como “pendientes” por desfase documental.
+        </p>
+        <p class="seccion__intro solo-tecnico">
+          Validación cruzada entre <code>docs/01-ANALYSIS/03-Requerimentos/requerimientos.md</code>,
+          endpoints REST, servicios, componentes del storefront y las suites de prueba.
+          Incluye RF-070→076 y RNF-027→031, que solo viven en
+          <code>REQUERIMIENTOS_PENDIENTES.md</code>.
+        </p>
+      </header>
+
+      <div class="rejilla rejilla--kpi" id="kpisRequisitos"></div>
+
+      <div class="tabla-envoltura">
+        <table class="tabla" id="tablaRequisitos">
+          <caption class="visualmente-oculto">Cumplimiento y evidencia por módulo</caption>
+          <thead>
+            <tr><th>Módulo</th><th>Requisitos</th><th>Estado</th><th>Evidencia (pruebas / cobertura)</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="aviso aviso--info">
+        <strong>Nota de trazabilidad:</strong> <code>requerimientos.md</code> marca RF-033 como “Parcial”
+        y RF-037→RF-069 y RNF-023→RNF-026 como “Pendiente”; la verificación del código demuestra que ya
+        están implementados y probados. Se recomienda sincronizar los 46 estados y anexar los 11
+        requerimientos nuevos.
+      </div>
+    </section>
+
+    <!-- ============ HALLAZGOS ============ -->
+    <section id="hallazgos" class="seccion">
+      <header class="seccion__cabecera">
+        <h2>5. Hallazgos y riesgos</h2>
+        <p class="seccion__intro solo-cliente">
+          Son las oportunidades de mejora detectadas. Ninguna impide vender ni usar la tienda:
+          dos son de <em>mantenimiento de pruebas</em> y tres de <em>refuerzo de la red de seguridad</em>.
+        </p>
+        <p class="seccion__intro solo-tecnico">
+          Clasificados por severidad según impacto en CI, cobertura y trazabilidad. Cada tarjeta incluye
+          acción concreta recomendada.
+        </p>
+      </header>
+      <div class="rejilla rejilla--2" id="rejillaHallazgos"></div>
+    </section>
+
+    <!-- ============ PLAN ============ -->
+    <section id="plan" class="seccion">
+      <header class="seccion__cabecera">
+        <h2>6. Plan de acción priorizado</h2>
+        <p class="seccion__intro solo-cliente">
+          Acciones ordenadas por beneficio frente al esfuerzo. Las tres primeras son rápidas
+          (menos de un día) y dejan el proyecto con la suite completa en verde y la cobertura medible.
+        </p>
+      </header>
+      <ol class="plan" id="listaPlan"></ol>
+      <div class="aviso aviso--ok solo-cliente">
+        <strong>Mensaje para el negocio:</strong> el sistema está listo para operar. Este plan es
+        mantenimiento preventivo para que siga siendo confiable cuando crezca el catálogo y el número
+        de pedidos.
+      </div>
+    </section>
+
+    <!-- ============ METODOLOGÍA ============ -->
+    <section id="metodologia" class="seccion">
+      <header class="seccion__cabecera">
+        <h2>7. Metodología y trazabilidad</h2>
+      </header>
+      <div class="rejilla rejilla--2">
+        <article class="tarjeta solo-tecnico">
+          <h3>Comandos ejecutados</h3>
+          <ul class="lista-comandos" id="listaComandos"></ul>
+        </article>
+        <article class="tarjeta">
+          <h3>Herramientas y versiones</h3>
+          <p id="herramientas" class="nota"></p>
+          <ul class="lista-datos" id="entornoLista"></ul>
+        </article>
+      </div>
+      <p class="nota">
+        Reportes fuente: <code>target/site/jacoco</code> (unit) ·
+        <code>target/site/jacoco-it</code> (integración) ·
+        <code>target/site/jacoco-merged</code> (consolidado) ·
+        <code>target/test-results/lcov-report</code> (frontend).
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <p><strong>KN-Store</strong> · Informe generado el <span id="fechaPie"></span> a partir de la corrida de pruebas del 2026-09-15.</p>
+      <p class="nota">Este informe es evidencia de calidad: separa la lectura de negocio (vista general) del detalle técnico (vista técnica).</p>
+    </div>
+  </footer>
+
+  <script src="js/datos.js"></script>
+  <script src="js/requisitos.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
