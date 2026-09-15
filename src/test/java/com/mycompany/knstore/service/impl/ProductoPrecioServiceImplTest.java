@@ -74,6 +74,24 @@ class ProductoPrecioServiceImplTest {
     }
 
     @Test
+    void guardarSinProductoAsociadoSincronizaPorReferenciaInversaDelProducto() {
+        when(productoPrecioRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        String precioId = "64b7f0c2a1b2c3d4e5f60718";
+        ProductoPrecioDTO dto = new ProductoPrecioDTO();
+        dto.setId(precioId);
+        dto.setPrecioCompra(new BigDecimal("1000"));
+        dto.setPrecioVenta(new BigDecimal("1500"));
+        dto.setPrecioAdicional(BigDecimal.ZERO);
+
+        service.save(dto);
+
+        ArgumentCaptor<Query> queryCaptor = ArgumentCaptor.forClass(Query.class);
+        verify(mongoTemplate).updateMulti(queryCaptor.capture(), any(Update.class), eq(Producto.class));
+        assertThat(queryCaptor.getValue().getQueryObject().toJson()).contains(precioId);
+    }
+
+    @Test
     void guardarSincronizaPrecioVentaEnProducto() {
         Producto producto = new Producto();
         producto.setId("p-1");
