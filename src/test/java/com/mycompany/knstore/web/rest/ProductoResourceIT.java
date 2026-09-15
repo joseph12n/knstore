@@ -12,8 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Categoria;
 import com.mycompany.knstore.domain.Producto;
+import com.mycompany.knstore.domain.ProductoImagen;
 import com.mycompany.knstore.domain.Subcategoria;
 import com.mycompany.knstore.repository.CategoriaRepository;
+import com.mycompany.knstore.repository.ProductoImagenRepository;
 import com.mycompany.knstore.repository.ProductoRepository;
 import com.mycompany.knstore.repository.SubcategoriaRepository;
 import com.mycompany.knstore.service.ProductoService;
@@ -86,6 +88,9 @@ class ProductoResourceIT {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private ProductoImagenRepository productoImagenRepository;
 
     @Autowired
     private CategoriaRepository categoriaRepository;
@@ -450,6 +455,35 @@ class ProductoResourceIT {
     void getNonExistingProducto() throws Exception {
         // Get the producto
         restProductoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getProductoBySlugDevuelveImagenesVinculadas() throws Exception {
+        Producto productoConImagen = ProductoResourceIT.createEntity();
+        productoConImagen.setId(null);
+        productoConImagen.setNombre("Producto con imagen");
+        productoConImagen.setSlug("producto-imagen-" + UUID.randomUUID());
+        productoConImagen.setSku("SKU-" + UUID.randomUUID());
+        productoConImagen = productoRepository.save(productoConImagen);
+
+        String imagenUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80";
+        ProductoImagen imagen = new ProductoImagen();
+        imagen.setImagenUrl(imagenUrl);
+        imagen.setImagenContentType("image/jpeg");
+        imagen.setImagenAlt("Imagen de prueba");
+        imagen.setEsPrincipal(true);
+        imagen.setProducto(productoConImagen);
+        ProductoImagen imagenGuardada = productoImagenRepository.save(imagen);
+
+        try {
+            restProductoMockMvc
+                .perform(get(ENTITY_API_URL + "/slug/{slug}", productoConImagen.getSlug()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.imagenes[0].imagenUrl").value(imagenUrl));
+        } finally {
+            productoImagenRepository.delete(imagenGuardada);
+            productoRepository.delete(productoConImagen);
+        }
     }
 
     @Test

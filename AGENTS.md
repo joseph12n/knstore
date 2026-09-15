@@ -337,6 +337,7 @@ node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # catálogo 
 - Respetar ownership: cualquier endpoint nuevo para `CLIENTE` debe validar que el recurso pertenece al usuario autenticado.
 - **No usar el perfil `dev` ni `app.yml` en la EC2:** habilitan seed de catálogo, CORS local y prometheus. El despliegue correcto es `app-prod.yml` con `.env`.
 - **RF-072 (precio denormalizado):** `ProductoPrecioDTO` no expone `producto`; `ProductoServiceImpl` escribe `precio_venta` al guardar el producto y `ProductoPrecioServiceImpl` resuelve la referencia inversa (`precio.$id`) al guardar el precio. No eliminar esa sincronización: el orden por precio depende de ella.
+- **Imágenes del catálogo:** `ProductoImagenRepository.findByProductoIdIn` recibe `Collection<ObjectId>` (quirk `@DBRef`); si se usan hosts de imágenes externas, agregarlos a `jhipster.security.content-security-policy` (`img-src`) o el navegador las bloquea.
 - La app password de Gmail ya no está en el repo; en dev/prod se define `SPRING_MAIL_PASSWORD` por entorno.
 - Antes de construir la imagen prod, verificar RAM disponible (webpack prod es el pico más alto).
 - Actualizar este `AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos.
