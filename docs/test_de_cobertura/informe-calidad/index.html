@@ -73,15 +73,13 @@
       <header class="seccion__cabecera">
         <h2>2. Resultado de las pruebas</h2>
         <p class="seccion__intro solo-cliente">
-          Se ejecutaron <strong>1.370 pruebas automáticas</strong> que revisan el sistema de punta a
-          punta: registro de usuarios, catálogo, carrito, pagos, envíos y facturación.
-          <strong>Todas pasan</strong>: 846 del backend (Java) y 524 del frontend (React). Las 4
-          pruebas del carrito que fallaban quedaron corregidas y se listan abajo como evidencia.
+          Se ejecutaron <strong><span id="nPruebasSistema">—</span> pruebas automáticas</strong> que
+          revisan el sistema de punta a punta: registro de usuarios, catálogo, carrito, pagos, envíos
+          y facturación. <strong>Todas pasan</strong>: <span id="nPruebasBackend">—</span> del backend
+          (Java) y <span id="nPruebasFrontend">—</span> del frontend (React). Las pruebas del carrito
+          que fallaban quedaron corregidas y se listan abajo como evidencia.
         </p>
-        <p class="seccion__intro solo-tecnico">
-          Backend: 361 pruebas unitarias (surefire) + 484 de integración (failsafe/Testcontainers) +
-          escenarios Cucumber. Frontend: 49 archivos de prueba Vitest, 524 pruebas, todas verdes.
-        </p>
+        <p class="seccion__intro solo-tecnico" id="introPruebasTecnico"></p>
       </header>
 
       <div class="rejilla rejilla--2">
@@ -93,7 +91,7 @@
               <span>pruebas OK</span>
             </div>
           </div>
-          <p class="nota">1.370 ejecutadas (846 backend + 524 frontend) · 1.370 correctas · 0 fallos</p>
+          <p class="nota" id="notaDona">—</p>
         </div>
         <div class="tarjeta">
           <h3>Desglose por tipo de prueba</h3>
@@ -145,7 +143,7 @@
 
       <div class="rejilla rejilla--2">
         <article class="tarjeta">
-          <h3>Backend (Java · Spring Boot) <span class="chip chip--neutro">194 clases</span></h3>
+          <h3>Backend (Java · Spring Boot) <span class="chip chip--neutro" id="chipClasesBackend">—</span></h3>
           <div id="barrasBackend" class="barras"></div>
           <p class="nota">
             Consolidado unit + IT. Los valores por separado son más bajos (unit 47,1% · IT 57,2% de
@@ -158,9 +156,9 @@
           <h3>Frontend (React · TypeScript) <span class="chip chip--neutro">49 archivos</span></h3>
           <div id="barrasFrontend" class="barras"></div>
           <p class="nota">
-            Cifra medida sobre los <strong>70 archivos de código propio</strong> (se excluye el código
+            Cifra medida sobre los <strong><span id="nArchivosPropios">—</span> archivos de código propio</strong> (se excluye el código
             generado por JHipster: entities/modules/shared). Ahora incluye las páginas sin prueba, por
-            eso el valor es más bajo y honesto: <strong>37 archivos aparecen en 0%</strong> y son la
+            eso el valor es más bajo y honesto: <strong><span id="nArchivosCero">—</span> archivos aparecen en 0%</strong> y son la
             lista de trabajo futura.
           </p>
           <ul class="chips chips--alerta" id="sinMedir"></ul>        </article>
@@ -316,6 +314,7 @@
           <h3>Herramientas y versiones</h3>
           <p id="herramientas" class="nota"></p>
           <ul class="lista-datos" id="entornoLista"></ul>
+          <p class="nota" id="notaDespliegue"></p>
         </article>
       </div>
       <p class="nota">
