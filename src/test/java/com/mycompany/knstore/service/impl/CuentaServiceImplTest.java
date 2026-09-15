@@ -149,7 +149,7 @@ class CuentaServiceImplTest {
         Optional<CuentaDTO> resultado = service.partialUpdate(dto);
 
         assertThat(resultado).isPresent();
-        assertThat(resultado.get().getPrimerNombre()).isEqualTo("Carlos");
+        assertThat(resultado.orElseThrow().getPrimerNombre()).isEqualTo("Carlos");
         ArgumentCaptor<Cuenta> captor = ArgumentCaptor.forClass(Cuenta.class);
         verify(cuentaRepository).save(captor.capture());
         assertThat(captor.getValue().getNumDocumento()).isEqualTo("123456789");
@@ -225,7 +225,7 @@ class CuentaServiceImplTest {
             Optional<CuentaDTO> resultado = service.findOne("cuenta-1");
 
             assertThat(resultado).isPresent();
-            assertThat(resultado.get().getId()).isEqualTo("cuenta-1");
+            assertThat(resultado.orElseThrow().getId()).isEqualTo("cuenta-1");
         }
     }
 
@@ -252,7 +252,7 @@ class CuentaServiceImplTest {
             Optional<CuentaDTO> resultado = service.findOne("cuenta-1");
 
             assertThat(resultado).isPresent();
-            assertThat(resultado.get().getUser().getLogin()).isEqualTo("joseph");
+            assertThat(resultado.orElseThrow().getUser().getLogin()).isEqualTo("joseph");
         }
     }
 

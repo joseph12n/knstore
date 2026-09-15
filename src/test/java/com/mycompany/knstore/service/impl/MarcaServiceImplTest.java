@@ -84,8 +84,8 @@ class MarcaServiceImplTest {
         Optional<MarcaDTO> result = service.partialUpdate(cambios);
 
         assertThat(result).isPresent();
-        assertThat(result.get().getSlug()).isEqualTo("nike-oficial");
-        assertThat(result.get().getNombre()).isEqualTo("Nike");
+        assertThat(result.orElseThrow().getSlug()).isEqualTo("nike-oficial");
+        assertThat(result.orElseThrow().getNombre()).isEqualTo("Nike");
     }
 
     @Test
@@ -113,9 +113,9 @@ class MarcaServiceImplTest {
         Optional<MarcaDTO> result = service.findOne("marca-1");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getId()).isEqualTo("marca-1");
-        assertThat(result.get().getNombre()).isEqualTo("Nike");
-        assertThat(result.get().getSlug()).isEqualTo("nike");
+        assertThat(result.orElseThrow().getId()).isEqualTo("marca-1");
+        assertThat(result.orElseThrow().getNombre()).isEqualTo("Nike");
+        assertThat(result.orElseThrow().getSlug()).isEqualTo("nike");
     }
 
     @Test

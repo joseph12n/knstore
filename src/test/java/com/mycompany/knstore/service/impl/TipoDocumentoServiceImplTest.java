@@ -90,9 +90,9 @@ class TipoDocumentoServiceImplTest {
         Optional<TipoDocumentoDTO> result = service.partialUpdate(cambios);
 
         assertThat(result).isPresent();
-        assertThat(result.get().getNombreTipo()).isEqualTo("Cedula ciudadania");
-        assertThat(result.get().getSigla()).isEqualTo("CC");
-        assertThat(result.get().getEstado()).isEqualTo(EstadoTipoDocumento.ACTIVO);
+        assertThat(result.orElseThrow().getNombreTipo()).isEqualTo("Cedula ciudadania");
+        assertThat(result.orElseThrow().getSigla()).isEqualTo("CC");
+        assertThat(result.orElseThrow().getEstado()).isEqualTo(EstadoTipoDocumento.ACTIVO);
     }
 
     @Test
@@ -121,10 +121,10 @@ class TipoDocumentoServiceImplTest {
         Optional<TipoDocumentoDTO> result = service.findOne("tdoc-1");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getId()).isEqualTo("tdoc-1");
-        assertThat(result.get().getSigla()).isEqualTo("CC");
-        assertThat(result.get().getNombreTipo()).isEqualTo("Cedula");
-        assertThat(result.get().getEstado()).isEqualTo(EstadoTipoDocumento.ACTIVO);
+        assertThat(result.orElseThrow().getId()).isEqualTo("tdoc-1");
+        assertThat(result.orElseThrow().getSigla()).isEqualTo("CC");
+        assertThat(result.orElseThrow().getNombreTipo()).isEqualTo("Cedula");
+        assertThat(result.orElseThrow().getEstado()).isEqualTo(EstadoTipoDocumento.ACTIVO);
     }
 
     @Test
