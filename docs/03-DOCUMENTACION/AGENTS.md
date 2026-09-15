@@ -257,14 +257,29 @@ npx tsc --noEmit                       # Chequeo de tipos
 ### Docker
 
 ```bash
-docker compose -f src/main/docker/mongodb.yml up -d               # MongoDB standalone (versión EC2/DNS, sin transacciones)
 docker compose -f src/main/docker/mongodb-replicaset.yml up -d    # MongoDB replica set rs0 (dev local, transacciones)
 docker compose -f src/main/docker/services.yml up -d --wait       # Mongo replica set + auxiliares
-docker compose -f src/main/docker/app.yml up                      # App completa
-npm run java:docker                                               # Imagen con Jib
+docker compose -f src/main/docker/app.yml up                      # App completa (dev)
+docker compose -f src/main/docker/app-prod.yml up -d              # Producción (EC2 + Nginx Proxy Manager)
+npm run java:docker                                               # Imagen dev con Jib
 ```
 
-> **Dos versiones de Mongo:** `mongodb.yml` es la versión standalone usada en la EC2 (`app.knstore.duckdns.org`); `mongodb-replicaset.yml` es la versión con replica set `rs0` (puerto `27018`) necesaria para el checkout transaccional en desarrollo. El script `docker:db:up` y `app.yml` usan la standalone; `services.yml` usa la de replica set.
+### Producción
+
+```bash
+# Regresión completa (unit + IT con Testcontainers, JaCoCo y modernizer)
+./mvnw -Dskip.npm=true -Dspotless.check.skip=true -Dcheckstyle.skip=true verify
+
+# Imagen de producción (el perfil prod ya compila el frontend con webpack)
+./mvnw -ntp verify -DskipTests -Pprod -Djib.to.image=eljoseph12/knstore:X.Y.Z -Djib.to.tags=latest jib:dockerBuild
+
+# En la EC2: copiar src/main/docker/.env.example a .env (secretos), luego
+docker compose -f src/main/docker/app-prod.yml pull && docker compose -f src/main/docker/app-prod.yml up -d
+node scripts/rotate-prod-users.js https://app.knstore.duckdns.org   # rotar admin y desactivar usuarios demo
+node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # cargar catálogo (reales o demo)
+```
+
+> **Mongo:** `mongodb.yml`, `mongodb-replicaset.yml` y `app-prod.yml` usan replica set `rs0` porque el checkout usa transacciones reales; la app de producción se conecta con `SPRING_MONGODB_URI=...?replicaSet=rs0`. En local el puerto del replica set es `27018`.
 
 ---
 
@@ -280,6 +295,8 @@ npm run java:docker                                               # Imagen con J
 8. **Cuenta obligatoria:** Sin `Cuenta` no se pueden gestionar direcciones ni finalizar compras; el carrito redirige a completar perfil.
 9. **Pago simbólico aprobado en el checkout:** el pago nace `APPROVED` en la misma transacción del checkout; la abstracción `PaymentGateway` queda lista para una API real futura.
 10. **Imágenes por URL:** `ProductoImagen.imagenUrl` (String) tiene prioridad sobre el blob `imagen` (byte[]) en el storefront; el seed usa URLs de Unsplash.
+11. **Producción endurecida:** el perfil `prod` no carga `secret-samples`; el JWT se inyecta con `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET`, SMTP y admin inicial van por entorno y los usuarios demo se controlan con `knstore.seed.demo-users` (`false` en prod).
+12. **Cobertura medible del frontend:** Vitest mide solo código propio (`coverage.include`; excluye `entities/modules/shared` generados) con umbrales en `coverage.thresholds` (45/35/40/45) que bloquean regresiones.
 
 ---
 
@@ -299,6 +316,10 @@ npm run java:docker                                               # Imagen con J
 - `src/main/webapp/app/app.tsx` y `routes.tsx`: enrutamiento y layout dual.
 - `src/main/webapp/app/landing/`: tienda pública y panel de cliente.
 - `src/main/webapp/app/dashboard/index.tsx`: punto de entrada del panel admin.
+- `src/main/docker/app-prod.yml` y `src/main/docker/.env.example`: despliegue de producción (perfil prod, Mongo rs0, secretos por entorno).
+- `scripts/rotate-prod-users.js`: rotación del administrador y desactivación de usuarios demo en producción.
+- `scripts/seed-demo-data.js`: carga de catálogo vía API (reales o demo).
+- `docs/test_de_cobertura/informe-calidad/`: informe de calidad HTML/CSS/JS (evidencia de pruebas y cobertura).
 
 ---
 
@@ -311,4 +332,7 @@ npm run java:docker                                               # Imagen con J
 - El pago es simbólico y SIEMPRE se aprueba dentro del checkout; no reintroducir estados REJECTED/aleatorios en la pasarela simulada. La rama REJECTED solo existe como defensa de monto incoherente.
 - Al tocar imágenes del catálogo, `buildImageUrl` (landing/utils/format.ts) da prioridad a `imagenUrl`; `imagen` (byte[]) sigue soportado para cargas del admin.
 - Los campos numéricos (documentos, teléfonos, código postal) solo aceptan dígitos: mantener `@Pattern` en dominio/DTO y patterns en los formularios.
+- **No usar el perfil `dev` ni `app.yml` en la EC2:** habilitan seed de catálogo, CORS local y prometheus. El despliegue correcto es `app-prod.yml` con `.env`.
+- La app password de Gmail ya no está en el repo; en dev/prod se define `SPRING_MAIL_PASSWORD` por entorno.
+- Antes de construir la imagen prod, verificar RAM disponible (webpack prod es el pico más alto).
 - Actualizar este `docs/03-DOCUMENTACION/AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos.

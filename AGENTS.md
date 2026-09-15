@@ -260,10 +260,28 @@ npx tsc --noEmit                       # Chequeo de tipos
 ### Docker
 
 ```bash
-docker compose -f src/main/docker/services.yml up   # MongoDB + auxiliares
-docker compose -f src/main/docker/app.yml up        # App completa
-npm run java:docker                                 # Imagen con Jib
+docker compose -f src/main/docker/services.yml up -d --wait   # MongoDB replica set rs0 + auxiliares
+docker compose -f src/main/docker/app.yml up                  # App completa (dev)
+docker compose -f src/main/docker/app-prod.yml up -d          # Producción (EC2 + Nginx Proxy Manager)
+npm run java:docker                                           # Imagen dev con Jib
 ```
+
+### Producción
+
+```bash
+# Regresión completa (unit + IT con Testcontainers, JaCoCo y modernizer)
+./mvnw -Dskip.npm=true -Dspotless.check.skip=true -Dcheckstyle.skip=true verify
+
+# Imagen de producción (el perfil prod ya compila el frontend con webpack)
+./mvnw -ntp verify -DskipTests -Pprod -Djib.to.image=eljoseph12/knstore:X.Y.Z -Djib.to.tags=latest jib:dockerBuild
+
+# En la EC2: copiar src/main/docker/.env.example a .env (secretos), luego
+docker compose -f src/main/docker/app-prod.yml pull && docker compose -f src/main/docker/app-prod.yml up -d
+node scripts/rotate-prod-users.js https://app.knstore.duckdns.org   # rotar admin y desactivar usuarios demo
+node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # cargar catálogo (reales o demo)
+```
+
+> **Mongo:** todos los compose (`mongodb.yml`, `mongodb-replicaset.yml`, `app-prod.yml`) usan replica set `rs0` porque el checkout usa transacciones reales; la app de producción se conecta con `SPRING_MONGODB_URI=...?replicaSet=rs0`. En local el puerto del replica set es `27018`.
 
 ---
 
@@ -277,6 +295,8 @@ npm run java:docker                                 # Imagen con Jib
 6. **Ownership de recursos:** Clientes solo acceden a sus propios datos.
 7. **Carrito híbrido:** `localStorage` para anónimos, backend para autenticados.
 8. **Cuenta obligatoria:** Sin `Cuenta` no se pueden gestionar direcciones ni finalizar compras.
+9. **Producción endurecida:** el perfil `prod` no carga `secret-samples`; el JWT se inyecta con `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET`, SMTP y admin inicial van por entorno y los usuarios demo se controlan con `knstore.seed.demo-users` (`false` en prod).
+10. **Cobertura medible del frontend:** Vitest mide solo código propio (`coverage.include`; excluye `entities/modules/shared` generados) con umbrales en `coverage.thresholds` (45/35/40/45) que bloquean regresiones.
 
 ---
 
@@ -299,6 +319,9 @@ npm run java:docker                                 # Imagen con Jib
 - `src/main/webapp/app/landing/services/checkout.service.ts`: payload y llamadas del checkout (precio siempre server-side; el resultado incluye `pago`).
 - `docs/jmeter/knstore_stress_plan.jmx`: plan de estrés/rendimiento (sección 07, escenarios ES-01…ES-07 con cargas vía `-JN_S1…N_S7`).
 - `docs/jmeter/gen_informe.py` + `print_variant.py` + `pdf_build.py` + `generar_informe.sh`: pipeline de informes (HTML/PDF) desde `resultados.jtl`.
+- `src/main/docker/app-prod.yml` y `src/main/docker/.env.example`: despliegue de producción (perfil prod, Mongo rs0, secretos por entorno).
+- `scripts/rotate-prod-users.js`: rotación del administrador y desactivación de usuarios demo en producción.
+- `docs/test_de_cobertura/informe-calidad/`: informe de calidad HTML/CSS/JS (evidencia de pruebas y cobertura).
 
 ---
 
@@ -309,6 +332,9 @@ npm run java:docker                                 # Imagen con Jib
 - Al trabajar en el landing, preferir hooks `useCart` y `useCatalog` en lugar de repetir lógica de fetching.
 - Mantener responsividad; probar desde 360px.
 - Respetar ownership: cualquier endpoint nuevo para `CLIENTE` debe validar que el recurso pertenece al usuario autenticado.
+- **No usar el perfil `dev` ni `app.yml` en la EC2:** habilitan seed de catálogo, CORS local y prometheus. El despliegue correcto es `app-prod.yml` con `.env`.
+- La app password de Gmail ya no está en el repo; en dev/prod se define `SPRING_MAIL_PASSWORD` por entorno.
+- Antes de construir la imagen prod, verificar RAM disponible (webpack prod es el pico más alto).
 - Actualizar este `AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos.
 
 ### 12.1 Commits y mirror — obligatorio
