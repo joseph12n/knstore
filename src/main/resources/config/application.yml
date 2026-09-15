@@ -94,6 +94,10 @@ mongock:
 
 # Propiedades especificas de KN-Store
 knstore:
+  seed:
+    # Usuarios demo (admin/admin, user/user, manager/manager, cliente/cliente)
+    # solo para desarrollo y pruebas; en produccion se desactiva.
+    demo-users: true
   payment:
     gateway:
       # Pasarela activa: "simulated" para desarrollo y pruebas. Aprueba siempre
@@ -122,8 +126,6 @@ spring:
         - api-docs
         # Uncomment to activate TLS for the dev profile
         #- tls
-      prod:
-        - secret-samples
   jmx:
     enabled: false
   messages:
