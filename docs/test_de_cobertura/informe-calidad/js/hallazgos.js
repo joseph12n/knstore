@@ -73,6 +73,15 @@ window.HALLAZGOS = [
     accion: 'Cerrado en la sesión del 2026-09-15.',
     estado: 'Resuelto',
   },
+  {
+    id: 'H-08',
+    sev: 'Alta',
+    t: 'La CSP bloqueaba las imágenes externas del catálogo',
+    d: 'La Content-Security-Policy tenía img-src \'self\' data:, por lo que el navegador bloqueaba las fotos de Unsplash y cualquier URL externa. Se agregaron images.unsplash.com y plus.unsplash.com a img-src. Además, la consulta por lote de imágenes fallaba por el quirk de @DBRef ($id como ObjectId): se corrigió ProductoImagenRepository con @Query y conversión con MongoIdUtils, más un IT de regresión.',
+    impacto: 'Resuelto: fichas, destacados y novedades muestran fotos reales en producción (verificado con captura real).',
+    accion: 'Cerrado en la sesión del 2026-09-15.',
+    estado: 'Resuelto',
+  },
 ];
 
 window.ACCIONES = [
@@ -83,8 +92,11 @@ window.ACCIONES = [
   { p: 5, t: 'Hardening de producción', imp: 'Alta', esf: 'Media', r: 'Secretos por entorno, admin real, Mongo rs0, compose app-prod.yml e imagen 3.0.0', estado: 'Completado' },
   { p: 6, t: 'Corregir denormalización de precio (H-07)', imp: 'Alta', esf: 'Baja', r: 'Orden por precio server-side funcionando', estado: 'Completado' },
   { p: 7, t: 'Seed de catálogo real para producción', imp: 'Alta', esf: 'Media', r: '777 productos, 12 marcas, imágenes y precios reales', estado: 'Completado' },
-  { p: 8, t: 'Specs de páginas del panel cliente/admin', imp: 'Media', esf: 'Media', r: 'Cobertura del panel (backlog post-lanzamiento)', estado: 'Pendiente' },
-  { p: 9, t: 'Casos negativos en Pedido/Envío/ItemCarrito/ResourceAccess (H-05)', imp: 'Media', esf: 'Media', r: 'Ramas backend de 41% a ~60% (backlog)', estado: 'Pendiente' },
+  { p: 8, t: 'Corregir consulta de imágenes y CSP (H-08)', imp: 'Alta', esf: 'Baja', r: 'Fotos visibles en producción', estado: 'Completado' },
+  { p: 9, t: 'Despliegue en la EC2 con perfil prod', imp: 'Alta', esf: 'Media', r: 'Imagen 3.0.3, datos y pedidos intactos, backups diarios', estado: 'Completado' },
+  { p: 10, t: 'Specs de páginas del panel cliente/admin', imp: 'Media', esf: 'Media', r: 'Cobertura del panel (backlog post-lanzamiento)', estado: 'Pendiente' },
+  { p: 11, t: 'Casos negativos en Pedido/Envío/ItemCarrito/ResourceAccess (H-05)', imp: 'Media', esf: 'Media', r: 'Ramas backend de 41% a ~60% (backlog)', estado: 'Pendiente' },
+  { p: 12, t: 'Cerrar el puerto 8080 en el Security Group (bypass de NPM/SSL)', imp: 'Alta', esf: 'Baja', r: 'Tráfico solo por 80/443 con certificado', estado: 'Pendiente' },
 ];
 
 window.METODOLOGIA = {

@@ -191,20 +191,20 @@ window.DATOS = {
    },
    {
     "n": "com.mycompany.knstore.service.impl",
-    "ic": 5652,
-    "it": 6337,
-    "bc": 247,
+    "ic": 5688,
+    "it": 6340,
+    "bc": 249,
     "bt": 382,
-    "lc": 1216,
-    "lt": 1327,
-    "mc": 284,
+    "lc": 1219,
+    "lt": 1328,
+    "mc": 287,
     "mt": 316,
     "cc": 21,
     "ct": 21,
-    "i": 89.2,
-    "b": 64.7,
-    "l": 91.6,
-    "m": 89.9,
+    "i": 89.7,
+    "b": 65.2,
+    "l": 91.8,
+    "m": 90.8,
     "c": 100.0
    },
    {
@@ -227,20 +227,20 @@ window.DATOS = {
    },
    {
     "n": "com.mycompany.knstore.web.rest",
-    "ic": 4733,
+    "ic": 4745,
     "it": 5678,
     "bc": 290,
     "bt": 372,
-    "lc": 1053,
+    "lc": 1056,
     "lt": 1226,
-    "mc": 200,
+    "mc": 201,
     "mt": 224,
     "cc": 29,
     "ct": 33,
-    "i": 83.4,
+    "i": 83.6,
     "b": 78.0,
-    "l": 85.9,
-    "m": 89.3,
+    "l": 86.1,
+    "m": 89.7,
     "c": 87.9
    },
    {
@@ -299,17 +299,17 @@ window.DATOS = {
    },
    {
     "n": "com.mycompany.knstore.service.mapper",
-    "ic": 5105,
+    "ic": 5117,
     "it": 13354,
-    "bc": 478,
+    "bc": 479,
     "bt": 2270,
-    "lc": 1444,
+    "lc": 1446,
     "lt": 3771,
     "mc": 170,
     "mt": 295,
     "cc": 20,
     "ct": 20,
-    "i": 38.2,
+    "i": 38.3,
     "b": 21.1,
     "l": 38.3,
     "m": 57.6,
@@ -353,20 +353,20 @@ window.DATOS = {
    }
   ],
   "total": {
-   "ic": 27786,
-   "it": 40207,
-   "bc": 1634,
+   "ic": 27846,
+   "it": 40210,
+   "bc": 1637,
    "bt": 3983,
-   "lc": 7321,
-   "lt": 10501,
-   "mc": 2130,
+   "lc": 7329,
+   "lt": 10502,
+   "mc": 2134,
    "mt": 2420,
    "cc": 185,
    "ct": 194,
-   "i": 69.1,
-   "b": 41.0,
-   "l": 69.7,
-   "m": 88.0,
+   "i": 69.3,
+   "b": 41.1,
+   "l": 69.8,
+   "m": 88.2,
    "c": 95.4
   },
   "clases": [
@@ -806,21 +806,6 @@ window.DATOS = {
     "l": 55.3
    },
    {
-    "n": "ProductoMapperImpl",
-    "p": "service.mapper",
-    "ic": 611,
-    "it": 1123,
-    "bc": 48,
-    "bt": 172,
-    "lc": 170,
-    "lt": 314,
-    "mc": 17,
-    "mt": 25,
-    "i": 54.4,
-    "b": 27.9,
-    "l": 54.1
-   },
-   {
     "n": "PedidoResource",
     "p": "web.rest",
     "ic": 239,
@@ -834,6 +819,21 @@ window.DATOS = {
     "i": 55.3,
     "b": 58.3,
     "l": 59.8
+   },
+   {
+    "n": "ProductoMapperImpl",
+    "p": "service.mapper",
+    "ic": 623,
+    "it": 1123,
+    "bc": 49,
+    "bt": 172,
+    "lc": 172,
+    "lt": 314,
+    "mc": 17,
+    "mt": 25,
+    "i": 55.5,
+    "b": 28.5,
+    "l": 54.8
    },
    {
     "n": "CategoriaIVAMapperImpl",
@@ -1151,21 +1151,6 @@ window.DATOS = {
     "l": 81.2
    },
    {
-    "n": "ProductoResource",
-    "p": "web.rest",
-    "ic": 242,
-    "it": 313,
-    "bc": 17,
-    "bt": 22,
-    "lc": 54,
-    "lt": 67,
-    "mc": 10,
-    "mt": 12,
-    "i": 77.3,
-    "b": 77.3,
-    "l": 80.6
-   },
-   {
     "n": "SecuenciasIndexMigration",
     "p": "config.dbmigrations",
     "ic": 24,
@@ -1286,6 +1271,21 @@ window.DATOS = {
     "l": 81.8
    },
    {
+    "n": "ProductoResource",
+    "p": "web.rest",
+    "ic": 254,
+    "it": 313,
+    "bc": 17,
+    "bt": 22,
+    "lc": 57,
+    "lt": 67,
+    "mc": 11,
+    "mt": 12,
+    "i": 81.2,
+    "b": 77.3,
+    "l": 85.1
+   },
+   {
     "n": "WebConfigurer",
     "p": "config",
     "ic": 116,
@@ -1329,21 +1329,6 @@ window.DATOS = {
     "i": 84.2,
     "b": 54.2,
     "l": 82.4
-   },
-   {
-    "n": "ProductoServiceImpl",
-    "p": "service.impl",
-    "ic": 785,
-    "it": 926,
-    "bc": 63,
-    "bt": 100,
-    "lc": 158,
-    "lt": 178,
-    "mc": 31,
-    "mt": 35,
-    "i": 84.8,
-    "b": 63.0,
-    "l": 88.8
    },
    {
     "n": "CuentaMapperImpl",
@@ -1404,6 +1389,21 @@ window.DATOS = {
     "i": 88.1,
     "b": 87.5,
     "l": 91.1
+   },
+   {
+    "n": "ProductoServiceImpl",
+    "p": "service.impl",
+    "ic": 821,
+    "it": 929,
+    "bc": 65,
+    "bt": 100,
+    "lc": 161,
+    "lt": 179,
+    "mc": 34,
+    "mt": 35,
+    "i": 88.4,
+    "b": 65.0,
+    "l": 89.9
    },
    {
     "n": "ProductoPrecioServiceImpl",
@@ -3294,8 +3294,8 @@ window.DATOS = {
    },
    {
     "n": "Consolidado (unit + IT)",
-    "i": 69.1,
-    "b": 41.0
+    "i": 69.3,
+    "b": 41.1
    }
   ]
  },
@@ -3695,12 +3695,12 @@ window.DATOS = {
   ]
  },
  "pruebas": {
-  "total": 848,
-  "ok": 848,
+  "total": 849,
+  "ok": 849,
   "fail": 0,
   "unit": 363,
-  "it": 485,
-  "itOk": 485,
+  "it": 486,
+  "itOk": 486,
   "itFail": 0,
   "cucumber": 3,
   "suites": [
@@ -3720,12 +3720,12 @@ window.DATOS = {
     "f": 0
    },
    {
-    "n": "com.mycompany.knstore.security.ResourceAccessServiceTest",
-    "p": 23,
+    "n": "com.mycompany.knstore.web.rest.ProductoResourceIT",
+    "p": 24,
     "f": 0
    },
    {
-    "n": "com.mycompany.knstore.web.rest.ProductoResourceIT",
+    "n": "com.mycompany.knstore.security.ResourceAccessServiceTest",
     "p": 23,
     "f": 0
    },
@@ -4351,6 +4351,6 @@ window.DATOS = {
    }
   ],
   "frontendTotal": 524,
-  "sistemaTotal": 1372
+  "sistemaTotal": 1373
  }
 };
