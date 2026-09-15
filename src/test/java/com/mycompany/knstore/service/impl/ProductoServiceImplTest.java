@@ -30,6 +30,7 @@ import com.mycompany.knstore.service.mapper.ProductoMapperImpl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +48,9 @@ import org.springframework.data.mongodb.core.query.Update;
 
 @ExtendWith(MockitoExtension.class)
 class ProductoServiceImplTest {
+
+    private static final String PRODUCTO_ID_1 = "64b7f0c2a1b2c3d4e5f60001";
+    private static final String PRODUCTO_ID_2 = "64b7f0c2a1b2c3d4e5f60002";
 
     private final com.mycompany.knstore.service.mapper.ProductoMapper productoMapper = new ProductoMapperImpl();
 
@@ -97,8 +101,8 @@ class ProductoServiceImplTest {
 
     @Test
     void findAllResuelveRelacionesEnLoteSinConsultasIndividuales() {
-        Producto p1 = productoConRefs("p-1", "pre-1", "inv-1", "cat-1", "sub-1", "m-1", "iva-1");
-        Producto p2 = productoConRefs("p-2", "pre-2", "inv-2", "cat-2", "sub-2", "m-2", "iva-2");
+        Producto p1 = productoConRefs(PRODUCTO_ID_1, "pre-1", "inv-1", "cat-1", "sub-1", "m-1", "iva-1");
+        Producto p2 = productoConRefs(PRODUCTO_ID_2, "pre-2", "inv-2", "cat-2", "sub-2", "m-2", "iva-2");
         when(productoRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(p1, p2), PageRequest.of(0, 10), 2));
 
         // entidades resueltas a partir de los findByIdIn
@@ -127,7 +131,7 @@ class ProductoServiceImplTest {
         assertThat(page).isNotNull();
         assertThat(page.getContent()).hasSize(2);
 
-        ProductoDTO dto1 = buscarPorId(page.getContent(), "p-1");
+        ProductoDTO dto1 = buscarPorId(page.getContent(), PRODUCTO_ID_1);
         assertThat(dto1.getPrecio().getPrecioVenta()).isEqualByComparingTo(new BigDecimal("9900.99"));
         assertThat(dto1.getInventario().getStock()).isEqualTo(20);
         assertThat(dto1.getCategoria().getNombre()).isEqualTo("Categoria 1");
@@ -142,7 +146,9 @@ class ProductoServiceImplTest {
         verify(subcategoriaRepository, times(1)).findByIdIn(coleccionConIdsExactos("sub-1", "sub-2"));
         verify(marcaRepository, times(1)).findByIdIn(coleccionConIdsExactos("m-1", "m-2"));
         verify(categoriaIVARepository, times(1)).findByIdIn(coleccionConIdsExactos("iva-1", "iva-2"));
-        verify(productoImagenRepository, times(1)).findByProductoIdIn(coleccionConIdsExactos("p-1", "p-2"));
+        verify(productoImagenRepository, times(1)).findByProductoIdIn(
+            coleccionConIdsExactos(new ObjectId(PRODUCTO_ID_1), new ObjectId(PRODUCTO_ID_2))
+        );
 
         // nunca se resuelven relaciones de a una (eliminacion del N+1)
         verify(productoPrecioRepository, never()).findById(any());
@@ -155,7 +161,7 @@ class ProductoServiceImplTest {
 
     @Test
     void findAllByIdsBuscaPorLoteYResuelveRelaciones() {
-        Producto p1 = productoConRefs("p-1", "pre-1", "inv-1", "cat-1", "sub-1", "m-1", "iva-1");
+        Producto p1 = productoConRefs(PRODUCTO_ID_1, "pre-1", "inv-1", "cat-1", "sub-1", "m-1", "iva-1");
         when(productoRepository.findAllById(anyCollection())).thenReturn(List.of(p1));
         when(productoPrecioRepository.findByIdIn(anyCollection())).thenReturn(List.of(precioResuelto("pre-1", "9900.99")));
         when(productoInventarioRepository.findByIdIn(anyCollection())).thenReturn(List.of(inventarioResuelto("inv-1", 20)));
@@ -165,19 +171,19 @@ class ProductoServiceImplTest {
         when(categoriaIVARepository.findByIdIn(anyCollection())).thenReturn(List.of(catIvaResuelta("iva-1", "IVA 1")));
         when(productoImagenRepository.findByProductoIdIn(anyCollection())).thenReturn(List.of());
 
-        List<ProductoDTO> result = service.findAllByIds(List.of("p-1"));
+        List<ProductoDTO> result = service.findAllByIds(List.of(PRODUCTO_ID_1));
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getId()).isEqualTo("p-1");
+        assertThat(result.get(0).getId()).isEqualTo(PRODUCTO_ID_1);
         assertThat(result.get(0).getPrecio().getPrecioVenta()).isEqualByComparingTo(new BigDecimal("9900.99"));
         verify(productoPrecioRepository, times(1)).findByIdIn(coleccionConIdsExactos("pre-1"));
-        verify(productoRepository, times(1)).findAllById(coleccionConIdsExactos("p-1"));
+        verify(productoRepository, times(1)).findAllById(coleccionConIdsExactos(PRODUCTO_ID_1));
     }
 
     @Test
     void searchActivePropagaElOrdenamientoPorPrecioVentaAlQuery() {
-        Producto p1 = productoBasico("p-1", new BigDecimal("10000.00"));
-        Producto p2 = productoBasico("p-2", new BigDecimal("5000.00"));
+        Producto p1 = productoBasico(PRODUCTO_ID_1, new BigDecimal("10000.00"));
+        Producto p2 = productoBasico(PRODUCTO_ID_2, new BigDecimal("5000.00"));
         when(mongoTemplate.find(any(Query.class), eq(Producto.class))).thenReturn(List.of(p1, p2));
         when(productoImagenRepository.findByProductoIdIn(anyCollection())).thenReturn(List.of());
 
@@ -190,12 +196,14 @@ class ProductoServiceImplTest {
         verify(mongoTemplate).find(queryCaptor.capture(), eq(Producto.class));
         Query query = queryCaptor.getValue();
         assertThat(query.getSortObject()).containsEntry("precioVenta", 1);
-        verify(productoImagenRepository, times(1)).findByProductoIdIn(coleccionConIdsExactos("p-1", "p-2"));
+        verify(productoImagenRepository, times(1)).findByProductoIdIn(
+            coleccionConIdsExactos(new ObjectId(PRODUCTO_ID_1), new ObjectId(PRODUCTO_ID_2))
+        );
     }
 
     @Test
     void searchActivePropagaElOrdenamientoDescendente() {
-        Producto p1 = productoBasico("p-1", new BigDecimal("10000.00"));
+        Producto p1 = productoBasico(PRODUCTO_ID_1, new BigDecimal("10000.00"));
         when(mongoTemplate.find(any(Query.class), eq(Producto.class))).thenReturn(List.of(p1));
         when(productoImagenRepository.findByProductoIdIn(anyCollection())).thenReturn(List.of());
 
@@ -337,7 +345,8 @@ class ProductoServiceImplTest {
             .orElseThrow();
     }
 
-    private java.util.Collection<String> coleccionConIdsExactos(String... ids) {
+    @SafeVarargs
+    private final <T> java.util.Collection<T> coleccionConIdsExactos(T... ids) {
         return org.mockito.ArgumentMatchers.argThat(
             coleccion -> coleccion != null && coleccion.size() == ids.length && Set.of(ids).containsAll(coleccion)
         );
