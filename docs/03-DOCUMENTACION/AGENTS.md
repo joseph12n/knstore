@@ -276,7 +276,8 @@ npm run java:docker                                               # Imagen dev c
 # En la EC2: copiar src/main/docker/.env.example a .env (secretos), luego
 docker compose -f src/main/docker/app-prod.yml pull && docker compose -f src/main/docker/app-prod.yml up -d
 node scripts/rotate-prod-users.js https://app.knstore.duckdns.org   # rotar admin y desactivar usuarios demo
-node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # cargar catálogo (reales o demo)
+node scripts/seed-catalogo-real.js https://app.knstore.duckdns.org  # catálogo real (recomendado)
+node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # catálogo demo (opcional)
 ```
 
 > **Mongo:** `mongodb.yml`, `mongodb-replicaset.yml` y `app-prod.yml` usan replica set `rs0` porque el checkout usa transacciones reales; la app de producción se conecta con `SPRING_MONGODB_URI=...?replicaSet=rs0`. En local el puerto del replica set es `27018`.
@@ -318,6 +319,8 @@ node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # cargar cat
 - `src/main/webapp/app/dashboard/index.tsx`: punto de entrada del panel admin.
 - `src/main/docker/app-prod.yml` y `src/main/docker/.env.example`: despliegue de producción (perfil prod, Mongo rs0, secretos por entorno).
 - `scripts/rotate-prod-users.js`: rotación del administrador y desactivación de usuarios demo en producción.
+- `scripts/seed-catalogo-real.js`: seed idempotente del catálogo real (12 marcas, ~777 productos con imágenes, precios e inventario) para producción.
+- `scripts/generar-informe-calidad.py`: regenera `docs/test_de_cobertura/informe-calidad/js/datos.js` desde JaCoCo y Vitest.
 - `scripts/seed-demo-data.js`: carga de catálogo vía API (reales o demo).
 - `docs/test_de_cobertura/informe-calidad/`: informe de calidad HTML/CSS/JS (evidencia de pruebas y cobertura).
 
@@ -333,6 +336,7 @@ node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # cargar cat
 - Al tocar imágenes del catálogo, `buildImageUrl` (landing/utils/format.ts) da prioridad a `imagenUrl`; `imagen` (byte[]) sigue soportado para cargas del admin.
 - Los campos numéricos (documentos, teléfonos, código postal) solo aceptan dígitos: mantener `@Pattern` en dominio/DTO y patterns en los formularios.
 - **No usar el perfil `dev` ni `app.yml` en la EC2:** habilitan seed de catálogo, CORS local y prometheus. El despliegue correcto es `app-prod.yml` con `.env`.
+- **RF-072 (precio denormalizado):** `ProductoPrecioDTO` no expone `producto`; `ProductoServiceImpl` escribe `precio_venta` al guardar el producto y `ProductoPrecioServiceImpl` resuelve la referencia inversa (`precio.$id`) al guardar el precio. No eliminar esa sincronización: el orden por precio depende de ella.
 - La app password de Gmail ya no está en el repo; en dev/prod se define `SPRING_MAIL_PASSWORD` por entorno.
 - Antes de construir la imagen prod, verificar RAM disponible (webpack prod es el pico más alto).
 - Actualizar este `docs/03-DOCUMENTACION/AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos.
