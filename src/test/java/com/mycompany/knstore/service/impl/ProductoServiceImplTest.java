@@ -43,6 +43,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 @ExtendWith(MockitoExtension.class)
 class ProductoServiceImplTest {
@@ -285,6 +286,33 @@ class ProductoServiceImplTest {
         subcategoria.setId(id);
         subcategoria.setNombre(nombre);
         return subcategoria;
+    }
+
+    @Test
+    void guardarProductoDenormalizaPrecioVentaDesdeElPrecioAsociado() {
+        ProductoPrecio precio = new ProductoPrecio();
+        precio.setId("pre-1");
+        precio.setPrecioVenta(new BigDecimal("1500.5"));
+        when(productoPrecioRepository.findById("pre-1")).thenReturn(java.util.Optional.of(precio));
+        when(productoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        com.mycompany.knstore.service.dto.ProductoPrecioDTO precioDto = new com.mycompany.knstore.service.dto.ProductoPrecioDTO();
+        precioDto.setId("pre-1");
+
+        ProductoDTO dto = new ProductoDTO();
+        dto.setId("p-1");
+        dto.setNombre("Tenis de prueba");
+        dto.setPrecio(precioDto);
+
+        service.save(dto);
+
+        ArgumentCaptor<Query> queryCaptor = ArgumentCaptor.forClass(Query.class);
+        ArgumentCaptor<Update> updateCaptor = ArgumentCaptor.forClass(Update.class);
+        verify(mongoTemplate).updateFirst(queryCaptor.capture(), updateCaptor.capture(), eq(Producto.class));
+
+        assertThat(queryCaptor.getValue().getQueryObject().get("_id")).isEqualTo("p-1");
+        Object valorSet = ((java.util.Map<?, ?>) updateCaptor.getValue().getUpdateObject().get("$set")).get("precio_venta");
+        assertThat(valorSet).isEqualTo(new BigDecimal("1500.50"));
     }
 
     private Marca marcaResuelta(String id, String nombre) {
