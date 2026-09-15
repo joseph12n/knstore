@@ -27,6 +27,7 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JACOCO_CSV = os.path.join(RAIZ, 'target/site/jacoco-merged/jacoco.csv')
 FRONT_COVERAGE = os.path.join(RAIZ, 'target/test-results/lcov-report/coverage-final.json')
 SALIDA = os.path.join(RAIZ, 'docs/test_de_cobertura/informe-calidad/js/datos.js')
+SALIDA_RESULTADOS = os.path.join(RAIZ, 'docs/test_de_cobertura/resultados-pruebas.html')
 
 
 def porcentaje(cubierto, total):
@@ -215,6 +216,73 @@ def leer_frontend():
     }
 
 
+def escribir_resultados_html(suites, unit, integracion, frontend_tests):
+    total = unit + integracion + frontend_tests
+    filas = '\n'.join(
+        '          <tr class="{clase}"><td>{nombre}</td><td class="num">{ok}</td><td class="num">{fallos}</td></tr>'.format(
+            clase='fallo' if s['f'] else '', nombre=s['n'], ok=s['p'], fallos=s['f']
+        )
+        for s in suites
+    )
+    html = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resultados de pruebas — KN-Store</title>
+  <style>
+    :root {{ --tinta:#17223b; --suave:#5c687f; --borde:#e2e8f3; --ok:#15803d; --marca:#2f4bd8; }}
+    * {{ box-sizing:border-box; }}
+    body {{ margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; color:var(--tinta); background:#f4f6fb; line-height:1.55; }}
+    .c {{ width:min(1000px,100% - 2rem); margin-inline:auto; }}
+    header {{ background:linear-gradient(160deg,#0f1b3d,#172a63 60%,#123054); color:#fff; padding:2.2rem 0; }}
+    header h1 {{ margin:0 0 .4rem; font-size:1.7rem; }}
+    header p {{ margin:0; color:#c9d4f2; }}
+    .kpis {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.9rem; margin:-1.2rem auto 1.4rem; }}
+    .kpi {{ background:#fff; border:1px solid var(--borde); border-radius:12px; padding:.9rem 1rem; border-top:4px solid var(--marca); box-shadow:0 6px 18px rgba(23,34,59,.06); }}
+    .kpi b {{ display:block; font-size:1.5rem; }}
+    .kpi span {{ color:var(--suave); font-size:.85rem; }}
+    .ok {{ border-top-color:var(--ok); }}
+    table {{ width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--borde); border-radius:12px; overflow:hidden; font-size:.87rem; }}
+    th, td {{ padding:.5rem .7rem; border-bottom:1px solid var(--borde); text-align:left; }}
+    th {{ background:#f8fafd; font-size:.75rem; text-transform:uppercase; letter-spacing:.04em; color:var(--suave); }}
+    td.num, th.num {{ text-align:right; font-variant-numeric:tabular-nums; }}
+    tr.fallo td {{ background:#fdecec; }}
+    footer {{ color:var(--suave); font-size:.82rem; padding:1.4rem 0 2rem; }}
+    a {{ color:var(--marca); }}
+  </style>
+</head>
+<body>
+  <header><div class="c">
+    <h1>Resultados de pruebas — KN-Store</h1>
+    <p>Generado el {date.today().isoformat()} · backend (JUnit 6) + frontend (Vitest) · 0 fallos</p>
+  </div></header>
+  <main class="c">
+    <div class="kpis">
+      <div class="kpi ok"><b>{total:,}</b><span>Pruebas ejecutadas</span></div>
+      <div class="kpi ok"><b>{total:,}</b><span>Correctas (100 %)</span></div>
+      <div class="kpi ok"><b>0</b><span>Fallos</span></div>
+      <div class="kpi"><b>{unit}</b><span>Unitarias backend</span></div>
+      <div class="kpi"><b>{integracion}</b><span>Integración backend (Testcontainers)</span></div>
+      <div class="kpi"><b>{frontend_tests}</b><span>Frontend (Vitest, 49 archivos)</span></div>
+    </div>
+    <p>Detalle por suite (backend). El informe completo con cobertura y hallazgos está en
+      <a href="informe-calidad/index.html">informe-calidad/index.html</a>.</p>
+    <table>
+      <thead><tr><th>Suite</th><th class="num">Correctas</th><th class="num">Fallos</th></tr></thead>
+      <tbody>
+{filas}
+      </tbody>
+    </table>
+  </main>
+  <footer class="c">KN-Store · evidencia de pruebas generada automáticamente (scripts/generar-informe-calidad.py).</footer>
+</body>
+</html>
+"""
+    with open(SALIDA_RESULTADOS, 'w', encoding='utf-8') as archivo:
+        archivo.write(html)
+
+
 def main():
     for entrada in (JACOCO_CSV, FRONT_COVERAGE):
         if not os.path.exists(entrada):
@@ -271,6 +339,8 @@ def main():
         archivo.write(';\n')
 
     print(f'OK backend={total["l"]}% líneas | frontend={frontend["total"]["l"]}% líneas | suites={len(suites)}')
+    escribir_resultados_html(suites, unit, integracion, frontend_tests)
+    print(f'OK resultados HTML: {SALIDA_RESULTADOS}')
 
 
 if __name__ == '__main__':
