@@ -14,8 +14,9 @@
 | 4 | **Portainer: contraseña reseteada** | Se recuperó acceso con `docker run --rm -v portainer_portainer_data:/data portainer/helper-reset-password -password '...'` (usuario `admin`); login verificado por API (HTTP 200). La credencial la custodia el responsable; **no se registra en el repo**. Datos/stacks intactos. |
 | 5 | **Secretos / accesos** | La app password de Gmail vigente se cargó en el `.env` de la EC2 y se verificó por SMTP. Se crearon usuarios de rol `manager@knstore.com` (MANAGER) y `cliente@knstore.com` (CLIENTE); los usuarios demo (`user`, `manager`, `cliente`, `jmetermanager`) quedaron desactivados. |
 | 6 | **Documentación obligatoria** | Se creó esta bitácora y se añadió la regla a `AGENTS.md`: registrar todo cambio (incluida la infraestructura de la EC2) en `BITACORA.md` y actualizar `ESTADO_SESION.md`. |
+| 7 | **Security Group restringido** | Inbound final: `22` solo desde `152.201.209.84/32` (IP del responsable), `80` y `443` abiertos a Internet; retiradas las reglas de `81`, `8080`, `9000` y `9443`. Verificado desde Internet el 2026-09-18: los 3 dominios responden 200, los puertos directos no responden (000) y el SSH sigue operativo. Si cambia la IP del responsable, actualizar la regla SSH (o entrar por EC2 Instance Connect). |
 
-**Pendiente del responsable (Security Group, sin cambios aún en AWS):** dejar solo `22` (IP propia), `80` y `443`; retirar `81`, `8080`, `9000`, `9443`. Es seguro porque NPM ya no depende de esos puertos públicos.
+**Security Group:** aplicado el 2026-09-18 (ver #7): solo `22` (IP del responsable), `80` y `443`.
 
 ---
 

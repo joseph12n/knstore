@@ -32,12 +32,13 @@
 - **2026-09-18 — reinicios:** Mongo ahora tiene `restart: unless-stopped` (no revivía al encender la EC2; ya aplicado en repo y servidor).
 - **2026-09-18 — NPM interno:** los proxy hosts apuntan a `knstore-app-1:8080`, `127.0.0.1:81` y `portainer:9000`; NPM está en las redes `knstore` y `portainer_portainer_network` (compose en `/home/ubuntu/nginx/docker-compose.yml`). Dominios verificados 200 dentro y fuera.
 - **2026-09-18 — Portainer:** contraseña reseteada con el helper oficial (la credencial la custodia el responsable; no está en el repo).
+- **2026-09-18 — Security Group:** solo `22` (IP del responsable), `80` y `443`; `81/8080/9000/9443` bloqueados desde Internet (verificado). Si cambia la IP del responsable, actualizar la regla SSH o entrar por EC2 Instance Connect.
 
 ## 4. Pendientes inmediatos
 
-1. **Seguridad EC2 (solo Security Group, en AWS):** dejar `22` (IP propia), `80` y `443`; retirar `81`, `8080`, `9000` y `9443`. Ya es seguro porque NPM enruta por red interna.
-2. Backlog de calidad: specs de páginas del panel `/cuenta` y admin, casos negativos (H-05: ramas de 41% a ~60%) e imágenes de categorías (hoy son placeholders por diseño).
-3. Rotar periódicamente la app password de Gmail, el secreto JWT del `.env` y la contraseña del administrador.
+1. Backlog de calidad: specs de páginas del panel `/cuenta` y admin, casos negativos (H-05: ramas de 41% a ~60%) e imágenes de categorías (hoy son placeholders por diseño).
+2. Rotar periódicamente la app password de Gmail, el secreto JWT del `.env` y la contraseña del administrador.
+3. Mantener actualizada la regla SSH del Security Group si cambia la IP del responsable.
 
 ## 5. Entorno y quirks
 
