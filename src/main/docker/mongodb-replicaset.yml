@@ -9,6 +9,8 @@ services:
     image: mongo:8.2.9
     # Replica set de un solo nodo para habilitar transacciones multi-documento reales.
     command: ['mongod', '--replSet', 'rs0', '--bind_ip_all']
+    # Sobrevive a reinicios de la EC2 (la app depende de Mongo para arrancar).
+    restart: unless-stopped
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
     networks:
