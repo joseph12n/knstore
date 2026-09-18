@@ -296,6 +296,8 @@ curl -s localhost:8080/management/health   # status UP
 - **No tocar** `.env` (secretos), `mongodb-replicaset.yml` ni el `name: knstore`: cambiarlos recrea contenedores/volúmenes o rompe la conexión.
 - `docker-compose.legacy-dev.yml.bak` es el compose viejo con perfil `dev` (seed/prometheus); **no usarlo**.
 - Backups: `backup-mongo.sh` corre a las 03:00 (retención 7 días) en `/home/ubuntu/knstore/backups`.
+- **Mongo y app tienen `restart: unless-stopped`**: sobreviven reinicios de la EC2 (si se agregan servicios, darles política de reinicio).
+- **NPM enruta por red interna** (`knstore-app-1:8080`, `127.0.0.1:81`, `portainer:9000`) y está conectado a las redes `knstore` y `portainer_portainer_network`; **nunca** volver a apuntar un proxy host a la IP pública.
 
 ---
 
@@ -320,6 +322,7 @@ curl -s localhost:8080/management/health   # status UP
 
 - `docs/03-DOCUMENTACION/README.md`: presentación general del proyecto.
 - `docs/03-DOCUMENTACION/CONTRIBUTING.md`: guía de contribución y convenciones de commits.
+- `docs/03-DOCUMENTACION/BITACORA.md`: registro obligatorio de todos los cambios (código, infraestructura, EC2).
 - `knstore.jdl`: definición del dominio JHipster.
 - `.yo-rc.json`: configuración del generador.
 - `pom.xml`: dependencias y plugins Maven.
@@ -343,6 +346,7 @@ curl -s localhost:8080/management/health   # status UP
 
 ## 12. Notas para el agente
 
+- **DOCUMENTACIÓN OBLIGATORIA:** todo cambio (código, base de datos, infraestructura, configuración de la EC2, decisiones y comandos ejecutados) debe registrarse en `docs/03-DOCUMENTACION/BITACORA.md` el mismo día, con evidencia, y actualizar `ESTADO_SESION.md` si cambia el estado. No hay excepciones.
 - Antes de modificar `entities/`, `modules/` o `shared/` consultar si es realmente necesario; es código autogenerado.
 - Al trabajar en el landing, preferir hooks `useCart` y `useCatalog` en lugar de repetir lógica de fetching.
 - Mantener responsividad; probar desde 360px.
