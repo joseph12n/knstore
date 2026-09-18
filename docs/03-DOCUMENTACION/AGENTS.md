@@ -282,6 +282,23 @@ node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # catálogo 
 
 > **Mongo:** `mongodb.yml`, `mongodb-replicaset.yml` y `app-prod.yml` usan replica set `rs0` porque el checkout usa transacciones reales; la app de producción se conecta con `SPRING_MONGODB_URI=...?replicaSet=rs0`. En local el puerto del replica set es `27018`.
 
+### Actualizar la versión en la EC2
+
+En el servidor solo se cambia la etiqueta de la imagen (el `docker-compose.yml` de `/home/ubuntu/knstore` es un enlace simbólico a `app-prod.yml`):
+
+```bash
+cd /home/ubuntu/knstore
+# editar app-prod.yml:  image: eljoseph12/knstore:X.Y.Z
+docker compose pull && docker compose up -d
+curl -s localhost:8080/management/health   # status UP
+```
+
+- **No tocar** `.env` (secretos), `mongodb-replicaset.yml` ni el `name: knstore`: cambiarlos recrea contenedores/volúmenes o rompe la conexión.
+- `docker-compose.legacy-dev.yml.bak` es el compose viejo con perfil `dev` (seed/prometheus); **no usarlo**.
+- Backups: `backup-mongo.sh` corre a las 03:00 (retención 7 días) en `/home/ubuntu/knstore/backups`.
+- **Mongo y app tienen `restart: unless-stopped`**: sobreviven reinicios de la EC2 (si se agregan servicios, darles política de reinicio).
+- **NPM enruta por red interna** (`knstore-app-1:8080`, `127.0.0.1:81`, `portainer:9000`) y está conectado a las redes `knstore` y `portainer_portainer_network`; **nunca** volver a apuntar un proxy host a la IP pública.
+
 ---
 
 ## 10. Decisiones arquitectónicas clave
@@ -305,6 +322,7 @@ node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # catálogo 
 
 - `docs/03-DOCUMENTACION/README.md`: presentación general del proyecto.
 - `docs/03-DOCUMENTACION/CONTRIBUTING.md`: guía de contribución y convenciones de commits.
+- `docs/03-DOCUMENTACION/BITACORA.md`: registro obligatorio de todos los cambios (código, infraestructura, EC2).
 - `knstore.jdl`: definición del dominio JHipster.
 - `.yo-rc.json`: configuración del generador.
 - `pom.xml`: dependencias y plugins Maven.
@@ -328,6 +346,7 @@ node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # catálogo 
 
 ## 12. Notas para el agente
 
+- **DOCUMENTACIÓN OBLIGATORIA:** todo cambio (código, base de datos, infraestructura, configuración de la EC2, decisiones y comandos ejecutados) debe registrarse en `docs/03-DOCUMENTACION/BITACORA.md` el mismo día, con evidencia, y actualizar `ESTADO_SESION.md` si cambia el estado. No hay excepciones.
 - Antes de modificar `entities/`, `modules/` o `shared/` consultar si es realmente necesario; es código autogenerado.
 - Al trabajar en el landing, preferir hooks `useCart` y `useCatalog` en lugar de repetir lógica de fetching.
 - Mantener responsividad; probar desde 360px.

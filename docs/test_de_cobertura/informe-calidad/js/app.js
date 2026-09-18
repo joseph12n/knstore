@@ -52,6 +52,9 @@
         D.entorno.node,
         D.entorno.mongo
       ];
+      if (window.METODOLOGIA && window.METODOLOGIA.despliegue) {
+        items.push('Producción: app.knstore.duckdns.org');
+      }
       chips.innerHTML = items.map(function (t) { return '<li>' + t + '</li>'; }).join('');
     }
     var pie = $('#fechaPie');
@@ -83,13 +86,13 @@
         clase: 'warn',
         valor: pct(D.backend.total.l, 1).replace(' %', '<small>%</small>'),
         etiqueta: 'Cobertura backend (líneas)',
-        detalle: 'Instrucciones ' + pct(D.backend.total.i) + ' · ramas ' + pct(D.backend.total.b) + ' · 194 clases.'
+        detalle: 'Instrucciones ' + pct(D.backend.total.i) + ' · ramas ' + pct(D.backend.total.b) + ' · ' + D.backend.total.ct + ' clases.'
       },
       {
         clase: 'ok',
         valor: pct(D.frontend.total.l, 2).replace(' %', '<small>%</small>'),
         etiqueta: 'Cobertura frontend (líneas)',
-        detalle: 'Código propio (70 archivos); excluye lo generado por JHipster.'
+        detalle: 'Código propio (' + D.frontend.archivosMedidos + ' archivos); excluye lo generado por JHipster.'
       },
       {
         clase: 'warn',
@@ -111,26 +114,31 @@
 
     var cliente = $('#veredictoTexto');
     if (cliente) {
-      cliente.innerHTML = 'El sistema <strong>cumple los 107 requisitos</strong> y el <strong>100 %</strong> ' +
-        'de las pruebas automatizadas pasa sin errores (1.370 de 1.370). La cobertura del backend es del ' +
-        pct(D.backend.total.l) + ' de las líneas y la del frontend del ' + pct(D.frontend.total.l) +
-        ' sobre código propio; la brecha está en las páginas del panel que aún no tienen pruebas.';
+      cliente.innerHTML = 'El sistema <strong>cumple los 107 requisitos</strong> y el <strong>' +
+        pct(tasa, 2) + '</strong> de las pruebas automatizadas pasa sin errores (' +
+        pruebasOk.toLocaleString('es-CO') + ' de ' + pruebasTotales.toLocaleString('es-CO') + '). ' +
+        'La cobertura del backend es del ' + pct(D.backend.total.l) + ' de las líneas y la del frontend del ' +
+        pct(D.frontend.total.l) + ' sobre código propio; la brecha está en las páginas del panel que aún no tienen pruebas.';
     }
     var tecnico = $('#veredictoTexto2');
     if (tecnico) {
       tecnico.innerHTML = 'Consolidado JaCoCo (unit + IT): instrucciones ' + pct(D.backend.total.i) +
         ', líneas ' + pct(D.backend.total.l) + ', ramas ' + pct(D.backend.total.b) + ', métodos ' +
-        pct(D.backend.total.m) + ' sobre 194 clases. Puntos débiles: <code>ItemCarrito*</code>, ' +
+        pct(D.backend.total.m) + ' sobre ' + D.backend.total.ct + ' clases. Puntos débiles: <code>ItemCarrito*</code>, ' +
         '<code>PedidoResource</code>, <code>EnvioResource</code> y <code>ResourceAccessService</code> (H-05). ' +
         'Frontend Vitest: sentencias ' + pct(D.frontend.total.s) + ', ramas ' + pct(D.frontend.total.b) +
-        ' con umbrales activos 45/35/40/45 sobre 70 archivos propios.';
+        ' con umbrales activos 45/35/40/45 sobre ' + D.frontend.archivosMedidos + ' archivos propios.';
     }
 
     var semaforo = $('#semaforo');
     if (semaforo) {
       var luces = [
         { color: 'ok', texto: 'Funcionalidad: completa (107/107 requisitos)' },
-        { color: 'ok', texto: 'Pruebas: 1.370 de 1.370 (100 %)' },
+        {
+          color: 'ok',
+          texto: 'Pruebas: ' + pruebasOk.toLocaleString('es-CO') + ' de ' + pruebasTotales.toLocaleString('es-CO') +
+            ' (' + pct(tasa, 2) + ')'
+        },
         { color: 'warn', texto: 'Cobertura: backend ' + pct(D.backend.total.l) + ' · frontend propio ' + pct(D.frontend.total.l) }
       ];
       semaforo.innerHTML = luces.map(function (l) {
@@ -151,6 +159,27 @@
     }
     var valor = $('#donaValor');
     if (valor) valor.textContent = pct(tasa, 1);
+
+    var nSistema = $('#nPruebasSistema');
+    if (nSistema) nSistema.textContent = total.toLocaleString('es-CO');
+    var nBackend = $('#nPruebasBackend');
+    if (nBackend) nBackend.textContent = D.pruebas.total.toLocaleString('es-CO');
+    var nFrontend = $('#nPruebasFrontend');
+    if (nFrontend) nFrontend.textContent = D.frontend.tests.toLocaleString('es-CO');
+    var notaDona = $('#notaDona');
+    if (notaDona) {
+      notaDona.textContent =
+        total.toLocaleString('es-CO') + ' ejecutadas (' + D.pruebas.total.toLocaleString('es-CO') + ' backend + ' +
+        D.frontend.tests.toLocaleString('es-CO') + ' frontend) · ' + ok.toLocaleString('es-CO') + ' correctas · ' +
+        D.pruebas.fail + ' fallos';
+    }
+    var introTecnico = $('#introPruebasTecnico');
+    if (introTecnico) {
+      introTecnico.textContent =
+        'Backend: ' + D.pruebas.unit + ' pruebas unitarias (surefire) + ' + D.pruebas.it +
+        ' de integración (failsafe/Testcontainers) + escenarios Cucumber. Frontend: ' + D.frontend.archivos +
+        ' archivos de prueba Vitest, ' + D.frontend.tests + ' pruebas, todas verdes.';
+    }
 
     var desglose = $('#desglosePruebas');
     if (desglose) {
@@ -210,13 +239,17 @@
   function renderCoberturaBackend() {
     var cont = $('#barrasBackend');
     if (cont) {
+      var t = D.backend.total;
+      var cuenta = function (c, v) { return '(' + c.toLocaleString('es-CO') + ' / ' + v.toLocaleString('es-CO') + ')'; };
       cont.innerHTML =
-        barra('Instrucciones ejecutadas', D.backend.total.i, '(27.576 / 40.005)') +
-        barra('Líneas ejecutadas', D.backend.total.l, '(7.273 / 10.457)') +
-        barra('Ramas de decisión', D.backend.total.b, '(1.622 / 3.965)') +
-        barra('Métodos cubiertos', D.backend.total.m, '(2.126 / 2.415)') +
-        barra('Clases con cobertura', D.backend.total.c, '(185 / 194)');
+        barra('Instrucciones ejecutadas', t.i, cuenta(t.ic, t.it)) +
+        barra('Líneas ejecutadas', t.l, cuenta(t.lc, t.lt)) +
+        barra('Ramas de decisión', t.b, cuenta(t.bc, t.bt)) +
+        barra('Métodos cubiertos', t.m, cuenta(t.mc, t.mt)) +
+        barra('Clases con cobertura', t.c, cuenta(t.cc, t.ct));
     }
+    var chipClases = $('#chipClasesBackend');
+    if (chipClases) chipClases.textContent = D.backend.total.ct + ' clases';
     var modos = $('#modosBackend');
     if (modos) {
       modos.innerHTML = D.backend.modos.map(function (m) {
@@ -259,6 +292,10 @@
       sinMedir.innerHTML = '<li class="etiqueta-lista">Archivos propios con 0 % de cobertura (backlog de pruebas):</li>' +
         D.frontend.sinMedir.map(function (p) { return '<li>' + p + '</li>'; }).join('');
     }
+    var nPropios = $('#nArchivosPropios');
+    if (nPropios) nPropios.textContent = D.frontend.archivosMedidos;
+    var nCero = $('#nArchivosCero');
+    if (nCero) nCero.textContent = D.frontend.sinMedir.length;
 
     var carpetas = $('#tablaCarpetas tbody');
     if (carpetas) {
@@ -423,6 +460,8 @@
     }
     var herramientas = $('#herramientas');
     if (herramientas) herramientas.textContent = window.METODOLOGIA.herramientas;
+    var notaDespliegue = $('#notaDespliegue');
+    if (notaDespliegue) notaDespliegue.textContent = window.METODOLOGIA.despliegue || '';
     var entorno = $('#entornoLista');
     if (entorno) {
       entorno.innerHTML = Object.keys(D.entorno).map(function (k) {

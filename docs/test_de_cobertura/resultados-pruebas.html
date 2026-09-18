@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resultados de pruebas — KN-Store</title>
+  <style>
+    :root { --tinta:#17223b; --suave:#5c687f; --borde:#e2e8f3; --ok:#15803d; --marca:#2f4bd8; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; color:var(--tinta); background:#f4f6fb; line-height:1.55; }
+    .c { width:min(1000px,100% - 2rem); margin-inline:auto; }
+    header { background:linear-gradient(160deg,#0f1b3d,#172a63 60%,#123054); color:#fff; padding:2.2rem 0; }
+    header h1 { margin:0 0 .4rem; font-size:1.7rem; }
+    header p { margin:0; color:#c9d4f2; }
+    .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.9rem; margin:-1.2rem auto 1.4rem; }
+    .kpi { background:#fff; border:1px solid var(--borde); border-radius:12px; padding:.9rem 1rem; border-top:4px solid var(--marca); box-shadow:0 6px 18px rgba(23,34,59,.06); }
+    .kpi b { display:block; font-size:1.5rem; }
+    .kpi span { color:var(--suave); font-size:.85rem; }
+    .ok { border-top-color:var(--ok); }
+    table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--borde); border-radius:12px; overflow:hidden; font-size:.87rem; }
+    th, td { padding:.5rem .7rem; border-bottom:1px solid var(--borde); text-align:left; }
+    th { background:#f8fafd; font-size:.75rem; text-transform:uppercase; letter-spacing:.04em; color:var(--suave); }
+    td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+    tr.fallo td { background:#fdecec; }
+    footer { color:var(--suave); font-size:.82rem; padding:1.4rem 0 2rem; }
+    a { color:var(--marca); }
+  </style>
+</head>
+<body>
+  <header><div class="c">
+    <h1>Resultados de pruebas — KN-Store</h1>
+    <p>Generado el 2026-09-15 · backend (JUnit 6) + frontend (Vitest) · 0 fallos</p>
+  </div></header>
+  <main class="c">
+    <div class="kpis">
+      <div class="kpi ok"><b>1,373</b><span>Pruebas ejecutadas</span></div>
+      <div class="kpi ok"><b>1,373</b><span>Correctas (100 %)</span></div>
+      <div class="kpi ok"><b>0</b><span>Fallos</span></div>
+      <div class="kpi"><b>363</b><span>Unitarias backend</span></div>
+      <div class="kpi"><b>486</b><span>Integración backend (Testcontainers)</span></div>
+      <div class="kpi"><b>524</b><span>Frontend (Vitest, 49 archivos)</span></div>
+    </div>
+    <p>Detalle por suite (backend). El informe completo con cobertura y hallazgos está en
+      <a href="informe-calidad/index.html">informe-calidad/index.html</a>.</p>
+    <table>
+      <thead><tr><th>Suite</th><th class="num">Correctas</th><th class="num">Fallos</th></tr></thead>
+      <tbody>
+          <tr class=""><td>com.mycompany.knstore.web.rest.AccountResourceIT</td><td class="num">32</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.CuentaResourceIT</td><td class="num">28</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.DireccionResourceIT</td><td class="num">28</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.ProductoResourceIT</td><td class="num">24</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.security.ResourceAccessServiceTest</td><td class="num">23</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.UserServiceTest</td><td class="num">22</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.PedidoResourceIT</td><td class="num">19</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.CategoriaIVAResourceIT</td><td class="num">18</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.CategoriaResourceIT</td><td class="num">18</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.FacturaResourceIT</td><td class="num">18</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.ItemPedidoResourceIT</td><td class="num">18</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.PagoResourceIT</td><td class="num">18</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.SubcategoriaResourceIT</td><td class="num">18</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.TipoDocumentoResourceIT</td><td class="num">18</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.ItemCarritoResourceIT</td><td class="num">17</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.MarcaResourceIT</td><td class="num">17</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.ProductoPrecioResourceIT</td><td class="num">17</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.DireccionServiceImplTest</td><td class="num">16</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.CarritoResourceIT</td><td class="num">16</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.EnvioResourceIT</td><td class="num">16</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.EtiquetaProductoResourceIT</td><td class="num">16</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.ProductoImagenResourceIT</td><td class="num">16</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.ProductoInventarioResourceIT</td><td class="num">16</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.PagoServiceImplTest</td><td class="num">14</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.UserResourceIT</td><td class="num">14</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.ItemPedidoServiceImplTest</td><td class="num">13</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.CarritoServiceImplTest</td><td class="num">12</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.CuentaServiceImplTest</td><td class="num">12</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.filter.SpaWebFilterIT</td><td class="num">12</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.MailServiceIT</td><td class="num">10</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.UserMapperTest</td><td class="num">10</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.config.CRLFLogConverterTest</td><td class="num">9</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.security.SecurityUtilsUnitTest</td><td class="num">9</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.EtiquetaProductoServiceImplTest</td><td class="num">9</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.ProductoInventarioServiceImplTest</td><td class="num">9</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.SubcategoriaServiceImplTest</td><td class="num">9</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.errors.ExceptionTranslatorIT</td><td class="num">9</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.ProductoTest</td><td class="num">8</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.CategoriaIVAServiceImplTest</td><td class="num">8</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.CategoriaServiceImplTest</td><td class="num">8</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.MarcaServiceImplTest</td><td class="num">8</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.ProductoImagenServiceImplTest</td><td class="num">8</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.TipoDocumentoServiceImplTest</td><td class="num">8</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.util.MongoIdUtilsTest</td><td class="num">8</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.PagoFlujoResourceIT</td><td class="num">8</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.UserServiceIT</td><td class="num">7</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.EnvioServiceImplTest</td><td class="num">7</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.PedidoServiceImplTest</td><td class="num">7</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.security.DomainUserDetailsServiceIT</td><td class="num">6</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.AuthorityResourceIT</td><td class="num">6</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.security.jwt.TokenAuthenticationSecurityMetersIT</td><td class="num">5</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.CheckoutServiceIT</td><td class="num">5</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.ProductoServiceImplTest</td><td class="num">5</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.SecuenciaServiceImplTest</td><td class="num">5</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.payment.SimulatedPaymentGatewayTest</td><td class="num">5</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.filter.InvalidBearerTokenFilterIT</td><td class="num">5</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.config.StaticResourcesWebConfigurerTest</td><td class="num">4</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.config.WebConfigurerTest</td><td class="num">4</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.PedidoTest</td><td class="num">4</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.security.jwt.TokenAuthenticationIT</td><td class="num">4</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.ItemCarritoServiceImplTest</td><td class="num">4</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.ProductoPrecioServiceImplTest</td><td class="num">4</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.util.MoneyUtilsTest</td><td class="num">4</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.cucumber.CucumberTest</td><td class="num">3</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.DireccionTest</td><td class="num">3</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.ItemCarritoTest</td><td class="num">3</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.ItemPedidoTest</td><td class="num">3</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.FacturaServiceImplTest</td><td class="num">3</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.invoice.FacturaPdfServiceTest</td><td class="num">3</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.AuthenticateControllerIT</td><td class="num">3</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.AuthorityTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.CarritoTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.CuentaTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.EnvioTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.EtiquetaProductoTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.FacturaTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.PagoTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.ProductoImagenTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.ProductoInventarioTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.ProductoPrecioTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.SubcategoriaTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.management.SecurityMetersServiceTests</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.impl.HistorialEstadoServiceImplTest</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.ListadosPropiosResourceIT</td><td class="num">2</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.TechnicalStructureTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.CategoriaIVATest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.CategoriaTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.MarcaTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.domain.TipoDocumentoTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.CarritoDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.CategoriaDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.CategoriaIVADTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.CuentaDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.DireccionDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.EnvioDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.EtiquetaProductoDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.FacturaDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.ItemCarritoDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.ItemPedidoDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.MarcaDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.PagoDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.PedidoDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.ProductoDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.ProductoImagenDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.ProductoInventarioDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.ProductoPrecioDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.SubcategoriaDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.dto.TipoDocumentoDTOTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.CarritoMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.CategoriaIVAMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.CategoriaMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.CuentaMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.DireccionMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.EnvioMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.EtiquetaProductoMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.FacturaMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.ItemCarritoMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.ItemPedidoMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.MarcaMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.PagoMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.PedidoMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.ProductoImagenMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.ProductoInventarioMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.ProductoMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.ProductoPrecioMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.SubcategoriaMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.service.mapper.TipoDocumentoMapperTest</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.ListadosQueryDebugIT</td><td class="num">1</td><td class="num">0</td></tr>
+          <tr class=""><td>com.mycompany.knstore.web.rest.PublicUserResourceIT</td><td class="num">1</td><td class="num">0</td></tr>
+      </tbody>
+    </table>
+  </main>
+  <footer class="c">KN-Store · evidencia de pruebas generada automáticamente (scripts/generar-informe-calidad.py).</footer>
+</body>
+</html>
