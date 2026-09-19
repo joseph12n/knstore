@@ -9,9 +9,9 @@
 ## 1. Git — estado
 
 - Rama **main** con los commits de calidad/hardening y las correcciones E2E del lanzamiento (ver `git log --oneline -15`).
-- Tags de release: `v3.0.0` (hardening), `v3.0.1` (precio_venta RF-072), `v3.0.3` (imágenes + CSP), **`v3.1.0`** (front: fixes responsive, modo oscuro, secciones, login y admin).
+- Tags de release: `v3.0.0` (hardening), `v3.0.1` (precio_venta RF-072), `v3.0.3` (imágenes + CSP), `v3.1.0` (front: fixes responsive, modo oscuro, secciones, login y admin), **`v3.1.1`** (sidebar admin).
 - Push a `origin` (joseph12n/knstore), mirror a **sena-students**, 6 ramas unificadas a `main` y backups de ramas en `refs/backup/2026-09-18/`.
-- Imagen publicada en Docker Hub: **`eljoseph12/knstore:3.1.0`** (= `latest`, digest `e5b6afff…`).
+- Imagen publicada en Docker Hub: **`eljoseph12/knstore:3.1.1`** (= `latest`, digest `d99ac4d8…`).
 
 ## 2. Calidad — todo verde
 
@@ -23,7 +23,7 @@
 ## 3. Producción — desplegado y verificado
 
 - **EC2 `44.197.126.33`** (`app.knstore.duckdns.org`) con Nginx Proxy Manager + SSL.
-- Imagen **`eljoseph12/knstore:3.1.0`** con **perfil prod** desplegada desde `/home/ubuntu/knstore/app-prod.yml` + `.env` (chmod 600; JWT, SMTP y URI rs0 por entorno).
+- Imagen **`eljoseph12/knstore:3.1.1`** con **perfil prod** desplegada desde `/home/ubuntu/knstore/app-prod.yml` + `.env` (chmod 600; JWT, SMTP y URI rs0 por entorno).
 - Datos intactos: **159 pedidos/facturas** y 16 usuarios; los 136 productos demo quedaron **desactivados** (preservan el historial) y **777 productos reales activos** con fotos, precios e inventario.
 - Administrador rotado y usuarios demo desactivados (`scripts/rotate-prod-users.js`); la contraseña la tiene el responsable.
 - SMTP verificado con la app password vigente (no está en el repo).
