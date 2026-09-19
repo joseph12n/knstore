@@ -110,6 +110,10 @@
   }
 
   /* Botones primarios */
+  .btn {
+    background-image: none;
+  }
+
   .btn-primary {
     --bs-btn-color: var(--kn-color-text-inverse);
     --bs-btn-bg: var(--kn-color-primary);
@@ -123,11 +127,25 @@
     --bs-btn-disabled-color: var(--kn-color-text-inverse);
     --bs-btn-disabled-bg: var(--kn-color-text-muted);
     --bs-btn-disabled-border-color: var(--kn-color-text-muted);
+    background-color: var(--kn-color-primary);
+    border-color: var(--kn-color-primary);
     border-radius: var(--kn-border-radius-pill);
     font-weight: var(--kn-font-weight-semibold);
     text-transform: uppercase;
     letter-spacing: 0.025em;
     padding: var(--kn-space-3) var(--kn-space-6);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--kn-color-secondary);
+      border-color: var(--kn-color-secondary);
+    }
+
+    &:disabled {
+      background-color: var(--kn-color-text-muted);
+      border-color: var(--kn-color-text-muted);
+    }
   }
 
   /* Botones de acento */
@@ -141,8 +159,17 @@
     --bs-btn-active-color: var(--kn-color-text-inverse);
     --bs-btn-active-bg: var(--kn-color-accent-hover);
     --bs-btn-active-border-color: var(--kn-color-accent-hover);
+    background-color: var(--kn-color-accent);
+    border-color: var(--kn-color-accent);
     border-radius: var(--kn-border-radius-pill);
     font-weight: var(--kn-font-weight-semibold);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--kn-color-accent-hover);
+      border-color: var(--kn-color-accent-hover);
+    }
   }
 
   /* Botones outline */
