@@ -146,6 +146,28 @@ describe('CheckoutPage', () => {
     });
   });
 
+  it('muestra envio gratis en cualquier metodo cuando el subtotal supera el umbral', async () => {
+    mocks.items[0] = { id: 'item-1', producto: { id: 'prod-1', nombre: 'Tenis Test' }, cantidad: 2, precioUnitario: 100000 };
+    vi.spyOn(axios, 'post').mockImplementation((url: string) => {
+      if (String(url).endsWith('api/pedidos/preview')) {
+        return Promise.resolve({ data: { subtotal: 200000, iva: 38000, envio: 0, total: 238000 } });
+      }
+      return Promise.resolve({ data: {} });
+    });
+    renderCheckout();
+    await flush();
+
+    await goToStep(1);
+    await waitFor(() => {
+      expect(screen.getByText('Tu pedido supera el umbral: el envío es gratis en cualquier método.')).toBeTruthy();
+    });
+
+    await goToStep(2);
+    await waitFor(() => {
+      expect(screen.getByText('$ 238.000')).toBeTruthy();
+    });
+  });
+
   it('el payload de checkout no incluye el precio unitario del cliente', async () => {
     const postMock = mockPost();
     renderCheckout();

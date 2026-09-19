@@ -8,7 +8,13 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
 import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
-import { CHECKOUT_STEPS, FREE_SHIPPING_MESSAGE, PAYMENT_METHODS, SHIPPING_METHODS } from 'app/landing/utils/constants';
+import {
+  CHECKOUT_STEPS,
+  FREE_SHIPPING_MESSAGE,
+  FREE_SHIPPING_THRESHOLD,
+  PAYMENT_METHODS,
+  SHIPPING_METHODS,
+} from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
 import CheckoutStepper from 'app/landing/components/CheckoutStepper';
 import AddressCard from 'app/landing/components/AddressCard';
@@ -60,6 +66,9 @@ export const CheckoutPage = () => {
 
   const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
+  const subtotalCarrito = useMemo(() => items.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0), [items]);
+  const envioGratis = (preview?.subtotal ?? subtotalCarrito) >= FREE_SHIPPING_THRESHOLD;
+
   useEffect(() => {
     const defaultAddress = direccionesUsuario.find(d => d.activo) || direccionesUsuario[0];
     if (defaultAddress && !selectedDireccionId) {
@@ -68,12 +77,6 @@ export const CheckoutPage = () => {
   }, [direccionesUsuario, selectedDireccionId]);
 
   useEffect(() => {
-    if (step !== 3) {
-      setPreview(null);
-      setPreviewError(null);
-      return;
-    }
-
     if (!cuenta || !selectedDireccionId || items.length === 0) {
       return;
     }
@@ -108,7 +111,7 @@ export const CheckoutPage = () => {
     void loadPreview();
     return () => controller.abort();
     // notas se lee via ref para no disparar un preview por cada tecla escrita.
-  }, [step, selectedDireccionId, selectedEnvio, selectedPago, items, cuenta]);
+  }, [selectedDireccionId, selectedEnvio, selectedPago, items, cuenta]);
 
   if (items.length === 0) {
     return (
@@ -225,7 +228,11 @@ export const CheckoutPage = () => {
         return (
           <div>
             <h5 className="fw-bold mb-3">Método de envío</h5>
-            <p className="text-muted small mb-3">{FREE_SHIPPING_MESSAGE}</p>
+            {envioGratis ? (
+              <div className="alert alert-success py-2 small mb-3">Tu pedido supera el umbral: el envío es gratis en cualquier método.</div>
+            ) : (
+              <p className="text-muted small mb-3">{FREE_SHIPPING_MESSAGE}</p>
+            )}
             <Row className="g-3">
               {SHIPPING_METHODS.map(method => (
                 <Col md={6} key={method.key}>
@@ -247,7 +254,18 @@ export const CheckoutPage = () => {
                           />
                           <p className="text-muted small mb-0 mt-1">{method.description}</p>
                         </div>
-                        <span className="fw-bold">{method.cost === 0 ? 'Gratis' : formatCOP(method.cost)}</span>
+                        <span className="fw-bold">
+                          {envioGratis ? (
+                            <>
+                              {method.cost > 0 && <s className="text-muted small me-1">{formatCOP(method.cost)}</s>}
+                              Gratis
+                            </>
+                          ) : method.cost === 0 ? (
+                            'Gratis'
+                          ) : (
+                            formatCOP(method.cost)
+                          )}
+                        </span>
                       </div>
                     </Card.Body>
                   </Card>
