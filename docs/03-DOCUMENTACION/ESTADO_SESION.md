@@ -51,3 +51,11 @@
 - `@DBRef`: las consultas por lote contra `ref.$id` requieren `ObjectId` (`MongoIdUtils`); ver `ProductoImagenRepository.findByProductoIdIn`.
 - **CSP:** si se agregan hosts de imágenes externas hay que incluirlos en `jhipster.security.content-security-policy` (`img-src`).
 - La imagen prod se construye con `-Pprod` (compila el frontend); verificar RAM antes (webpack es el pico).
+
+## 6. Trabajo en curso — plan de front (local)
+
+Plan aprobado 2026-09-18 (local primero; el despliegue a la EC2 se decide al cierre). Estado:
+
+- **Fase 0 — completada:** botón "Añadir" de `ProductCard` (responsive 360→1920 + estilo compacto) y envío gratis visible en el checkout (preview desde el paso de dirección, "Gratis" con costo tachado). Pruebas: `CheckoutServiceIT` 7/7 (2 nuevas), `CheckoutPage.spec` 7/7, frontend 525/525, `tsc` limpio. Detalle y capturas en `BITACORA.md`.
+- **Fase 1 — pendiente:** landing con toggle claro/oscuro y secciones nuevas (Beneficios, Ofertas/Más vendidos, Marcas, Testimonios, Newsletter/CTA).
+- **Fase 2 — pendiente (por subfases):** admin con shell propio + dashboard (F2.1), operación (F2.2), catálogo/inventario (F2.3), usuarios/resto de entidades (F2.4).
