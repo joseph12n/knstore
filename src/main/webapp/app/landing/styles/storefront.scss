@@ -292,6 +292,23 @@
 }
 
 /* ==========================================================================
+   Banner de newsletter: conserva el contraste en claro y oscuro
+   ========================================================================== */
+.storefront .kn-newsletter {
+  background-color: var(--kn-color-primary);
+  color: var(--kn-color-text-inverse);
+
+  h3,
+  p {
+    color: var(--kn-color-text-inverse);
+  }
+
+  p {
+    opacity: 0.85;
+  }
+}
+
+/* ==========================================================================
    Tarjeta de producto: precio + CTA responsivos (container queries)
    ==========================================================================
    En tarjetas angostas (2 columnas a 360px) el precio y el botón se apilan

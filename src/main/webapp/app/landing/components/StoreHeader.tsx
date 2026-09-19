@@ -7,10 +7,12 @@ import {
   faBox,
   faHome,
   faMapMarkerAlt,
+  faMoon,
   faShoppingBag,
   faShoppingCart,
   faSignInAlt,
   faSignOutAlt,
+  faSun,
   faUser,
   faCreditCard,
   faTruck,
@@ -32,9 +34,11 @@ import useCart from 'app/landing/hooks/useCart';
 interface StoreHeaderProps {
   categorias: ICategoria[];
   subcategorias: ISubcategoria[];
+  tema: 'light' | 'dark';
+  onToggleTema: () => void;
 }
 
-export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => {
+export const StoreHeader = ({ categorias, subcategorias, tema, onToggleTema }: StoreHeaderProps) => {
   const categoriasList = categorias ?? [];
   const subcategoriasList = subcategorias ?? [];
   const { count } = useCart();
@@ -83,6 +87,15 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
             </div>
 
             <Nav className="flex-row align-items-center gap-3">
+              <button
+                type="button"
+                className="btn btn-link p-0"
+                onClick={onToggleTema}
+                aria-label={tema === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
+                title={tema === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+              >
+                <FontAwesomeIcon icon={tema === 'dark' ? faSun : faMoon} />
+              </button>
               {isAuthenticated ? (
                 <NavDropdown
                   title={
