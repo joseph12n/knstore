@@ -1,6 +1,6 @@
 // Datos generados automáticamente — Informe de Calidad KN-Store
 window.DATOS = {
- "generado": "2026-09-15",
+ "generado": "2026-09-18",
  "entorno": {
   "java": "Java 21 (Amazon Corretto)",
   "spring": "Spring Boot 4.0.6",
@@ -83,21 +83,21 @@ window.DATOS = {
    },
    {
     "n": "com.mycompany.knstore.service.dto",
-    "ic": 2723,
+    "ic": 2754,
     "it": 2855,
     "bc": 120,
     "bt": 138,
-    "lc": 1027,
+    "lc": 1040,
     "lt": 1062,
-    "mc": 499,
+    "mc": 508,
     "mt": 516,
-    "cc": 26,
+    "cc": 27,
     "ct": 27,
-    "i": 95.4,
+    "i": 96.5,
     "b": 87.0,
-    "l": 96.7,
-    "m": 96.7,
-    "c": 96.3
+    "l": 97.9,
+    "m": 98.4,
+    "c": 100.0
    },
    {
     "n": "com.mycompany.knstore.security",
@@ -209,20 +209,20 @@ window.DATOS = {
    },
    {
     "n": "com.mycompany.knstore.service",
-    "ic": 2086,
+    "ic": 2162,
     "it": 2494,
-    "bc": 123,
+    "bc": 129,
     "bt": 269,
-    "lc": 502,
+    "lc": 517,
     "lt": 602,
-    "mc": 84,
+    "mc": 85,
     "mt": 99,
     "cc": 9,
     "ct": 9,
-    "i": 83.6,
-    "b": 45.7,
-    "l": 83.4,
-    "m": 84.8,
+    "i": 86.7,
+    "b": 48.0,
+    "l": 85.9,
+    "m": 85.9,
     "c": 100.0
    },
    {
@@ -353,21 +353,21 @@ window.DATOS = {
    }
   ],
   "total": {
-   "ic": 27846,
+   "ic": 27953,
    "it": 40210,
-   "bc": 1637,
+   "bc": 1643,
    "bt": 3983,
-   "lc": 7329,
+   "lc": 7357,
    "lt": 10502,
-   "mc": 2134,
+   "mc": 2144,
    "mt": 2420,
-   "cc": 185,
+   "cc": 186,
    "ct": 194,
-   "i": 69.3,
-   "b": 41.1,
-   "l": 69.8,
-   "m": 88.2,
-   "c": 95.4
+   "i": 69.5,
+   "b": 41.3,
+   "l": 70.1,
+   "m": 88.6,
+   "c": 95.9
   },
   "clases": [
    {
@@ -488,21 +488,6 @@ window.DATOS = {
     "mt": 6,
     "i": 0.0,
     "b": 0.0,
-    "l": 0.0
-   },
-   {
-    "n": "CheckoutPreviewDTO",
-    "p": "service.dto",
-    "ic": 0,
-    "it": 31,
-    "bc": 0,
-    "bt": 0,
-    "lc": 0,
-    "lt": 13,
-    "mc": 0,
-    "mt": 9,
-    "i": 0.0,
-    "b": null,
     "l": 0.0
    },
    {
@@ -1301,21 +1286,6 @@ window.DATOS = {
     "l": 83.3
    },
    {
-    "n": "CheckoutService",
-    "p": "service",
-    "ic": 696,
-    "it": 829,
-    "bc": 37,
-    "bt": 65,
-    "lc": 153,
-    "lt": 178,
-    "mc": 11,
-    "mt": 15,
-    "i": 84.0,
-    "b": 56.9,
-    "l": 86.0
-   },
-   {
     "n": "UserResource",
     "p": "web.rest",
     "ic": 251,
@@ -1689,6 +1659,21 @@ window.DATOS = {
     "i": 93.0,
     "b": 85.7,
     "l": 95.3
+   },
+   {
+    "n": "CheckoutService",
+    "p": "service",
+    "ic": 772,
+    "it": 829,
+    "bc": 43,
+    "bt": 65,
+    "lc": 168,
+    "lt": 178,
+    "mc": 12,
+    "mt": 15,
+    "i": 93.1,
+    "b": 66.2,
+    "l": 94.4
    },
    {
     "n": "CarritoResource",
@@ -2981,6 +2966,21 @@ window.DATOS = {
     "l": 100.0
    },
    {
+    "n": "CheckoutPreviewDTO",
+    "p": "service.dto",
+    "ic": 31,
+    "it": 31,
+    "bc": 0,
+    "bt": 0,
+    "lc": 13,
+    "lt": 13,
+    "mc": 9,
+    "mt": 9,
+    "i": 100.0,
+    "b": null,
+    "l": 100.0
+   },
+   {
     "n": "PagoDTO",
     "p": "service.dto",
     "ic": 147,
@@ -3294,21 +3294,21 @@ window.DATOS = {
    },
    {
     "n": "Consolidado (unit + IT)",
-    "i": 69.3,
-    "b": 41.1
+    "i": 69.5,
+    "b": 41.3
    }
   ]
  },
  "frontend": {
   "total": {
-   "s": 49.21,
-   "b": 39.8,
-   "f": 44.99,
-   "l": 49.46
+   "s": 50.74,
+   "b": 40.21,
+   "f": 47.06,
+   "l": 50.97
   },
   "archivos": 49,
   "tests": 524,
-  "archivosMedidos": 70,
+  "archivosMedidos": 78,
   "carpetas": [
    {
     "n": "app/config/icon-loader.ts",
@@ -3368,17 +3368,24 @@ window.DATOS = {
    },
    {
     "n": "app/landing/utils",
-    "s": 64.52,
-    "b": 55.38,
+    "s": 65.59,
+    "b": 61.54,
     "f": 78.57,
-    "l": 63.33
+    "l": 64.44
    },
    {
     "n": "app/landing/pages",
-    "s": 43.64,
-    "b": 30.12,
-    "f": 42.01,
-    "l": 43.12
+    "s": 44.57,
+    "b": 31.39,
+    "f": 42.74,
+    "l": 43.93
+   },
+   {
+    "n": "app/landing/components",
+    "s": 37.88,
+    "b": 43.96,
+    "f": 32.76,
+    "l": 40.37
    },
    {
     "n": "app/config/logger-middleware.ts",
@@ -3388,25 +3395,18 @@ window.DATOS = {
     "l": 30.0
    },
    {
+    "n": "app/dashboard/pages",
+    "s": 33.33,
+    "b": 20.55,
+    "f": 28.85,
+    "l": 34.51
+   },
+   {
     "n": "app/config/error-middleware.ts",
     "s": 31.25,
     "b": 12.5,
     "f": 50.0,
     "l": 26.67
-   },
-   {
-    "n": "app/landing/components",
-    "s": 27.95,
-    "b": 43.97,
-    "f": 19.32,
-    "l": 30.29
-   },
-   {
-    "n": "app/dashboard/pages",
-    "s": 7.14,
-    "b": 5.61,
-    "f": 2.63,
-    "l": 8.08
    },
    {
     "n": "app/app.tsx",
@@ -3452,6 +3452,13 @@ window.DATOS = {
    },
    {
     "n": "app/dashboard/index.tsx",
+    "s": 0.0,
+    "b": 0.0,
+    "f": 0.0,
+    "l": 0.0
+   },
+   {
+    "n": "app/dashboard/layout",
     "s": 0.0,
     "b": 0.0,
     "f": 0.0,
@@ -3511,6 +3518,12 @@ window.DATOS = {
    },
    {
     "n": "app/dashboard/index.tsx",
+    "s": 0.0,
+    "b": 0.0,
+    "l": 0.0
+   },
+   {
+    "n": "app/dashboard/layout/AdminLayout.tsx",
     "s": 0.0,
     "b": 0.0,
     "l": 0.0
@@ -3646,12 +3659,6 @@ window.DATOS = {
     "s": 0.0,
     "b": 0.0,
     "l": 0.0
-   },
-   {
-    "n": "app/landing/pages/PaymentsPage.tsx",
-    "s": 0.0,
-    "b": 0.0,
-    "l": 0.0
    }
   ],
   "sinMedir": [
@@ -3662,6 +3669,7 @@ window.DATOS = {
    "app/config/constants.ts",
    "app/config/dayjs.ts",
    "app/dashboard/index.tsx",
+   "app/dashboard/layout/AdminLayout.tsx",
    "app/dashboard/pages/AdminRefundsPage.tsx",
    "app/dashboard/pages/AdminShipmentsPage.tsx",
    "app/landing/components/AccountLayout.tsx",
@@ -3695,12 +3703,12 @@ window.DATOS = {
   ]
  },
  "pruebas": {
-  "total": 849,
-  "ok": 849,
+  "total": 851,
+  "ok": 851,
   "fail": 0,
   "unit": 363,
-  "it": 486,
-  "itOk": 486,
+  "it": 488,
+  "itOk": 488,
   "itFail": 0,
   "cucumber": 3,
   "suites": [
@@ -3930,6 +3938,11 @@ window.DATOS = {
     "f": 0
    },
    {
+    "n": "com.mycompany.knstore.service.CheckoutServiceIT",
+    "p": 7,
+    "f": 0
+   },
+   {
     "n": "com.mycompany.knstore.service.UserServiceIT",
     "p": 7,
     "f": 0
@@ -3956,11 +3969,6 @@ window.DATOS = {
    },
    {
     "n": "com.mycompany.knstore.security.jwt.TokenAuthenticationSecurityMetersIT",
-    "p": 5,
-    "f": 0
-   },
-   {
-    "n": "com.mycompany.knstore.service.CheckoutServiceIT",
     "p": 5,
     "f": 0
    },
@@ -4351,6 +4359,6 @@ window.DATOS = {
    }
   ],
   "frontendTotal": 524,
-  "sistemaTotal": 1373
+  "sistemaTotal": 1375
  }
 };
