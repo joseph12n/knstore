@@ -18,8 +18,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Enlaces */
-  a {
+  /* Enlaces (no aplica a enlaces estilizados como botones) */
+  a:not(.btn):not(.nav-link):not(.dropdown-item) {
     color: var(--kn-color-text);
     text-decoration: none;
     transition: color var(--kn-transition-fast);
@@ -29,6 +29,35 @@
       color: var(--kn-color-accent);
       text-decoration: none;
     }
+  }
+
+  /* Affordance de hover consistente en ambos temas: ningún componente debe
+     caer en colores oscuros de Bootstrap sobre fondos oscuros. */
+  .nav-link {
+    color: var(--kn-color-text);
+  }
+
+  .dropdown-item {
+    color: var(--kn-color-text);
+  }
+
+  .btn-link {
+    color: var(--kn-color-text);
+  }
+
+  .nav-link:hover,
+  .nav-link:focus,
+  .dropdown-item:hover,
+  .dropdown-item:focus,
+  .list-group-item-action:hover,
+  .list-group-item-action:focus,
+  .page-link:hover,
+  .page-link:focus,
+  .btn-link:hover,
+  .btn-link:focus,
+  footer a:hover,
+  footer a:focus {
+    color: var(--kn-color-accent);
   }
 
   /* Títulos */
@@ -319,6 +348,18 @@
 }
 
 /* ==========================================================================
+   Header del storefront: los dropdowns deben flotar siempre
+   ==========================================================================
+   Bootstrap 5 vuelve `static` a los `.dropdown-menu` dentro del navbar en
+   <992px (porque asume un collapse); nuestro navbar no colapsa, así que el
+   menú se insertaba en el flujo y rompía la barra. Se restaura el flotado.
+   ========================================================================== */
+.storefront .storefront-header .dropdown-menu {
+  position: absolute;
+  max-width: calc(100vw - 1.5rem);
+}
+
+/* ==========================================================================
    Banner de newsletter: conserva el contraste en claro y oscuro
    ========================================================================== */
 .storefront .kn-newsletter {
@@ -531,4 +572,8 @@
   .min-width-0 {
     min-width: 0;
   }
+}
+
+.storefront[data-theme='dark'] .kn-cart-drawer .btn-close {
+  filter: invert(1) grayscale(100%);
 }

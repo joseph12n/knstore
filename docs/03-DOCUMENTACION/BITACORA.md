@@ -4,6 +4,70 @@
 
 ---
 
+## 2026-09-18 — Release 3.1.0: limpieza, regresión y despliegue
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Limpieza de código** | Eliminados los archivos muertos `modules/login/login.tsx` y `modules/login/login-modal.tsx` (reemplazados por `landing/pages/LoginPage.tsx`) y `.vscode/launch.json` (apuntaba al export viejo de tests). `.vscode/settings.json` queda versionado. Sin referencias rotas (`grep` + `tsc`). |
+| 2 | **Regresión completa** | Unit **363/363** · IT **488/488** · Frontend **534/534** (56 archivos) · `tsc` limpio · `verify` con modernizer y JaCoCo. Cobertura: backend **70,1% líneas**, frontend **50,97%**. |
+| 3 | **Informe de calidad** | `informe-calidad/js/datos.js` y `resultados-pruebas.html` regenerados con las cifras finales (129 suites). |
+| 4 | **Imagen 3.1.0** | `eljoseph12/knstore:3.1.0` (+ `latest`, digest `sha256:e5b6afff4fedb60c1df279fb30173420b6ac06d5815be4b27f6ff0d2786a5ca4`) publicada en Docker Hub. |
+| 5 | **Despliegue EC2** | `src/main/docker/app-prod.yml` actualizado a 3.1.0; en el servidor `docker compose pull && docker compose up -d`. Mongo conservó el mismo contenedor (datos intactos). Verificado: `knstore-app-1` con la imagen 3.1.0 `Up (healthy)`, `/management/health` 200, home 200, nueva página de login servida y capturada, 777 productos activos / 160 pedidos / 17 usuarios. |
+| 6 | **Git** | Commits, push a `origin`, mirror `sena-students`, 6 ramas unificadas a `main` y tag `v3.1.0`. |
+
+
+
+## 2026-09-18 — Fix visibilidad de la navegación del header
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **"Ingresar" y las categorías invisibles en modo oscuro** | Al excluir `.nav-link` de la regla genérica de enlaces, estos quedaron con `--bs-nav-link-color` (negro del tema base de Cyborg) sobre el header oscuro. Se fijó con tokens: `.storefront .nav-link { color: var(--kn-color-text) }` y `.storefront .dropdown-item { color: var(--kn-color-text) }`, además de `.storefront .btn-link { color: var(--kn-color-text) }` (toggle de tema). Verificado con capturas del header en claro y oscuro: marca, toggle, "Ingresar", carrito y menú de categorías visibles y consistentes. |
+| 2 | **Pruebas** | Frontend **534/534** (56 archivos) y `tsc` limpios. |
+
+
+
+## 2026-09-18 — Fix bucle de recarga en el inicio (Service Worker)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **El inicio se quedaba en bucle de recargas** | Causa raíz: `registerServiceWorker()` se ejecutaba **también en desarrollo** (`app/index.tsx`), registrando el SW de Workbox; el SW servía bundle/index cacheados y, combinado con HMR, provocaba el bucle de recargas y el error de montaje en `LandingLayout`. Fix: el SW solo se registra con `process.env.NODE_ENV === 'production'`; en dev se **desregistran** los SW existentes y se limpian las `caches` (libera al navegador sin pasos manuales). Verificado con CDP: carga limpia con 0 SW; un SW registrado manualmente queda en 0 tras recargar, con 1 sola recarga (sin bucle). |
+| 2 | **Pruebas** | Frontend **534/534** (56 archivos), `tsc` y webpack limpios. |
+| 3 | **Si persiste en un navegador ya afectado** | Un reload normal basta (el documento se pide a red); si no, DevTools → Application → Service Workers → *Unregister* y *Clear site data*. |
+
+
+
+## 2026-09-18 — Fix carrito oscuro, login, registro y botones del admin
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Carrito (drawer) en modo oscuro** | React-Bootstrap renderiza el `Offcanvas` en un portal fuera de `.storefront`, por lo que no heredaba los tokens y quedaba blanco. Se pasó `container={() => document.querySelector('.storefront') ?? document.body}` en `CartDrawer` y se invierte el `btn-close` en oscuro. Captura verificada con ítems reales: fondo oscuro, tarjetas y textos legibles. |
+| 2 | **Sección de cuentas demo en el registro** | Se eliminó el bloque `Alert` de "cuentas predeterminadas" en `modules/account/register/register.tsx` (y el import de `Link` que quedaba sin uso). Ya no expone admin/admin en la UI. |
+| 3 | **Login rediseñado** | Nuevo `landing/pages/LoginPage.tsx` (reemplaza al modal de JHipster en la ruta `/login`): tarjeta de dos columnas con panel de marca, formulario con tokens del storefront, toggle claro/oscuro, redirección por rol (ADMIN/MANAGER/cliente) y spec de render (`LoginPage.spec.tsx`). Capturas claro/oscuro verificadas. |
+| 4 | **Botones de acciones del admin** | Las acciones de tabla son `<a class="btn ...">`; la regla `.admin-shell a { color: accent }` pisaba el color del botón (texto rojo sobre rojo en "Eliminar"). Se excluyeron los enlaces-botón: `.admin-shell a:not(.btn):not(.nav-link):not(.dropdown-item)` (igual en `storefront.scss`). Verificado en claro y oscuro: Vista neutro, Editar/Eliminar rojos con texto blanco. |
+| 5 | **Pruebas** | Frontend **534/534** (56 archivos), `tsc` limpio, webpack sin errores. |
+
+
+
+## 2026-09-18 — Fix modo oscuro: hero y hovers
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Hero invisible en modo oscuro** | `HeroBanner` usaba `backgroundColor: var(--kn-color-primary)` (que en oscuro se invierte a claro) con título por token inverso y subtítulo blanco fijo → subtítulo invisible. Se fijó el hero como bloque de marca **siempre oscuro** (`#111111`) con título blanco y subtítulo `rgba(255,255,255,.85)`, igual en ambos temas. Verificado con capturas 1440 y 390 en oscuro. |
+| 2 | **Hovers inconsistentes en oscuro** | Red de seguridad con tokens en `storefront.scss` y `admin.scss`: `nav-link`, `dropdown-item`, `list-group-item-action`, `page-link`, `btn-link` y enlaces del footer usan `--kn-color-accent` en `:hover`/`:focus`, para que ningún componente caiga en colores oscuros de Bootstrap sobre fondos oscuros. |
+| 3 | **Loop de recarga con sesión** | Verificado con CDP en idle (12 s en `/admin` y en `/`): **0 navegaciones/recargas**. El comportamiento observado es el *live reload* de webpack al guardar archivos durante el desarrollo (se detiene al terminar de editar), no un bucle de la aplicación; si se reproduce sin ediciones, escalar. |
+| 4 | **Pruebas** | Frontend **533/533**, `tsc` limpio. |
+
+
+
+## 2026-09-18 — Fix responsive del header (dropdown de cuenta)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **El dropdown de cuenta rompía el header en <992px** | Causa: Bootstrap 5 aplica `position: static` a los `.dropdown-menu` dentro del navbar en <lg (asume un collapse que nuestro header no usa); el menú entraba al flujo, estiraba el nav-item (216×254 px) y desalineaba los iconos (el carrito caía a otra fila, el toggle quedaba oculto). Fix en `storefront.scss`: `.storefront .storefront-header .dropdown-menu { position: absolute; max-width: calc(100vw - 1.5rem); }`. Verificado con CDP a 390/540/790/1440: el menú flota alineado a la derecha, dentro del viewport, y el header queda en una sola fila. |
+| 2 | **Pruebas** | Frontend **533/533** y `tsc` limpios tras el cambio (solo CSS). |
+
+
+
 ## 2026-09-18 — Fase 2 panel administrativo propio (local)
 
 | # | Cambio | Detalle / evidencia |
@@ -19,6 +83,8 @@
 
 
 
+## 2026-09-18 — Fase 1 landing: modo oscuro y secciones nuevas (local)
+
 | # | Cambio | Detalle / evidencia |
 |---|--------|---------------------|
 | 1 | **Modo oscuro con toggle** | Tokens `[data-theme='dark']` en `landing/styles/tokens.css`; `StorefrontLayout` gestiona el tema (`data-theme` en `.storefront`, persistencia en `localStorage` `kn-theme`, inicial por `prefers-color-scheme`); botón sol/luna en `StoreHeader`. Fondos `#f8f9fa` tokenizados (`ProductCard`, categorías) para que el tema aplique. Evidencia: capturas CDP con `prefers-color-scheme` emulado (claro y oscuro a 1440 y 360). |
@@ -28,6 +94,8 @@
 | 5 | **Alcance** | Cambios **solo locales** (webpack dev + backend dev activos para revisión). Sin despliegue a la EC2. |
 
 
+
+## 2026-09-18 — Fase 0 mejoras de front (local)
 
 Plan aprobado: responsive del catálogo, envío gratis visible, landing con toggle oscuro + secciones nuevas y admin por fases (local primero; despliegue a EC2 se decide al final).
 

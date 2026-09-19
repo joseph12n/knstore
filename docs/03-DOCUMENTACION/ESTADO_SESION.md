@@ -9,21 +9,21 @@
 ## 1. Git — estado
 
 - Rama **main** con los commits de calidad/hardening y las correcciones E2E del lanzamiento (ver `git log --oneline -15`).
-- Tags de release: `v3.0.0` (hardening), `v3.0.1` (precio_venta RF-072), `v3.0.3` (imágenes + CSP).
-- Push a `origin` (joseph12n/knstore), mirror a **sena-students**, 6 ramas unificadas a `main` y backups de ramas en `refs/backup/2026-09-15/`.
-- Imagen publicada en Docker Hub: **`eljoseph12/knstore:3.0.3`** (= `latest`).
+- Tags de release: `v3.0.0` (hardening), `v3.0.1` (precio_venta RF-072), `v3.0.3` (imágenes + CSP), **`v3.1.0`** (front: fixes responsive, modo oscuro, secciones, login y admin).
+- Push a `origin` (joseph12n/knstore), mirror a **sena-students**, 6 ramas unificadas a `main` y backups de ramas en `refs/backup/2026-09-18/`.
+- Imagen publicada en Docker Hub: **`eljoseph12/knstore:3.1.0`** (= `latest`, digest `e5b6afff…`).
 
 ## 2. Calidad — todo verde
 
-- Unit 363/363 · IT 486/486 · Vitest 524/524 · `./mvnw verify` completo (modernizer incluido) · `tsc` limpio.
-- Cobertura backend (consolidada unit+IT): **69,8% líneas** / 41% ramas / 194 clases.
-- Cobertura frontend: **49,46% líneas** sobre **70 archivos propios** (37 en 0%); excluye generado y aplica umbrales 45/35/40/45.
-- Informe visual: `docs/test_de_cobertura/informe-calidad/index.html`; se regenera con `python3 scripts/generar-informe-calidad.py`.
+- Unit 363/363 · IT 488/488 · Vitest 534/534 · `./mvnw verify` completo (modernizer incluido) · `tsc` limpio.
+- Cobertura backend (consolidada unit+IT): **70,1% líneas** / 41% ramas / 194 clases.
+- Cobertura frontend: **50,97% líneas** sobre **70 archivos propios**; excluye generado y aplica umbrales 45/35/40/45.
+- Informe visual: `docs/test_de_cobertura/informe-calidad/index.html` y `docs/test_de_cobertura/resultados-pruebas.html`; se regeneran con `python3 scripts/generar-informe-calidad.py`.
 
 ## 3. Producción — desplegado y verificado
 
 - **EC2 `44.197.126.33`** (`app.knstore.duckdns.org`) con Nginx Proxy Manager + SSL.
-- Imagen `eljoseph12/knstore:3.0.3` con **perfil prod** desplegada desde `/home/ubuntu/knstore/app-prod.yml` + `.env` (chmod 600; JWT, SMTP y URI rs0 por entorno).
+- Imagen **`eljoseph12/knstore:3.1.0`** con **perfil prod** desplegada desde `/home/ubuntu/knstore/app-prod.yml` + `.env` (chmod 600; JWT, SMTP y URI rs0 por entorno).
 - Datos intactos: **159 pedidos/facturas** y 16 usuarios; los 136 productos demo quedaron **desactivados** (preservan el historial) y **777 productos reales activos** con fotos, precios e inventario.
 - Administrador rotado y usuarios demo desactivados (`scripts/rotate-prod-users.js`); la contraseña la tiene el responsable.
 - SMTP verificado con la app password vigente (no está en el repo).
