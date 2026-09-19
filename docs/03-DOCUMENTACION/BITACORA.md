@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-09-18 — Fix bucle de recarga en el inicio (Service Worker)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **El inicio se quedaba en bucle de recargas** | Causa raíz: `registerServiceWorker()` se ejecutaba **también en desarrollo** (`app/index.tsx`), registrando el SW de Workbox; el SW servía bundle/index cacheados y, combinado con HMR, provocaba el bucle de recargas y el error de montaje en `LandingLayout`. Fix: el SW solo se registra con `process.env.NODE_ENV === 'production'`; en dev se **desregistran** los SW existentes y se limpian las `caches` (libera al navegador sin pasos manuales). Verificado con CDP: carga limpia con 0 SW; un SW registrado manualmente queda en 0 tras recargar, con 1 sola recarga (sin bucle). |
+| 2 | **Pruebas** | Frontend **534/534** (56 archivos), `tsc` y webpack limpios. |
+| 3 | **Si persiste en un navegador ya afectado** | Un reload normal basta (el documento se pide a red); si no, DevTools → Application → Service Workers → *Unregister* y *Clear site data*. |
+
+
+
 ## 2026-09-18 — Fix carrito oscuro, login, registro y botones del admin
 
 | # | Cambio | Detalle / evidencia |
