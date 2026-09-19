@@ -6,6 +6,7 @@ import PrivateRoute from 'app/shared/auth/private-route';
 import { Authority } from 'app/shared/jhipster/constants';
 import AdministrationRoutes from 'app/modules/administration';
 import EntitiesRoutes from 'app/entities/routes';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
 import AdminShipmentsPage from './pages/AdminShipmentsPage';
 import AdminRefundsPage from './pages/AdminRefundsPage';
@@ -13,6 +14,8 @@ import AdminRefundsPage from './pages/AdminRefundsPage';
 const Admin = () => (
   <div>
     <ErrorBoundaryRoutes>
+      {/* Panel de inicio */}
+      <Route index element={<AdminDashboardPage />} />
       {/* Operación diaria: pedidos, envíos y reembolsos */}
       <Route
         path="operacion/pedidos"
