@@ -4,7 +4,14 @@
 
 ---
 
-## 2026-09-18 — Fase 2 panel administrativo propio (local)
+## 2026-09-18 — Fix responsive del header (dropdown de cuenta)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **El dropdown de cuenta rompía el header en <992px** | Causa: Bootstrap 5 aplica `position: static` a los `.dropdown-menu` dentro del navbar en <lg (asume un collapse que nuestro header no usa); el menú entraba al flujo, estiraba el nav-item (216×254 px) y desalineaba los iconos (el carrito caía a otra fila, el toggle quedaba oculto). Fix en `storefront.scss`: `.storefront .storefront-header .dropdown-menu { position: absolute; max-width: calc(100vw - 1.5rem); }`. Verificado con CDP a 390/540/790/1440: el menú flota alineado a la derecha, dentro del viewport, y el header queda en una sola fila. |
+| 2 | **Pruebas** | Frontend **533/533** y `tsc` limpios tras el cambio (solo CSS). |
+
+
 
 | # | Cambio | Detalle / evidencia |
 |---|--------|---------------------|
