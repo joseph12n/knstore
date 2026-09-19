@@ -56,7 +56,7 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link to={`/productos/${producto.slug}`} className="text-decoration-none">
-        <div className="position-relative overflow-hidden" style={{ aspectRatio: '3/4', backgroundColor: '#f8f9fa' }}>
+        <div className="position-relative overflow-hidden" style={{ aspectRatio: '3/4', backgroundColor: 'var(--kn-color-surface)' }}>
           <img
             src={buildImageUrl(imagenPrincipal?.imagenContentType, imagenPrincipal?.imagen, undefined, imagenPrincipal?.imagenUrl)}
             alt={producto.nombre}

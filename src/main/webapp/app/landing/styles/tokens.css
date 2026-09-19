@@ -82,3 +82,30 @@
   --kn-transition-base: 250ms ease-in-out;
   --kn-transition-slow: 350ms ease-in-out;
 }
+
+/* ==========================================================================
+   Modo oscuro del storefront (toggle en StoreHeader, persistido en kn-theme)
+   ========================================================================== */
+.storefront[data-theme='dark'] {
+  --kn-color-primary: #f1f3f5;
+  --kn-color-primary-rgb: 241, 243, 245;
+  --kn-color-secondary: #ced4da;
+  --kn-color-accent: #ff3b3b;
+  --kn-color-accent-rgb: 255, 59, 59;
+  --kn-color-accent-hover: #ff5a5a;
+
+  --kn-color-background: #0f1115;
+  --kn-color-surface: #161a22;
+  --kn-color-surface-elevated: #1c212b;
+  --kn-color-border: #262c38;
+  --kn-color-border-strong: #343c4b;
+
+  --kn-color-text: #f1f3f5;
+  --kn-color-text-secondary: #aeb6c2;
+  --kn-color-text-muted: #7b8494;
+  --kn-color-text-inverse: #0f1115;
+
+  --kn-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --kn-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.45);
+  --kn-shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
