@@ -4,6 +4,41 @@
 
 ---
 
+## 2026-09-18 — Fase 2 panel administrativo propio (local)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Fix de botones (afecta landing y admin)** | Causa raíz: Bootswatch/Cyborg fija `background-color` literal y `background-image` (gradiente) al final del CSS, pisando los tokens (`AÑADIR` azul, `Refrescar lista` lila, `Crear` cian). Se anuló `background-image` y se fijó `background-color`/`:hover`/`:disabled` por token: `ProductCard` ahora usa botón negro de marca, crear del admin rojo y secundarios neutros. Archivos: `storefront.scss`, `admin.scss`. Verificado con capturas. |
+| 2 | **Shell propio `AdminLayout`** | Sidebar agrupada (Panel, Operación, Catálogo, Clientes, Ventas, Administración) + topbar con acceso a la tienda, toggle claro/oscuro y menú de sesión. Reemplaza el header/`.jh-card` de JHipster para `/admin/*` y rutas de entidades (`app.tsx`). Responsive (sidebar off-canvas en móvil). |
+| 3 | **Dashboard de inicio (`/admin`)** | KPIs (pedidos totales, pendientes, ventas, stock bajo, envíos pendientes), últimos 5 pedidos con badges y accesos rápidos. Spec con axios mockeado. |
+| 4 | **Tema del admin (`admin.scss`)** | Tokens del storefront (claro/oscuro) aplicados a las páginas generadas: tablas, formularios, modales, dropdowns, paginación, listas y alertas. `tokens.css` amplía el selector oscuro a `.admin-shell[data-theme='dark']`. |
+| 5 | **F2.2 Operación** | Pedidos, Envíos y Reembolsos se renderizan dentro del shell nuevo (captura de `/admin/operacion/pedidos`). |
+| 6 | **F2.3/F2.4 Catálogo, clientes, ventas y administración** | Los CRUD generados quedan tematizados y accesibles desde la sidebar (productos, inventario, precios, imágenes, categorías, subcategorías, marcas, etiquetas, IVA, cuentas, direcciones, carritos, ítems, pedidos, pagos, facturas, envíos, usuarios, salud, métricas, configuración, logs, API). Páginas propias de edición rápida quedan como backlog opcional. |
+| 7 | **Pruebas** | Frontend **533/533** (55 archivos), `tsc` y webpack sin errores; capturas claro/oscuro de dashboard, CRUD de productos y operación. |
+| 8 | **Alcance** | Cambios **solo locales**; sin despliegue a la EC2. |
+
+
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Modo oscuro con toggle** | Tokens `[data-theme='dark']` en `landing/styles/tokens.css`; `StorefrontLayout` gestiona el tema (`data-theme` en `.storefront`, persistencia en `localStorage` `kn-theme`, inicial por `prefers-color-scheme`); botón sol/luna en `StoreHeader`. Fondos `#f8f9fa` tokenizados (`ProductCard`, categorías) para que el tema aplique. Evidencia: capturas CDP con `prefers-color-scheme` emulado (claro y oscuro a 1440 y 360). |
+| 2 | **Secciones nuevas en el home** | `BenefitsBar` (envío gratis ≥$150.000, pagos, garantía, soporte), `OffersSection` (productos con descuento y completado con más baratos), `BrandStrip` (`/api/marcas`), `Testimonials` (3 opiniones) y `NewsletterCta` (validación de correo + toast). Integradas en `StoreHome` en ese orden. |
+| 3 | **Fix de contraste del newsletter** | `.storefront h3/p` pisaban el color del banner y el texto quedaba invisible en oscuro; se agregó la clase `.kn-newsletter` en `storefront.scss` con colores por token (claro: banner oscuro/texto blanco; oscuro: banner claro/texto oscuro). Verificado con capturas. |
+| 4 | **Pruebas** | 5 specs nuevas (Benefits, Testimonials, Newsletter con interacción, BrandStrip con axios mockeado, OffersSection): **532/532** frontend, 54 archivos, cobertura 50,19% sentencias / 50,48% líneas; `tsc` y webpack sin errores. |
+| 5 | **Alcance** | Cambios **solo locales** (webpack dev + backend dev activos para revisión). Sin despliegue a la EC2. |
+
+
+
+Plan aprobado: responsive del catálogo, envío gratis visible, landing con toggle oscuro + secciones nuevas y admin por fases (local primero; despliegue a EC2 se decide al final).
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **`ProductCard` responsive y botón** | Causa: fila precio/CTA sin `flex-wrap` y `.storefront .btn-primary` pisaba a `btn-sm` (padding grande + uppercase); además el `stretched-link` obligaba a un `z-3` frágil. Se quitó el `stretched-link`, se creó `.kn-product-card__footer/__price/__add` con `container-type: inline-size` y `@container (max-width: 240px)` que apila precio y botón a ancho completo. Evidencia: capturas a 360/768/1024/1440 sin superposición (`/tmp/opencode/after-*`, `full-*`). Archivos: `landing/components/ProductCard.tsx`, `landing/styles/storefront.scss`. |
+| 2 | **Envío gratis visible en el checkout** | El backend ya aplicaba la regla (`subtotal >= 150000 ⇒ envío 0`), pero el preview solo se cargaba en el paso 3 y el paso 2 mostraba siempre el costo de lista. Se movió la carga del preview al seleccionar dirección (paso 1) y se agregó `envioGratis` (preview o subtotal local) que muestra "Gratis" con el costo tachado y un aviso cuando aplica. Archivos: `landing/pages/CheckoutPage.tsx`, `CheckoutPage.spec.tsx`. |
+| 3 | **Pruebas** | IT nuevos en `CheckoutServiceIT`: envío gratis con subtotal ≥ umbral (preview, pedido, pago y envío en 0) y cobro estándar bajo el umbral → 7/7 verdes. Spec de UI nueva en `CheckoutPage.spec.tsx` (525/525 frontend). `tsc` limpio y umbrales de cobertura vigentes. |
+| 4 | **Alcance** | Cambios **solo locales**; no se desplegó a la EC2. Si se aprueba, se construye imagen nueva y se actualiza solo el tag en `app-prod.yml`. |
+
+
 ## 2026-09-18 — Operación EC2 (encendido tras apagón, enrutamiento y accesos)
 
 | # | Cambio | Detalle / evidencia |

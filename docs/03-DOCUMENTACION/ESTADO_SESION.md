@@ -51,3 +51,12 @@
 - `@DBRef`: las consultas por lote contra `ref.$id` requieren `ObjectId` (`MongoIdUtils`); ver `ProductoImagenRepository.findByProductoIdIn`.
 - **CSP:** si se agregan hosts de imágenes externas hay que incluirlos en `jhipster.security.content-security-policy` (`img-src`).
 - La imagen prod se construye con `-Pprod` (compila el frontend); verificar RAM antes (webpack es el pico).
+
+## 6. Trabajo en curso — plan de front (local)
+
+Plan aprobado 2026-09-18 (local primero; el despliegue a la EC2 se decide al cierre). Estado:
+
+- **Fase 0 — completada:** botón "Añadir" de `ProductCard` (responsive 360→1920 + estilo compacto) y envío gratis visible en el checkout (preview desde el paso de dirección, "Gratis" con costo tachado). Pruebas: `CheckoutServiceIT` 7/7 (2 nuevas), `CheckoutPage.spec` 7/7, frontend 525/525, `tsc` limpio. Detalle y capturas en `BITACORA.md`.
+- **Fase 1 — completada:** modo oscuro con toggle persistente (`data-theme` + `kn-theme` + `prefers-color-scheme`) y 5 secciones nuevas en el home (Beneficios, Ofertas, Marcas, Testimonios, Newsletter). Frontend 532/532, cobertura 50,19% sentencias. Detalle y capturas en `BITACORA.md`.
+- **Fase 2 — completada:** shell propio `AdminLayout` (sidebar + topbar con tema claro/oscuro), dashboard `/admin` con KPIs, CRUDs generados tematizados (tokens del storefront) y fix de botones del tema (se eliminó el gradiente de Bootswatch; AÑADIR negro, crear rojo). Frontend 533/533. Detalle y capturas en `BITACORA.md`.
+- **Backlog opcional del admin:** páginas propias de edición rápida para productos/inventario (hoy CRUDs generados tematizados); specs de las páginas del panel `/cuenta`; casos negativos (H-05).

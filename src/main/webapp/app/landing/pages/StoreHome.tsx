@@ -3,6 +3,11 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router';
 
 import HeroBanner from 'app/landing/components/HeroBanner';
+import BenefitsBar from 'app/landing/components/BenefitsBar';
+import BrandStrip from 'app/landing/components/BrandStrip';
+import NewsletterCta from 'app/landing/components/NewsletterCta';
+import OffersSection from 'app/landing/components/OffersSection';
+import Testimonials from 'app/landing/components/Testimonials';
 import ProductCard from 'app/landing/components/ProductCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import ErrorAlert from 'app/landing/components/ErrorAlert';
@@ -41,6 +46,8 @@ export const StoreHome = () => {
         </Container>
       )}
 
+      <BenefitsBar />
+
       {/* Categorías */}
       <section className="py-5">
         <Container>
@@ -52,7 +59,10 @@ export const StoreHome = () => {
               {categorias.slice(0, 4).map(categoria => (
                 <Col key={categoria.id} xs={6} md={3}>
                   <Link to={`/categorias/${categoria.slug}`} className="text-decoration-none">
-                    <div className="position-relative overflow-hidden rounded" style={{ aspectRatio: '1/1', backgroundColor: '#f8f9fa' }}>
+                    <div
+                      className="position-relative overflow-hidden rounded"
+                      style={{ aspectRatio: '1/1', backgroundColor: 'var(--kn-color-surface)' }}
+                    >
                       {categoria.imagen ? (
                         <img
                           src={buildImageUrl(categoria.imagenContentType, categoria.imagen)}
@@ -124,6 +134,14 @@ export const StoreHome = () => {
           )}
         </Container>
       </section>
+
+      <OffersSection productos={productos} onAddToCart={onAddToCart} loading={loading} />
+
+      <BrandStrip />
+
+      <Testimonials />
+
+      <NewsletterCta />
     </div>
   );
 };
