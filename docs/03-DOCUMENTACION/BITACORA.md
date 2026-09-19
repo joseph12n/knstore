@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-09-18 — Fix modo oscuro: hero y hovers
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Hero invisible en modo oscuro** | `HeroBanner` usaba `backgroundColor: var(--kn-color-primary)` (que en oscuro se invierte a claro) con título por token inverso y subtítulo blanco fijo → subtítulo invisible. Se fijó el hero como bloque de marca **siempre oscuro** (`#111111`) con título blanco y subtítulo `rgba(255,255,255,.85)`, igual en ambos temas. Verificado con capturas 1440 y 390 en oscuro. |
+| 2 | **Hovers inconsistentes en oscuro** | Red de seguridad con tokens en `storefront.scss` y `admin.scss`: `nav-link`, `dropdown-item`, `list-group-item-action`, `page-link`, `btn-link` y enlaces del footer usan `--kn-color-accent` en `:hover`/`:focus`, para que ningún componente caiga en colores oscuros de Bootstrap sobre fondos oscuros. |
+| 3 | **Loop de recarga con sesión** | Verificado con CDP en idle (12 s en `/admin` y en `/`): **0 navegaciones/recargas**. El comportamiento observado es el *live reload* de webpack al guardar archivos durante el desarrollo (se detiene al terminar de editar), no un bucle de la aplicación; si se reproduce sin ediciones, escalar. |
+| 4 | **Pruebas** | Frontend **533/533**, `tsc` limpio. |
+
+
+
 ## 2026-09-18 — Fix responsive del header (dropdown de cuenta)
 
 | # | Cambio | Detalle / evidencia |
@@ -12,6 +23,8 @@
 | 2 | **Pruebas** | Frontend **533/533** y `tsc` limpios tras el cambio (solo CSS). |
 
 
+
+## 2026-09-18 — Fase 2 panel administrativo propio (local)
 
 | # | Cambio | Detalle / evidencia |
 |---|--------|---------------------|
@@ -26,6 +39,8 @@
 
 
 
+## 2026-09-18 — Fase 1 landing: modo oscuro y secciones nuevas (local)
+
 | # | Cambio | Detalle / evidencia |
 |---|--------|---------------------|
 | 1 | **Modo oscuro con toggle** | Tokens `[data-theme='dark']` en `landing/styles/tokens.css`; `StorefrontLayout` gestiona el tema (`data-theme` en `.storefront`, persistencia en `localStorage` `kn-theme`, inicial por `prefers-color-scheme`); botón sol/luna en `StoreHeader`. Fondos `#f8f9fa` tokenizados (`ProductCard`, categorías) para que el tema aplique. Evidencia: capturas CDP con `prefers-color-scheme` emulado (claro y oscuro a 1440 y 360). |
@@ -35,6 +50,8 @@
 | 5 | **Alcance** | Cambios **solo locales** (webpack dev + backend dev activos para revisión). Sin despliegue a la EC2. |
 
 
+
+## 2026-09-18 — Fase 0 mejoras de front (local)
 
 Plan aprobado: responsive del catálogo, envío gratis visible, landing con toggle oscuro + secciones nuevas y admin por fases (local primero; despliegue a EC2 se decide al final).
 
