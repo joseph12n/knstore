@@ -4,7 +4,20 @@
 
 ---
 
-## 2026-09-18 — Fase 1 landing: modo oscuro y secciones nuevas (local)
+## 2026-09-18 — Fase 2 panel administrativo propio (local)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Fix de botones (afecta landing y admin)** | Causa raíz: Bootswatch/Cyborg fija `background-color` literal y `background-image` (gradiente) al final del CSS, pisando los tokens (`AÑADIR` azul, `Refrescar lista` lila, `Crear` cian). Se anuló `background-image` y se fijó `background-color`/`:hover`/`:disabled` por token: `ProductCard` ahora usa botón negro de marca, crear del admin rojo y secundarios neutros. Archivos: `storefront.scss`, `admin.scss`. Verificado con capturas. |
+| 2 | **Shell propio `AdminLayout`** | Sidebar agrupada (Panel, Operación, Catálogo, Clientes, Ventas, Administración) + topbar con acceso a la tienda, toggle claro/oscuro y menú de sesión. Reemplaza el header/`.jh-card` de JHipster para `/admin/*` y rutas de entidades (`app.tsx`). Responsive (sidebar off-canvas en móvil). |
+| 3 | **Dashboard de inicio (`/admin`)** | KPIs (pedidos totales, pendientes, ventas, stock bajo, envíos pendientes), últimos 5 pedidos con badges y accesos rápidos. Spec con axios mockeado. |
+| 4 | **Tema del admin (`admin.scss`)** | Tokens del storefront (claro/oscuro) aplicados a las páginas generadas: tablas, formularios, modales, dropdowns, paginación, listas y alertas. `tokens.css` amplía el selector oscuro a `.admin-shell[data-theme='dark']`. |
+| 5 | **F2.2 Operación** | Pedidos, Envíos y Reembolsos se renderizan dentro del shell nuevo (captura de `/admin/operacion/pedidos`). |
+| 6 | **F2.3/F2.4 Catálogo, clientes, ventas y administración** | Los CRUD generados quedan tematizados y accesibles desde la sidebar (productos, inventario, precios, imágenes, categorías, subcategorías, marcas, etiquetas, IVA, cuentas, direcciones, carritos, ítems, pedidos, pagos, facturas, envíos, usuarios, salud, métricas, configuración, logs, API). Páginas propias de edición rápida quedan como backlog opcional. |
+| 7 | **Pruebas** | Frontend **533/533** (55 archivos), `tsc` y webpack sin errores; capturas claro/oscuro de dashboard, CRUD de productos y operación. |
+| 8 | **Alcance** | Cambios **solo locales**; sin despliegue a la EC2. |
+
+
 
 | # | Cambio | Detalle / evidencia |
 |---|--------|---------------------|
