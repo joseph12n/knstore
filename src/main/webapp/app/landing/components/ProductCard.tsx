@@ -95,15 +95,15 @@ export const ProductCard = ({ producto, onAddToCart }: ProductCardProps) => {
       </Link>
       <Card.Body className="d-flex flex-column p-3">
         <div className="text-muted small text-uppercase mb-1">{producto.marca?.nombre || 'Knstore'}</div>
-        <Link to={`/productos/${producto.slug}`} className="text-decoration-none stretched-link">
+        <Link to={`/productos/${producto.slug}`} className="text-decoration-none">
           <Card.Title className="h6 fw-semibold mb-2" style={{ minHeight: '2.5em' }}>
             {truncateText(producto.nombre, 55)}
           </Card.Title>
         </Link>
-        <div className="mt-auto d-flex align-items-center justify-content-between">
-          <span className="h5 mb-0 fw-bold">{formatCOP(precioVenta)}</span>
+        <div className="kn-product-card__footer mt-auto">
+          <span className="kn-product-card__price">{formatCOP(precioVenta)}</span>
           {onAddToCart && (
-            <button type="button" className="btn btn-primary btn-sm position-relative z-3" onClick={handleAddToCart}>
+            <button type="button" className="btn btn-primary kn-product-card__add" onClick={handleAddToCart}>
               Añadir
             </button>
           )}
