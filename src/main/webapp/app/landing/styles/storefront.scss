@@ -291,6 +291,53 @@
     transform var(--kn-transition-base);
 }
 
+/* ==========================================================================
+   Tarjeta de producto: precio + CTA responsivos (container queries)
+   ==========================================================================
+   En tarjetas angostas (2 columnas a 360px) el precio y el botón se apilan
+   para evitar superposición; el botón no hereda el padding grande del tema.
+   ========================================================================== */
+.storefront .kn-product-card {
+  container-type: inline-size;
+
+  .kn-product-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--kn-space-2);
+    min-width: 0;
+  }
+
+  .kn-product-card__price {
+    font-size: 1.05rem;
+    font-weight: var(--kn-font-weight-bold);
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .kn-product-card__add {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.78rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    border-radius: var(--kn-border-radius-pill);
+  }
+
+  @container (max-width: 240px) {
+    .kn-product-card__footer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .kn-product-card__add {
+      width: 100%;
+    }
+  }
+}
+
 /* Focus visible accesible */
 .storefront *:focus-visible {
   outline: 2px solid var(--kn-color-primary);
