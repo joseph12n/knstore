@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-09-18 — Release 3.1.1: fix visibilidad del sidebar del admin
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Ítems del sidebar admin en rojo y activo invisible** | La regla de enlaces del admin (`a:not(.btn):not(.nav-link):not(.dropdown-item)`) aplicaba también a `.admin-nav__item` y al botón "Tienda" del topbar: pintaba los ítems en acento rojo y dejaba el activo **rojo sobre rojo**. Se limitó al contenido: `.admin-content a:not(...)`. Verificado con capturas en claro y oscuro: ítems en color de texto secundario, activo rojo con texto blanco, "Tienda" con el color del tema. |
+| 2 | **Pruebas** | Frontend **534/534**, `tsc` limpio. |
+| 3 | **Release 3.1.1** | Imagen `eljoseph12/knstore:3.1.1` (+ `latest`, digest `sha256:d99ac4d8e3175414c11495f3da0f72b0eca65276b43ae1d39247faacb5d2f764`) publicada y desplegada en la EC2: `knstore-app-1` con 3.1.1 `Up (healthy)`, home 200, health 200, Mongo intacto. |
+| 4 | **Git** | Commits, push a `origin`, mirror `sena-students`, 6 ramas unificadas a `main` y tag `v3.1.1`. |
+
+
+
 ## 2026-09-18 — Release 3.1.0: limpieza, regresión y despliegue
 
 | # | Cambio | Detalle / evidencia |
