@@ -86,7 +86,8 @@
 /* ==========================================================================
    Modo oscuro del storefront (toggle en StoreHeader, persistido en kn-theme)
    ========================================================================== */
-.storefront[data-theme='dark'] {
+.storefront[data-theme='dark'],
+.admin-shell[data-theme='dark'] {
   --kn-color-primary: #f1f3f5;
   --kn-color-primary-rgb: 241, 243, 245;
   --kn-color-secondary: #ced4da;
