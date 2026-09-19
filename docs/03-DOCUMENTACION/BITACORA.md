@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-09-18 — Release 3.1.0: limpieza, regresión y despliegue
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Limpieza de código** | Eliminados los archivos muertos `modules/login/login.tsx` y `modules/login/login-modal.tsx` (reemplazados por `landing/pages/LoginPage.tsx`) y `.vscode/launch.json` (apuntaba al export viejo de tests). `.vscode/settings.json` queda versionado. Sin referencias rotas (`grep` + `tsc`). |
+| 2 | **Regresión completa** | Unit **363/363** · IT **488/488** · Frontend **534/534** (56 archivos) · `tsc` limpio · `verify` con modernizer y JaCoCo. Cobertura: backend **70,1% líneas**, frontend **50,97%**. |
+| 3 | **Informe de calidad** | `informe-calidad/js/datos.js` y `resultados-pruebas.html` regenerados con las cifras finales (129 suites). |
+| 4 | **Imagen 3.1.0** | `eljoseph12/knstore:3.1.0` (+ `latest`, digest `sha256:e5b6afff4fedb60c1df279fb30173420b6ac06d5815be4b27f6ff0d2786a5ca4`) publicada en Docker Hub. |
+| 5 | **Despliegue EC2** | `src/main/docker/app-prod.yml` actualizado a 3.1.0; en el servidor `docker compose pull && docker compose up -d`. Mongo conservó el mismo contenedor (datos intactos). Verificado: `knstore-app-1` con la imagen 3.1.0 `Up (healthy)`, `/management/health` 200, home 200, nueva página de login servida y capturada, 777 productos activos / 160 pedidos / 17 usuarios. |
+| 6 | **Git** | Commits, push a `origin`, mirror `sena-students`, 6 ramas unificadas a `main` y tag `v3.1.0`. |
+
+
+
 ## 2026-09-18 — Fix visibilidad de la navegación del header
 
 | # | Cambio | Detalle / evidencia |
