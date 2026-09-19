@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Row } from 'react-bootstrap';
 import { ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
-import { Link } from 'react-router';
 
 import { toast } from 'react-toastify';
 
@@ -113,18 +112,6 @@ export const RegisterPage = () => {
               Crear la cuenta
             </Button>
           </ValidatedForm>
-          <p>&nbsp;</p>
-          <Alert variant="warning">
-            <span>Si desea </span>
-            <Link to="/login" className="alert-link">
-              iniciar sesión
-            </Link>
-            <span>
-              , puede intentar con las cuentas predeterminadas:
-              <br />- Administrador (usuario=&quot;admin&quot; y contraseña=&quot;admin&quot;) <br />- Usuario (usuario=&quot;user&quot; y
-              contraseña=&quot;user&quot;).
-            </span>
-          </Alert>
         </Col>
       </Row>
     </div>
