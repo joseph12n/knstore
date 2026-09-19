@@ -4,7 +4,17 @@
 
 ---
 
-## 2026-09-18 — Fase 0 mejoras de front (local)
+## 2026-09-18 — Fase 1 landing: modo oscuro y secciones nuevas (local)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Modo oscuro con toggle** | Tokens `[data-theme='dark']` en `landing/styles/tokens.css`; `StorefrontLayout` gestiona el tema (`data-theme` en `.storefront`, persistencia en `localStorage` `kn-theme`, inicial por `prefers-color-scheme`); botón sol/luna en `StoreHeader`. Fondos `#f8f9fa` tokenizados (`ProductCard`, categorías) para que el tema aplique. Evidencia: capturas CDP con `prefers-color-scheme` emulado (claro y oscuro a 1440 y 360). |
+| 2 | **Secciones nuevas en el home** | `BenefitsBar` (envío gratis ≥$150.000, pagos, garantía, soporte), `OffersSection` (productos con descuento y completado con más baratos), `BrandStrip` (`/api/marcas`), `Testimonials` (3 opiniones) y `NewsletterCta` (validación de correo + toast). Integradas en `StoreHome` en ese orden. |
+| 3 | **Fix de contraste del newsletter** | `.storefront h3/p` pisaban el color del banner y el texto quedaba invisible en oscuro; se agregó la clase `.kn-newsletter` en `storefront.scss` con colores por token (claro: banner oscuro/texto blanco; oscuro: banner claro/texto oscuro). Verificado con capturas. |
+| 4 | **Pruebas** | 5 specs nuevas (Benefits, Testimonials, Newsletter con interacción, BrandStrip con axios mockeado, OffersSection): **532/532** frontend, 54 archivos, cobertura 50,19% sentencias / 50,48% líneas; `tsc` y webpack sin errores. |
+| 5 | **Alcance** | Cambios **solo locales** (webpack dev + backend dev activos para revisión). Sin despliegue a la EC2. |
+
+
 
 Plan aprobado: responsive del catálogo, envío gratis visible, landing con toggle oscuro + secciones nuevas y admin por fases (local primero; despliegue a EC2 se decide al final).
 
