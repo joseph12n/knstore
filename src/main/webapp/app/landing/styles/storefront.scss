@@ -319,6 +319,18 @@
 }
 
 /* ==========================================================================
+   Header del storefront: los dropdowns deben flotar siempre
+   ==========================================================================
+   Bootstrap 5 vuelve `static` a los `.dropdown-menu` dentro del navbar en
+   <992px (porque asume un collapse); nuestro navbar no colapsa, así que el
+   menú se insertaba en el flujo y rompía la barra. Se restaura el flotado.
+   ========================================================================== */
+.storefront .storefront-header .dropdown-menu {
+  position: absolute;
+  max-width: calc(100vw - 1.5rem);
+}
+
+/* ==========================================================================
    Banner de newsletter: conserva el contraste en claro y oscuro
    ========================================================================== */
 .storefront .kn-newsletter {
