@@ -33,6 +33,18 @@
 
   /* Affordance de hover consistente en ambos temas: ningún componente debe
      caer en colores oscuros de Bootstrap sobre fondos oscuros. */
+  .nav-link {
+    color: var(--kn-color-text);
+  }
+
+  .dropdown-item {
+    color: var(--kn-color-text);
+  }
+
+  .btn-link {
+    color: var(--kn-color-text);
+  }
+
   .nav-link:hover,
   .nav-link:focus,
   .dropdown-item:hover,
