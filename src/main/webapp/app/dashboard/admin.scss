@@ -164,6 +164,17 @@
     color: var(--kn-color-accent);
   }
 
+  .nav-link:hover,
+  .nav-link:focus,
+  .list-group-item-action:hover,
+  .list-group-item-action:focus,
+  .page-link:hover,
+  .page-link:focus,
+  .btn-link:hover,
+  .btn-link:focus {
+    color: var(--kn-color-accent);
+  }
+
   .text-muted {
     color: var(--kn-color-text-muted) !important;
   }

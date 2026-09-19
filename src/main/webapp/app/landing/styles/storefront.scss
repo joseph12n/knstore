@@ -31,6 +31,23 @@
     }
   }
 
+  /* Affordance de hover consistente en ambos temas: ningún componente debe
+     caer en colores oscuros de Bootstrap sobre fondos oscuros. */
+  .nav-link:hover,
+  .nav-link:focus,
+  .dropdown-item:hover,
+  .dropdown-item:focus,
+  .list-group-item-action:hover,
+  .list-group-item-action:focus,
+  .page-link:hover,
+  .page-link:focus,
+  .btn-link:hover,
+  .btn-link:focus,
+  footer a:hover,
+  footer a:focus {
+    color: var(--kn-color-accent);
+  }
+
   /* Títulos */
   h1,
   h2,
