@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-09-18 — Fix visibilidad de la navegación del header
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **"Ingresar" y las categorías invisibles en modo oscuro** | Al excluir `.nav-link` de la regla genérica de enlaces, estos quedaron con `--bs-nav-link-color` (negro del tema base de Cyborg) sobre el header oscuro. Se fijó con tokens: `.storefront .nav-link { color: var(--kn-color-text) }` y `.storefront .dropdown-item { color: var(--kn-color-text) }`, además de `.storefront .btn-link { color: var(--kn-color-text) }` (toggle de tema). Verificado con capturas del header en claro y oscuro: marca, toggle, "Ingresar", carrito y menú de categorías visibles y consistentes. |
+| 2 | **Pruebas** | Frontend **534/534** (56 archivos) y `tsc` limpios. |
+
+
+
 ## 2026-09-18 — Fix bucle de recarga en el inicio (Service Worker)
 
 | # | Cambio | Detalle / evidencia |
