@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-09-18 — Fase 0 mejoras de front (local)
+
+Plan aprobado: responsive del catálogo, envío gratis visible, landing con toggle oscuro + secciones nuevas y admin por fases (local primero; despliegue a EC2 se decide al final).
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **`ProductCard` responsive y botón** | Causa: fila precio/CTA sin `flex-wrap` y `.storefront .btn-primary` pisaba a `btn-sm` (padding grande + uppercase); además el `stretched-link` obligaba a un `z-3` frágil. Se quitó el `stretched-link`, se creó `.kn-product-card__footer/__price/__add` con `container-type: inline-size` y `@container (max-width: 240px)` que apila precio y botón a ancho completo. Evidencia: capturas a 360/768/1024/1440 sin superposición (`/tmp/opencode/after-*`, `full-*`). Archivos: `landing/components/ProductCard.tsx`, `landing/styles/storefront.scss`. |
+| 2 | **Envío gratis visible en el checkout** | El backend ya aplicaba la regla (`subtotal >= 150000 ⇒ envío 0`), pero el preview solo se cargaba en el paso 3 y el paso 2 mostraba siempre el costo de lista. Se movió la carga del preview al seleccionar dirección (paso 1) y se agregó `envioGratis` (preview o subtotal local) que muestra "Gratis" con el costo tachado y un aviso cuando aplica. Archivos: `landing/pages/CheckoutPage.tsx`, `CheckoutPage.spec.tsx`. |
+| 3 | **Pruebas** | IT nuevos en `CheckoutServiceIT`: envío gratis con subtotal ≥ umbral (preview, pedido, pago y envío en 0) y cobro estándar bajo el umbral → 7/7 verdes. Spec de UI nueva en `CheckoutPage.spec.tsx` (525/525 frontend). `tsc` limpio y umbrales de cobertura vigentes. |
+| 4 | **Alcance** | Cambios **solo locales**; no se desplegó a la EC2. Si se aprueba, se construye imagen nueva y se actualiza solo el tag en `app-prod.yml`. |
+
+
 ## 2026-09-18 — Operación EC2 (encendido tras apagón, enrutamiento y accesos)
 
 | # | Cambio | Detalle / evidencia |
