@@ -18,8 +18,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Enlaces */
-  a {
+  /* Enlaces (no aplica a enlaces estilizados como botones) */
+  a:not(.btn):not(.nav-link):not(.dropdown-item) {
     color: var(--kn-color-text);
     text-decoration: none;
     transition: color var(--kn-transition-fast);
@@ -560,4 +560,8 @@
   .min-width-0 {
     min-width: 0;
   }
+}
+
+.storefront[data-theme='dark'] .kn-cart-drawer .btn-close {
+  filter: invert(1) grayscale(100%);
 }
