@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-09-18 — Fix carrito oscuro, login, registro y botones del admin
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Carrito (drawer) en modo oscuro** | React-Bootstrap renderiza el `Offcanvas` en un portal fuera de `.storefront`, por lo que no heredaba los tokens y quedaba blanco. Se pasó `container={() => document.querySelector('.storefront') ?? document.body}` en `CartDrawer` y se invierte el `btn-close` en oscuro. Captura verificada con ítems reales: fondo oscuro, tarjetas y textos legibles. |
+| 2 | **Sección de cuentas demo en el registro** | Se eliminó el bloque `Alert` de "cuentas predeterminadas" en `modules/account/register/register.tsx` (y el import de `Link` que quedaba sin uso). Ya no expone admin/admin en la UI. |
+| 3 | **Login rediseñado** | Nuevo `landing/pages/LoginPage.tsx` (reemplaza al modal de JHipster en la ruta `/login`): tarjeta de dos columnas con panel de marca, formulario con tokens del storefront, toggle claro/oscuro, redirección por rol (ADMIN/MANAGER/cliente) y spec de render (`LoginPage.spec.tsx`). Capturas claro/oscuro verificadas. |
+| 4 | **Botones de acciones del admin** | Las acciones de tabla son `<a class="btn ...">`; la regla `.admin-shell a { color: accent }` pisaba el color del botón (texto rojo sobre rojo en "Eliminar"). Se excluyeron los enlaces-botón: `.admin-shell a:not(.btn):not(.nav-link):not(.dropdown-item)` (igual en `storefront.scss`). Verificado en claro y oscuro: Vista neutro, Editar/Eliminar rojos con texto blanco. |
+| 5 | **Pruebas** | Frontend **534/534** (56 archivos), `tsc` limpio, webpack sin errores. |
+
+
+
 ## 2026-09-18 — Fix modo oscuro: hero y hovers
 
 | # | Cambio | Detalle / evidencia |
