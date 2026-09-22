@@ -1,6 +1,6 @@
 // Datos generados automáticamente — Informe de Calidad KN-Store
 window.DATOS = {
- "generado": "2026-09-18",
+ "generado": "2026-09-22",
  "entorno": {
   "java": "Java 21 (Amazon Corretto)",
   "spring": "Spring Boot 4.0.6",
@@ -2216,21 +2216,6 @@ window.DATOS = {
     "l": 100.0
    },
    {
-    "n": "ItemCarrito",
-    "p": "domain",
-    "ic": 115,
-    "it": 115,
-    "bc": 8,
-    "bt": 8,
-    "lc": 42,
-    "lt": 42,
-    "mc": 22,
-    "mt": 22,
-    "i": 100.0,
-    "b": 100.0,
-    "l": 100.0
-   },
-   {
     "n": "Authority",
     "p": "domain",
     "ic": 47,
@@ -2241,6 +2226,21 @@ window.DATOS = {
     "lt": 14,
     "mc": 7,
     "mt": 7,
+    "i": 100.0,
+    "b": 100.0,
+    "l": 100.0
+   },
+   {
+    "n": "ItemCarrito",
+    "p": "domain",
+    "ic": 115,
+    "it": 115,
+    "bc": 8,
+    "bt": 8,
+    "lc": 42,
+    "lt": 42,
+    "mc": 22,
+    "mt": 22,
     "i": 100.0,
     "b": 100.0,
     "l": 100.0

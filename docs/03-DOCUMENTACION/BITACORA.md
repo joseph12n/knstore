@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-09-22 — Corrida de cobertura y análisis de estado (backend + frontend)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Corrida backend** | `./mvnw -Dskip.npm=true -Dspotless.check.skip=true -Dcheckstyle.skip=true verify` → **BUILD SUCCESS**: unit **363/363** (93 suites) + IT **487/487** (35 suites frescas; el `.txt` residual de `ListadosQueryDebugIT` del 24-ago explica el 488 de los reportes), 0 fallos. Se consolidó JaCoCo unit+IT con el CLI 0.8.14 (`jacoco-merged.exec` → HTML/XML/CSV en `target/site/jacoco-merged/`). |
+| 2 | **Cobertura backend (consolidada)** | **70,1% líneas** (7357/10502) · **41,3% ramas** (1643/3983) · **88,6% métodos** · 194 clases — igual a la línea base (sin regresión). Fuerte: `domain` 96,8%, `service.dto` 97,9%, `service.impl` 91,8%, `web.rest` 86,1%, `service.payment` 100%. Débil: `service.mapper` 38,3% (MapStruct generado), `config.dbmigrations` 37,4% (`CatalogSeedMigration` 5%, `CatalogSeedImagesMigration` 13,3%), `aop.logging` 0%. |
+| 3 | **Corrida frontend** | Vitest: **534/534** en 56 archivos (4,0 s). Cobertura sobre código propio: **50,74% sentencias** (994/1959) en 78 archivos; umbrales 45/35/40/45 **cumplidos**. Sin cobertura (0%): páginas del panel `/cuenta` (ProfilePage, AddressesPage, PaymentsPage, InvoicesPage, ShipmentsPage, SecurityChangePage), `StoreHome`, `StoreHeader`, `CartPage`, `CartDrawer` y `navItems.ts` — coincide con el backlog H-05. |
+| 4 | **Corrida del IDE (evidencia del usuario)** | `docs/test_de_cobertura/Test Results - java_in_knstore.html` (exportado hoy 14:04 desde IntelliJ con agente de cobertura): **853 total, 853 passed** en 41,77 s. Los % de cobertura del IDE no se exportaron al repo; los números de cobertura de este registro provienen de JaCoCo y Vitest. |
+| 5 | **Hallazgo: `npm test` roto por lint** | `pretest` (`eslint .`) falla con **5831 errores**: ~5818 son de las carpetas de skills de agentes IA (`.opencode/`, `.agent/`, `.claude/`, `.gemini/` — `live-browser.js` 1386 errores × 4 copias, etc.), que están en `.gitignore` pero **no** en los `ignores` de `eslint.config.ts`; los **13 errores reales del repo** están en `scripts/seed-contenido.js` (prettier, commit `ada5041`) y **sí rompen `ci:frontend:test`** en un clone limpio. Pendiente de fix (ignores + `lint:fix`). |
+| 6 | **Git (sin commit)** | Había trabajo sin commitear en `docs/test_de_cobertura/`: borrado staged del `informe-calidad/`, `resultados-pruebas.html` y el HTML previo del IDE, más el export nuevo sin trackear. Decisión del responsable: **regenerar el informe**. |
+| 7 | **Fix del lint (`npm test` operativo)** | `eslint.config.ts` ahora ignora las carpetas de skills de agentes IA (`.opencode/`, `.agent/`, `.claude/`, `.gemini/`) y `scripts/seed-contenido.js` quedó formateado con prettier (`eslint --fix`, solo ese archivo). Evidencia: `npm run lint` **0 errores** (antes 5831), `tsc --noEmit` limpio. |
+| 8 | **Informe regenerado** | Se restauraron las plantillas del `informe-calidad/` y se corrió `scripts/generar-informe-calidad.py` sobre la corrida de hoy: backend **70,1% líneas** (unit+IT consolidado JaCoCo), frontend **50,97% líneas**, 129 suites, 0 fallos (`datos.js` y `resultados-pruebas.html` actualizados, fecha 2026-09-22). |
+| 9 | **⚠️ Incidente: export del IDE sobrescrito** | Al restaurar plantillas se incluyó por error `Test Results - java_in_knstore.html` en `git restore`; esto reemplazó el export del IDE de las 14:04 (625.507 B, **853 total / 853 passed**, 41,77 s) por la versión commiteada anterior (611.974 B, 848 total / **4 failed** / 844 passed). El archivo nuevo nunca estuvo en git, pero es **recuperable desde la Historia local de IntelliJ** (`~/.cache/JetBrains/IntelliJIdea2026.2/LocalHistory`; clic derecho sobre el archivo → Local History → restaurar la versión de las 14:04). Los datos clave del export se preservaron en esta bitácora (fila 4). |
+
+
+
 ## 2026-09-22 — Limpieza: eliminación de la rama `revert-3-lauraG`
 
 | # | Cambio | Detalle / evidencia |
