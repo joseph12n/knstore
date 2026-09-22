@@ -4,6 +4,72 @@
 
 ---
 
+## 2026-09-22 — GitHub Pages: Quality Gate de SonarCloud y reestructuración Jekyll
+
+La publicación del informe dejó el **Quality Gate de SonarCloud en rojo** (los otros 3 checks —build/deploy de Pages— verdes). Diagnóstico y arreglo completo en `joseph12n/pruebas`:
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Fiabilidad D → A (21 bugs cerrados)** | Bug CRÍTICO `css:S4657` (`.terminal-body code` con `border-color` muerto pisado por el shorthand `border`) + 20 mayores de accesibilidad: `aria-label` en los 16 inputs/select sin label (command palette y toolbars) y `thead/th` en las 4 tablas de suites de `unitarias.html`. Verificado en DOM: 0 controles sin label, 0 tablas sin `th` (commit `cc7891b`). |
+| 2 | **Duplicación 9,7 % → 0,0 %** | El análisis automático de SonarCloud (Auto-Scan) **ignora `sonar-project.properties`** (limitación conocida de la plataforma), así que las exclusiones no servían y la duplicación era real: el shell estático copiado en las 7 páginas por el fallback sin JS. Solución (decisión del usuario): **reestructurar con Jekyll** — shell único en `_layouts/default.html` + `_includes/` (`head`, `nav-rail`, `nav-drawer`, `scripts`), 7 páginas con front matter + contenido, nav en 1 archivo (antes 7), ticker con 1 grupo + clon por JS. Commits `b1ae5e4` (−1335/+365 líneas) y `55cd1b4` (`title` literal en el layout: el analizador HTML no sigue `{% include %}`). |
+| 3 | **Verificación de la reestructuración** | Build con `jekyll/jekyll:4` (Docker), 7 páginas 200 sin errores de consola ni overflow, nav activa correcta, charts exactos; **diff de píxel RMSE = 0** contra las capturas pre-Jekyll (4/5 renders idénticos; la única diferencia son los `thead` nuevos de unitarias, ya en `.impeccable/review/`). Sitio live sirviendo el build Jekyll (200 con `<title>` renderizado). |
+| 4 | **Resultado SonarCloud** | **Quality Gate OK (5/5):** fiabilidad A, seguridad A, mantenibilidad A, **duplicación 0,0 %** (umbral 3 %), hotspots revisados 100 %. Bug `Web:PageWithoutTitleCheck` residual del template cerrado. Detalle completo en `~/Descargas/pruebas/CONTEXT.md`. |
+| 5 | **Git** | `joseph12n/pruebas`: commits `cc7891b` (fiabilidad + accesibilidad), `b1ae5e4` (reestructuración Jekyll, −1335/+365) y `55cd1b4` (title literal en el layout) → push a `main` (GitHub Pages con build Jekyll verde y sitio live verificado). Este registro: commit `b3b6859` (`docs: registrar el quality gate...`) → push a `origin` y mirror a **sena-students**, 6 ramas unificadas a `main`. |
+
+---
+
+## 2026-09-22 — GitHub Pages de reportes QA: informe de Cobertura y pulido del sitio
+
+Trabajo en el repo **`joseph12n/pruebas`** (`~/Descargas/pruebas`, sitio KN·QA Observatory publicado en GitHub Pages), no en `knstore`.
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Informe de Cobertura integrado** | Página nueva `pages/cobertura.html` con los datos de la corrida de cobertura de hoy: JaCoCo unit+IT consolidado (70,1 % líneas / 41,3 % ramas / 88,6 % métodos, 194 clases) y Vitest (50,97 % líneas, 78 archivos propios, umbrales 45/35/40/45), 1.384 pruebas (363 unit + 487 IT + 534 front). Tablas filtrables por clase (194) y archivo (78), charts y focos de mejora H-05. Datos crudos en `docs/cobertura/` (jacoco.csv + vitest-resumen.json) y generados con `tools/build_data.py` → `assets/js/data/cobertura.js`. |
+| 2 | **Datos del ciclo actualizados** | Unitarias 361→363 (regresión 22-sep, +2 RF-072), backlog `ItemCarritoResourceIT` cerrado (17/17), "JaCoCo ya midiendo" con enlace al informe nuevo, ticker/KPIs del dashboard con cobertura y Comité de Calidad movido al footer. |
+| 3 | **Pulido general** | `.grid.cols-2` pasa a 2 columnas reales (antes auto-fit dejaba filas huérfanas 3+1 en 7 bloques de cobertura/unitarias/e2e/maestro) + media ≤700px; `print.css` fija `--accent-ink` para impresión (badges con contraste 2,6:1 → alto). Verificación Playwright: 6 capturas (1440/390 × claro/oscuro + index + unitarias) en `.impeccable/review/`, 0 errores de consola, 0 overflow horizontal; detector `impeccable detect` (79 hallazgos: 2 arreglados, el resto identidad del mundo fijada). Nota: la publicación arrastra también el rediseño del 2026-09-10 pendiente de commit, cuyo diff incluye `assets/js/core/shell.js`, `core/motion.js`, `css/motion.css` y `assets/vendor/` (Chart.js/GSAP/Lenis localizados, sin CDN en runtime). |
+| 3b | **Revisión de acabado** | Revisor independiente sobre las capturas + contrato de dirección: veredicto `fix` con lote quirúrgico — M1 gauge "Backend · líneas" descontaba instrucciones en vez de líneas (copy corregido a 7.357/10.502), M2 estado vacío "Sin resultados · Limpiar filtros" en las tablas filtrables nuevas, M3 buscador de tablas a ancho real (`flex: 1 1 260px`), M4 tonos de los gauges alineados al orden de los KPIs — todo aplicado y recapturado; resto de hallazgos = identidad del mundo KN·QA Observatory (sin objeción). |
+| 4 | **Publicación** | Commit + push a `main` de `joseph12n/pruebas` (incluye el rediseño del 2026-09-10 que estaba sin commitear, autorizado por el usuario); GitHub Pages queda con los 7 informes. Detalle en `~/Descargas/pruebas/CONTEXT.md`. |
+
+---
+
+## 2026-09-22 — Corrida de cobertura y análisis de estado (backend + frontend)
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Corrida backend** | `./mvnw -Dskip.npm=true -Dspotless.check.skip=true -Dcheckstyle.skip=true verify` → **BUILD SUCCESS**: unit **363/363** (93 suites) + IT **487/487** (35 suites frescas; el `.txt` residual de `ListadosQueryDebugIT` del 24-ago explica el 488 de los reportes), 0 fallos. Se consolidó JaCoCo unit+IT con el CLI 0.8.14 (`jacoco-merged.exec` → HTML/XML/CSV en `target/site/jacoco-merged/`). |
+| 2 | **Cobertura backend (consolidada)** | **70,1% líneas** (7357/10502) · **41,3% ramas** (1643/3983) · **88,6% métodos** · 194 clases — igual a la línea base (sin regresión). Fuerte: `domain` 96,8%, `service.dto` 97,9%, `service.impl` 91,8%, `web.rest` 86,1%, `service.payment` 100%. Débil: `service.mapper` 38,3% (MapStruct generado), `config.dbmigrations` 37,4% (`CatalogSeedMigration` 5%, `CatalogSeedImagesMigration` 13,3%), `aop.logging` 0%. |
+| 3 | **Corrida frontend** | Vitest: **534/534** en 56 archivos (4,0 s). Cobertura sobre código propio: **50,74% sentencias** (994/1959) en 78 archivos; umbrales 45/35/40/45 **cumplidos**. Sin cobertura (0%): páginas del panel `/cuenta` (ProfilePage, AddressesPage, PaymentsPage, InvoicesPage, ShipmentsPage, SecurityChangePage), `StoreHome`, `StoreHeader`, `CartPage`, `CartDrawer` y `navItems.ts` — coincide con el backlog H-05. |
+| 4 | **Corrida del IDE (evidencia del usuario)** | `docs/test_de_cobertura/Test Results - java_in_knstore.html` (exportado hoy 14:04 desde IntelliJ con agente de cobertura): **853 total, 853 passed** en 41,77 s. Los % de cobertura del IDE no se exportaron al repo; los números de cobertura de este registro provienen de JaCoCo y Vitest. |
+| 5 | **Hallazgo: `npm test` roto por lint** | `pretest` (`eslint .`) falla con **5831 errores**: ~5818 son de las carpetas de skills de agentes IA (`.opencode/`, `.agent/`, `.claude/`, `.gemini/` — `live-browser.js` 1386 errores × 4 copias, etc.), que están en `.gitignore` pero **no** en los `ignores` de `eslint.config.ts`; los **13 errores reales del repo** están en `scripts/seed-contenido.js` (prettier, commit `ada5041`) y **sí rompen `ci:frontend:test`** en un clone limpio. Pendiente de fix (ignores + `lint:fix`). |
+| 6 | **Git (sin commit)** | Había trabajo sin commitear en `docs/test_de_cobertura/`: borrado staged del `informe-calidad/`, `resultados-pruebas.html` y el HTML previo del IDE, más el export nuevo sin trackear. Decisión del responsable: **regenerar el informe**. |
+| 7 | **Fix del lint (`npm test` operativo)** | `eslint.config.ts` ahora ignora las carpetas de skills de agentes IA (`.opencode/`, `.agent/`, `.claude/`, `.gemini/`) y `scripts/seed-contenido.js` quedó formateado con prettier (`eslint --fix`, solo ese archivo). Evidencia: `npm run lint` **0 errores** (antes 5831), `tsc --noEmit` limpio. |
+| 8 | **Informe regenerado** | Se restauraron las plantillas del `informe-calidad/` y se corrió `scripts/generar-informe-calidad.py` sobre la corrida de hoy: backend **70,1% líneas** (unit+IT consolidado JaCoCo), frontend **50,97% líneas**, 129 suites, 0 fallos (`datos.js` y `resultados-pruebas.html` actualizados, fecha 2026-09-22). |
+| 9 | **⚠️ Incidente: export del IDE sobrescrito** | Al restaurar plantillas se incluyó por error `Test Results - java_in_knstore.html` en `git restore`; esto reemplazó el export del IDE de las 14:04 (625.507 B, **853 total / 853 passed**, 41,77 s) por la versión commiteada anterior (611.974 B, 848 total / **4 failed** / 844 passed). El archivo nuevo nunca estuvo en git, pero es **recuperable desde la Historia local de IntelliJ** (`~/.cache/JetBrains/IntelliJIdea2026.2/LocalHistory`; clic derecho sobre el archivo → Local History → restaurar la versión de las 14:04). Los datos clave del export se preservaron en esta bitácora (fila 4). |
+| 10 | **Git** | Commits `82e326c` (`chore(config): excluir carpetas de agentes ia del eslint`), `b83dda2` (`style(config): formatear seed-contenido.js con prettier`) y `3f603b5` (`docs: regenerar informe de calidad y registrar la corrida de cobertura`) → push a `origin` (`0c0f8d9..3f603b5`) → mirror a **sena-students** (mismo SHA `3f603b5`). Las 6 ramas (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`) quedan unificadas a `main` en **ambos** `origin` (todas fast-forward; backups locales en `refs/backup/2026-09-22/`). |
+
+
+
+## 2026-09-22 — Limpieza: eliminación de la rama `revert-3-lauraG`
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Respaldo previo (§12.1)** | El tip de la rama tenía 1 commit único no contenido en `main`: `c6cbf07 Revert "Docs: Manuales y planes del sistema knstore"` (revert del PR #3 creado por GitHub). Antes de borrarlo se respaldó en `refs/backup/2026-09-22/revert-3-lauraG` en **ambos** repos locales (referencia local, no se sube), preservando el commit. |
+| 2 | **Rama eliminada de `origin`** | `git push origin --delete revert-3-lauraG` en `joseph12n/knstore` (`- [deleted] revert-3-lauraG`). El espejo **sena-students** nunca tuvo esa rama (verificado con `git ls-remote`). |
+| 3 | **Resultado** | Los dos `origin` quedan exactamente con las 6 ramas oficiales (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`), sin ramas ajenas al flujo. |
+
+
+
+## 2026-09-22 — Contenido de la tienda: manifiesto de catálogo y seed idempotente
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Manifiesto de contenido** | `contenido/catalogo.json` (v1) describe marcas, categorías/subcategorías y productos con precio, inventario e imágenes; el `slug` es la llave de idempotencia. `contenido/imagenes/README.md` fija la estructura `imagenes/<slug>/<orden>-<variante>.jpg` (≤500 KB, ~800 px, `01-principal` como única principal y `alt` descriptivo en español). Validado: JSON parseable (2 marcas, 1 categoría, 1 producto de ejemplo). |
+| 2 | **Seed idempotente** | `scripts/seed-contenido.js` (289 líneas) lee el manifiesto y sube marcas, categorías, subcategorías, productos con precios e inventario e imágenes locales vía API REST, siguiendo el patrón de `scripts/seed-catalogo-real.js`: credenciales por entorno (`KNSTORE_USERNAME`/`KNSTORE_PASSWORD`), sin secretos reales en el repo. Idempotente por `slug` (crear si no existe, actualizar si existe; nunca duplica) y con flag `--force-images`. Evidencia: `node --check` OK. |
+| 3 | **Higiene del repo** | `.gitignore` ahora excluye las carpetas de agentes IA (`.agent/`, `.claude/`, `.gemini/`, `.opencode/`): ~72 MB de skills duplicados (`impeccable`) que no deben versionarse ni subirse al espejo. |
+| 4 | **Git** | Commit `ada5041` (`feat(config): agregar manifiesto de contenido y seed idempotente de la tienda`) → push a `origin` (`343a7a6..ada5041`) → mirror a **sena-students** (fast-forward al mismo SHA; `git log` verificado idéntico en ambos). Este registro documental cierra el flujo con las 6 ramas (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`) unificadas a `main` en ambos repos (solo fast-forwards; sin reinicios ni `refs/backup`). |
+
+
+
 ## 2026-09-18 — Release 3.1.1: fix visibilidad del sidebar del admin
 
 | # | Cambio | Detalle / evidencia |
