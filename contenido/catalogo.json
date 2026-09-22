@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "descripcion": "Manifiesto de contenido de la tienda KN-Store. Lo mantiene el agente contenido-tienda y lo consume scripts/seed-contenido.js. Los slugs son la llave de idempotencia (crear si no existe, actualizar si existe).",
+  "marcas": [
+    { "nombre": "Nike", "slug": "nike" },
+    { "nombre": "Adidas", "slug": "adidas" }
+  ],
+  "categorias": [
+    {
+      "nombre": "Unisex",
+      "slug": "unisex",
+      "descripcion": "Calzado para todas las personas",
+      "subcategorias": [
+        { "nombre": "Casual", "slug": "casual", "descripcion": "Estilo urbano y comodidad para el día a día." }
+      ]
+    }
+  ],
+  "productos": [
+    {
+      "slug": "nike-air-force-1-07-blanco",
+      "nombre": "Nike Air Force 1 '07 Blanco",
+      "descripcion": "El clásico atemporal de Nike en cuero blanco. Amortiguación Air y suela de goma para el uso diario.",
+      "marca": "nike",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "NK-AF107-WT",
+      "sku": "NK-AF107-WT-40",
+      "color": "Blanco",
+      "talla": "40",
+      "codigoBarras": "7700000000001",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "precio": {
+        "precioCompra": 250000,
+        "precioVenta": 349900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 25,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Nike Air Force 1 '07 en color blanco, vista lateral",
+          "principal": true
+        }
+      ]
+    }
+  ]
+}
