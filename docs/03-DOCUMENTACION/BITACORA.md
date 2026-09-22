@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-09-22 — GitHub Pages: Quality Gate de SonarCloud y reestructuración Jekyll
+
+La publicación del informe dejó el **Quality Gate de SonarCloud en rojo** (los otros 3 checks —build/deploy de Pages— verdes). Diagnóstico y arreglo completo en `joseph12n/pruebas`:
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Fiabilidad D → A (21 bugs cerrados)** | Bug CRÍTICO `css:S4657` (`.terminal-body code` con `border-color` muerto pisado por el shorthand `border`) + 20 mayores de accesibilidad: `aria-label` en los 16 inputs/select sin label (command palette y toolbars) y `thead/th` en las 4 tablas de suites de `unitarias.html`. Verificado en DOM: 0 controles sin label, 0 tablas sin `th` (commit `cc7891b`). |
+| 2 | **Duplicación 9,7 % → 0,0 %** | El análisis automático de SonarCloud (Auto-Scan) **ignora `sonar-project.properties`** (limitación conocida de la plataforma), así que las exclusiones no servían y la duplicación era real: el shell estático copiado en las 7 páginas por el fallback sin JS. Solución (decisión del usuario): **reestructurar con Jekyll** — shell único en `_layouts/default.html` + `_includes/` (`head`, `nav-rail`, `nav-drawer`, `scripts`), 7 páginas con front matter + contenido, nav en 1 archivo (antes 7), ticker con 1 grupo + clon por JS. Commits `b1ae5e4` (−1335/+365 líneas) y `55cd1b4` (`title` literal en el layout: el analizador HTML no sigue `{% include %}`). |
+| 3 | **Verificación de la reestructuración** | Build con `jekyll/jekyll:4` (Docker), 7 páginas 200 sin errores de consola ni overflow, nav activa correcta, charts exactos; **diff de píxel RMSE = 0** contra las capturas pre-Jekyll (4/5 renders idénticos; la única diferencia son los `thead` nuevos de unitarias, ya en `.impeccable/review/`). Sitio live sirviendo el build Jekyll (200 con `<title>` renderizado). |
+| 4 | **Resultado SonarCloud** | **Quality Gate OK (5/5):** fiabilidad A, seguridad A, mantenibilidad A, **duplicación 0,0 %** (umbral 3 %), hotspots revisados 100 %. Bug `Web:PageWithoutTitleCheck` residual del template cerrado. Detalle completo en `~/Descargas/pruebas/CONTEXT.md`. |
+
+---
+
 ## 2026-09-22 — GitHub Pages de reportes QA: informe de Cobertura y pulido del sitio
 
 Trabajo en el repo **`joseph12n/pruebas`** (`~/Descargas/pruebas`, sitio KN·QA Observatory publicado en GitHub Pages), no en `knstore`.
