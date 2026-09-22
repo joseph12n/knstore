@@ -1,14 +1,15 @@
-# ESTADO_SESION.md — Handoff (actualizado 2026-09-18)
+# ESTADO_SESION.md — Handoff (actualizado 2026-09-22)
 
 > ⚠️ OBLIGATORIO: leer este archivo completo antes de tocar nada.
 > **Regla obligatoria:** todo cambio debe quedar registrado en `docs/03-DOCUMENTACION/BITACORA.md` (entradas nuevas arriba) y reflejado aquí cuando cambie el estado.
-> Resume el cierre de calidad (H-01→H-08), el despliegue en producción y la operación de la EC2 del 2026-09-18.
+> Resume el cierre de calidad (H-01→H-08), el despliegue en producción y la operación de la EC2 del 2026-09-18, más el flujo de contenido de la tienda del 2026-09-22.
 
 ---
 
 ## 1. Git — estado
 
 - Rama **main** con los commits de calidad/hardening y las correcciones E2E del lanzamiento (ver `git log --oneline -15`).
+- **2026-09-22:** commit `ada5041` (`feat(config): agregar manifiesto de contenido y seed idempotente de la tienda`) con `contenido/catalogo.json`, `contenido/imagenes/README.md` y `scripts/seed-contenido.js`; push a `origin` y mirror a **sena-students** (mismo SHA). Las 6 ramas quedan unificadas a `main` en ambos repos.
 - Tags de release: `v3.0.0` (hardening), `v3.0.1` (precio_venta RF-072), `v3.0.3` (imágenes + CSP), `v3.1.0` (front: fixes responsive, modo oscuro, secciones, login y admin), **`v3.1.1`** (sidebar admin).
 - Push a `origin` (joseph12n/knstore), mirror a **sena-students**, 6 ramas unificadas a `main` y backups de ramas en `refs/backup/2026-09-18/`.
 - Imagen publicada en Docker Hub: **`eljoseph12/knstore:3.1.1`** (= `latest`, digest `d99ac4d8…`).
@@ -43,6 +44,7 @@
 ## 5. Entorno y quirks
 
 - **Documentación:** cada cambio (código, infra, EC2) se registra en `docs/03-DOCUMENTACION/BITACORA.md`; este archivo refleja el estado vigente.
+- **Contenido de la tienda (2026-09-22):** el manifiesto `contenido/catalogo.json` lo mantiene el agente `contenido-tienda` y lo carga `scripts/seed-contenido.js` (idempotente por `slug`, imágenes desde `contenido/imagenes/<slug>/`). Credenciales por entorno `KNSTORE_USERNAME`/`KNSTORE_PASSWORD`. Las carpetas de agentes IA (`.agent/`, `.claude/`, `.gemini/`, `.opencode/`) están en `.gitignore` (skills duplicados, ~72 MB): no versionarlas.
 - **NPM (EC2):** nunca apuntar un proxy host a la IP pública; usar nombres internos (`knstore-app-1`, `portainer`) o `127.0.0.1` para NPM admin. Si NPM se recrea, su compose ya incluye las redes externas.
 - **Actualizar la EC2:** solo se cambia `image:` en `/home/ubuntu/knstore/app-prod.yml` (el `docker-compose.yml` es un symlink a ese archivo) y se ejecuta `docker compose pull && docker compose up -d`. No tocar `.env`, `mongodb-replicaset.yml` ni el `name: knstore`.
 - `docker-compose.legacy-dev.yml.bak` es el compose viejo (perfil dev con seed/prometheus): no usar.

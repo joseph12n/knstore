@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-09-22 — Contenido de la tienda: manifiesto de catálogo y seed idempotente
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Manifiesto de contenido** | `contenido/catalogo.json` (v1) describe marcas, categorías/subcategorías y productos con precio, inventario e imágenes; el `slug` es la llave de idempotencia. `contenido/imagenes/README.md` fija la estructura `imagenes/<slug>/<orden>-<variante>.jpg` (≤500 KB, ~800 px, `01-principal` como única principal y `alt` descriptivo en español). Validado: JSON parseable (2 marcas, 1 categoría, 1 producto de ejemplo). |
+| 2 | **Seed idempotente** | `scripts/seed-contenido.js` (289 líneas) lee el manifiesto y sube marcas, categorías, subcategorías, productos con precios e inventario e imágenes locales vía API REST, siguiendo el patrón de `scripts/seed-catalogo-real.js`: credenciales por entorno (`KNSTORE_USERNAME`/`KNSTORE_PASSWORD`), sin secretos reales en el repo. Idempotente por `slug` (crear si no existe, actualizar si existe; nunca duplica) y con flag `--force-images`. Evidencia: `node --check` OK. |
+| 3 | **Higiene del repo** | `.gitignore` ahora excluye las carpetas de agentes IA (`.agent/`, `.claude/`, `.gemini/`, `.opencode/`): ~72 MB de skills duplicados (`impeccable`) que no deben versionarse ni subirse al espejo. |
+| 4 | **Git** | Commit `ada5041` (`feat(config): agregar manifiesto de contenido y seed idempotente de la tienda`) → push a `origin` (`343a7a6..ada5041`) → mirror a **sena-students** (fast-forward al mismo SHA; `git log` verificado idéntico en ambos). Este registro documental cierra el flujo con las 6 ramas (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`) unificadas a `main` en ambos repos (solo fast-forwards; sin reinicios ni `refs/backup`). |
+
+
+
 ## 2026-09-18 — Release 3.1.1: fix visibilidad del sidebar del admin
 
 | # | Cambio | Detalle / evidencia |
