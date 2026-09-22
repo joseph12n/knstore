@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-09-22 — Limpieza: eliminación de la rama `revert-3-lauraG`
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Respaldo previo (§12.1)** | El tip de la rama tenía 1 commit único no contenido en `main`: `c6cbf07 Revert "Docs: Manuales y planes del sistema knstore"` (revert del PR #3 creado por GitHub). Antes de borrarlo se respaldó en `refs/backup/2026-09-22/revert-3-lauraG` en **ambos** repos locales (referencia local, no se sube), preservando el commit. |
+| 2 | **Rama eliminada de `origin`** | `git push origin --delete revert-3-lauraG` en `joseph12n/knstore` (`- [deleted] revert-3-lauraG`). El espejo **sena-students** nunca tuvo esa rama (verificado con `git ls-remote`). |
+| 3 | **Resultado** | Los dos `origin` quedan exactamente con las 6 ramas oficiales (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`), sin ramas ajenas al flujo. |
+
+
+
 ## 2026-09-22 — Contenido de la tienda: manifiesto de catálogo y seed idempotente
 
 | # | Cambio | Detalle / evidencia |

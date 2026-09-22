@@ -10,6 +10,7 @@
 
 - Rama **main** con los commits de calidad/hardening y las correcciones E2E del lanzamiento (ver `git log --oneline -15`).
 - **2026-09-22:** commit `ada5041` (`feat(config): agregar manifiesto de contenido y seed idempotente de la tienda`) con `contenido/catalogo.json`, `contenido/imagenes/README.md` y `scripts/seed-contenido.js`; push a `origin` y mirror a **sena-students** (mismo SHA). Las 6 ramas quedan unificadas a `main` en ambos repos.
+- **2026-09-22:** rama `revert-3-lauraG` (revert del PR #3, commit único `c6cbf07`) eliminada de `origin` tras respaldar su tip en `refs/backup/2026-09-22/revert-3-lauraG` (local, en los dos repos). Los dos `origin` quedan solo con las 6 ramas oficiales.
 - Tags de release: `v3.0.0` (hardening), `v3.0.1` (precio_venta RF-072), `v3.0.3` (imágenes + CSP), `v3.1.0` (front: fixes responsive, modo oscuro, secciones, login y admin), **`v3.1.1`** (sidebar admin).
 - Push a `origin` (joseph12n/knstore), mirror a **sena-students**, 6 ramas unificadas a `main` y backups de ramas en `refs/backup/2026-09-18/`.
 - Imagen publicada en Docker Hub: **`eljoseph12/knstore:3.1.1`** (= `latest`, digest `d99ac4d8…`).
