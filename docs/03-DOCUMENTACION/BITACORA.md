@@ -4,6 +4,20 @@
 
 ---
 
+## 2026-09-22 — GitHub Pages de reportes QA: informe de Cobertura y pulido del sitio
+
+Trabajo en el repo **`joseph12n/pruebas`** (`~/Descargas/pruebas`, sitio KN·QA Observatory publicado en GitHub Pages), no en `knstore`.
+
+| # | Cambio | Detalle / evidencia |
+|---|--------|---------------------|
+| 1 | **Informe de Cobertura integrado** | Página nueva `pages/cobertura.html` con los datos de la corrida de cobertura de hoy: JaCoCo unit+IT consolidado (70,1 % líneas / 41,3 % ramas / 88,6 % métodos, 194 clases) y Vitest (50,97 % líneas, 78 archivos propios, umbrales 45/35/40/45), 1.384 pruebas (363 unit + 487 IT + 534 front). Tablas filtrables por clase (194) y archivo (78), charts y focos de mejora H-05. Datos crudos en `docs/cobertura/` (jacoco.csv + vitest-resumen.json) y generados con `tools/build_data.py` → `assets/js/data/cobertura.js`. |
+| 2 | **Datos del ciclo actualizados** | Unitarias 361→363 (regresión 22-sep, +2 RF-072), backlog `ItemCarritoResourceIT` cerrado (17/17), "JaCoCo ya midiendo" con enlace al informe nuevo, ticker/KPIs del dashboard con cobertura y Comité de Calidad movido al footer. |
+| 3 | **Pulido general** | `.grid.cols-2` pasa a 2 columnas reales (antes auto-fit dejaba filas huérfanas 3+1 en 7 bloques de cobertura/unitarias/e2e/maestro) + media ≤700px; `print.css` fija `--accent-ink` para impresión (badges con contraste 2,6:1 → alto). Verificación Playwright: 6 capturas (1440/390 × claro/oscuro + index + unitarias) en `.impeccable/review/`, 0 errores de consola, 0 overflow horizontal; detector `impeccable detect` (79 hallazgos: 2 arreglados, el resto identidad del mundo fijada). Nota: la publicación arrastra también el rediseño del 2026-09-10 pendiente de commit, cuyo diff incluye `assets/js/core/shell.js`, `core/motion.js`, `css/motion.css` y `assets/vendor/` (Chart.js/GSAP/Lenis localizados, sin CDN en runtime). |
+| 3b | **Revisión de acabado** | Revisor independiente sobre las capturas + contrato de dirección: veredicto `fix` con lote quirúrgico — M1 gauge "Backend · líneas" descontaba instrucciones en vez de líneas (copy corregido a 7.357/10.502), M2 estado vacío "Sin resultados · Limpiar filtros" en las tablas filtrables nuevas, M3 buscador de tablas a ancho real (`flex: 1 1 260px`), M4 tonos de los gauges alineados al orden de los KPIs — todo aplicado y recapturado; resto de hallazgos = identidad del mundo KN·QA Observatory (sin objeción). |
+| 4 | **Publicación** | Commit + push a `main` de `joseph12n/pruebas` (incluye el rediseño del 2026-09-10 que estaba sin commitear, autorizado por el usuario); GitHub Pages queda con los 7 informes. Detalle en `~/Descargas/pruebas/CONTEXT.md`. |
+
+---
+
 ## 2026-09-22 — Corrida de cobertura y análisis de estado (backend + frontend)
 
 | # | Cambio | Detalle / evidencia |
