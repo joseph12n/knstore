@@ -32,7 +32,7 @@ const RAIZ = path.resolve(__dirname, '..');
 const MANIFIESTO = path.join(RAIZ, 'contenido', 'catalogo.json');
 const IMAGENES_DIR = path.join(RAIZ, 'contenido', 'imagenes');
 
-const args = process.argv.slice(2).filter((a) => !a.startsWith('--'));
+const args = process.argv.slice(2).filter(a => !a.startsWith('--'));
 const FORCE_IMAGES = process.argv.includes('--force-images');
 const BASE_URL = args[0] || process.env.KNSTORE_BASE_URL || 'http://localhost:8080';
 const USERNAME = process.env.KNSTORE_USERNAME || 'admin';
@@ -44,7 +44,7 @@ const api = axios.create({
 });
 
 let token = null;
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(config => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -88,7 +88,7 @@ const crear = async (recurso, body) => (await api.post(`/${recurso}`, body)).dat
 const actualizar = async (recurso, body) => (await api.put(`/${recurso}`, body)).data;
 
 async function asegurarPorSlug(lista, recurso, datos) {
-  const existente = lista.find((x) => x.slug === datos.slug);
+  const existente = lista.find(x => x.slug === datos.slug);
   if (existente) return { obj: existente, creado: false };
   const obj = await crear(recurso, datos);
   lista.push(obj);
@@ -142,8 +142,9 @@ function resolverImagenes(producto) {
     else if (!MIME[path.extname(img.archivo).toLowerCase()]) errores.push(`Formato no soportado: ${img.archivo}`);
     else if (!img.alt) errores.push(`Falta "alt" para ${producto.slug}/${img.archivo}`);
   }
-  const principales = definidas.filter((i) => i.principal).length;
-  if (definidas.length > 0 && principales !== 1) errores.push(`${producto.slug}: debe tener exactamente 1 imagen principal (tiene ${principales})`);
+  const principales = definidas.filter(i => i.principal).length;
+  if (definidas.length > 0 && principales !== 1)
+    errores.push(`${producto.slug}: debe tener exactamente 1 imagen principal (tiene ${principales})`);
   return errores;
 }
 
@@ -174,7 +175,7 @@ async function subirImagenes(producto, productoId, imagenesExistentes) {
 
 async function procesarProductos(manifiesto, taxonomia) {
   const productosExistentes = await listar('productos');
-  const porSlug = new Map(productosExistentes.map((p) => [p.slug, p]));
+  const porSlug = new Map(productosExistentes.map(p => [p.slug, p]));
 
   for (const producto of manifiesto.productos) {
     const errores = resolverImagenes(producto);
@@ -184,9 +185,9 @@ async function procesarProductos(manifiesto, taxonomia) {
       continue;
     }
 
-    const marca = taxonomia.marcas.find((m) => m.slug === producto.marca);
-    const categoria = taxonomia.categorias.find((c) => c.slug === producto.categoria);
-    const subcategoria = taxonomia.subcategorias.find((s) => s.slug === producto.subcategoria);
+    const marca = taxonomia.marcas.find(m => m.slug === producto.marca);
+    const categoria = taxonomia.categorias.find(c => c.slug === producto.categoria);
+    const subcategoria = taxonomia.subcategorias.find(s => s.slug === producto.subcategoria);
     if (!marca || !categoria || !subcategoria) {
       console.warn(`⚠ ${producto.slug} omitido: marca/categoría/subcategoría no resuelta.`);
       resumen.omitidos += 1;
@@ -268,7 +269,9 @@ async function procesarProductos(manifiesto, taxonomia) {
 
 async function main() {
   const manifiesto = cargarManifiesto();
-  console.log(`Manifiesto: ${manifiesto.productos.length} productos, imágenes en ${IMAGENES_DIR}${FORCE_IMAGES ? ' (modo --force-images)' : ''}`);
+  console.log(
+    `Manifiesto: ${manifiesto.productos.length} productos, imágenes en ${IMAGENES_DIR}${FORCE_IMAGES ? ' (modo --force-images)' : ''}`,
+  );
   await autenticar();
   const taxonomia = await procesarCategorias(manifiesto);
   await procesarProductos(manifiesto, taxonomia);
@@ -282,7 +285,7 @@ async function main() {
   console.log(`Elementos omitidos:       ${resumen.omitidos}`);
 }
 
-main().catch((error) => {
+main().catch(error => {
   console.error('❌ La carga falló:', error.response?.data ?? error.message);
   console.error('Puedes re-ejecutar el script: es idempotente por slug y no duplica datos.');
   process.exitCode = 1;
