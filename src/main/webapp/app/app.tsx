@@ -12,6 +12,8 @@ import { ToastContainer } from 'react-toastify';
 import { useAppDispatch } from 'app/config/store';
 import AppRoutes from 'app/routes';
 import AdminLayout from 'app/dashboard/layout/AdminLayout';
+import DesktopOnlyNotice from 'app/landing/components/DesktopOnlyNotice';
+import { useIsMobileView } from 'app/landing/hooks/useIsMobileView';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { getProfile } from 'app/shared/reducers/application-profile';
 import { getSession } from 'app/shared/reducers/authentication';
@@ -50,6 +52,7 @@ const resolveLayout = (pathname: string): AppLayout => {
 const AppContent = () => {
   const location = useLocation();
   const layout = resolveLayout(location.pathname);
+  const isMobile = useIsMobileView();
 
   const dispatch = useAppDispatch();
 
@@ -57,6 +60,19 @@ const AppContent = () => {
     dispatch(getSession());
     dispatch(getProfile());
   }, []);
+
+  // En viewports móviles el panel admin se reemplaza por un aviso a pantalla
+  // completa: sin AdminLayout (sidebar) y sin montar AppRoutes.
+  if (layout === 'admin' && isMobile) {
+    return (
+      <div className="app-container storefront-app">
+        <ToastContainer position="top-right" className="toastify-container" toastClassName="toastify-toast" />
+        <ErrorBoundary>
+          <DesktopOnlyNotice />
+        </ErrorBoundary>
+      </div>
+    );
+  }
 
   if (layout === 'storefront') {
     return (

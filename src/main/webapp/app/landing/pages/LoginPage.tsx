@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faMoon, faShieldAlt, faSun, faTruck, faUndoAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { useIsMobileView } from 'app/landing/hooks/useIsMobileView';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import { Authority } from 'app/shared/jhipster/constants';
 import { login } from 'app/shared/reducers/authentication';
@@ -27,6 +28,7 @@ export const LoginPage = () => {
   const loginError = useAppSelector(state => state.authentication.loginError);
   const accountAuthorities = useAppSelector(state => state.authentication.account.authorities);
   const pageLocation = useLocation();
+  const isMobile = useIsMobileView();
 
   const [tema, setTema] = useState<Tema>(getTemaInicial);
   const [username, setUsername] = useState('');
@@ -47,6 +49,13 @@ export const LoginPage = () => {
   const { from } = pageLocation.state || {};
 
   if (isAuthenticated) {
+    // En móvil el panel admin no existe: cualquier intento de entrar a /admin/*
+    // (venga del `from` o del rol) cae en la tienda con el aviso como feedback.
+    const intentaPanelAdmin = Boolean(from?.pathname?.startsWith('/admin'));
+    if (isMobile && (intentaPanelAdmin || hasAnyAuthority(accountAuthorities, [Authority.ADMIN]))) {
+      return <Navigate to="/" replace state={{ avisoPanelEscritorio: true }} />;
+    }
+
     if (from?.pathname && from.pathname !== '/') {
       return <Navigate to={from} replace />;
     }
