@@ -207,7 +207,7 @@ jhipster:
     license: unlicensed
     license-url:
   security:
-    content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://plus.unsplash.com; font-src 'self' https://fonts.gstatic.com data:"
+    content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://plus.unsplash.com https://images.pexels.com; font-src 'self' https://fonts.gstatic.com data:"
 
 
 # jhipster-needle-add-application-yaml-document

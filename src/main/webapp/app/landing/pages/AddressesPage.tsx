@@ -181,7 +181,7 @@ export const AddressesPage = () => {
         </Row>
       )}
 
-      <Modal show={showForm} onHide={handleCloseForm} size="lg" centered unmountOnExit>
+      <Modal show={showForm} onHide={handleCloseForm} size="lg" centered scrollable unmountOnExit>
         <Modal.Header closeButton>
           <Modal.Title className="fw-bold">{editingAddress ? 'Editar dirección' : 'Nueva dirección'}</Modal.Title>
         </Modal.Header>

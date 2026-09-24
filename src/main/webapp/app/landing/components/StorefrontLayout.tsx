@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
+import { toast } from 'react-toastify';
 
 import StoreHeader from './StoreHeader';
 import StoreFooter from './StoreFooter';
@@ -25,10 +27,20 @@ const getTemaInicial = (): Tema => {
 
 export const StorefrontLayout = ({ children, categorias, subcategorias }: StorefrontLayoutProps) => {
   const [tema, setTema] = useState<Tema>(getTemaInicial);
+  const location = useLocation();
 
   useEffect(() => {
     window.localStorage.setItem(TEMA_KEY, tema);
   }, [tema]);
+
+  // Feedback tras el redirect del login cuando el panel admin no está disponible en móvil.
+  // El state del router vive solo en esa entrada de navegación: el efecto corre una sola vez.
+  useEffect(() => {
+    const state = location.state as { avisoPanelEscritorio?: boolean } | null;
+    if (state?.avisoPanelEscritorio) {
+      toast.info('El panel administrativo solo está disponible desde escritorio.');
+    }
+  }, [location.state]);
 
   return (
     <div className="storefront d-flex flex-column min-vh-100" data-theme={tema}>

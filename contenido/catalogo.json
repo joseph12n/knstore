@@ -1,9 +1,67 @@
 {
-  "version": 1,
-  "descripcion": "Manifiesto de contenido de la tienda KN-Store. Lo mantiene el agente contenido-tienda y lo consume scripts/seed-contenido.js. Los slugs son la llave de idempotencia (crear si no existe, actualizar si existe).",
+  "version": 2,
+  "descripcion": "Manifiesto de contenido de la tienda KN-Store (v2). Lo mantiene el agente contenido-tienda y lo consume scripts/seed-contenido.js. Los slugs son la llave de idempotencia (crear si no existe, actualizar si existe). Las imagenes pueden ser por URL (fuente libre Unsplash/Pexels) o por archivo local en contenido/imagenes/<slug>/.",
+  "categoriasIVA": [
+    {
+      "nombre": "IVA 19%",
+      "porcentaje": 19,
+      "estado": "ACTIVO"
+    },
+    {
+      "nombre": "Exento",
+      "porcentaje": 0,
+      "estado": "ACTIVO"
+    }
+  ],
   "marcas": [
-    { "nombre": "Nike", "slug": "nike" },
-    { "nombre": "Adidas", "slug": "adidas" }
+    {
+      "nombre": "Nike",
+      "slug": "nike"
+    },
+    {
+      "nombre": "Adidas",
+      "slug": "adidas"
+    },
+    {
+      "nombre": "Puma",
+      "slug": "puma"
+    },
+    {
+      "nombre": "Converse",
+      "slug": "converse"
+    },
+    {
+      "nombre": "Vans",
+      "slug": "vans"
+    },
+    {
+      "nombre": "New Balance",
+      "slug": "new-balance"
+    },
+    {
+      "nombre": "Reebok",
+      "slug": "reebok"
+    },
+    {
+      "nombre": "Jordan",
+      "slug": "jordan"
+    },
+    {
+      "nombre": "Fila",
+      "slug": "fila"
+    },
+    {
+      "nombre": "Skechers",
+      "slug": "skechers"
+    },
+    {
+      "nombre": "Crocs",
+      "slug": "crocs"
+    },
+    {
+      "nombre": "Under Armour",
+      "slug": "under-armour"
+    }
   ],
   "categorias": [
     {
@@ -11,7 +69,87 @@
       "slug": "unisex",
       "descripcion": "Calzado para todas las personas",
       "subcategorias": [
-        { "nombre": "Casual", "slug": "casual", "descripcion": "Estilo urbano y comodidad para el día a día." }
+        {
+          "nombre": "Casual",
+          "slug": "casual",
+          "descripcion": "Estilo urbano y comodidad para el dia a dia."
+        },
+        {
+          "nombre": "Deportivo",
+          "slug": "deportivo",
+          "descripcion": "Calzado para entrenamiento y actividad fisica."
+        },
+        {
+          "nombre": "Running",
+          "slug": "running",
+          "descripcion": "Zapatillas para correr y trotar."
+        },
+        {
+          "nombre": "Skate",
+          "slug": "skate",
+          "descripcion": "Calzado resistente para patinaje y cultura urbana."
+        }
+      ]
+    },
+    {
+      "nombre": "Hombre",
+      "slug": "hombre",
+      "descripcion": "Calzado masculino en tallas 39 a 44",
+      "subcategorias": [
+        {
+          "nombre": "Casual Hombre",
+          "slug": "casual-hombre",
+          "descripcion": "Estilo casual en tallas masculinas."
+        },
+        {
+          "nombre": "Deportivo Hombre",
+          "slug": "deportivo-hombre",
+          "descripcion": "Deporte y entrenamiento en tallas masculinas."
+        },
+        {
+          "nombre": "Running Hombre",
+          "slug": "running-hombre",
+          "descripcion": "Carrera y trotadera en tallas masculinas."
+        }
+      ]
+    },
+    {
+      "nombre": "Mujer",
+      "slug": "mujer",
+      "descripcion": "Calzado femenino en tallas 35 a 38",
+      "subcategorias": [
+        {
+          "nombre": "Casual Mujer",
+          "slug": "casual-mujer",
+          "descripcion": "Estilo casual en tallas femeninas."
+        },
+        {
+          "nombre": "Deportivo Mujer",
+          "slug": "deportivo-mujer",
+          "descripcion": "Deporte y entrenamiento en tallas femeninas."
+        },
+        {
+          "nombre": "Running Mujer",
+          "slug": "running-mujer",
+          "descripcion": "Carrera y trotadera en tallas femeninas."
+        }
+      ]
+    },
+    {
+      "nombre": "Nino",
+      "slug": "nino",
+      "descripcion": "Calzado infantil en tallas 28 a 33",
+      "subcategorias": [
+        {
+          "nombre": "Casual Nino",
+          "slug": "casual-nino",
+          "descripcion": "Estilo casual para ninos."
+        },
+        {
+          "nombre": "Deportivo Nino",
+          "slug": "deportivo-nino",
+          "descripcion": "Deporte y juego para ninos."
+        }
       ]
     }
   ],
@@ -19,7 +157,7 @@
     {
       "slug": "nike-air-force-1-07-blanco",
       "nombre": "Nike Air Force 1 '07 Blanco",
-      "descripcion": "El clásico atemporal de Nike en cuero blanco. Amortiguación Air y suela de goma para el uso diario.",
+      "descripcion": "El clasico atemporal de Nike en cuero blanco. Amortiguacion Air y suela de goma para el uso diario.",
       "marca": "nike",
       "categoria": "unisex",
       "subcategoria": "casual",
@@ -31,6 +169,7 @@
       "unidadMedida": "PAR",
       "destacado": true,
       "activo": true,
+      "categoriaIVA": "IVA 19%",
       "precio": {
         "precioCompra": 250000,
         "precioVenta": 349900,
@@ -42,11 +181,3739 @@
         "ubicacionBodega": "BODEGA_PRINCIPAL",
         "garantiaMeses": 3
       },
+      "etiquetas": ["clasico", "envio-gratis", "mas-vendido"],
       "imagenes": [
         {
-          "archivo": "01-principal.jpg",
-          "alt": "Nike Air Force 1 '07 en color blanco, vista lateral",
-          "principal": true
+          "url": "https://images.unsplash.com/photo-1641792670570-158202f62fae?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 '07 Blanco en color Blanco, par completo, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1641792670570-158202f62fae",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-nike-air-force-sneakers-ORM7dQjvupI"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1623970437629-f71276ad1797?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 '07 Blanco en color Blanco, detalle del upper y las agujetas",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1623970437629-f71276ad1797",
+          "origen": "https://unsplash.com/photos/white-nike-air-force-1-shoe-sRCu5dkcYjU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1625860191460-10a66c7384fb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 '07 Blanco en color Blanco, vista lateral en fondo blanco",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1625860191460-10a66c7384fb",
+          "origen": "https://unsplash.com/photos/white-nike-low-top-sneakers-jVerIoX3y7c"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-force-1-07-negro",
+      "nombre": "Nike Air Force 1 07 Negro",
+      "descripcion": "Air Force 1 07 en cuero negro con suela contrastante. Unisex, ideal para combinar con cualquier look urbano.",
+      "marca": "nike",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "NK-AF107-BK",
+      "sku": "NK-AF107-BK-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700000000002",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 255000,
+        "precioVenta": 359900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["envio-gratis", "temporada"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 07 Negro en color Negro, par colgado, vista frontal",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1687511968900-7418e0fdc532?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 07 Negro en color Negro, par completo con suela blanca",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1687511968900-7418e0fdc532",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-sneakers-with-a-white-sole-pRmhOUlzViU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1619203696083-02bd602de876?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 07 Negro en color Negro, vista tres cuartos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1619203696083-02bd602de876",
+          "origen": "https://unsplash.com/photos/black-and-white-nike-sneakers-ydTCq61Lvuk"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-max-90-blanco-negro",
+      "nombre": "Nike Air Max 90 Blanco/Negro",
+      "descripcion": "Air Max 90 con burbuja Air visible y paneles en blanco y negro. Comodidad y amortiguacion para toda la jornada.",
+      "marca": "nike",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "NK-AM090-BN",
+      "sku": "NK-AM090-BN-41",
+      "color": "Blanco/Negro",
+      "talla": "41",
+      "codigoBarras": "7700000000003",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 300000,
+        "precioVenta": 429900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 14,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1580977251970-221b2fa3f554?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 90 Blanco/Negro en color Blanco/Negro, en uso, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1580977251970-221b2fa3f554",
+          "origen": "https://unsplash.com/photos/person-wearing-black-and-white-nike-air-max-90-WjT22VoDMIU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1757513189288-eb723faa94a0?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 90 Blanco/Negro en color Blanco/Negro, par sobre fondo negro",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1757513189288-eb723faa94a0",
+          "origen": "https://unsplash.com/photos/pair-of-white-nike-sneakers-on-black-background-UxbcCJynf60"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1617813812179-dc1639fb8bdb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 90 Blanco/Negro en color Blanco/Negro, detalle de la plantilla y el logotipo",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1617813812179-dc1639fb8bdb",
+          "origen": "https://unsplash.com/photos/a-close-up-of-the-nike-logo-on-a-shoe-gn07k9Kmx9c"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-superstar-blanco-negro",
+      "nombre": "Adidas Superstar Blanco/Negro",
+      "descripcion": "El Superstar de adidas con su puntera de goma caracteristica y las tres rayas en negro. Icono del calzado casual.",
+      "marca": "adidas",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "AD-SS-BN",
+      "sku": "AD-SS-BN-40",
+      "color": "Blanco/Negro",
+      "talla": "40",
+      "codigoBarras": "7700000000004",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 230000,
+        "precioVenta": 329900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 22,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis", "mas-vendido"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1537152443565-83a95138a61c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Superstar Blanco/Negro en color Blanco/Negro, en uso, vista superior",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1537152443565-83a95138a61c",
+          "origen": "https://unsplash.com/photos/pair-of-white-adidas-superstar-sneakers-8VurHsVsls4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1519931127525-6b6a7619a003?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Superstar Blanco/Negro en color Blanco/Negro, en uso sobre el piso",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1519931127525-6b6a7619a003",
+          "origen": "https://unsplash.com/photos/person-wearing-pair-of-white-adidas-superstar-sneakers-during-daytime-xHrkWhLVM8E"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1558191053-c03db2757e3d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Superstar Blanco/Negro en color Blanco/Negro, par completo, angulo frontal",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1558191053-c03db2757e3d",
+          "origen": "https://unsplash.com/photos/white-and-black-adidas-low-top-sneakers-_VfvnjbKFu4"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-samba-og-blanco-verde",
+      "nombre": "Adidas Samba OG Blanco/Verde",
+      "descripcion": "Samba OG en piel blanca con detalles en verde y suela de goma. Silueta retro que regreso a la tendencia.",
+      "marca": "adidas",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "AD-SMB-WG",
+      "sku": "AD-SMB-WG-39",
+      "color": "Blanco/Verde",
+      "talla": "39",
+      "codigoBarras": "7700000000005",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 265000,
+        "precioVenta": 379900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1695552835054-95b185af3d11?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Samba OG Blanco/Verde en color Blanco/Verde, par completo sobre fondo neutro",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1695552835054-95b185af3d11",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-and-green-adidas-sneakers-Y5pcyypfuLE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1698108223397-3d222e80d7ea?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Samba OG Blanco/Verde en color Blanco/Verde, vista superior del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1698108223397-3d222e80d7ea",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-and-black-adidas-sneakers-Jlt58eKwq6k"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1700433770684-6a8f69dd28ba?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Samba OG Blanco/Verde en color Blanco/Verde, exhibicion en muro de tienda",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1700433770684-6a8f69dd28ba",
+          "origen": "https://unsplash.com/photos/a-display-of-adidas-shoes-on-a-brick-wall-BUuiGd2fI8Y"
+        }
+      ]
+    },
+    {
+      "slug": "puma-carina-blanco-azul",
+      "nombre": "Puma Carina Blanco/Azul",
+      "descripcion": "Puma Carina con silueta retro y apliques en azul. Ligereza y amortiguacion para el dia a dia.",
+      "marca": "puma",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "PM-CAR-WA",
+      "sku": "PM-CAR-WA-38",
+      "color": "Blanco/Azul",
+      "talla": "38",
+      "codigoBarras": "7700000000006",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 195000,
+        "precioVenta": 279900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 20,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1715694031128-3ca9662a387b?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Carina Blanco/Azul en color Blanco/Azul, par en estante, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1715694031128-3ca9662a387b",
+          "origen": "https://unsplash.com/photos/a-white-and-blue-puma-sneakers-on-a-shelf-Qkg-nDlKbzw"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Carina Blanco/Azul en color Blanco/Azul, par en el piso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Carina Blanco/Azul en color Blanco/Azul, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-high-blanco",
+      "nombre": "Converse Chuck Taylor All Star High Blanco",
+      "descripcion": "Chuck Taylor All Star altos en lizo blanco con la media punta clasica. Un clasico que nunca pasa de moda.",
+      "marca": "converse",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "CV-CT-HS-WT",
+      "sku": "CV-CT-HS-WT-39",
+      "color": "Blanco",
+      "talla": "39",
+      "codigoBarras": "7700000000007",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 185000,
+        "precioVenta": 269900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 26,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis", "mas-vendido"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1594124264189-e31770337e23?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor All Star High Blanco en color Blanco, en uso con jean, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1594124264189-e31770337e23",
+          "origen": "https://unsplash.com/photos/person-wearing-blue-denim-jeans-and-white-converse-all-star-high-top-sneakers-yVkh51fDVW8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1676379827610-c380c52db0c6?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor All Star High Blanco en color Blanco, par sobre tela clara, vista lateral",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1676379827610-c380c52db0c6",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-on-a-white-background-8GzbKs74yq4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1663457100980-fa5394e8522f?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor All Star High Blanco en color Blanco, en los pies, vista superior",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1663457100980-fa5394e8522f",
+          "origen": "https://unsplash.com/photos/a-persons-feet-in-white-sneakers-wRO_OPrJpe4"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-low-blanco",
+      "nombre": "Converse Chuck Taylor All Star Low Blanco",
+      "descripcion": "Chuck Taylor All Star bajos en lizo blanco. Silueta versatil para uso casual y deportivo ligero.",
+      "marca": "converse",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "CV-CT-LS-WT",
+      "sku": "CV-CT-LS-WT-40",
+      "color": "Blanco",
+      "talla": "40",
+      "codigoBarras": "7700000000008",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 170000,
+        "precioVenta": 249900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 24,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor All Star Low Blanco en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1663457100980-fa5394e8522f?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor All Star Low Blanco en color Blanco, en los pies, vista superior",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1663457100980-fa5394e8522f",
+          "origen": "https://unsplash.com/photos/a-persons-feet-in-white-sneakers-wRO_OPrJpe4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor All Star Low Blanco en color Blanco, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-classic-leather-blanco",
+      "nombre": "Reebok Classic Leather Blanco",
+      "descripcion": "Reebok Classic Leather en piel blanca con suela de goma. Comodidad legendaria desde los anos 80.",
+      "marca": "reebok",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "RB-CL-WT",
+      "sku": "RB-CL-WT-40",
+      "color": "Blanco",
+      "talla": "40",
+      "codigoBarras": "7700000000009",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 225000,
+        "precioVenta": 319900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 16,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1541597455068-49e3562bdfa4?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Classic Leather Blanco en color Blanco, sostenido en la mano, perfil",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1541597455068-49e3562bdfa4",
+          "origen": "https://unsplash.com/photos/person-carrying-white-reebok-low-top-sneakers-cEot_30k978"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1725271741302-4b87691dde86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Classic Leather Blanco en color Blanco, par dentro de su caja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1725271741302-4b87691dde86",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-in-a-box-uIWfpSURyeM"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Classic Leather Blanco en color Blanco, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "crocs-classic-clog-verde-oliva",
+      "nombre": "Crocs Classic Clog Verde Oliva",
+      "descripcion": "Crocs Classic Clog en color verde oliva con ventilacion lateral y ajuste trasero. Livianos y faciles de limpiar.",
+      "marca": "crocs",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "CR-CC-OL",
+      "sku": "CR-CC-OL-38",
+      "color": "Verde Oliva",
+      "talla": "38",
+      "codigoBarras": "7700000000010",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 180000,
+        "precioVenta": 259900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 30,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["envio-gratis", "mas-vendido"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1764072565582-3f2198c9cd65?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Crocs Classic Clog Verde Oliva en color Verde Oliva, par con accesorios, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1764072565582-3f2198c9cd65",
+          "origen": "https://unsplash.com/photos/olive-green-clogs-decorated-with-fruit-charms-bLYGy5Phw9w"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1714935101713-d6f6da0e2c4b?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Crocs Classic Clog Verde Oliva en color Verde Oliva, en uso al aire libre",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1714935101713-d6f6da0e2c4b",
+          "origen": "https://unsplash.com/photos/a-person-wearing-a-green-clogger-shoe-in-a-park-Qv9F1y2GHk8"
+        }
+      ]
+    },
+    {
+      "slug": "puma-rsx-azul-blanco",
+      "nombre": "Puma RS-X Azul/Blanco",
+      "descripcion": "Puma RS-X con mediasuela exagerada y refuerzos en azul. Amortiguacion RS para entrenamiento y calle.",
+      "marca": "puma",
+      "categoria": "unisex",
+      "subcategoria": "deportivo",
+      "referencia": "PM-RSX-AB",
+      "sku": "PM-RSX-AB-41",
+      "color": "Azul/Blanco",
+      "talla": "41",
+      "codigoBarras": "7700000000011",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 230000,
+        "precioVenta": 329900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 15,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1715695163681-af368e4feb5e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Azul/Blanco en color Azul/Blanco, par sobre mesa, vista tres cuartos",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1715695163681-af368e4feb5e",
+          "origen": "https://unsplash.com/photos/a-pair-of-puma-sneakers-on-a-table-OtqCK0AKw3A"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1715694031128-3ca9662a387b?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Azul/Blanco en color Azul/Blanco, par en estante, vista lateral",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1715694031128-3ca9662a387b",
+          "origen": "https://unsplash.com/photos/a-white-and-blue-puma-sneakers-on-a-shelf-Qkg-nDlKbzw"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Azul/Blanco en color Azul/Blanco, par colgado, vista frontal",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        }
+      ]
+    },
+    {
+      "slug": "jordan-air-1-mid-rojo-negro",
+      "nombre": "Jordan Air 1 Mid Rojo/Negro",
+      "descripcion": "Air Jordan 1 Mid en cuero rojo y negro, inspirado en el colorway clasico de la cancha. Para coleccionistas y calle.",
+      "marca": "jordan",
+      "categoria": "unisex",
+      "subcategoria": "deportivo",
+      "referencia": "JD-A1M-RN",
+      "sku": "JD-A1M-RN-42",
+      "color": "Rojo/Negro",
+      "talla": "42",
+      "codigoBarras": "7700000000012",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 350000,
+        "precioVenta": 499900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 10,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["mas-vendido", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Mid Rojo/Negro en color Rojo/Negro, par en la cancha, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1552346154-21d32810aba3",
+          "origen": "https://unsplash.com/photos/pair-of-black-white-and-red-air-jordan-1-shoes-aDZ5YIuedQg"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Mid Rojo/Negro en color Rojo/Negro, perfil con iluminacion calida",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1600185365483-26d7a4cc7519",
+          "origen": "https://unsplash.com/photos/white-and-red-nike-athletic-shoe-J2-wAQDckus"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1617813812179-dc1639fb8bdb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Mid Rojo/Negro en color Rojo/Negro, detalle de la plantilla y el logotipo",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1617813812179-dc1639fb8bdb",
+          "origen": "https://unsplash.com/photos/a-close-up-of-the-nike-logo-on-a-shoe-gn07k9Kmx9c"
+        }
+      ]
+    },
+    {
+      "slug": "jordan-air-1-low-oliva",
+      "nombre": "Jordan Air 1 Low Oliva",
+      "descripcion": "Air Jordan 1 Low en tonos oliva con mediasuela clara. Baja y versatil con la esencia de Jordan.",
+      "marca": "jordan",
+      "categoria": "unisex",
+      "subcategoria": "deportivo",
+      "referencia": "JD-A1L-OL",
+      "sku": "JD-A1L-OL-41",
+      "color": "Oliva",
+      "talla": "41",
+      "codigoBarras": "7700000000013",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 315000,
+        "precioVenta": 449900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1705096953495-8ea06879b986?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Oliva en color Oliva, par sobre fondo gris",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1705096953495-8ea06879b986",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-and-green-sneakers-on-a-gray-background-JEChDyvo22c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1724365314431-d9e00de5b258?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Oliva en color Oliva, flotando sobre fondo verde",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1724365314431-d9e00de5b258",
+          "origen": "https://unsplash.com/photos/a-pair-of-sneakers-with-a-green-background-HIyD2pPlK-s"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Oliva en color Oliva, par colgado, vista frontal",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        }
+      ]
+    },
+    {
+      "slug": "fila-disruptor-blanco-negro",
+      "nombre": "Fila Disruptor Blanco/Negro",
+      "descripcion": "Fila Disruptor con suela chunky y detalles en negro. Volumen y comodidad para el look streetwear.",
+      "marca": "fila",
+      "categoria": "unisex",
+      "subcategoria": "deportivo",
+      "referencia": "FL-DIS-BN",
+      "sku": "FL-DIS-BN-42",
+      "color": "Blanco/Negro",
+      "talla": "42",
+      "codigoBarras": "7700000000014",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 210000,
+        "precioVenta": 299900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 17,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Disruptor Blanco/Negro en color Blanco/Negro, par completo sobre fondo gris",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Disruptor Blanco/Negro en color Blanco/Negro, vista trasera del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Disruptor Blanco/Negro en color Blanco/Negro, par en el piso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        }
+      ]
+    },
+    {
+      "slug": "nike-vomero-17-negro",
+      "nombre": "Nike Vomero 17 Negro",
+      "descripcion": "ZoomX Vomero 17 en negro con espuma de respuesta alta. Corrida suave para entrenamientos largos.",
+      "marca": "nike",
+      "categoria": "unisex",
+      "subcategoria": "deportivo",
+      "referencia": "NK-VOM17-BK",
+      "sku": "NK-VOM17-BK-43",
+      "color": "Negro",
+      "talla": "43",
+      "codigoBarras": "7700000000015",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 305000,
+        "precioVenta": 429900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 9,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1687511968900-7418e0fdc532?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Vomero 17 Negro en color Negro, par completo con suela blanca",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1687511968900-7418e0fdc532",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-sneakers-with-a-white-sole-pRmhOUlzViU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1619203696083-02bd602de876?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Vomero 17 Negro en color Negro, vista tres cuartos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1619203696083-02bd602de876",
+          "origen": "https://unsplash.com/photos/black-and-white-nike-sneakers-ydTCq61Lvuk"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Vomero 17 Negro en color Negro, par colgado, vista frontal",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        }
+      ]
+    },
+    {
+      "slug": "under-armour-assert-10-blanco",
+      "nombre": "Under Armour Assert 10 Blanco",
+      "descripcion": "UA Assert 10 con malla transpirable y soporte en el arco. Zapatilla ligera para entrenamiento diario.",
+      "marca": "under-armour",
+      "categoria": "unisex",
+      "subcategoria": "deportivo",
+      "referencia": "UA-A10-WT",
+      "sku": "UA-A10-WT-41",
+      "color": "Blanco",
+      "talla": "41",
+      "codigoBarras": "7700000000016",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 195000,
+        "precioVenta": 279900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 13,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Assert 10 Blanco en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Assert 10 Blanco en color Blanco, vista trasera del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Assert 10 Blanco en color Blanco, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        }
+      ]
+    },
+    {
+      "slug": "puma-velophasis-blanco-naranja",
+      "nombre": "Puma Velophasis Blanco/Naranja",
+      "descripcion": "Puma Velophasis con paneles en naranja y acabado retro de anos 2000. Estilo Y2K con amortiguacion Reactive.",
+      "marca": "puma",
+      "categoria": "unisex",
+      "subcategoria": "deportivo",
+      "referencia": "PM-VEL-ON",
+      "sku": "PM-VEL-ON-40",
+      "color": "Blanco/Naranja",
+      "talla": "40",
+      "codigoBarras": "7700000000017",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 205000,
+        "precioVenta": 289900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 11,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Velophasis Blanco/Naranja en color Blanco/Naranja, par sobre pedestal blanco",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1560769629-975ec94e6a86",
+          "origen": "https://unsplash.com/photos/pair-of-white-and-orange-athletic-shoes-on-white-box-dwKiHoqqxk8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1631542204051-7927ce32b94e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Velophasis Blanco/Naranja en color Blanco/Naranja, par sobre fondo naranja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1631542204051-7927ce32b94e",
+          "origen": "https://unsplash.com/photos/a-pair-of-sneakers-on-an-orange-background-rBLItzudueg"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1724921195757-ca6918647a5e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Velophasis Blanco/Naranja en color Blanco/Naranja, par completo, vista superior",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1724921195757-ca6918647a5e",
+          "origen": "https://unsplash.com/photos/a-pair-of-colorful-sneakers-on-a-white-background-p3A8UwbJ_w4"
+        }
+      ]
+    },
+    {
+      "slug": "jordan-air-1-alto-azul-blanco",
+      "nombre": "Jordan Air 1 Alto Azul/Blanco",
+      "descripcion": "Air Jordan 1 de caña alta en azul, blanco y negro. Piel premium y traccion de cancha para la calle.",
+      "marca": "jordan",
+      "categoria": "unisex",
+      "subcategoria": "deportivo",
+      "referencia": "JD-A1H-AB",
+      "sku": "JD-A1H-AB-42",
+      "color": "Azul/Blanco",
+      "talla": "42",
+      "codigoBarras": "7700000000018",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 520000,
+        "precioVenta": 729900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 6,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis", "edicion"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1603787081207-362bcef7c144?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Alto Azul/Blanco en color Azul/Blanco, par alto, vista tres cuartos",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1603787081207-362bcef7c144",
+          "origen": "https://unsplash.com/photos/blue-and-black-nike-high-top-sneakers-BWPqHZBhMVA"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1644426059269-36535c7c00fc?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Alto Azul/Blanco en color Azul/Blanco, flotando sobre fondo naranja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1644426059269-36535c7c00fc",
+          "origen": "https://unsplash.com/photos/a-pair-of-sneakers-on-an-orange-background-1vHAP0oeUQE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1724365314431-d9e00de5b258?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Alto Azul/Blanco en color Azul/Blanco, flotando sobre fondo verde",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1724365314431-d9e00de5b258",
+          "origen": "https://unsplash.com/photos/a-pair-of-sneakers-with-a-green-background-HIyD2pPlK-s"
+        }
+      ]
+    },
+    {
+      "slug": "nike-revolution-7-blanco",
+      "nombre": "Nike Revolution 7 Blanco",
+      "descripcion": "Nike Revolution 7 con malla ligera y espuma de mediasuela suave. Zapatilla de running para iniciarse.",
+      "marca": "nike",
+      "categoria": "unisex",
+      "subcategoria": "running",
+      "referencia": "NK-REV7-WT",
+      "sku": "NK-REV7-WT-41",
+      "color": "Blanco",
+      "talla": "41",
+      "codigoBarras": "7700000000019",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 180000,
+        "precioVenta": 259900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 28,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis", "mas-vendido"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1625860191460-10a66c7384fb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Revolution 7 Blanco en color Blanco, vista lateral en fondo blanco",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1625860191460-10a66c7384fb",
+          "origen": "https://unsplash.com/photos/white-nike-low-top-sneakers-jVerIoX3y7c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1695073621086-aa692bc32a3d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Revolution 7 Blanco en color Blanco, par sobre fondo rojo",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1695073621086-aa692bc32a3d",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-nike-sneakers-on-a-red-background-36MiHf2KKr8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Revolution 7 Blanco en color Blanco, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-duramo-speed-azul-marino",
+      "nombre": "Adidas Duramo Speed Azul Marino",
+      "descripcion": "Duramo Speed con media suela Ligend y caballete de apoyo. Para tiradas rapidas y rodajes diarios.",
+      "marca": "adidas",
+      "categoria": "unisex",
+      "subcategoria": "running",
+      "referencia": "AD-DUR-AM",
+      "sku": "AD-DUR-AM-42",
+      "color": "Azul Marino",
+      "talla": "42",
+      "codigoBarras": "7700000000020",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 190000,
+        "precioVenta": 269900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 19,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["envio-gratis", "temporada"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Duramo Speed Azul Marino en color Azul Marino, en uso, vista lateral en exteriores",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1571008887538-b36bb32f4571",
+          "origen": "https://unsplash.com/photos/pair-of-blue-and-white-adidas-running-shoes-XiZ7pRvCzro"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1578314921455-34dd4626b38d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Duramo Speed Azul Marino en color Azul Marino, enfoque superficial del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1578314921455-34dd4626b38d",
+          "origen": "https://unsplash.com/photos/shallow-focus-photo-of-pair-of-white-and-black-running-shoes-Ijp_wDimUMc"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1568475763859-489abcef2f4a?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Duramo Speed Azul Marino en color Azul Marino, en los pies sobre el pavimento",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1568475763859-489abcef2f4a",
+          "origen": "https://unsplash.com/photos/a-persons-feet-with-blue-and-yellow-sneakers-9glAZI2_AlI"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-fuelcell-blanco-gris",
+      "nombre": "New Balance FuelCell Blanco/Gris",
+      "descripcion": "FuelCell con espuma de rebote y upper en blanco y gris. Zapatilla tecnica para ritmos exigentes.",
+      "marca": "new-balance",
+      "categoria": "unisex",
+      "subcategoria": "running",
+      "referencia": "NB-FC-WG",
+      "sku": "NB-FC-WG-42",
+      "color": "Blanco/Gris",
+      "talla": "42",
+      "codigoBarras": "7700000000021",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 285000,
+        "precioVenta": 399900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance FuelCell Blanco/Gris en color Blanco/Gris, par completo sobre fondo gris",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance FuelCell Blanco/Gris en color Blanco/Gris, par en el piso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance FuelCell Blanco/Gris en color Blanco/Gris, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "puma-fast-r-nitro-blanco-naranja",
+      "nombre": "Puma Fast R Nitro Blanco/Naranja",
+      "descripcion": "Fast R Nitro con espuma NITRO y refuerzos en naranja. Diseño agresivo para correr mas rapido.",
+      "marca": "puma",
+      "categoria": "unisex",
+      "subcategoria": "running",
+      "referencia": "PM-FR-ON",
+      "sku": "PM-FR-ON-40",
+      "color": "Blanco/Naranja",
+      "talla": "40",
+      "codigoBarras": "7700000000022",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 245000,
+        "precioVenta": 349900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 7,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Fast R Nitro Blanco/Naranja en color Blanco/Naranja, par sobre pedestal blanco",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1560769629-975ec94e6a86",
+          "origen": "https://unsplash.com/photos/pair-of-white-and-orange-athletic-shoes-on-white-box-dwKiHoqqxk8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1631542204051-7927ce32b94e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Fast R Nitro Blanco/Naranja en color Blanco/Naranja, par sobre fondo naranja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1631542204051-7927ce32b94e",
+          "origen": "https://unsplash.com/photos/a-pair-of-sneakers-on-an-orange-background-rBLItzudueg"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Fast R Nitro Blanco/Naranja en color Blanco/Naranja, vista trasera del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        }
+      ]
+    },
+    {
+      "slug": "under-armour-charged-pursuit-negro",
+      "nombre": "Under Armour Charged Pursuit 3 Negro",
+      "descripcion": "UA Charged Pursuit 3 en negro con suela de traccion multi-superficie. Para caminar y correr sin excusas.",
+      "marca": "under-armour",
+      "categoria": "unisex",
+      "subcategoria": "running",
+      "referencia": "UA-CP3-BK",
+      "sku": "UA-CP3-BK-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700000000023",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 175000,
+        "precioVenta": 249900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 14,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Charged Pursuit 3 Negro en color Negro, par colgado, vista frontal",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Charged Pursuit 3 Negro en color Negro, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        }
+      ]
+    },
+    {
+      "slug": "vans-old-skool-negro-blanco",
+      "nombre": "Vans Old Skool Negro/Blanco",
+      "descripcion": "Old Skool con la banda lateral en zigzag y refuerzos en ante. El calzado skate por excelencia.",
+      "marca": "vans",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "VN-OS-BN",
+      "sku": "VN-OS-BN-41",
+      "color": "Negro/Blanco",
+      "talla": "41",
+      "codigoBarras": "7700000000024",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 195000,
+        "precioVenta": 279900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 21,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["mas-vendido", "envio-gratis", "clasico"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1620324800051-f5a0a9ebbd61?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Negro/Blanco en color Negro/Blanco, en uso, vista lateral en la calle",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1620324800051-f5a0a9ebbd61",
+          "origen": "https://unsplash.com/photos/person-wearing-black-and-white-vans-low-top-sneakers--p6G8Tg62qQ"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1457968867385-9f877f3f2bce?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Negro/Blanco en color Negro/Blanco, en uso sobre cubos blancos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1457968867385-9f877f3f2bce",
+          "origen": "https://unsplash.com/photos/pair-of-white-and-black-vans-high-top-sneakers-A9H40TYRbbk"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577208288347-b24488f3efa5?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Negro/Blanco en color Negro/Blanco, exhibicion de modelos en la pared",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577208288347-b24488f3efa5",
+          "origen": "https://unsplash.com/photos/vans-shoes-on-display-photograph-CHKaD8uRaDU"
+        }
+      ]
+    },
+    {
+      "slug": "vans-authentic-blanco",
+      "nombre": "Vans Authentic Blanco",
+      "descripcion": "Vans Authentic en lizo blanco con ojales metalicos. Silueta original de 1966, simple y duradera.",
+      "marca": "vans",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "VN-AUT-WT",
+      "sku": "VN-AUT-WT-40",
+      "color": "Blanco",
+      "talla": "40",
+      "codigoBarras": "7700000000025",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 165000,
+        "precioVenta": 239900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 23,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Authentic Blanco en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Authentic Blanco en color Blanco, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Authentic Blanco en color Blanco, vista trasera del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        }
+      ]
+    },
+    {
+      "slug": "vans-sk8-hi-negro-blanco",
+      "nombre": "Vans Sk8-Hi Negro/Blanco",
+      "descripcion": "Sk8-Hi de caña alta en negro y blanco con suela waffle. Proteccion del tobillo para patinar o vestir.",
+      "marca": "vans",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "VN-SK8-BN",
+      "sku": "VN-SK8-BN-42",
+      "color": "Negro/Blanco",
+      "talla": "42",
+      "codigoBarras": "7700000000026",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 210000,
+        "precioVenta": 299900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 15,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1457968867385-9f877f3f2bce?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Sk8-Hi Negro/Blanco en color Negro/Blanco, en uso sobre cubos blancos",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1457968867385-9f877f3f2bce",
+          "origen": "https://unsplash.com/photos/pair-of-white-and-black-vans-high-top-sneakers-A9H40TYRbbk"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1576491110919-df70d852860f?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Sk8-Hi Negro/Blanco en color Negro/Blanco, exhibicion en muro de madera",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1576491110919-df70d852860f",
+          "origen": "https://unsplash.com/photos/assorted-vans-shoes-display-23WUGwMsFH8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Sk8-Hi Negro/Blanco en color Negro/Blanco, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        }
+      ]
+    },
+    {
+      "slug": "vans-authentic-verde",
+      "nombre": "Vans Authentic Verde",
+      "descripcion": "Vans Authentic en color verde con suela waffle clasica. Un toque de color para tu outfit diario.",
+      "marca": "vans",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "VN-AUT-GN",
+      "sku": "VN-AUT-GN-39",
+      "color": "Verde",
+      "talla": "39",
+      "codigoBarras": "7700000000027",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 165000,
+        "precioVenta": 239900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 10,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1512990414788-d97cb4a25db3?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Authentic Verde en color Verde, sostenido en la mano, color verde",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1512990414788-d97cb4a25db3",
+          "origen": "https://unsplash.com/photos/person-holding-pair-of-green-vans-shoes-vJgJLzWmXDA"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577208288347-b24488f3efa5?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Authentic Verde en color Verde, exhibicion de modelos en la pared",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577208288347-b24488f3efa5",
+          "origen": "https://unsplash.com/photos/vans-shoes-on-display-photograph-CHKaD8uRaDU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1576491110919-df70d852860f?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Authentic Verde en color Verde, exhibicion en muro de madera",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1576491110919-df70d852860f",
+          "origen": "https://unsplash.com/photos/assorted-vans-shoes-display-23WUGwMsFH8"
+        }
+      ]
+    },
+    {
+      "slug": "nike-blazer-mid-77-blanco",
+      "nombre": "Nike Blazer Mid '77 Blanco",
+      "descripcion": "Blazer Mid '77 en cuero blanco con swoosh en contraste. Aspecto vintage de basquetbol con suela de goma.",
+      "marca": "nike",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "NK-BLZ77-WT",
+      "sku": "NK-BLZ77-WT-42",
+      "color": "Blanco",
+      "talla": "42",
+      "codigoBarras": "7700000000028",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 260000,
+        "precioVenta": 369900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Blazer Mid '77 Blanco en color Blanco, par alto sobre concreto",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1512374382149-233c42b6a83b",
+          "origen": "https://unsplash.com/photos/pair-of-white-nike-high-top-shoes-SxAXphIPWeg"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1625860191460-10a66c7384fb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Blazer Mid '77 Blanco en color Blanco, vista lateral en fondo blanco",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1625860191460-10a66c7384fb",
+          "origen": "https://unsplash.com/photos/white-nike-low-top-sneakers-jVerIoX3y7c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1757513189288-eb723faa94a0?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Blazer Mid '77 Blanco en color Blanco, par sobre fondo negro",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1757513189288-eb723faa94a0",
+          "origen": "https://unsplash.com/photos/pair-of-white-nike-sneakers-on-black-background-UxbcCJynf60"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-forum-low-blanco",
+      "nombre": "Adidas Forum Low Blanco",
+      "descripcion": "Forum Low en cuero blanco con la correa caracteristica en el empeine. Herencia de basquetbol anni 80.",
+      "marca": "adidas",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "AD-FRM-WT",
+      "sku": "AD-FRM-WT-43",
+      "color": "Blanco",
+      "talla": "43",
+      "codigoBarras": "7700000000029",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 245000,
+        "precioVenta": 349900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 11,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1558191053-c03db2757e3d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Forum Low Blanco en color Blanco, par completo, angulo frontal",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1558191053-c03db2757e3d",
+          "origen": "https://unsplash.com/photos/white-and-black-adidas-low-top-sneakers-_VfvnjbKFu4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1698108223397-3d222e80d7ea?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Forum Low Blanco en color Blanco, vista superior del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1698108223397-3d222e80d7ea",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-and-black-adidas-sneakers-Jlt58eKwq6k"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Adidas Forum Low Blanco en color Blanco, vista trasera del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-574-gris",
+      "nombre": "New Balance 574 Gris",
+      "descripcion": "New Balance 574 en gamuza gris con encap ENCAP. El modelo heritage mas versatil de la marca.",
+      "marca": "new-balance",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "NB-574-GY",
+      "sku": "NB-574-GY-42",
+      "color": "Gris",
+      "talla": "42",
+      "codigoBarras": "7700000000030",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 285000,
+        "precioVenta": 399900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis", "mas-vendido"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance 574 Gris en color Gris, vista trasera del par",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance 574 Gris en color Gris, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance 574 Gris en color Gris, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        }
+      ]
+    },
+    {
+      "slug": "puma-suede-classic-negro",
+      "nombre": "Puma Suede Classic Negro",
+      "descripcion": "Puma Suede Classic en ante negro con la formstrip blanca. Un referente del calzado deportivo urbano.",
+      "marca": "puma",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "PM-SUED-BK",
+      "sku": "PM-SUED-BK-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700000000031",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 210000,
+        "precioVenta": 299900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 16,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Suede Classic Negro en color Negro, par colgado, vista frontal",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Suede Classic Negro en color Negro, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577208288347-b24488f3efa5?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Suede Classic Negro en color Negro, exhibicion de modelos en la pared",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577208288347-b24488f3efa5",
+          "origen": "https://unsplash.com/photos/vans-shoes-on-display-photograph-CHKaD8uRaDU"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-workout-plus-blanco",
+      "nombre": "Reebok Workout Plus Blanco",
+      "descripcion": "Workout Plus en cuero blanco con la suela Honey. Clasico de gimnasio reinventado para la calle.",
+      "marca": "reebok",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "RB-WKP-WT",
+      "sku": "RB-WKP-WT-42",
+      "color": "Blanco",
+      "talla": "42",
+      "codigoBarras": "7700000000032",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 220000,
+        "precioVenta": 309900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 13,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1541597455068-49e3562bdfa4?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Workout Plus Blanco en color Blanco, sostenido en la mano, perfil",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1541597455068-49e3562bdfa4",
+          "origen": "https://unsplash.com/photos/person-carrying-white-reebok-low-top-sneakers-cEot_30k978"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Workout Plus Blanco en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1725271741302-4b87691dde86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Workout Plus Blanco en color Blanco, par dentro de su caja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1725271741302-4b87691dde86",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-in-a-box-uIWfpSURyeM"
+        }
+      ]
+    },
+    {
+      "slug": "jordan-air-1-low-blanco-negro",
+      "nombre": "Jordan Air 1 Low Blanco/Negro",
+      "descripcion": "Air Jordan 1 Low en blanco con detalles negros. Baja, limpia y con toda la herencia de Michael Jordan.",
+      "marca": "jordan",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "JD-A1L-BN",
+      "sku": "JD-A1L-BN-43",
+      "color": "Blanco/Negro",
+      "talla": "43",
+      "codigoBarras": "7700000000033",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 320000,
+        "precioVenta": 449900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 9,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["mas-vendido", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1641792670570-158202f62fae?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Blanco/Negro en color Blanco/Negro, par completo, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1641792670570-158202f62fae",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-nike-air-force-sneakers-ORM7dQjvupI"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1623970437629-f71276ad1797?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Blanco/Negro en color Blanco/Negro, detalle del upper y las agujetas",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1623970437629-f71276ad1797",
+          "origen": "https://unsplash.com/photos/white-nike-air-force-1-shoe-sRCu5dkcYjU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Blanco/Negro en color Blanco/Negro, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "fila-ray-tracer-negro",
+      "nombre": "Fila Ray Tracer Negro",
+      "descripcion": "Fila Ray Tracer en negro con mediasuela chunky. Soporte y estilo retro para el diario.",
+      "marca": "fila",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "FL-RAY-BK",
+      "sku": "FL-RAY-BK-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700000000034",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 185000,
+        "precioVenta": 259900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 14,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Ray Tracer Negro en color Negro, par colgado, vista frontal",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Ray Tracer Negro en color Negro, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577208288347-b24488f3efa5?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Ray Tracer Negro en color Negro, exhibicion de modelos en la pared",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577208288347-b24488f3efa5",
+          "origen": "https://unsplash.com/photos/vans-shoes-on-display-photograph-CHKaD8uRaDU"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-max-270-negro",
+      "nombre": "Nike Air Max 270 Negro",
+      "descripcion": "Air Max 270 con la burbuja de aire mas alta de Nike. Amortiguacion generosa para estar de pie todo el dia.",
+      "marca": "nike",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "NK-AM270-BK",
+      "sku": "NK-AM270-BK-43",
+      "color": "Negro",
+      "talla": "43",
+      "codigoBarras": "7700000000035",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 320000,
+        "precioVenta": 449900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 10,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1617813812179-dc1639fb8bdb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 270 Negro en color Negro, detalle de la plantilla y el logotipo",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1617813812179-dc1639fb8bdb",
+          "origen": "https://unsplash.com/photos/a-close-up-of-the-nike-logo-on-a-shoe-gn07k9Kmx9c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1619203696083-02bd602de876?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 270 Negro en color Negro, vista tres cuartos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1619203696083-02bd602de876",
+          "origen": "https://unsplash.com/photos/black-and-white-nike-sneakers-ydTCq61Lvuk"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1687511968900-7418e0fdc532?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 270 Negro en color Negro, par completo con suela blanca",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1687511968900-7418e0fdc532",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-sneakers-with-a-white-sole-pRmhOUlzViU"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-ultraboost-blanco-negro",
+      "nombre": "adidas Ultraboost Blanco/Negro",
+      "descripcion": "Ultraboost con espuma Boost y tejido Primeknit. Retorno de energia para entrenamiento y uso diario.",
+      "marca": "adidas",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "AD-UB-BN",
+      "sku": "AD-UB-BN-42",
+      "color": "Blanco/Negro",
+      "talla": "42",
+      "codigoBarras": "7700000000036",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 430000,
+        "precioVenta": 599900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1578314921455-34dd4626b38d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Ultraboost Blanco/Negro en color Blanco/Negro, enfoque superficial del par",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1578314921455-34dd4626b38d",
+          "origen": "https://unsplash.com/photos/shallow-focus-photo-of-pair-of-white-and-black-running-shoes-Ijp_wDimUMc"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Ultraboost Blanco/Negro en color Blanco/Negro, en uso, vista lateral en exteriores",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1571008887538-b36bb32f4571",
+          "origen": "https://unsplash.com/photos/pair-of-blue-and-white-adidas-running-shoes-XiZ7pRvCzro"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1558191053-c03db2757e3d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Ultraboost Blanco/Negro en color Blanco/Negro, par completo, angulo frontal",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1558191053-c03db2757e3d",
+          "origen": "https://unsplash.com/photos/white-and-black-adidas-low-top-sneakers-_VfvnjbKFu4"
+        }
+      ]
+    },
+    {
+      "slug": "puma-rsx-negro-blanco",
+      "nombre": "Puma RS-X Negro/Blanco",
+      "descripcion": "Puma RS-X en negro con paneles blancos y mediasuela chunky. Tecnologia RS con presencia en la calle.",
+      "marca": "puma",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "PM-RSX-BK",
+      "sku": "PM-RSX-BK-43",
+      "color": "Negro/Blanco",
+      "talla": "43",
+      "codigoBarras": "7700000000037",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 230000,
+        "precioVenta": 329900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Negro/Blanco en color Negro/Blanco, par colgado, vista frontal",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Negro/Blanco en color Negro/Blanco, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577208288347-b24488f3efa5?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Negro/Blanco en color Negro/Blanco, exhibicion de modelos en la pared",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577208288347-b24488f3efa5",
+          "origen": "https://unsplash.com/photos/vans-shoes-on-display-photograph-CHKaD8uRaDU"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-327-verde-blanco",
+      "nombre": "New Balance 327 Verde/Blanco",
+      "descripcion": "New Balance 327 con silueta inspirada en los anni 70 y suela de goma sobresaliente. Fresco y ligero.",
+      "marca": "new-balance",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "NB-327-VB",
+      "sku": "NB-327-VB-42",
+      "color": "Verde/Blanco",
+      "talla": "42",
+      "codigoBarras": "7700000000038",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 310000,
+        "precioVenta": 429900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 9,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1738958668189-eb0f8cac4d09?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance 327 Verde/Blanco en color Verde/Blanco, par sobre piso de madera",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1738958668189-eb0f8cac4d09",
+          "origen": "https://unsplash.com/photos/a-pair-of-new-balance-shoes-on-a-wooden-floor-uhJ4ronWkwg"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance 327 Verde/Blanco en color Verde/Blanco, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1724921195757-ca6918647a5e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance 327 Verde/Blanco en color Verde/Blanco, par completo, vista superior",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1724921195757-ca6918647a5e",
+          "origen": "https://unsplash.com/photos/a-pair-of-colorful-sneakers-on-a-white-background-p3A8UwbJ_w4"
+        }
+      ]
+    },
+    {
+      "slug": "under-armour-assert-11-negro",
+      "nombre": "Under Armour Assert 11 Negro",
+      "descripcion": "UA Assert 11 en negro con malla duradera y amortiguacion neutral. Ideal para correr y entrenar.",
+      "marca": "under-armour",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "UA-A11-BK",
+      "sku": "UA-A11-BK-44",
+      "color": "Negro",
+      "talla": "44",
+      "codigoBarras": "7700000000039",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 180000,
+        "precioVenta": 259900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 11,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1726133731483-d4b8bcabeb43?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Assert 11 Negro en color Negro, par colgado, vista frontal",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1726133731483-d4b8bcabeb43",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-and-white-sneakers-hanging-from-a-hook-VeW_kL0isfs"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Assert 11 Negro en color Negro, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577208288347-b24488f3efa5?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Assert 11 Negro en color Negro, exhibicion de modelos en la pared",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577208288347-b24488f3efa5",
+          "origen": "https://unsplash.com/photos/vans-shoes-on-display-photograph-CHKaD8uRaDU"
+        }
+      ]
+    },
+    {
+      "slug": "nike-pegasus-41-blanco-negro",
+      "nombre": "Nike Pegasus 41 Blanco/Negro",
+      "descripcion": "Pegasus 41 con espuma ReactX y unidades Zoom. El caballo de batalla diario para corredores.",
+      "marca": "nike",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "referencia": "NK-PEG41-BN",
+      "sku": "NK-PEG41-BN-43",
+      "color": "Blanco/Negro",
+      "talla": "43",
+      "codigoBarras": "7700000000040",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 370000,
+        "precioVenta": 519900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 9,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1757513189288-eb723faa94a0?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Pegasus 41 Blanco/Negro en color Blanco/Negro, par sobre fondo negro",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1757513189288-eb723faa94a0",
+          "origen": "https://unsplash.com/photos/pair-of-white-nike-sneakers-on-black-background-UxbcCJynf60"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1625860191460-10a66c7384fb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Pegasus 41 Blanco/Negro en color Blanco/Negro, vista lateral en fondo blanco",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1625860191460-10a66c7384fb",
+          "origen": "https://unsplash.com/photos/white-nike-low-top-sneakers-jVerIoX3y7c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1617813812179-dc1639fb8bdb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Pegasus 41 Blanco/Negro en color Blanco/Negro, detalle de la plantilla y el logotipo",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1617813812179-dc1639fb8bdb",
+          "origen": "https://unsplash.com/photos/a-close-up-of-the-nike-logo-on-a-shoe-gn07k9Kmx9c"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-adizero-sl2-blanco",
+      "nombre": "adidas Adizero SL2 Blanco",
+      "descripcion": "Adizero SL2 ligera con espuma Lightstrike Pro. Para series y carreras con ritmo.",
+      "marca": "adidas",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "referencia": "AD-SL2-WT",
+      "sku": "AD-SL2-WT-42",
+      "color": "Blanco",
+      "talla": "42",
+      "codigoBarras": "7700000000041",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 285000,
+        "precioVenta": 399900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 10,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Adizero SL2 Blanco en color Blanco, en uso, vista lateral en exteriores",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1571008887538-b36bb32f4571",
+          "origen": "https://unsplash.com/photos/pair-of-blue-and-white-adidas-running-shoes-XiZ7pRvCzro"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1578314921455-34dd4626b38d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Adizero SL2 Blanco en color Blanco, enfoque superficial del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1578314921455-34dd4626b38d",
+          "origen": "https://unsplash.com/photos/shallow-focus-photo-of-pair-of-white-and-black-running-shoes-Ijp_wDimUMc"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1519931127525-6b6a7619a003?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Adizero SL2 Blanco en color Blanco, en uso sobre el piso",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1519931127525-6b6a7619a003",
+          "origen": "https://unsplash.com/photos/person-wearing-pair-of-white-adidas-superstar-sneakers-during-daytime-xHrkWhLVM8E"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-floatride-energy-blanco",
+      "nombre": "Reebok Floatride Energy 4 Blanco",
+      "descripcion": "Floatride Energy 4 con espuma Floatride Energy y upper ultraligero. Sensacion rapida en cada paso.",
+      "marca": "reebok",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "referencia": "RB-FRE4-WT",
+      "sku": "RB-FRE4-WT-42",
+      "color": "Blanco",
+      "talla": "42",
+      "codigoBarras": "7700000000042",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 250000,
+        "precioVenta": 349900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Floatride Energy 4 Blanco en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1725271741302-4b87691dde86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Floatride Energy 4 Blanco en color Blanco, par dentro de su caja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1725271741302-4b87691dde86",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-in-a-box-uIWfpSURyeM"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Floatride Energy 4 Blanco en color Blanco, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "nike-downshifter-13-negro",
+      "nombre": "Nike Downshifter 13 Negro",
+      "descripcion": "Downshifter 13 en negro con mediasuela de espuma flexible. Zapatilla de running accesible y duradera.",
+      "marca": "nike",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "referencia": "NK-DS13-BK",
+      "sku": "NK-DS13-BK-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700000000043",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 165000,
+        "precioVenta": 229900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 20,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1687511968900-7418e0fdc532?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Downshifter 13 Negro en color Negro, par completo con suela blanca",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1687511968900-7418e0fdc532",
+          "origen": "https://unsplash.com/photos/a-pair-of-black-sneakers-with-a-white-sole-pRmhOUlzViU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1619203696083-02bd602de876?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Downshifter 13 Negro en color Negro, vista tres cuartos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1619203696083-02bd602de876",
+          "origen": "https://unsplash.com/photos/black-and-white-nike-sneakers-ydTCq61Lvuk"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Downshifter 13 Negro en color Negro, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-force-1-07-blanco-mujer",
+      "nombre": "Nike Air Force 1 '07 Blanco (Mujer)",
+      "descripcion": "Air Force 1 07 en cuero blanco, el favorito para todos los dias. Amortiguacion Air y suela de goma antideslizante.",
+      "marca": "nike",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "NK-AF107-WT-M",
+      "sku": "NK-AF107-WT-M-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700000000044",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 250000,
+        "precioVenta": 349900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 17,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["mas-vendido", "envio-gratis", "clasico"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1625860191460-10a66c7384fb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 '07 Blanco (Mujer) en color Blanco, vista lateral en fondo blanco",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1625860191460-10a66c7384fb",
+          "origen": "https://unsplash.com/photos/white-nike-low-top-sneakers-jVerIoX3y7c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1725271741302-4b87691dde86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 '07 Blanco (Mujer) en color Blanco, par dentro de su caja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1725271741302-4b87691dde86",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-in-a-box-uIWfpSURyeM"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 '07 Blanco (Mujer) en color Blanco, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-grand-court-blanco-azul",
+      "nombre": "adidas Grand Court Blanco/Azul",
+      "descripcion": "Grand Court en blanco con las tres rayas en azul. Ligero y fresco para el uso diario.",
+      "marca": "adidas",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "AD-GC-WA",
+      "sku": "AD-GC-WA-36",
+      "color": "Blanco/Azul",
+      "talla": "36",
+      "codigoBarras": "7700000000045",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 175000,
+        "precioVenta": 249900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 21,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1558191053-c03db2757e3d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Grand Court Blanco/Azul en color Blanco/Azul, par completo, angulo frontal",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1558191053-c03db2757e3d",
+          "origen": "https://unsplash.com/photos/white-and-black-adidas-low-top-sneakers-_VfvnjbKFu4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Grand Court Blanco/Azul en color Blanco/Azul, en uso, vista lateral en exteriores",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1571008887538-b36bb32f4571",
+          "origen": "https://unsplash.com/photos/pair-of-blue-and-white-adidas-running-shoes-XiZ7pRvCzro"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Grand Court Blanco/Azul en color Blanco/Azul, par en el piso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        }
+      ]
+    },
+    {
+      "slug": "skechers-dlites-blanco-mujer",
+      "nombre": "Skechers D'Lites Blanco (Mujer)",
+      "descripcion": "Skechers D'Lites con suela acolchada Air-Cooled Memory Foam. Comodidad todo el dia con estilo retro.",
+      "marca": "skechers",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "SK-DLT-WT-M",
+      "sku": "SK-DLT-WT-M-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700000000046",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 230000,
+        "precioVenta": 329900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 16,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["mas-vendido", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Skechers D'Lites Blanco (Mujer) en color Blanco, par completo sobre fondo gris",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1725271741302-4b87691dde86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Skechers D'Lites Blanco (Mujer) en color Blanco, par dentro de su caja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1725271741302-4b87691dde86",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-in-a-box-uIWfpSURyeM"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Skechers D'Lites Blanco (Mujer) en color Blanco, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-nano-x4-blanco",
+      "nombre": "Reebok Nano X4 Blanco",
+      "descripcion": "Nano X4 para entrenamiento funcional con suela estable y upper reforzado. Listo para WOD o gimnasio.",
+      "marca": "reebok",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "RB-NX4-WT",
+      "sku": "RB-NX4-WT-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700000000047",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 265000,
+        "precioVenta": 369900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 10,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1541597455068-49e3562bdfa4?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Nano X4 Blanco en color Blanco, sostenido en la mano, perfil",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1541597455068-49e3562bdfa4",
+          "origen": "https://unsplash.com/photos/person-carrying-white-reebok-low-top-sneakers-cEot_30k978"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1725271741302-4b87691dde86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Nano X4 Blanco en color Blanco, par dentro de su caja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1725271741302-4b87691dde86",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-in-a-box-uIWfpSURyeM"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Nano X4 Blanco en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        }
+      ]
+    },
+    {
+      "slug": "crocs-classic-clog-verde-oliva-mujer",
+      "nombre": "Crocs Classic Clog Verde Oliva (Mujer)",
+      "descripcion": "Crocs Classic Clog en verde oliva, livianos y con ventilacion lateral. Perfectos para casa, playa o calle.",
+      "marca": "crocs",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "CR-CC-OL-M",
+      "sku": "CR-CC-OL-M-36",
+      "color": "Verde Oliva",
+      "talla": "36",
+      "codigoBarras": "7700000000048",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 180000,
+        "precioVenta": 259900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 14,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["envio-gratis", "mas-vendido"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1764072565582-3f2198c9cd65?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Crocs Classic Clog Verde Oliva (Mujer) en color Verde Oliva, par con accesorios, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1764072565582-3f2198c9cd65",
+          "origen": "https://unsplash.com/photos/olive-green-clogs-decorated-with-fruit-charms-bLYGy5Phw9w"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1714935101713-d6f6da0e2c4b?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Crocs Classic Clog Verde Oliva (Mujer) en color Verde Oliva, en uso al aire libre",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1714935101713-d6f6da0e2c4b",
+          "origen": "https://unsplash.com/photos/a-person-wearing-a-green-clogger-shoe-in-a-park-Qv9F1y2GHk8"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-high-blanco-mujer",
+      "nombre": "Converse Chuck Taylor High Blanco (Mujer)",
+      "descripcion": "Chuck Taylor altos en lizo blanco con puntera de goma. El clasico que combina con todo.",
+      "marca": "converse",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "CV-CT-HS-WT-M",
+      "sku": "CV-CT-HS-WT-M-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700000000049",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 185000,
+        "precioVenta": 269900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1594124264189-e31770337e23?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor High Blanco (Mujer) en color Blanco, en uso con jean, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1594124264189-e31770337e23",
+          "origen": "https://unsplash.com/photos/person-wearing-blue-denim-jeans-and-white-converse-all-star-high-top-sneakers-yVkh51fDVW8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1676379827610-c380c52db0c6?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor High Blanco (Mujer) en color Blanco, par sobre tela clara, vista lateral",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1676379827610-c380c52db0c6",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-on-a-white-background-8GzbKs74yq4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1663457100980-fa5394e8522f?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor High Blanco (Mujer) en color Blanco, en los pies, vista superior",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1663457100980-fa5394e8522f",
+          "origen": "https://unsplash.com/photos/a-persons-feet-in-white-sneakers-wRO_OPrJpe4"
+        }
+      ]
+    },
+    {
+      "slug": "vans-old-skool-blanco-negro-mujer",
+      "nombre": "Vans Old Skool Blanco/Negro (Mujer)",
+      "descripcion": "Old Skool en blanco con la banda lateral negra. Comodidad skate con acabado limpio.",
+      "marca": "vans",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "VN-OS-BN-M",
+      "sku": "VN-OS-BN-M-35",
+      "color": "Blanco/Negro",
+      "talla": "35",
+      "codigoBarras": "7700000000050",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 195000,
+        "precioVenta": 279900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 13,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1620324800051-f5a0a9ebbd61?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Blanco/Negro (Mujer) en color Blanco/Negro, en uso, vista lateral en la calle",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1620324800051-f5a0a9ebbd61",
+          "origen": "https://unsplash.com/photos/person-wearing-black-and-white-vans-low-top-sneakers--p6G8Tg62qQ"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1457968867385-9f877f3f2bce?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Blanco/Negro (Mujer) en color Blanco/Negro, en uso sobre cubos blancos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1457968867385-9f877f3f2bce",
+          "origen": "https://unsplash.com/photos/pair-of-white-and-black-vans-high-top-sneakers-A9H40TYRbbk"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577208288347-b24488f3efa5?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Blanco/Negro (Mujer) en color Blanco/Negro, exhibicion de modelos en la pared",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577208288347-b24488f3efa5",
+          "origen": "https://unsplash.com/photos/vans-shoes-on-display-photograph-CHKaD8uRaDU"
+        }
+      ]
+    },
+    {
+      "slug": "fila-disruptor-blanco-mujer",
+      "nombre": "Fila Disruptor Blanco (Mujer)",
+      "descripcion": "Fila Disruptor en blanco con suela chunky. Volumen y comodidad para elevar cualquier look.",
+      "marca": "fila",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "FL-DIS-WT-M",
+      "sku": "FL-DIS-WT-M-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7700000000051",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 210000,
+        "precioVenta": 299900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Disruptor Blanco (Mujer) en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Disruptor Blanco (Mujer) en color Blanco, vista trasera del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Disruptor Blanco (Mujer) en color Blanco, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-max-90-blanco-negro-mujer",
+      "nombre": "Nike Air Max 90 Blanco/Negro (Mujer)",
+      "descripcion": "Air Max 90 con burbuja Air y paneles blanco y negro. Icono de amortiguacion y estilo.",
+      "marca": "nike",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "NK-AM090-BN-M",
+      "sku": "NK-AM090-BN-M-37",
+      "color": "Blanco/Negro",
+      "talla": "37",
+      "codigoBarras": "7700000000052",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 300000,
+        "precioVenta": 429900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 11,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1580977251970-221b2fa3f554?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 90 Blanco/Negro (Mujer) en color Blanco/Negro, en uso, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1580977251970-221b2fa3f554",
+          "origen": "https://unsplash.com/photos/person-wearing-black-and-white-nike-air-max-90-WjT22VoDMIU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1757513189288-eb723faa94a0?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 90 Blanco/Negro (Mujer) en color Blanco/Negro, par sobre fondo negro",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1757513189288-eb723faa94a0",
+          "origen": "https://unsplash.com/photos/pair-of-white-nike-sneakers-on-black-background-UxbcCJynf60"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1617813812179-dc1639fb8bdb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Max 90 Blanco/Negro (Mujer) en color Blanco/Negro, detalle de la plantilla y el logotipo",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1617813812179-dc1639fb8bdb",
+          "origen": "https://unsplash.com/photos/a-close-up-of-the-nike-logo-on-a-shoe-gn07k9Kmx9c"
+        }
+      ]
+    },
+    {
+      "slug": "under-armour-infinite-pro-blanco-mujer",
+      "nombre": "Under Armour Infinite Pro Blanco (Mujer)",
+      "descripcion": "UA Infinite Pro con espuma UA TriBase y upper transpirable. Estabilidad para entrenamiento cruzado.",
+      "marca": "under-armour",
+      "categoria": "mujer",
+      "subcategoria": "deportivo-mujer",
+      "referencia": "UA-INFP-WT-M",
+      "sku": "UA-INFP-WT-M-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7700000000053",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 250000,
+        "precioVenta": 349900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 9,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Infinite Pro Blanco (Mujer) en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Infinite Pro Blanco (Mujer) en color Blanco, vista trasera del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Under Armour Infinite Pro Blanco (Mujer) en color Blanco, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "puma-velophasis-blanco-mujer",
+      "nombre": "Puma Velophasis Blanco (Mujer)",
+      "descripcion": "Puma Velophasis con acabado retro y paneles acolchados. Estilo Y2K con comodidad de entrenamiento.",
+      "marca": "puma",
+      "categoria": "mujer",
+      "subcategoria": "deportivo-mujer",
+      "referencia": "PM-VEL-WT-M",
+      "sku": "PM-VEL-WT-M-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700000000054",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 205000,
+        "precioVenta": 289900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 10,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Velophasis Blanco (Mujer) en color Blanco, par sobre pedestal blanco",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1560769629-975ec94e6a86",
+          "origen": "https://unsplash.com/photos/pair-of-white-and-orange-athletic-shoes-on-white-box-dwKiHoqqxk8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1631542204051-7927ce32b94e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Velophasis Blanco (Mujer) en color Blanco, par sobre fondo naranja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1631542204051-7927ce32b94e",
+          "origen": "https://unsplash.com/photos/a-pair-of-sneakers-on-an-orange-background-rBLItzudueg"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1724921195757-ca6918647a5e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma Velophasis Blanco (Mujer) en color Blanco, par completo, vista superior",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1724921195757-ca6918647a5e",
+          "origen": "https://unsplash.com/photos/a-pair-of-colorful-sneakers-on-a-white-background-p3A8UwbJ_w4"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-fresh-foam-blanco-mujer",
+      "nombre": "New Balance Fresh Foam X Blanco (Mujer)",
+      "descripcion": "Fresh Foam X con espuma suave y drop bajo. Cushioning natural para entrenamiento diario.",
+      "marca": "new-balance",
+      "categoria": "mujer",
+      "subcategoria": "deportivo-mujer",
+      "referencia": "NB-FFX-WT-M",
+      "sku": "NB-FFX-WT-M-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7700000000055",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 330000,
+        "precioVenta": 459900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance Fresh Foam X Blanco (Mujer) en color Blanco, par completo sobre fondo gris",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance Fresh Foam X Blanco (Mujer) en color Blanco, par en el piso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "New Balance Fresh Foam X Blanco (Mujer) en color Blanco, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "fila-court-deluxe-blanco-mujer",
+      "nombre": "Fila Court Deluxe Blanco (Mujer)",
+      "descripcion": "Fila Court Deluxe en blanco con detalles en azul marino. Silueta de cancha versatil.",
+      "marca": "fila",
+      "categoria": "mujer",
+      "subcategoria": "deportivo-mujer",
+      "referencia": "FL-CD-WT-M",
+      "sku": "FL-CD-WT-M-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700000000056",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 195000,
+        "precioVenta": 279900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1725271741302-4b87691dde86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Court Deluxe Blanco (Mujer) en color Blanco, par dentro de su caja",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1725271741302-4b87691dde86",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-in-a-box-uIWfpSURyeM"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Court Deluxe Blanco (Mujer) en color Blanco, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Fila Court Deluxe Blanco (Mujer) en color Blanco, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        }
+      ]
+    },
+    {
+      "slug": "nike-downshifter-13-blanco-mujer",
+      "nombre": "Nike Downshifter 13 Blanco (Mujer)",
+      "descripcion": "Downshifter 13 en blanco con mediasuela flexible. Zapatilla de running ligera para empezar a correr.",
+      "marca": "nike",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "referencia": "NK-DS13-WT-M",
+      "sku": "NK-DS13-WT-M-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700000000057",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 165000,
+        "precioVenta": 229900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 16,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1625860191460-10a66c7384fb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Downshifter 13 Blanco (Mujer) en color Blanco, vista lateral en fondo blanco",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1625860191460-10a66c7384fb",
+          "origen": "https://unsplash.com/photos/white-nike-low-top-sneakers-jVerIoX3y7c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1695073621086-aa692bc32a3d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Downshifter 13 Blanco (Mujer) en color Blanco, par sobre fondo rojo",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1695073621086-aa692bc32a3d",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-nike-sneakers-on-a-red-background-36MiHf2KKr8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1536085439-e1532af5457c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Downshifter 13 Blanco (Mujer) en color Blanco, en uso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1536085439-e1532af5457c",
+          "origen": "https://unsplash.com/photos/high-angle-photography-of-person-wearing-white-sneakers-R5PwcuSVL2c"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-duramo-speed-blanco-mujer",
+      "nombre": "adidas Duramo Speed Blanco (Mujer)",
+      "descripcion": "Duramo Speed en blanco con media suela responsiva. Para rodajes largos sin fatiga.",
+      "marca": "adidas",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "referencia": "AD-DUR-WT-M",
+      "sku": "AD-DUR-WT-M-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700000000058",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 190000,
+        "precioVenta": 269900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 14,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1578314921455-34dd4626b38d?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Duramo Speed Blanco (Mujer) en color Blanco, enfoque superficial del par",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1578314921455-34dd4626b38d",
+          "origen": "https://unsplash.com/photos/shallow-focus-photo-of-pair-of-white-and-black-running-shoes-Ijp_wDimUMc"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Duramo Speed Blanco (Mujer) en color Blanco, en uso, vista lateral en exteriores",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1571008887538-b36bb32f4571",
+          "origen": "https://unsplash.com/photos/pair-of-blue-and-white-adidas-running-shoes-XiZ7pRvCzro"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1519931127525-6b6a7619a003?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Duramo Speed Blanco (Mujer) en color Blanco, en uso sobre el piso",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1519931127525-6b6a7619a003",
+          "origen": "https://unsplash.com/photos/person-wearing-pair-of-white-adidas-superstar-sneakers-during-daytime-xHrkWhLVM8E"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-floatride-energy-azul-mujer",
+      "nombre": "Reebok Floatride Energy Azul (Mujer)",
+      "descripcion": "Floatride Energy en azul con upper ligero y suela flexible. Respuesta y frescura en cada zancada.",
+      "marca": "reebok",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "referencia": "RB-FRE-AZ-M",
+      "sku": "RB-FRE-AZ-M-35",
+      "color": "Azul",
+      "talla": "35",
+      "codigoBarras": "7700000000059",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 250000,
+        "precioVenta": 349900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 7,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1568475763859-489abcef2f4a?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Floatride Energy Azul (Mujer) en color Azul, en los pies sobre el pavimento",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1568475763859-489abcef2f4a",
+          "origen": "https://unsplash.com/photos/a-persons-feet-with-blue-and-yellow-sneakers-9glAZI2_AlI"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1561997315-9a2bbf985881?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Floatride Energy Azul (Mujer) en color Azul, par en el piso, vista cenital",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1561997315-9a2bbf985881",
+          "origen": "https://unsplash.com/photos/pair-of-white-low-top-sneakers-Ra2lCqc08SE"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1725271741302-4b87691dde86?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Reebok Floatride Energy Azul (Mujer) en color Azul, par dentro de su caja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1725271741302-4b87691dde86",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-in-a-box-uIWfpSURyeM"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-force-1-low-blanco-nino",
+      "nombre": "Nike Air Force 1 Low Blanco (Nino)",
+      "descripcion": "Air Force 1 en talla infantil con cuero blanco y burbuja Air. Comodidad para el dia a dia del nino.",
+      "marca": "nike",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "NK-AF107-WT-N",
+      "sku": "NK-AF107-WT-N-32",
+      "color": "Blanco",
+      "talla": "32",
+      "codigoBarras": "7700000000060",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 250000,
+        "precioVenta": 349900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1625860191460-10a66c7384fb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 Low Blanco (Nino) en color Blanco, vista lateral en fondo blanco",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1625860191460-10a66c7384fb",
+          "origen": "https://unsplash.com/photos/white-nike-low-top-sneakers-jVerIoX3y7c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1641792670570-158202f62fae?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 Low Blanco (Nino) en color Blanco, par completo, vista lateral",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1641792670570-158202f62fae",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-nike-air-force-sneakers-ORM7dQjvupI"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1623970437629-f71276ad1797?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Air Force 1 Low Blanco (Nino) en color Blanco, detalle del upper y las agujetas",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1623970437629-f71276ad1797",
+          "origen": "https://unsplash.com/photos/white-nike-air-force-1-shoe-sRCu5dkcYjU"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-superstar-blanco-nino",
+      "nombre": "adidas Superstar Blanco (Nino)",
+      "descripcion": "Superstar infantil con puntera de goma y las tres rayas. Resistente para el recreo.",
+      "marca": "adidas",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "AD-SS-WT-N",
+      "sku": "AD-SS-WT-N-32",
+      "color": "Blanco",
+      "talla": "32",
+      "codigoBarras": "7700000000061",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 230000,
+        "precioVenta": 329900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 13,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["mas-vendido", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1537152443565-83a95138a61c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Superstar Blanco (Nino) en color Blanco, en uso, vista superior",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1537152443565-83a95138a61c",
+          "origen": "https://unsplash.com/photos/pair-of-white-adidas-superstar-sneakers-8VurHsVsls4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1519931127525-6b6a7619a003?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Superstar Blanco (Nino) en color Blanco, en uso sobre el piso",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1519931127525-6b6a7619a003",
+          "origen": "https://unsplash.com/photos/person-wearing-pair-of-white-adidas-superstar-sneakers-during-daytime-xHrkWhLVM8E"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1700433770684-6a8f69dd28ba?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "adidas Superstar Blanco (Nino) en color Blanco, exhibicion en muro de tienda",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1700433770684-6a8f69dd28ba",
+          "origen": "https://unsplash.com/photos/a-display-of-adidas-shoes-on-a-brick-wall-BUuiGd2fI8Y"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-high-blanco-nino",
+      "nombre": "Converse Chuck Taylor High Blanco (Nino)",
+      "descripcion": "Chuck Taylor altos en talla infantil, lizo blanco con media punta clasica. Para el estilo desde peque.",
+      "marca": "converse",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "CV-CT-HS-WT-N",
+      "sku": "CV-CT-HS-WT-N-31",
+      "color": "Blanco",
+      "talla": "31",
+      "codigoBarras": "7700000000062",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 185000,
+        "precioVenta": 269900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 15,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["clasico", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1594124264189-e31770337e23?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor High Blanco (Nino) en color Blanco, en uso con jean, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1594124264189-e31770337e23",
+          "origen": "https://unsplash.com/photos/person-wearing-blue-denim-jeans-and-white-converse-all-star-high-top-sneakers-yVkh51fDVW8"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1676379827610-c380c52db0c6?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor High Blanco (Nino) en color Blanco, par sobre tela clara, vista lateral",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1676379827610-c380c52db0c6",
+          "origen": "https://unsplash.com/photos/a-pair-of-white-sneakers-on-a-white-background-8GzbKs74yq4"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1663457100980-fa5394e8522f?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Converse Chuck Taylor High Blanco (Nino) en color Blanco, en los pies, vista superior",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1663457100980-fa5394e8522f",
+          "origen": "https://unsplash.com/photos/a-persons-feet-in-white-sneakers-wRO_OPrJpe4"
+        }
+      ]
+    },
+    {
+      "slug": "crocs-classic-clog-verde-oliva-nino",
+      "nombre": "Crocs Classic Clog Verde Oliva (Nino)",
+      "descripcion": "Crocs infantiles en verde oliva, flotantes y faciles de poner. Aventuras sin ataduras.",
+      "marca": "crocs",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "CR-CC-OL-N",
+      "sku": "CR-CC-OL-N-30",
+      "color": "Verde Oliva",
+      "talla": "30",
+      "codigoBarras": "7700000000063",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 180000,
+        "precioVenta": 259900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 16,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["envio-gratis", "mas-vendido"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1764072565582-3f2198c9cd65?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Crocs Classic Clog Verde Oliva (Nino) en color Verde Oliva, par con accesorios, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1764072565582-3f2198c9cd65",
+          "origen": "https://unsplash.com/photos/olive-green-clogs-decorated-with-fruit-charms-bLYGy5Phw9w"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1714935101713-d6f6da0e2c4b?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Crocs Classic Clog Verde Oliva (Nino) en color Verde Oliva, en uso al aire libre",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1714935101713-d6f6da0e2c4b",
+          "origen": "https://unsplash.com/photos/a-person-wearing-a-green-clogger-shoe-in-a-park-Qv9F1y2GHk8"
+        }
+      ]
+    },
+    {
+      "slug": "skechers-go-walk-azul-nino",
+      "nombre": "Skechers Go Walk Azul (Nino)",
+      "descripcion": "Skechers Go Walk infantil en azul con plantilla acolchada. Ligereza para el colegio y el juego.",
+      "marca": "skechers",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "SK-GW-AZ-N",
+      "sku": "SK-GW-AZ-N-31",
+      "color": "Azul",
+      "talla": "31",
+      "codigoBarras": "7700000000064",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 180000,
+        "precioVenta": 259900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 11,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1568475763859-489abcef2f4a?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Skechers Go Walk Azul (Nino) en color Azul, en los pies sobre el pavimento",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1568475763859-489abcef2f4a",
+          "origen": "https://unsplash.com/photos/a-persons-feet-with-blue-and-yellow-sneakers-9glAZI2_AlI"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577982886439-c25dc08b0c01?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Skechers Go Walk Azul (Nino) en color Azul, par completo sobre fondo gris",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577982886439-c25dc08b0c01",
+          "origen": "https://unsplash.com/photos/pair-of-white-sneakers-XVBZc0zig4Y"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1724921195757-ca6918647a5e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Skechers Go Walk Azul (Nino) en color Azul, par completo, vista superior",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1724921195757-ca6918647a5e",
+          "origen": "https://unsplash.com/photos/a-pair-of-colorful-sneakers-on-a-white-background-p3A8UwbJ_w4"
+        }
+      ]
+    },
+    {
+      "slug": "puma-rsx-blanco-azul-nino",
+      "nombre": "Puma RS-X Blanco/Azul (Nino)",
+      "descripcion": "Puma RS-X infantil con mediasuela chunky y detalles en azul. Amortiguacion para jugar todo el dia.",
+      "marca": "puma",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "PM-RSX-WA-N",
+      "sku": "PM-RSX-WA-N-31",
+      "color": "Blanco/Azul",
+      "talla": "31",
+      "codigoBarras": "7700000000065",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 230000,
+        "precioVenta": 329900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 9,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["temporada", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1715694031128-3ca9662a387b?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Blanco/Azul (Nino) en color Blanco/Azul, par en estante, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1715694031128-3ca9662a387b",
+          "origen": "https://unsplash.com/photos/a-white-and-blue-puma-sneakers-on-a-shelf-Qkg-nDlKbzw"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1715695163681-af368e4feb5e?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Blanco/Azul (Nino) en color Blanco/Azul, par sobre mesa, vista tres cuartos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1715695163681-af368e4feb5e",
+          "origen": "https://unsplash.com/photos/a-pair-of-puma-sneakers-on-a-table-OtqCK0AKw3A"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1693164437035-1b79dbab908c?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Puma RS-X Blanco/Azul (Nino) en color Blanco/Azul, varios modelos en estanteria",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1693164437035-1b79dbab908c",
+          "origen": "https://unsplash.com/photos/a-bunch-of-shoes-that-are-on-some-shelves-wOZ3i2b0eX4"
+        }
+      ]
+    },
+    {
+      "slug": "nike-revolution-7-gris-nino",
+      "nombre": "Nike Revolution 7 Gris (Nino)",
+      "descripcion": "Nike Revolution 7 infantil en gris con malla transpirable. Zapatilla deportiva para entrenar y jugar.",
+      "marca": "nike",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "NK-REV7-GY-N",
+      "sku": "NK-REV7-GY-N-30",
+      "color": "Gris",
+      "talla": "30",
+      "codigoBarras": "7700000000066",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 180000,
+        "precioVenta": 259900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 14,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["oferta", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1580977251970-221b2fa3f554?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Revolution 7 Gris (Nino) en color Gris, en uso, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1580977251970-221b2fa3f554",
+          "origen": "https://unsplash.com/photos/person-wearing-black-and-white-nike-air-max-90-WjT22VoDMIU"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1627847314002-d426fbc89043?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Revolution 7 Gris (Nino) en color Gris, vista trasera del par",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1627847314002-d426fbc89043",
+          "origen": "https://unsplash.com/photos/white-and-yellow-adidas-sneakers-414Gb1RCp4A"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1619203696083-02bd602de876?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Revolution 7 Gris (Nino) en color Gris, vista tres cuartos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1619203696083-02bd602de876",
+          "origen": "https://unsplash.com/photos/black-and-white-nike-sneakers-ydTCq61Lvuk"
+        }
+      ]
+    },
+    {
+      "slug": "jordan-air-1-low-nino-rojo",
+      "nombre": "Jordan Air 1 Low Rojo (Nino)",
+      "descripcion": "Air Jordan 1 Low en rojo para nino. Piel resistente y el logo Jumpman para lucir en el patio.",
+      "marca": "jordan",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "JD-A1L-RD-N",
+      "sku": "JD-A1L-RD-N-32",
+      "color": "Rojo",
+      "talla": "32",
+      "codigoBarras": "7700000000067",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 320000,
+        "precioVenta": 449900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 7,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Rojo (Nino) en color Rojo, par en la cancha, vista lateral",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1552346154-21d32810aba3",
+          "origen": "https://unsplash.com/photos/pair-of-black-white-and-red-air-jordan-1-shoes-aDZ5YIuedQg"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Rojo (Nino) en color Rojo, perfil con iluminacion calida",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1600185365483-26d7a4cc7519",
+          "origen": "https://unsplash.com/photos/white-and-red-nike-athletic-shoe-J2-wAQDckus"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1644426059269-36535c7c00fc?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Jordan Air 1 Low Rojo (Nino) en color Rojo, flotando sobre fondo naranja",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1644426059269-36535c7c00fc",
+          "origen": "https://unsplash.com/photos/a-pair-of-sneakers-on-an-orange-background-1vHAP0oeUQE"
+        }
+      ]
+    },
+    {
+      "slug": "vans-old-skool-nino-negro",
+      "nombre": "Vans Old Skool Negro (Nino)",
+      "descripcion": "Old Skool infantil en negro con banda lateral blanca. Resistente para patinar y jugar.",
+      "marca": "vans",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "VN-OS-BK-N",
+      "sku": "VN-OS-BK-N-30",
+      "color": "Negro",
+      "talla": "30",
+      "codigoBarras": "7700000000068",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 195000,
+        "precioVenta": 279900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 10,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["mas-vendido", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1620324800051-f5a0a9ebbd61?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Negro (Nino) en color Negro, en uso, vista lateral en la calle",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1620324800051-f5a0a9ebbd61",
+          "origen": "https://unsplash.com/photos/person-wearing-black-and-white-vans-low-top-sneakers--p6G8Tg62qQ"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1457968867385-9f877f3f2bce?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Negro (Nino) en color Negro, en uso sobre cubos blancos",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1457968867385-9f877f3f2bce",
+          "origen": "https://unsplash.com/photos/pair-of-white-and-black-vans-high-top-sneakers-A9H40TYRbbk"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1577208288347-b24488f3efa5?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Vans Old Skool Negro (Nino) en color Negro, exhibicion de modelos en la pared",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1577208288347-b24488f3efa5",
+          "origen": "https://unsplash.com/photos/vans-shoes-on-display-photograph-CHKaD8uRaDU"
+        }
+      ]
+    },
+    {
+      "slug": "nike-blazer-mid-77-nino-blanco",
+      "nombre": "Nike Blazer Mid '77 Blanco (Nino)",
+      "descripcion": "Blazer Mid '77 infantil en cuero blanco con swoosh en contraste. Estilo vintage en talla de nino.",
+      "marca": "nike",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "NK-BLZ77-WT-N",
+      "sku": "NK-BLZ77-WT-N-33",
+      "color": "Blanco",
+      "talla": "33",
+      "codigoBarras": "7700000000069",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 260000,
+        "precioVenta": 369900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 5,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": ["novedad", "envio-gratis"],
+      "imagenes": [
+        {
+          "url": "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Blazer Mid '77 Blanco (Nino) en color Blanco, par alto sobre concreto",
+          "esPrincipal": true,
+          "fuente": "unsplash",
+          "fotoId": "1512374382149-233c42b6a83b",
+          "origen": "https://unsplash.com/photos/pair-of-white-nike-high-top-shoes-SxAXphIPWeg"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1625860191460-10a66c7384fb?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Blazer Mid '77 Blanco (Nino) en color Blanco, vista lateral en fondo blanco",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1625860191460-10a66c7384fb",
+          "origen": "https://unsplash.com/photos/white-nike-low-top-sneakers-jVerIoX3y7c"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1757513189288-eb723faa94a0?w=800&q=80&fm=jpg&fit=crop",
+          "alt": "Nike Blazer Mid '77 Blanco (Nino) en color Blanco, par sobre fondo negro",
+          "esPrincipal": false,
+          "fuente": "unsplash",
+          "fotoId": "1757513189288-eb723faa94a0",
+          "origen": "https://unsplash.com/photos/pair-of-white-nike-sneakers-on-black-background-UxbcCJynf60"
         }
       ]
     }
