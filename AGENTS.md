@@ -129,6 +129,8 @@ src/main/webapp/app/
 | `/account/settings`, `/account/password`                               | ADMIN, MANAGER                              |
 | `/login`, `/account/register`, `/account/activate`, `/account/reset/*` | Público                                     |
 
+> `/admin/*` está bloqueado **por diseño** en viewports ≤992 px (móvil): el gate vive en `app.tsx` con `useIsMobileView` + `DesktopOnlyNotice` (ver §12).
+
 ### 5.2 Ownership de recursos
 
 Para `Cuenta`, `Direccion`, `Carrito`, `Pedido`, `ItemCarrito`, `ItemPedido`, `Pago`, `Envio`, `Factura`:
@@ -151,21 +153,26 @@ Para `Cuenta`, `Direccion`, `Carrito`, `Pedido`, `ItemCarrito`, `ItemPedido`, `P
 
 - RF-001 a RF-036: autenticación, gestión de usuarios, categorías, subcategorías, productos, catálogo público, panel admin.
 - RF-037 a RF-041: CRUD de direcciones propias con dirección predeterminada atómica (`PATCH /api/direccions/{id}/predeterminada`).
-- RF-042 a RF-046: carrito (agregar, consultar, modificar, eliminar, vaciar) con recálculo automático de subtotales.
+- RF-042 a RF-046: carrito (agregar, consultar, modificar, eliminar, vaciar) con recálculo automático de subtotales. El carrito maneja explícitamente el caso de CLIENTE autenticado sin `Cuenta` (redirección a completar perfil, sin falsos éxitos), evita carritos duplicados por condiciones de carrera y revierte mutaciones optimistas fallidas.
 - RF-047 a RF-053: checkout atómico con preview de totales, reglas de envío (gratis ≥ $150.000), listado/detalle de pedidos y cancelación con máquina de estados.
-- RF-054 a RF-069: pasarela de pagos abstracta (simulada configurable), callback idempotente, reembolsos, facturación real con consecutivo, PDF con QR y envío por correo; endpoints de operación de envíos (tracking, estado, devolución, pendientes).
+- RF-054 a RF-069: pasarela de pagos abstracta (`PaymentGateway`) con implementación **simulada que SIEMPRE aprueba**: el pago nace `APPROVED` dentro del mismo checkout (sin ventana PENDING ni segunda llamada HTTP), el callback es idempotente y no puede revertir un pago final; reembolsos, facturación real con consecutivo, PDF con QR y envío por correo; endpoints de operación de envíos (tracking, estado, devolución, pendientes). Para conectar una pasarela real basta una nueva implementación de `PaymentGateway` activada con `knstore.payment.gateway.type`.
 - RF-070 a RF-076: filtros server-side en buscador, búsqueda por marca, orden por precio server-side (`Producto.precioVenta` denormalizado), edición del perfil propio (RF-033 completado), pago en resultado del checkout y botón "Pagar ahora". Detalle en `docs/01-ANALYSIS/REQUERIMIENTOS_PENDIENTES.md`.
 - RNF-027 a RNF-031: índice de texto MongoDB, eliminación de N+1 (listados CLIENTE, ownership y catálogo por lotes), endpoint `GET /api/productos/por-ids` para el carrito, consecutivos diarios atómicos (colección `secuencias`, `SecuenciaService`) y `/management/prometheus` protegido.
-- Seed automático del catálogo en desarrollo (`knstore.seed.catalog=true`).
+- Seed automático del catálogo en desarrollo (`knstore.seed.catalog=true`) con **imágenes reales vía URLs** (campo `imagenUrl` de `ProductoImagen`, prioridad sobre el byte[]): `CatalogSeedImagesMigration` (order 005) asigna URLs de Unsplash por modelo/color sin tocar imágenes subidas manualmente. El contenido **vigente** de la tienda es el manifiesto v2 (`contenido/catalogo.json`, 60 productos / 179 imágenes locales) cargado con `scripts/seed-contenido.js`.
+- Validación de entrada por tipo: `celular`/`telefono` (`^[0-9]{7,15}$`), `numDocumento` (`^[0-9]{1,20}$`), `telefonoContacto`/`codigoPostal` (solo dígitos) y **solo letras** `^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$` en nombres de persona (Cuenta, User, Direccion.destinatario) y catálogo (Marca/Categoria/Subcategoria/TipoDocumento) — `Producto.nombre` queda flexible (números legítimos: "Air Max 270"); `Direccion.direccion` exige al menos una letra; `Cuenta.fechaNacimiento` no futura ni anterior a 100 años (`@AssertTrue` inclusivo). `@Pattern`/`@AssertTrue` en dominio + DTO y reglas espejo en el frontend (perfil `/mi-cuenta` y CRUD admin). PATCH de cuentas captura `DuplicateKeyException` (documentoduplicado).
+- Unicidad real de `email` y `login` del User: migración `UserUniqueIndexesMigration` (order 006) normaliza emails a minúsculas, deduplica datos previos y crea índices únicos parciales `unique_user_email`/`unique_user_login`; `DuplicateKeyException` se traduce a 400 (`error.emailexists`/`error.userexists`) en register/create/update/saveAccount; los errores del backend se muestran en español en el frontend (`translateErrorKey` en notification-middleware, sin archivos i18n).
+- Catálogo público tolerante: el frontend no envía JWT vencidos en peticiones públicas y `InvalidBearerTokenFilter` (filtro servlet, orden -101) retira tokens inválidos de `/api/categorias|subcategorias|productos|marcas` para que el 401 no bloquee el catálogo; los matchers de `reducer.utils.ts` escriben/limpian `errorMessage` SOLO para acciones del propio slice (el 401 de `get_account` no contamina los slices del catálogo) y el alert de error solo se muestra si no hay datos cargados (nunca obliga a "Reintentar" con contenido visible); `useCatalog` deduplica fetches y `SearchPage` cancela búsquedas obsoletas.
+- Alertas por rol: ADMIN/MANAGER conservan los toasts técnicos JHipster (con detalle específico); CLIENTE y demás roles ven solo mensajes amigables en español (`notification-middleware` filtra los alertMessage técnicos `"A <entity> is created... with identifier"` y traduce claves `error.*` con `translateErrorKey`; el registro muestra el error inline traducido).
+- Carrito post-checkout: `CheckoutPage` refresca el carrito desde el servidor (no `clearCart`) tras el pago aprobado; existe el endpoint idempotente `DELETE /api/carritos/{id}/items` (`CarritoService.vaciar`) y `CartContext.clearCart` hace un único DELETE tolerante a 403/404 (sin restaurar items fantasma ni toasts técnicos).
 - MongoDB en replica set para transacciones reales.
 
 ### Pendientes / parciales
 
-| ID  | Requerimiento                                               | Estado |
-| --- | ----------------------------------------------------------- | ------ |
-| —   | Barrido RF-072→RNF-031 implementado 2026-08-24 (sin commit) | ✅     |
+| ID     | Requerimiento                  | Estado                                                     |
+| ------ | ------------------------------ | ---------------------------------------------------------- |
+| RF-033 | Editar datos del perfil propio | Completado (validaciones numéricas + PATCH con duplicados) |
 
-\* _Pendientes conocidos de calidad (backlog): `ItemCarritoResourceIT` (4 tests CRUD autogenerados) fallan preexistentes desde que se blindó el precio server-side (productos ficticios, `400 error.itemcarritoinvalido`); contadores viejos `pedido_sequence`/`factura_sequence` huérfanos (cleanup opcional). Detalle completo en `docs/01-ANALYSIS/REQUERIMIENTOS_PENDIENTES.md`._
+\* _Backlog vigente: specs de páginas del panel `/cuenta` y admin, páginas del frontend sin cobertura (`StoreHome`, `CartPage`, `CartDrawer`, `navItems.ts`), casos negativos (H-05) y `cufe`/`codigoQr` nulos en facturas (stub). Detalle en `docs/01-ANALYSIS/REQUERIMIENTOS_PENDIENTES.md`._
 
 ---
 
@@ -173,7 +180,7 @@ Para `Cuenta`, `Direccion`, `Carrito`, `Pedido`, `ItemCarrito`, `ItemPedido`, `P
 
 ### Implementados
 
-- Seguridad: bcrypt costo ≥10, JWT 30 días, validación de entradas, control de roles, eliminación lógica por defecto, CORS restringido.
+- Seguridad: bcrypt costo ≥10, JWT 30 días, validación de entradas (Bean Validation + patrones numéricos en frontend/backend), control de roles, eliminación lógica por defecto, CORS restringido. Los endpoints públicos de catálogo toleran Bearer inválidos/vencidos (filtro `InvalidBearerTokenFilter`) sin debilitar rutas protegidas.
 - Rendimiento: catálogo <500ms P95, paginación obligatoria, índices MongoDB.
 - Usabilidad: responsive, animaciones ≥50 FPS, tokens CSS, mensajes de error claros.
 - Mantenibilidad: separación de capas, convenciones de nomenclatura, documentación sincronizada, compatibilidad de navegadores, Node LTS.
@@ -278,7 +285,9 @@ npm run java:docker                                           # Imagen dev con J
 # En la EC2: copiar src/main/docker/.env.example a .env (secretos), luego
 docker compose -f src/main/docker/app-prod.yml pull && docker compose -f src/main/docker/app-prod.yml up -d
 node scripts/rotate-prod-users.js https://app.knstore.duckdns.org   # rotar admin y desactivar usuarios demo
-node scripts/seed-catalogo-real.js https://app.knstore.duckdns.org  # catálogo real (recomendado)
+node scripts/seed-contenido.js https://app.knstore.duckdns.org      # catálogo vigente (manifiesto v2, recomendado)
+node scripts/seed-operaciones.js https://app.knstore.duckdns.org    # operaciones demo (clientes, pedidos, pagos)
+node scripts/seed-catalogo-real.js https://app.knstore.duckdns.org  # catálogo real anterior (ya no vigente)
 node scripts/seed-demo-data.js https://app.knstore.duckdns.org      # catálogo demo (opcional)
 ```
 
@@ -312,9 +321,11 @@ curl -s localhost:8080/management/health   # status UP
 5. **Roles de negocio:** `ADMIN`, `MANAGER`, `CLIENTE` modelan perfiles operativos.
 6. **Ownership de recursos:** Clientes solo acceden a sus propios datos.
 7. **Carrito híbrido:** `localStorage` para anónimos, backend para autenticados.
-8. **Cuenta obligatoria:** Sin `Cuenta` no se pueden gestionar direcciones ni finalizar compras.
-9. **Producción endurecida:** el perfil `prod` no carga `secret-samples`; el JWT se inyecta con `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET`, SMTP y admin inicial van por entorno y los usuarios demo se controlan con `knstore.seed.demo-users` (`false` en prod).
-10. **Cobertura medible del frontend:** Vitest mide solo código propio (`coverage.include`; excluye `entities/modules/shared` generados) con umbrales en `coverage.thresholds` (45/35/40/45) que bloquean regresiones.
+8. **Cuenta obligatoria:** Sin `Cuenta` no se pueden gestionar direcciones ni finalizar compras; el carrito redirige a completar perfil.
+9. **Pago simbólico aprobado en el checkout:** el pago nace `APPROVED` en la misma transacción del checkout; la abstracción `PaymentGateway` queda lista para una API real futura.
+10. **Imágenes del catálogo:** `buildImageUrl` prioriza `imagenUrl` (String) y arma `data:` para el blob `imagen` (byte[]); el catálogo vigente usa **blobs locales** (179 JPG 1000×1000) y `imagenUrl` sigue soportado para hosts externos permitidos en la CSP.
+11. **Producción endurecida:** el perfil `prod` no carga `secret-samples`; el JWT se inyecta con `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET`, SMTP y admin inicial van por entorno y los usuarios demo se controlan con `knstore.seed.demo-users` (`false` en prod).
+12. **Cobertura medible del frontend:** Vitest mide solo código propio (`coverage.include`; excluye `entities/modules/shared` generados) con umbrales en `coverage.thresholds` (45/35/40/45) que bloquean regresiones.
 
 ---
 
@@ -329,9 +340,14 @@ curl -s localhost:8080/management/health   # status UP
 - `package.json`: scripts y dependencias Node.
 - `src/main/resources/config/application.yml`: configuración central Spring Boot.
 - `src/main/java/com/mycompany/knstore/config/SecurityConfiguration.java`: reglas de seguridad HTTP.
+- `src/main/java/com/mycompany/knstore/web/filter/InvalidBearerTokenFilter.java`: retira tokens inválidos de los endpoints públicos del catálogo.
+- `src/main/java/com/mycompany/knstore/config/dbmigrations/CatalogSeedImagesMigration.java`: seed de URLs reales de imágenes (Unsplash) sobre el catálogo de desarrollo.
+- `src/main/java/com/mycompany/knstore/service/payment/`: abstracción `PaymentGateway` y pasarela simulada que siempre aprueba.
 - `src/main/webapp/app/app.tsx` y `routes.tsx`: enrutamiento y layout dual.
 - `src/main/webapp/app/landing/`: tienda pública y panel de cliente.
 - `src/main/webapp/app/dashboard/index.tsx`: punto de entrada del panel admin.
+- `src/main/webapp/app/landing/model/divipola.ts`: dataset DIVIPOLA serializado (33 departamentos / 578 municipios) usado por la cascada de `AddressForm`.
+- `src/main/webapp/app/landing/hooks/useIsMobileView.ts` y `components/DesktopOnlyNotice.tsx`: corte de viewport ≤992 px y aviso "panel solo escritorio" del gate del admin.
 - `src/main/java/com/mycompany/knstore/service/util/MongoIdUtils.java`: conversión String→ObjectId para consultas batch sobre `@DBRef` (`ref.$id` guardado como ObjectId).
 - `src/main/java/com/mycompany/knstore/service/SecuenciaService.java`: consecutivos diarios atómicos (colección `secuencias`, `findAndModify` + `$inc`).
 - `src/main/webapp/app/landing/hooks/useCuentaActual.ts` y `utils/apiError.ts`: patrones compartidos del panel de cliente (carga de cuenta, errores Axios tipados).
@@ -340,8 +356,13 @@ curl -s localhost:8080/management/health   # status UP
 - `docs/jmeter/gen_informe.py` + `print_variant.py` + `pdf_build.py` + `generar_informe.sh`: pipeline de informes (HTML/PDF) desde `resultados.jtl`.
 - `src/main/docker/app-prod.yml` y `src/main/docker/.env.example`: despliegue de producción (perfil prod, Mongo rs0, secretos por entorno).
 - `scripts/rotate-prod-users.js`: rotación del administrador y desactivación de usuarios demo en producción.
-- `scripts/seed-catalogo-real.js`: seed idempotente del catálogo real (12 marcas, ~777 productos con imágenes, precios e inventario) para producción.
+- `scripts/seed-catalogo-real.js`: seed idempotente del catálogo real anterior (12 marcas, ~777 productos con imágenes, precios e inventario) para producción; **ya no es el catálogo vigente** (el de producción es `contenido/catalogo.json` vía `seed-contenido.js`).
+- `scripts/seed-contenido.js`: seed idempotente del catálogo desde el manifiesto `contenido/catalogo.json` (idempotencia por `slug`; imágenes locales identificadas por `alt`, `--force-images` para reemplazarlas).
+- `scripts/seed-operaciones.js`: seed idempotente de operaciones vía API (5 clientes demo, cuentas, direcciones y 7 pedidos multi-estado con pagos/envíos/facturas); se loguea como cada cliente para el checkout.
+- `scripts/scraper-zapatos.js`: scraper de Zappos (`--collect` → `contenido/scraping/candidatos.json`; descarga idempotente a `contenido/imagenes/<slug>/` con validación de content-type, tamaño y magic bytes).
+- `contenido/catalogo.json` (manifiesto v2: 60 productos con nombre real y 179 imágenes locales `{archivo, alt, esPrincipal, fuente, origen, rol}`) y `contenido/scraping/` (`candidatos.json`, `listing.json`, `qa.json` con el veredicto por imagen del QA visual).
 - `scripts/generar-informe-calidad.py`: regenera el `datos.js` del informe de calidad desde JaCoCo y Vitest.
+- `scripts/seed-demo-data.js`: carga de catálogo vía API (reales o demo).
 - `docs/test_de_cobertura/informe-calidad/`: informe de calidad HTML/CSS/JS (evidencia de pruebas y cobertura).
 
 ---
@@ -356,10 +377,18 @@ curl -s localhost:8080/management/health   # status UP
 - Respetar ownership: cualquier endpoint nuevo para `CLIENTE` debe validar que el recurso pertenece al usuario autenticado.
 - **No usar el perfil `dev` ni `app.yml` en la EC2:** habilitan seed de catálogo, CORS local y prometheus. El despliegue correcto es `app-prod.yml` con `.env`.
 - **RF-072 (precio denormalizado):** `ProductoPrecioDTO` no expone `producto`; `ProductoServiceImpl` escribe `precio_venta` al guardar el producto y `ProductoPrecioServiceImpl` resuelve la referencia inversa (`precio.$id`) al guardar el precio. No eliminar esa sincronización: el orden por precio depende de ella.
-- **Imágenes del catálogo:** `ProductoImagenRepository.findByProductoIdIn` recibe `Collection<ObjectId>` (quirk `@DBRef`); si se usan hosts de imágenes externas, agregarlos a `jhipster.security.content-security-policy` (`img-src`) o el navegador las bloquea.
+- **Imágenes del catálogo:** `ProductoImagenRepository.findByProductoIdIn` recibe `Collection<ObjectId>` (quirk `@DBRef`); hosts externos permitidos en la CSP (`img-src`): `images.unsplash.com`, `plus.unsplash.com` e `images.pexels.com`. **El catálogo vigente usa blobs locales** (base64 dentro del DTO), así que no depende de hosts externos.
+- **Pago simbólico:** siempre se aprueba dentro del checkout; no reintroducir estados REJECTED/aleatorios en la pasarela simulada (la rama REJECTED solo existe como defensa de monto incoherente).
+- **`buildImageUrl`** (`landing/utils/format.ts`) da prioridad a `imagenUrl`; `imagen` (byte[]) sigue soportado para cargas del admin.
+- **Campos numéricos** (documentos, teléfonos, código postal): solo dígitos; mantener `@Pattern` en dominio/DTO y patterns en los formularios.
+- **SonarCloud:** el **Auto-Scan ignora `sonar-project.properties`** (no aplican exclusiones ni `sonar.cpd.exclusions`). Evitar datasets con arrays de literales de estructura repetida (el CPD ignora las diferencias de literales y los marca como duplicados): usar formato serializado por líneas (ver `divipola.ts`: `'<codigo>|<nombre>|<cmun>:<nombre>,…'`, 33 literales únicos con `.join('\n')`) o extraer helpers en specs. Gate vigente: **OK, 1,1 % de duplicación nueva** (umbral 3 %).
+- **Panel admin solo escritorio (por diseño):** `useIsMobileView` (≤991,98 px) bloquea `/admin` con `DesktopOnlyNotice` y oculta los accesos en `StoreHeader`/`LoginPage`. No habilitarlo en móvil sin decisión de producto.
+- **Seeds:** catálogo `scripts/seed-contenido.js` (manifiesto v2; imágenes locales por `alt`) y operaciones `scripts/seed-operaciones.js` (se loguea como cada cliente para el checkout; marca `seed-operaciones v1` en `notasCliente`). Ambos con **doble corrida idempotente** verificada (dev y prod).
+- **Estado de producción (2026-09-24):** BD `knstore` re-sembrada desde cero — 60 productos / 179 imágenes locales / 6 usuarios (admin + 5 clientes demo) / 5 cuentas / 7 pedidos con 7 pagos/envíos/facturas; backup pre-wipe en `/home/ubuntu/knstore/backups/pre-wipe-20260924.archive.gz` (6.055 docs verificados). El admin se recrea desde `KNSTORE_SECURITY_ADMIN_*` del `.env`; **rotación de contraseñas pendiente por el responsable**. Tras un wipe, recrear el contenedor (`docker compose up -d --no-deps app`), no `docker restart`.
+- **Secretos:** nunca escribir contraseñas, tokens ni PAT en la documentación; se referencian como «la custodia el responsable».
 - La app password de Gmail ya no está en el repo; en dev/prod se define `SPRING_MAIL_PASSWORD` por entorno.
 - Antes de construir la imagen prod, verificar RAM disponible (webpack prod es el pico más alto).
-- Actualizar este `AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos.
+- Actualizar este `AGENTS.md` cuando cambien decisiones arquitectónicas, roles, convenciones o requerimientos; mantener sincronizada la copia `docs/03-DOCUMENTACION/AGENTS.md`.
 
 ### 12.1 Commits y mirror — obligatorio
 
