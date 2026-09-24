@@ -348,7 +348,16 @@ async function asegurarDirecciones(cliente, cuenta) {
 
 /** Productos activos con precio y stock > 0 (el checkout valida stock server-side). */
 async function cargarProductos() {
-  const productos = await listar('productos');
+  let productos;
+  try {
+    productos = await listar('productos');
+  } catch (error) {
+    // Workaround (prod): GET /api/productos devuelve 500 si el catálogo contiene un
+    // producto inactivo con datos corruptos; /productos/search devuelve solo los
+    // activos, que es exactamente lo que este filtro necesita.
+    console.warn(`  ⚠ Listado de productos falló (${mensajeError(error)}): uso /productos/search (solo activos)`);
+    productos = await listar('productos/search', { q: '' });
+  }
   return productos.filter(p => p.activo !== false && p.precio && (p.inventario?.stock ?? 0) > 0);
 }
 

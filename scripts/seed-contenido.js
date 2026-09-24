@@ -11,7 +11,9 @@
  *   - Producto.categoriaIVA (nombre) -> se envía `categoriaIva: {id}` al crear/actualizar.
  *   - Producto.etiquetas (2-4 strings): el manifiesto es la fuente de verdad; se crean/borran en /api/etiqueta-productos.
  *   - Imágenes con `url` (https + host permitido) -> POST /api/producto-imagens con `imagenUrl` (sin base64),
- *     idempotente por URL dentro del producto. Imágenes con `archivo` -> flujo local (base64) como en v1.
+ *     idempotente por URL dentro del producto. Imágenes con `archivo` -> flujo local (base64) desde
+ *     contenido/imagenes/<slug>/, idempotente por `alt` dentro del producto (el recurso no expone la URL
+ *     ni los bytes). Cambiar de URL a local en un producto existente exige --force-images.
  *   - Pre-vuelo (preflight) ANTES de tocar la API: slugs duplicados = error fatal;
  *     referencias rotas o imágenes fuera de regla = warn + omitir producto.
  *
@@ -216,16 +218,37 @@ async function autenticar() {
   console.log(`Autenticado como ${USERNAME} en ${BASE_URL}`);
 }
 
-async function listar(recurso) {
+async function listar(recurso, params = {}) {
   const todos = [];
   const size = 200;
   for (let page = 0; ; page += 1) {
-    const { data, headers } = await api.get(`/${recurso}?page=${page}&size=${size}&sort=id,asc`);
+    const { data, headers } = await api.get(`/${recurso}`, { params: { page, size, sort: 'id,asc', ...params } });
     todos.push(...data);
     const total = Number(headers['x-total-count'] ?? data.length);
     if (data.length === 0 || todos.length >= total) break;
   }
   return todos;
+}
+
+function mensajeError(error) {
+  const data = error.response?.data;
+  if (data?.errorKey) return data.errorKey;
+  if (typeof data === 'string') return data;
+  if (data?.message) return data.message;
+  return error.message;
+}
+
+/** Listado de productos con fallback de solo lectura (mismo patrón que scripts/seed-operaciones.js). */
+async function listarProductos() {
+  try {
+    return await listar('productos');
+  } catch (error) {
+    // Workaround (prod): GET /api/productos (página con sort=id,asc) devuelve 500 si incluye
+    // el producto inactivo con datos corruptos; /productos/search (searchActive) devuelve
+    // solo los activos, que es lo que necesitamos para casar por slug sin tocar el catálogo.
+    console.warn(`⚠ Listado de productos falló (${mensajeError(error)}): uso /productos/search (solo activos)`);
+    return await listar('productos/search', { q: '' });
+  }
 }
 
 // Normaliza a UNA sola barra inicial: axios 1.x interpreta "//ruta" como URL absoluta (protocol-relative) y falla con "Invalid URL".
@@ -345,7 +368,7 @@ async function sincronizarEtiquetas(productoId, etiquetasDeseadas, porProducto) 
 /**
  * Sube las imágenes de un producto:
  * - con `url`  => POST imagenUrl (idempotente por URL dentro del producto; actualiza alt/principal si cambiaron).
- * - con `archivo` => base64 desde contenido/imagenes/<slug>/ (se omite si el producto ya tiene imágenes, como en v1).
+ * - con `archivo` => base64 desde contenido/imagenes/<slug>/ (idempotente por `alt` dentro del producto).
  */
 async function subirImagenes(producto, productoId, imagenesExistentes) {
   if (FORCE_IMAGES && imagenesExistentes.length > 0) {
@@ -384,9 +407,15 @@ async function subirImagenes(producto, productoId, imagenesExistentes) {
       continue;
     }
 
-    // Archivo local (v1): sin forma de identificarlo contra lo remoto, se omite si ya hay imágenes.
-    if (imagenesExistentes.length > 0) {
-      resumen.imagenesOmitidas += 1;
+    // Archivo local: idempotencia por `alt` dentro del producto (el recurso no expone bytes ni URL).
+    const existente = imagenesExistentes.find(e => !e.imagenUrl && e.imagenAlt === img.alt);
+    if (existente) {
+      if (Boolean(existente.esPrincipal) !== principal) {
+        await actualizar('/producto-imagens', { ...existente, esPrincipal: principal });
+        resumen.imagenesActualizadas += 1;
+      } else {
+        resumen.imagenesOmitidas += 1;
+      }
       continue;
     }
     const ruta = path.join(dir, img.archivo);
@@ -404,7 +433,7 @@ async function subirImagenes(producto, productoId, imagenesExistentes) {
 }
 
 async function procesarProductos(productosListos, taxonomia, ivasPorNombre) {
-  const productosExistentes = await listar('productos');
+  const productosExistentes = await listarProductos();
   const porSlug = new Map(productosExistentes.map(p => [p.slug, p]));
   const imagenesPorProducto = agruparPorProducto(await listar('producto-imagens'));
   const etiquetasPorProducto = agruparPorProducto(await listar('etiqueta-productos'));
