@@ -4,6 +4,24 @@
 
 ---
 
+## 2026-09-23 — Publicación del release 3.3.0: Quality Gate de SonarCloud en verde (1,12 %), contenido v3 con imágenes reales, imagen en Docker Hub y despliegue en EC2
+
+Publicación del hito correctivo completo (fix del Quality Gate + contenido v3 con fotos locales de Zappos) por el agente `auditor`. Pre-vuelo, commits, push, mirror, 6 ramas, tag, imagen y despliegue verificados; **seeds y datos de BD sin tocar** (el wipe de prod va en la misión siguiente).
+
+| # | Cambio / verificación | Detalle / evidencia |
+| --- | --- | --- |
+| 1 | **Pre-vuelo** | `npx tsc --noEmit` → exit 0. `./npmw test` inicial → **falla con 1 error de lint** (`const CDN` sin uso en `scripts/scraper-zapatos.js:69`, `no-unused-vars` = error); **fix mínimo autorizado por el usuario** (pregunta explícita): se eliminó el const muerto (2 líneas, sin cambio de comportamiento) y prettier lo re-formateó. `./npmw test` final → **exit 0** (lint OK + vitest **563/563** en 61 archivos, 0 fallos, umbrales de cobertura OK). El fix viaja en `dc65ed9`. |
+| 2 | **Commits (5)** | `73e089f` fix(frontend): serializar el dataset divipola para eliminar la duplicacion del quality gate · `dc65ed9` feat(config): agregar scraper de imagenes de zapatos con qa visual · `688adc6` feat(config): reemplazar el catalogo por 60 productos con fotos locales de estudio · `949fe32` fix(config): asegurar idempotencia de imagenes locales y fallback de productos en los seeds · `48642a9` docs: registrar el hito de imagenes reales y quality gate de sonar. Working tree limpio. |
+| 3 | **Push + mirror + ramas** | `origin` (joseph12n/knstore): `15f4588..48642a9` en `main`. Mirror sena-students: `git fetch ../knstore` + `merge --ff-only` + push → `15f4588..48642a9`. **6 ramas unificadas** (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`) a `48642a9` en ambos repos (fast-forward, sin force); tips previos respaldados en `refs/backup/2026-09-23/<rama>` (local en los dos repos, no se suben). |
+| 4 | **SonarCloud — Quality Gate en verde** | Análisis del push `48642a97e016` (2026-09-24T04:33:33Z), API pública: `projectStatus.status = **OK**` con `new_duplicated_lines_density = **1.1 %**` (umbral 3 %), fiabilidad/seguridad/mantenibilidad **A (1.0)** y hotspots revisados **100 %**; medidas: `new_duplicated_lines_density = 1,1156 %`, `new_lines = 19.451` (antes: 5,24 % con 1.056 líneas nuevas duplicadas). Proyección del fix (~1,08 %) cumplida. |
+| 5 | **Imagen 3.3.0 (Jib)** | `./mvnw -ntp verify -DskipTests -Pprod -Djib.to.image=eljoseph12/knstore:3.3.0 -Djib.to.tags=latest jib:dockerBuild` → **BUILD SUCCESS** (53,6 s; webpack prod 33,9 s). Contenido verificado en la imagen: `/app/resources/static/index.html` + `main.8c5abdad.js` con el dataset serializado (`\|Antioquia\|`) → el fix del gate viaja en la imagen. `docker push` de `3.3.0` y `latest` → digest **`sha256:2d3b62f1cc94c4e90e0388cd257230aebe5c7240ad5394fed5fda44df0d03a75`**. |
+| 6 | **Despliegue EC2** | `app-prod.yml` del servidor: **solo** la línea 16 `image: eljoseph12/knstore:3.2.0 → 3.3.0` (diff verificado de 1 línea; respaldo previo en `/tmp/app-prod.yml.bak-2026-09-23`); `docker compose pull && docker compose up -d` → `knstore-app-1` en 3.3.0 **healthy**; `knstore-mongodb-1` sin recrear. `.env`, `mongodb-replicaset.yml` y `name: knstore` intactos. |
+| 7 | **Smoke** | Interno: `health` **UP**, `/` 200, `/productos` 200, `/categorias` 200, `/management/prometheus` **401**, `/v3/api-docs` **401**. Externo por `https://app.knstore.duckdns.org`: health **200/UP**, `/` 200, `/productos` 200. |
+| 8 | **Commits de release** | `49647e1` chore(config): actualizar imagen de produccion a 3.3.0 (`src/main/docker/app-prod.yml` local alineado con lo desplegado) + este registro. Tag anotado **`v3.3.0`** sobre el estado final (incluye este registro) y push del tag en ambos repos. |
+| 9 | **Notas** | Queda un stash preexistente `stash@{0}: tweaks EC2 antes de mirror` (redundante con el estado actual; no se tocó). No se ejecutaron seeds ni se modificaron datos de la BD en esta misión. |
+
+---
+
 ## 2026-09-23 — Contenido v3: scraper de Zappos con QA visual, 60 productos con imágenes locales y carga dev verificada (doble corrida)
 
 Reemplazo total del contenido de imágenes del catálogo: el intento anterior con URLs de Unsplash asignadas por nombre no correspondía a los productos (gente usándolos, pies, colores errados). Ahora cada foto se descarga de un retailer real (**Zappos**, primera opción del plan) y el título acompaña a la imagen por construcción (mismo objeto de producto). **Sin commits** (publica `auditor`) y **sin borrar productos viejos de dev** (el wipe de prod va aparte). El backend dev y `knstore-mongodb-1` quedaron corriendo.
