@@ -1,0 +1,3633 @@
+{
+  "version": 2,
+  "descripcion": "Manifiesto de contenido de la tienda KN-Store (v2). Lo mantiene el agente contenido-tienda y lo consume scripts/seed-contenido.js. Slugs = llave de idempotencia. Imagenes locales en contenido/imagenes/<slug>/ descargadas del retailer (Zappos) con QA visual; cada producto declara fuente y origen (pagina del producto).",
+  "categoriasIVA": [
+    {
+      "nombre": "IVA 19%",
+      "porcentaje": 19,
+      "estado": "ACTIVO"
+    },
+    {
+      "nombre": "Exento",
+      "porcentaje": 0,
+      "estado": "ACTIVO"
+    }
+  ],
+  "marcas": [
+    {
+      "nombre": "Nike",
+      "slug": "nike"
+    },
+    {
+      "nombre": "Adidas",
+      "slug": "adidas"
+    },
+    {
+      "nombre": "Puma",
+      "slug": "puma"
+    },
+    {
+      "nombre": "Converse",
+      "slug": "converse"
+    },
+    {
+      "nombre": "Vans",
+      "slug": "vans"
+    },
+    {
+      "nombre": "New Balance",
+      "slug": "new-balance"
+    },
+    {
+      "nombre": "Reebok",
+      "slug": "reebok"
+    },
+    {
+      "nombre": "Skechers",
+      "slug": "skechers"
+    },
+    {
+      "nombre": "Crocs",
+      "slug": "crocs"
+    },
+    {
+      "nombre": "Under Armour",
+      "slug": "under-armour"
+    }
+  ],
+  "categorias": [
+    {
+      "nombre": "Unisex",
+      "slug": "unisex",
+      "descripcion": "Calzado para todas las personas",
+      "subcategorias": [
+        {
+          "nombre": "Casual",
+          "slug": "casual",
+          "descripcion": "Estilo urbano y comodidad para el dia a dia."
+        },
+        {
+          "nombre": "Skate",
+          "slug": "skate",
+          "descripcion": "Calzado resistente para patinaje y cultura urbana."
+        }
+      ]
+    },
+    {
+      "nombre": "Hombre",
+      "slug": "hombre",
+      "descripcion": "Calzado masculino en tallas 39 a 44",
+      "subcategorias": [
+        {
+          "nombre": "Casual Hombre",
+          "slug": "casual-hombre",
+          "descripcion": "Clasicos urbanos para hombre."
+        },
+        {
+          "nombre": "Deportivo Hombre",
+          "slug": "deportivo-hombre",
+          "descripcion": "Entrenamiento y actividad fisica."
+        },
+        {
+          "nombre": "Running Hombre",
+          "slug": "running-hombre",
+          "descripcion": "Zapatillas para correr."
+        }
+      ]
+    },
+    {
+      "nombre": "Mujer",
+      "slug": "mujer",
+      "descripcion": "Calzado femenino en tallas 35 a 40",
+      "subcategorias": [
+        {
+          "nombre": "Casual Mujer",
+          "slug": "casual-mujer",
+          "descripcion": "Estilo urbano para mujer."
+        },
+        {
+          "nombre": "Running Mujer",
+          "slug": "running-mujer",
+          "descripcion": "Running y comodidad para mujer."
+        }
+      ]
+    },
+    {
+      "nombre": "Nino",
+      "slug": "nino",
+      "descripcion": "Calzado infantil en tallas 28 a 34",
+      "subcategorias": [
+        {
+          "nombre": "Casual Nino",
+          "slug": "casual-nino",
+          "descripcion": "Calzado comodo para ninos."
+        },
+        {
+          "nombre": "Deportivo Nino",
+          "slug": "deportivo-nino",
+          "descripcion": "Calzado deportivo para ninos."
+        }
+      ]
+    }
+  ],
+  "productos": [
+    {
+      "slug": "nike-court-vision-low-next-nature-blanco",
+      "nombre": "Nike Court Vision Low Next Nature Blanco Hombre",
+      "descripcion": "El Court Vision Low Next Nature de Nike en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "nike",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "KN-NIKE-10020695",
+      "sku": "KN-NIKE-10020695-41",
+      "color": "Blanco",
+      "talla": "41",
+      "codigoBarras": "7701002069501",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 235000,
+        "precioVenta": 378900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 26,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "urbano",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Court Vision Low Next Nature en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-court-vision-low-next-nature-white-white-white/product/10020695/color/5078",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Court Vision Low Next Nature en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-court-vision-low-next-nature-white-white-white/product/10020695/color/5078",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Court Vision Low Next Nature en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-court-vision-low-next-nature-white-white-white/product/10020695/color/5078",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-monarch-iv-blanco",
+      "nombre": "Nike Air Monarch IV Blanco Hombre",
+      "descripcion": "El Air Monarch IV de Nike en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "nike",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "KN-NIKE-10020780",
+      "sku": "KN-NIKE-10020780-42",
+      "color": "Blanco",
+      "talla": "42",
+      "codigoBarras": "7701002078002",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 258000,
+        "precioVenta": 416900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 11,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "urbano",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Air Monarch IV en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-air-monarch-iv-white-indigo-storm-gum-light-brown/product/10020780/color/1136462",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Air Monarch IV en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-air-monarch-iv-white-indigo-storm-gum-light-brown/product/10020780/color/1136462",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Air Monarch IV en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-air-monarch-iv-white-indigo-storm-gum-light-brown/product/10020780/color/1136462",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-vomero-18-amarillo",
+      "nombre": "Nike Vomero 18 Amarillo Volt Hombre",
+      "descripcion": "El Vomero 18 de Nike en amarillo volt es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "nike",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "referencia": "KN-NIKE-10020711",
+      "sku": "KN-NIKE-10020711-42",
+      "color": "Amarillo Volt",
+      "talla": "42",
+      "codigoBarras": "7701002071103",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 344000,
+        "precioVenta": 554900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 17,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "nuevo",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Vomero 18 en amarillo volt, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-vomero-18-white-black-volt-barely-volt/product/10020711/color/1122253",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Vomero 18 en amarillo volt, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-vomero-18-white-black-volt-barely-volt/product/10020711/color/1122253",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Vomero 18 en amarillo volt, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-vomero-18-white-black-volt-barely-volt/product/10020711/color/1122253",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-metcon-10-blanco",
+      "nombre": "Nike Metcon 10 Blanco Hombre",
+      "descripcion": "El Metcon 10 de Nike en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "nike",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "KN-NIKE-10031804",
+      "sku": "KN-NIKE-10031804-41",
+      "color": "Blanco",
+      "talla": "41",
+      "codigoBarras": "7701003180404",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 400000,
+        "precioVenta": 645900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 10,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "deportivo",
+        "nuevo",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Metcon 10 en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-metcon-10-photon-dust-photon-dust/product/10031804/color/891890",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Metcon 10 en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-metcon-10-photon-dust-photon-dust/product/10031804/color/891890",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Metcon 10 en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-metcon-10-photon-dust-photon-dust/product/10031804/color/891890",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-max-270-negro",
+      "nombre": "Nike Air Max 270 Negro Mujer",
+      "descripcion": "El Air Max 270 de Nike en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "nike",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-NIKE-9828744",
+      "sku": "KN-NIKE-9828744-37",
+      "color": "Negro",
+      "talla": "37",
+      "codigoBarras": "7700982874405",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 358000,
+        "precioVenta": 576900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 25,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "mas-vendido",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Air Max 270 en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-air-max-270-black-anthracite-white/product/9828744/color/120870",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Air Max 270 en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-air-max-270-black-anthracite-white/product/9828744/color/120870",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Air Max 270 en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-air-max-270-black-anthracite-white/product/9828744/color/120870",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-pegasus-41-purpura-mujer",
+      "nombre": "Nike Pegasus 41 Morado Mujer",
+      "descripcion": "El Pegasus 41 de Nike en morado es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "nike",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "referencia": "KN-NIKE-10020722",
+      "sku": "KN-NIKE-10020722-37",
+      "color": "Morado",
+      "talla": "37",
+      "codigoBarras": "7701002072206",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 283000,
+        "precioVenta": 455900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 28,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "comodo",
+        "nuevo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Pegasus 41 en morado, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-pegasus-41-violet-mist-purple-dynasty-bright-violet/product/10020722/color/1122246",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Pegasus 41 en morado, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-pegasus-41-violet-mist-purple-dynasty-bright-violet/product/10020722/color/1122246",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Pegasus 41 en morado, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-pegasus-41-violet-mist-purple-dynasty-bright-violet/product/10020722/color/1122246",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-court-vision-low-mujer-cafe",
+      "nombre": "Nike Court Vision Low Cafe Mujer",
+      "descripcion": "El Court Vision Low de Nike en cafe es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "nike",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-NIKE-10030822",
+      "sku": "KN-NIKE-10030822-37",
+      "color": "Cafe",
+      "talla": "37",
+      "codigoBarras": "7701003082207",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 214000,
+        "precioVenta": 344900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 28,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "urbano",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Court Vision Low en cafe, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-court-vision-low-sail-sail-cacao-wow-coconut-milk/product/10030822/color/1123122",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Court Vision Low en cafe, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-court-vision-low-sail-sail-cacao-wow-coconut-milk/product/10030822/color/1123122",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Court Vision Low en cafe, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-court-vision-low-sail-sail-cacao-wow-coconut-milk/product/10030822/color/1123122",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-run-swift-3-blanco-mujer",
+      "nombre": "Nike Run Swift 3 Blanco Mujer",
+      "descripcion": "El Run Swift 3 de Nike en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "nike",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "referencia": "KN-NIKE-10025052",
+      "sku": "KN-NIKE-10025052-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7701002505208",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 214000,
+        "precioVenta": 344900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "liviano",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Run Swift 3 en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-run-swift-3-summit-white-metallic-silver/product/10025052/color/401710",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Run Swift 3 en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-run-swift-3-summit-white-metallic-silver/product/10025052/color/401710",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Run Swift 3 en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-run-swift-3-summit-white-metallic-silver/product/10025052/color/401710",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-court-borough-low-recraft-nino-blanco",
+      "nombre": "Nike Court Borough Low Recraft Blanco Nino",
+      "descripcion": "El Court Borough Low Recraft de Nike en blanco para los mas pequenos: comodo, resistente y facil de poner. Perfecto para el colegio y el juego diario.",
+      "marca": "nike",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "KN-NIKE-10036724",
+      "sku": "KN-NIKE-10036724-33",
+      "color": "Blanco",
+      "talla": "33",
+      "codigoBarras": "7701003672409",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 204000,
+        "precioVenta": 328900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 30,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "colegio",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Court Borough Low Recraft en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-court-borough-low-recraft-big-kid-white-white-white/product/10036724/color/5078",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Court Borough Low Recraft en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-court-borough-low-recraft-big-kid-white-white-white/product/10036724/color/5078",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Court Borough Low Recraft en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-court-borough-low-recraft-big-kid-white-white-white/product/10036724/color/5078",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-air-max-270-nino-gris",
+      "nombre": "Nike Air Max 270 Gris Nino",
+      "descripcion": "El Air Max 270 de Nike en gris para los mas pequenos: comodo, resistente y facil de poner. Perfecto para el colegio y el juego diario.",
+      "marca": "nike",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "KN-NIKE-10052359",
+      "sku": "KN-NIKE-10052359-32",
+      "color": "Gris",
+      "talla": "32",
+      "codigoBarras": "7701005235910",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 381000,
+        "precioVenta": 613900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 15,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Air Max 270 en gris, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-air-max-270-big-kid-wolf-grey-racer-blue-smoke-grey-green-spark/product/10052359/color/1135571",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Air Max 270 en gris, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-air-max-270-big-kid-wolf-grey-racer-blue-smoke-grey-green-spark/product/10052359/color/1135571",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Air Max 270 en gris, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-air-max-270-big-kid-wolf-grey-racer-blue-smoke-grey-green-spark/product/10052359/color/1135571",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "nike-star-runner-5-nino-azul",
+      "nombre": "Nike Star Runner 5 Azul Nino",
+      "descripcion": "Calzado deportivo Nike Star Runner 5 en azul para ninos: liviano, con buen agarre y pensado para acompanarlos en el colegio y el deporte.",
+      "marca": "nike",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "KN-NIKE-10022449",
+      "sku": "KN-NIKE-10022449-32",
+      "color": "Azul",
+      "talla": "32",
+      "codigoBarras": "7701002244911",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 206000,
+        "precioVenta": 332900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 30,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "colegio",
+        "comodo",
+        "liviano"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Nike Star Runner 5 en azul, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-star-runner-5-big-kid-midnight-navy-racer-blue-dark-slate/product/10022449/color/1142270",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Nike Star Runner 5 en azul, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-star-runner-5-big-kid-midnight-navy-racer-blue-dark-slate/product/10022449/color/1142270",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Nike Star Runner 5 en azul, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/nike-kids-star-runner-5-big-kid-midnight-navy-racer-blue-dark-slate/product/10022449/color/1142270",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-samba-negro-blanco",
+      "nombre": "Adidas Samba Negro Hombre",
+      "descripcion": "El Samba de Adidas en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "adidas",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "KN-ADIDAS-9953593",
+      "sku": "KN-ADIDAS-9953593-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700995359312",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 285000,
+        "precioVenta": 458900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 24,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "tendencia",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Adidas Samba en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-samba-black-white-vivid-red/product/9953593/color/390466",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Adidas Samba en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-samba-black-white-vivid-red/product/9953593/color/390466",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Adidas Samba en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-samba-black-white-vivid-red/product/9953593/color/390466",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-vl-court-3-0-borgona",
+      "nombre": "Adidas VL Court 3.0 Borgona Hombre",
+      "descripcion": "El VL Court 3.0 de Adidas en borgona es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "adidas",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "KN-ADIDAS-9916486",
+      "sku": "KN-ADIDAS-9916486-42",
+      "color": "Borgona",
+      "talla": "42",
+      "codigoBarras": "7700991648613",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 224000,
+        "precioVenta": 361900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 17,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "urbano",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Adidas VL Court 3.0 en borgona, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-vl-court-3-0-shadow-red-off-white-maroon/product/9916486/color/1117317",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Adidas VL Court 3.0 en borgona, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-vl-court-3-0-shadow-red-off-white-maroon/product/9916486/color/1117317",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Adidas VL Court 3.0 en borgona, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-vl-court-3-0-shadow-red-off-white-maroon/product/9916486/color/1117317",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-adizero-evo-sl-rojo",
+      "nombre": "Adidas AdiZero Evo SL Rojo Hombre",
+      "descripcion": "El AdiZero Evo SL de Adidas en rojo es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "adidas",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "referencia": "KN-ADIDAS-10046273",
+      "sku": "KN-ADIDAS-10046273-42",
+      "color": "Rojo",
+      "talla": "42",
+      "codigoBarras": "7701004627314",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 428000,
+        "precioVenta": 689900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 29,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "nuevo",
+        "liviano"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Adidas AdiZero Evo SL en rojo, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-adizero-evo-sl-running-shoes-solar-turbo-black-carbon/product/10046273/color/1130368",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Adidas AdiZero Evo SL en rojo, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-adizero-evo-sl-running-shoes-solar-turbo-black-carbon/product/10046273/color/1130368",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Adidas AdiZero Evo SL en rojo, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-adizero-evo-sl-running-shoes-solar-turbo-black-carbon/product/10046273/color/1130368",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-grand-court-low-blanco-mujer",
+      "nombre": "Adidas Grand Court Low Blanco Mujer",
+      "descripcion": "El Grand Court Low de Adidas en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "adidas",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-ADIDAS-10023112",
+      "sku": "KN-ADIDAS-10023112-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7701002311215",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 232000,
+        "precioVenta": 374900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "urbano",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Adidas Grand Court Low en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-grand-court-low-shoes-white-black-gum/product/10023112/color/8287",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Adidas Grand Court Low en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-grand-court-low-shoes-white-black-gum/product/10023112/color/8287",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Adidas Grand Court Low en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-grand-court-low-shoes-white-black-gum/product/10023112/color/8287",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-ultraboost-1-0-rosa-mujer",
+      "nombre": "Adidas Ultraboost 1.0 Rosa Claro Mujer",
+      "descripcion": "El Ultraboost 1.0 de Adidas en rosa claro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "adidas",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "referencia": "KN-ADIDAS-9816662",
+      "sku": "KN-ADIDAS-9816662-37",
+      "color": "Rosa Claro",
+      "talla": "37",
+      "codigoBarras": "7700981666216",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 271000,
+        "precioVenta": 437900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "comodo",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Adidas Ultraboost 1.0 en rosa claro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-running-ultraboost-1-0-wonder-quartz-wonder-quartz-white/product/9816662/color/1063452",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Adidas Ultraboost 1.0 en rosa claro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-running-ultraboost-1-0-wonder-quartz-wonder-quartz-white/product/9816662/color/1063452",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Adidas Ultraboost 1.0 en rosa claro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-running-ultraboost-1-0-wonder-quartz-wonder-quartz-white/product/9816662/color/1063452",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-grand-court-3-0-nino-blanco",
+      "nombre": "Adidas Grand Court 3.0 Blanco Nino",
+      "descripcion": "El Grand Court 3.0 de Adidas en blanco para los mas pequenos: comodo, resistente y facil de poner. Perfecto para el colegio y el juego diario.",
+      "marca": "adidas",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "KN-ADIDAS-10023192",
+      "sku": "KN-ADIDAS-10023192-31",
+      "color": "Blanco",
+      "talla": "31",
+      "codigoBarras": "7701002319217",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 167000,
+        "precioVenta": 269900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 23,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "colegio",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Adidas Grand Court 3.0 en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-kids-grand-court-3-0-shoes-little-kid-white-iridescent-white/product/10023192/color/986962",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Adidas Grand Court 3.0 en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-kids-grand-court-3-0-shoes-little-kid-white-iridescent-white/product/10023192/color/986962",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Adidas Grand Court 3.0 en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-kids-grand-court-3-0-shoes-little-kid-white-iridescent-white/product/10023192/color/986962",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-run-70s-2-0-nino-blanco",
+      "nombre": "Adidas Run 70s 2.0 Blanco Nino",
+      "descripcion": "Calzado deportivo Adidas Run 70s 2.0 en blanco para ninos: liviano, con buen agarre y pensado para acompanarlos en el colegio y el deporte.",
+      "marca": "adidas",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "KN-ADIDAS-10002992",
+      "sku": "KN-ADIDAS-10002992-32",
+      "color": "Blanco",
+      "talla": "32",
+      "codigoBarras": "7701000299218",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 141000,
+        "precioVenta": 227900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 23,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "colegio",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Adidas Run 70s 2.0 en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-kids-run-70s-2-0-shoes-big-kid-white-black-grey/product/10002992/color/1858",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Adidas Run 70s 2.0 en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-kids-run-70s-2-0-shoes-big-kid-white-black-grey/product/10002992/color/1858",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Adidas Run 70s 2.0 en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-kids-run-70s-2-0-shoes-big-kid-white-black-grey/product/10002992/color/1858",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "adidas-daily-4-0-oliva",
+      "nombre": "Adidas Daily 4.0 Oliva Unisex",
+      "descripcion": "El Daily 4.0 de Adidas en oliva es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "adidas",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-ADIDAS-9954134",
+      "sku": "KN-ADIDAS-9954134-40",
+      "color": "Oliva",
+      "talla": "40",
+      "codigoBarras": "7700995413419",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 206000,
+        "precioVenta": 332900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 15,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "urbano",
+        "comodo",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Adidas Daily 4.0 en oliva, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-daily-4-0-olive-strata-shadow-olive-gum/product/9954134/color/1061713",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Adidas Daily 4.0 en oliva, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-daily-4-0-olive-strata-shadow-olive-gum/product/9954134/color/1061713",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Adidas Daily 4.0 en oliva, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/adidas-daily-4-0-olive-strata-shadow-olive-gum/product/9954134/color/1061713",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "puma-palermo-leather-blanco-mujer",
+      "nombre": "Puma Palermo Leather Blanco Mujer",
+      "descripcion": "El Palermo Leather de Puma en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "puma",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-PUMA-10044747",
+      "sku": "KN-PUMA-10044747-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7701004474720",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 258000,
+        "precioVenta": 416900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 28,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "tendencia",
+        "clasico",
+        "nuevo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Puma Palermo Leather en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-palermo-leather-sneakers-puma-white-vapor-gray-gum/product/10044747/color/1070777",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Puma Palermo Leather en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-palermo-leather-sneakers-puma-white-vapor-gray-gum/product/10044747/color/1070777",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Puma Palermo Leather en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-palermo-leather-sneakers-puma-white-vapor-gray-gum/product/10044747/color/1070777",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "puma-palermo-azul-mujer",
+      "nombre": "Puma Palermo Azul Mujer",
+      "descripcion": "El Palermo de Puma en azul es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "puma",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-PUMA-10016314",
+      "sku": "KN-PUMA-10016314-37",
+      "color": "Azul",
+      "talla": "37",
+      "codigoBarras": "7701001631421",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 236000,
+        "precioVenta": 380900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 20,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "urbano",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Puma Palermo en azul, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-palermo-sneakers-sea-illusion-buttercream/product/10016314/color/1141015",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Puma Palermo en azul, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-palermo-sneakers-sea-illusion-buttercream/product/10016314/color/1141015",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Puma Palermo en azul, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-palermo-sneakers-sea-illusion-buttercream/product/10016314/color/1141015",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "puma-speedcat-plateado-mujer",
+      "nombre": "Puma Speedcat Plateado Mujer",
+      "descripcion": "El Speedcat de Puma en plateado es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "puma",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-PUMA-10082195",
+      "sku": "KN-PUMA-10082195-36",
+      "color": "Plateado",
+      "talla": "36",
+      "codigoBarras": "7701008219522",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 324000,
+        "precioVenta": 521900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 26,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "tendencia",
+        "nuevo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Puma Speedcat en plateado, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-speedcat-silver-shoes-alpine-snow-gum/product/10082195/color/1151758",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Puma Speedcat en plateado, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-speedcat-silver-shoes-alpine-snow-gum/product/10082195/color/1151758",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Puma Speedcat en plateado, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-speedcat-silver-shoes-alpine-snow-gum/product/10082195/color/1151758",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "puma-easy-rider-vintage-rojo",
+      "nombre": "Puma Easy Rider Vintage Rojo Unisex",
+      "descripcion": "El Easy Rider Vintage de Puma en rojo es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "puma",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-PUMA-10016355",
+      "sku": "KN-PUMA-10016355-41",
+      "color": "Rojo",
+      "talla": "41",
+      "codigoBarras": "7701001635523",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 206000,
+        "precioVenta": 332900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 11,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "retro",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Puma Easy Rider Vintage en rojo, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-easy-rider-vintage-shoes-puma-red-puma-white/product/10016355/color/742580",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Puma Easy Rider Vintage en rojo, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-easy-rider-vintage-shoes-puma-red-puma-white/product/10016355/color/742580",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Puma Easy Rider Vintage en rojo, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-easy-rider-vintage-shoes-puma-red-puma-white/product/10016355/color/742580",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "puma-rebound-layup-mid-nino-azul",
+      "nombre": "Puma Rebound Layup Mid Azul Nino",
+      "descripcion": "Calzado deportivo Puma Rebound Layup Mid en azul para ninos: liviano, con buen agarre y pensado para acompanarlos en el colegio y el deporte.",
+      "marca": "puma",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "KN-PUMA-9952043",
+      "sku": "KN-PUMA-9952043-32",
+      "color": "Azul",
+      "talla": "32",
+      "codigoBarras": "7700995204324",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 206000,
+        "precioVenta": 331900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 24,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "deportivo",
+        "colegio"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Puma Rebound Layup Mid en azul, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-kids-rebound-layup-mid-big-kid-white-fresh-water-gold/product/9952043/color/1127267",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Puma Rebound Layup Mid en azul, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-kids-rebound-layup-mid-big-kid-white-fresh-water-gold/product/9952043/color/1127267",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Puma Rebound Layup Mid en azul, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/puma-kids-rebound-layup-mid-big-kid-white-fresh-water-gold/product/9952043/color/1127267",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-high-top-negro",
+      "nombre": "Converse Chuck Taylor All Star High-Top Negro Unisex",
+      "descripcion": "El Chuck Taylor All Star High-Top de Converse en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "converse",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-CONVERSE-107999",
+      "sku": "KN-CONVERSE-107999-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700010799925",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 206000,
+        "precioVenta": 332900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 30,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "mas-vendido",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star High-Top en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-high-top-sneaker-black/product/107999/color/3",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star High-Top en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-high-top-sneaker-black/product/107999/color/3",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star High-Top en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-high-top-sneaker-black/product/107999/color/3",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-low-top-negro",
+      "nombre": "Converse Chuck Taylor All Star Low Top Negro Unisex",
+      "descripcion": "El Chuck Taylor All Star Low Top de Converse en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "converse",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-CONVERSE-108000",
+      "sku": "KN-CONVERSE-108000-40",
+      "color": "Negro",
+      "talla": "40",
+      "codigoBarras": "7700010800026",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 193000,
+        "precioVenta": 311900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 6,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "urbano"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Low Top en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-low-top-sneaker-black/product/108000/color/3",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Low Top en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-low-top-sneaker-black/product/108000/color/3",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Low Top en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-low-top-sneaker-black/product/108000/color/3",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "converse-run-star-hike-canvas-platform-blanco",
+      "nombre": "Converse Run Star Hike Canvas Platform Blanco Unisex",
+      "descripcion": "El Run Star Hike Canvas Platform de Converse en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "converse",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-CONVERSE-9997037",
+      "sku": "KN-CONVERSE-9997037-40",
+      "color": "Blanco",
+      "talla": "40",
+      "codigoBarras": "7700999703727",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 295000,
+        "precioVenta": 475900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "tendencia",
+        "plataforma"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Converse Run Star Hike Canvas Platform en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-run-star-hike-canvas-platform-white-black-gum/product/9997037/color/8287",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Converse Run Star Hike Canvas Platform en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-run-star-hike-canvas-platform-white-black-gum/product/9997037/color/8287",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Converse Run Star Hike Canvas Platform en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-run-star-hike-canvas-platform-white-black-gum/product/9997037/color/8287",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-high-top-platform-blanco-mujer",
+      "nombre": "Converse Chuck Taylor All Star High-Top Platform Blanco Mujer",
+      "descripcion": "El Chuck Taylor All Star High-Top Platform de Converse en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "converse",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-CONVERSE-9289796",
+      "sku": "KN-CONVERSE-9289796-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7700928979628",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 232000,
+        "precioVenta": 374900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 27,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "plataforma",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star High-Top Platform en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-high-top-platform-sneaker-optical-white/product/9289796/color/3124",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star High-Top Platform en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-high-top-platform-sneaker-optical-white/product/9289796/color/3124",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star High-Top Platform en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-high-top-platform-sneaker-optical-white/product/9289796/color/3124",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-madison-mid-top-negro-mujer",
+      "nombre": "Converse Chuck Taylor All Star Madison Mid-Top Negro Mujer",
+      "descripcion": "El Chuck Taylor All Star Madison Mid-Top de Converse en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "converse",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-CONVERSE-9152631",
+      "sku": "KN-CONVERSE-9152631-37",
+      "color": "Negro",
+      "talla": "37",
+      "codigoBarras": "7700915263129",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 219000,
+        "precioVenta": 353900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Madison Mid-Top en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-madison-mid-top-sneaker-black/product/9152631/color/3",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Madison Mid-Top en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-madison-mid-top-sneaker-black/product/9152631/color/3",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Madison Mid-Top en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-chuck-taylor-all-star-madison-mid-top-sneaker-black/product/9152631/color/3",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-core-ox-nino-negro",
+      "nombre": "Converse Chuck Taylor All Star Core Ox Negro Nino",
+      "descripcion": "El Chuck Taylor All Star Core Ox de Converse en negro para los mas pequenos: comodo, resistente y facil de poner. Perfecto para el colegio y el juego diario.",
+      "marca": "converse",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "KN-CONVERSE-7553452",
+      "sku": "KN-CONVERSE-7553452-32",
+      "color": "Negro",
+      "talla": "32",
+      "codigoBarras": "7700755345230",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 128000,
+        "precioVenta": 206900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "colegio",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Core Ox en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-kids-chuck-taylor-all-star-core-ox-little-kid-black/product/7553452/color/3",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Core Ox en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-kids-chuck-taylor-all-star-core-ox-little-kid-black/product/7553452/color/3",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Converse Chuck Taylor All Star Core Ox en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/converse-kids-chuck-taylor-all-star-core-ox-little-kid-black/product/7553452/color/3",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "vans-old-skool-negro-blanco",
+      "nombre": "Vans Old Skool Negro Unisex",
+      "descripcion": "Silueta skate Vans Old Skool en negro: construccion resistente, suela de goma con buen agarre y estilo urbano atemporal para el dia a dia.",
+      "marca": "vans",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "KN-VANS-103789",
+      "sku": "KN-VANS-103789-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700010378931",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 232000,
+        "precioVenta": 374900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 20,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "skate",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Vans Old Skool en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-old-skool-black-white/product/103789/color/151",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Vans Old Skool en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-old-skool-black-white/product/103789/color/151",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Vans Old Skool en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-old-skool-black-white/product/103789/color/151",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "vans-sk8-hi-wide-negro",
+      "nombre": "Vans Sk8-Hi Wide Negro Unisex",
+      "descripcion": "Silueta skate Vans Sk8-Hi Wide en negro: construccion resistente, suela de goma con buen agarre y estilo urbano atemporal para el dia a dia.",
+      "marca": "vans",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "KN-VANS-9785327",
+      "sku": "KN-VANS-9785327-42",
+      "color": "Negro",
+      "talla": "42",
+      "codigoBarras": "7700978532732",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 245000,
+        "precioVenta": 395900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "skate",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Vans Sk8-Hi Wide en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-sk8-hi-wide-black-true-white/product/9785327/color/133085",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Vans Sk8-Hi Wide en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-sk8-hi-wide-black-true-white/product/9785327/color/133085",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Vans Sk8-Hi Wide en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-sk8-hi-wide-black-true-white/product/9785327/color/133085",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "vans-authentic-blanco",
+      "nombre": "Vans Authentic Blanco Unisex",
+      "descripcion": "Silueta skate Vans Authentic en blanco: construccion resistente, suela de goma con buen agarre y estilo urbano atemporal para el dia a dia.",
+      "marca": "vans",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "KN-VANS-103787",
+      "sku": "KN-VANS-103787-40",
+      "color": "Blanco",
+      "talla": "40",
+      "codigoBarras": "7700010378733",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 193000,
+        "precioVenta": 311900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "skate",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Vans Authentic en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-authentic-true-white/product/103787/color/38877",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Vans Authentic en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-authentic-true-white/product/103787/color/38877",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Vans Authentic en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-authentic-true-white/product/103787/color/38877",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "vans-classic-slip-on-checkerboard-negro",
+      "nombre": "Vans Classic Slip-On Checkerboard Negro Unisex",
+      "descripcion": "Silueta skate Vans Classic Slip-On Checkerboard en negro: construccion resistente, suela de goma con buen agarre y estilo urbano atemporal para el dia a dia.",
+      "marca": "vans",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "KN-VANS-7213526",
+      "sku": "KN-VANS-7213526-40",
+      "color": "Negro",
+      "talla": "40",
+      "codigoBarras": "7700721352634",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 193000,
+        "precioVenta": 311900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 7,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "skate",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Vans Classic Slip-On Checkerboard en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-classic-slip-on-checkerboard-black-and-white-checker-white-canvas/product/7213526/color/382554",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Vans Classic Slip-On Checkerboard en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-classic-slip-on-checkerboard-black-and-white-checker-white-canvas/product/7213526/color/382554",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Vans Classic Slip-On Checkerboard en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-classic-slip-on-checkerboard-black-and-white-checker-white-canvas/product/7213526/color/382554",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "vans-knu-skool-nino-negro",
+      "nombre": "Vans Knu Skool Negro Nino",
+      "descripcion": "El Knu Skool de Vans en negro para los mas pequenos: comodo, resistente y facil de poner. Perfecto para el colegio y el juego diario.",
+      "marca": "vans",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "KN-VANS-10037856",
+      "sku": "KN-VANS-10037856-32",
+      "color": "Negro",
+      "talla": "32",
+      "codigoBarras": "7701003785635",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 193000,
+        "precioVenta": 311900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 12,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "skate",
+        "colegio"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Vans Knu Skool en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-kids-knu-skool-big-kid-black-true-white/product/10037856/color/133085",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Vans Knu Skool en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-kids-knu-skool-big-kid-black-true-white/product/10037856/color/133085",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Vans Knu Skool en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/vans-kids-knu-skool-big-kid-black-true-white/product/10037856/color/133085",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-574-gris",
+      "nombre": "New Balance 574 Core Gris Hombre",
+      "descripcion": "El 574 Core de New Balance en gris es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "new-balance",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "referencia": "KN-NEW-BALANCE-9600301",
+      "sku": "KN-NEW-BALANCE-9600301-42",
+      "color": "Gris",
+      "talla": "42",
+      "codigoBarras": "7700960030136",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 298000,
+        "precioVenta": 479900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 7,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "comodo",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla New Balance 574 Core en gris, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-574-core-grey-white/product/9600301/color/1522",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla New Balance 574 Core en gris, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-574-core-grey-white/product/9600301/color/1522",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla New Balance 574 Core en gris, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-574-core-grey-white/product/9600301/color/1522",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-fresh-foam-x-880-v15-gris",
+      "nombre": "New Balance Fresh Foam X 880 v15 Gris Hombre",
+      "descripcion": "El Fresh Foam X 880 v15 de New Balance en gris es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "new-balance",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "referencia": "KN-NEW-BALANCE-9982268",
+      "sku": "KN-NEW-BALANCE-9982268-42",
+      "color": "Gris",
+      "talla": "42",
+      "codigoBarras": "7700998226837",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 428000,
+        "precioVenta": 689900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 24,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "comodo",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla New Balance Fresh Foam X 880 v15 en gris, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-fresh-foam-x-880-v15-slate-grey-mineral-black/product/9982268/color/1095052",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla New Balance Fresh Foam X 880 v15 en gris, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-fresh-foam-x-880-v15-slate-grey-mineral-black/product/9982268/color/1095052",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla New Balance Fresh Foam X 880 v15 en gris, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-fresh-foam-x-880-v15-slate-grey-mineral-black/product/9982268/color/1095052",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-327-gris-menta-mujer",
+      "nombre": "New Balance 327 Gris Menta Mujer",
+      "descripcion": "El 327 de New Balance en gris menta es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "new-balance",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-NEW-BALANCE-9448651",
+      "sku": "KN-NEW-BALANCE-9448651-37",
+      "color": "Gris Menta",
+      "talla": "37",
+      "codigoBarras": "7700944865138",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 311000,
+        "precioVenta": 500900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 7,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "tendencia",
+        "retro"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla New Balance 327 en gris menta, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-327-lone-star-grey-mint-water/product/9448651/color/1131942",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla New Balance 327 en gris menta, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-327-lone-star-grey-mint-water/product/9448651/color/1131942",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla New Balance 327 en gris menta, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-327-lone-star-grey-mint-water/product/9448651/color/1131942",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-574-core-beige-mujer",
+      "nombre": "New Balance 574 Core Beige Mujer",
+      "descripcion": "El 574 Core de New Balance en beige es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "new-balance",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-NEW-BALANCE-9600322",
+      "sku": "KN-NEW-BALANCE-9600322-37",
+      "color": "Beige",
+      "talla": "37",
+      "codigoBarras": "7700960032239",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 298000,
+        "precioVenta": 479900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 28,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla New Balance 574 Core en beige, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-574-core-nimbus-cloud-white/product/9600322/color/680862",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla New Balance 574 Core en beige, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-574-core-nimbus-cloud-white/product/9600322/color/680862",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla New Balance 574 Core en beige, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-classics-574-core-nimbus-cloud-white/product/9600322/color/680862",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-440-negro",
+      "nombre": "New Balance 440 Negro Unisex",
+      "descripcion": "Silueta skate New Balance 440 en negro: construccion resistente, suela de goma con buen agarre y estilo urbano atemporal para el dia a dia.",
+      "marca": "new-balance",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "referencia": "KN-NEW-BALANCE-9717885",
+      "sku": "KN-NEW-BALANCE-9717885-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700971788540",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 179000,
+        "precioVenta": 288900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 16,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "skate",
+        "urbano"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla New Balance 440 en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-numeric-440-black-gum-1/product/9717885/color/419450",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla New Balance 440 en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-numeric-440-black-gum-1/product/9717885/color/419450",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla New Balance 440 en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-numeric-440-black-gum-1/product/9717885/color/419450",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "new-balance-327-nino-azul",
+      "nombre": "New Balance 327 Azul Nino",
+      "descripcion": "El 327 de New Balance en azul para los mas pequenos: comodo, resistente y facil de poner. Perfecto para el colegio y el juego diario.",
+      "marca": "new-balance",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "KN-NEW-BALANCE-9982714",
+      "sku": "KN-NEW-BALANCE-9982714-32",
+      "color": "Azul",
+      "talla": "32",
+      "codigoBarras": "7700998271441",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 245000,
+        "precioVenta": 395900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 20,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "colegio",
+        "retro"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla New Balance 327 en azul, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-kids-327-big-kid-analog-blue-heron-blue/product/9982714/color/1132444",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla New Balance 327 en azul, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-kids-327-big-kid-analog-blue-heron-blue/product/9982714/color/1132444",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla New Balance 327 en azul, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/new-balance-kids-327-big-kid-analog-blue-heron-blue/product/9982714/color/1132444",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-classic-leather-blanco",
+      "nombre": "Reebok Classic Leather Blanco Unisex",
+      "descripcion": "El Classic Leather de Reebok en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "reebok",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-REEBOK-9399589",
+      "sku": "KN-REEBOK-9399589-40",
+      "color": "Blanco",
+      "talla": "40",
+      "codigoBarras": "7700939958942",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 258000,
+        "precioVenta": 416900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 20,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "mas-vendido",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Reebok Classic Leather en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-leather-white-pure-grey-1/product/9399589/color/947950",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Reebok Classic Leather en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-leather-white-pure-grey-1/product/9399589/color/947950",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Reebok Classic Leather en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-leather-white-pure-grey-1/product/9399589/color/947950",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-club-c-85-vintage-blanco",
+      "nombre": "Reebok Club C 85 Vintage Blanco Unisex",
+      "descripcion": "El Club C 85 Vintage de Reebok en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "reebok",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-REEBOK-8798702",
+      "sku": "KN-REEBOK-8798702-41",
+      "color": "Blanco",
+      "talla": "41",
+      "codigoBarras": "7700879870243",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 258000,
+        "precioVenta": 416900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "urbano"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Reebok Club C 85 Vintage en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-club-c-85-vintage-int-white-navy/product/8798702/color/657971",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Reebok Club C 85 Vintage en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-club-c-85-vintage-int-white-navy/product/8798702/color/657971",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Reebok Club C 85 Vintage en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-club-c-85-vintage-int-white-navy/product/8798702/color/657971",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-classic-nylon-azul-marino",
+      "nombre": "Reebok Classic Nylon Azul Marino Unisex",
+      "descripcion": "El Classic Nylon de Reebok en azul marino es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "reebok",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-REEBOK-7231285",
+      "sku": "KN-REEBOK-7231285-41",
+      "color": "Azul Marino",
+      "talla": "41",
+      "codigoBarras": "7700723128544",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 206000,
+        "precioVenta": 332900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 16,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "retro",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Reebok Classic Nylon en azul marino, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-nylon-vector-navy-white/product/7231285/color/870037",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Reebok Classic Nylon en azul marino, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-nylon-vector-navy-white/product/7231285/color/870037",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Reebok Classic Nylon en azul marino, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-nylon-vector-navy-white/product/7231285/color/870037",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-freestyle-hi-blanco-mujer",
+      "nombre": "Reebok Freestyle Hi Blanco Mujer",
+      "descripcion": "El Freestyle Hi de Reebok en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "reebok",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-REEBOK-110552",
+      "sku": "KN-REEBOK-110552-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7700011055245",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 245000,
+        "precioVenta": 395900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 8,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Reebok Freestyle Hi en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-freestyle-hi-footwear-white-blue-gum/product/110552/color/1121065",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Reebok Freestyle Hi en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-freestyle-hi-footwear-white-blue-gum/product/110552/color/1121065",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Reebok Freestyle Hi en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-freestyle-hi-footwear-white-blue-gum/product/110552/color/1121065",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-classic-az-blanco-mujer",
+      "nombre": "Reebok Classic AZ Blanco Mujer",
+      "descripcion": "El Classic AZ de Reebok en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "reebok",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-REEBOK-9985932",
+      "sku": "KN-REEBOK-9985932-36",
+      "color": "Blanco",
+      "talla": "36",
+      "codigoBarras": "7700998593246",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 206000,
+        "precioVenta": 332900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 13,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Reebok Classic AZ en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-az-chalk-chalk-grey/product/9985932/color/1097143",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Reebok Classic AZ en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-az-chalk-chalk-grey/product/9985932/color/1097143",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Reebok Classic AZ en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-classic-az-chalk-chalk-grey/product/9985932/color/1097143",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "reebok-princess-negro-mujer",
+      "nombre": "Reebok Princess Negro Mujer",
+      "descripcion": "El Princess de Reebok en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "reebok",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-REEBOK-10014138",
+      "sku": "KN-REEBOK-10014138-37",
+      "color": "Negro",
+      "talla": "37",
+      "codigoBarras": "7701001413847",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 167000,
+        "precioVenta": 269900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 19,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Reebok Princess en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-princess-black-gum/product/10014138/color/4830",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Reebok Princess en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-princess-black-gum/product/10014138/color/4830",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Reebok Princess en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/reebok-lifestyle-princess-black-gum/product/10014138/color/4830",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "skechers-dlites-gris-mujer",
+      "nombre": "Skechers D'Lites Gris Mujer",
+      "descripcion": "El D'Lites de Skechers en gris es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "skechers",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-SKECHERS-10036937",
+      "sku": "KN-SKECHERS-10036937-37",
+      "color": "Gris",
+      "talla": "37",
+      "codigoBarras": "7701003693748",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 214000,
+        "precioVenta": 345900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "mas-vendido",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Skechers D'Lites en gris, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-dlites-popular-vote-grey/product/10036937/color/401",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Skechers D'Lites en gris, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-dlites-popular-vote-grey/product/10036937/color/401",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Skechers D'Lites en gris, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-dlites-popular-vote-grey/product/10036937/color/401",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "skechers-uno-glide-step-lite-blanco-mujer",
+      "nombre": "Skechers Uno Glide Step Lite Blanco Mujer",
+      "descripcion": "El Uno Glide Step Lite de Skechers en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "skechers",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-SKECHERS-10069284",
+      "sku": "KN-SKECHERS-10069284-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7701006928449",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 245000,
+        "precioVenta": 395900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 15,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "urbano"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Skechers Uno Glide Step Lite en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-uno-glide-step-lite-white/product/10069284/color/14",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Skechers Uno Glide Step Lite en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-uno-glide-step-lite-white/product/10069284/color/14",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Skechers Uno Glide Step Lite en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-uno-glide-step-lite-white/product/10069284/color/14",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "skechers-bobs-b-cute-negro-mujer",
+      "nombre": "Skechers Bobs B Cute Negro Mujer",
+      "descripcion": "El Bobs B Cute de Skechers en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "skechers",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "referencia": "KN-SKECHERS-9301245",
+      "sku": "KN-SKECHERS-9301245-36",
+      "color": "Negro",
+      "talla": "36",
+      "codigoBarras": "7700930124550",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 172000,
+        "precioVenta": 276900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 26,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "liviano"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Skechers Bobs B Cute en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/bobs-from-skechers-bobs-b-cute-black/product/9301245/color/3",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Skechers Bobs B Cute en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/bobs-from-skechers-bobs-b-cute-black/product/9301245/color/3",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Skechers Bobs B Cute en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/bobs-from-skechers-bobs-b-cute-black/product/9301245/color/3",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "skechers-arch-fit-glide-step-pro-negro",
+      "nombre": "Skechers Arch Fit Glide-Step Pro Negro Hombre",
+      "descripcion": "El Arch Fit Glide-Step Pro de Skechers en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "skechers",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "KN-SKECHERS-10037737",
+      "sku": "KN-SKECHERS-10037737-42",
+      "color": "Negro",
+      "talla": "42",
+      "codigoBarras": "7701003773751",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 324000,
+        "precioVenta": 521900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "deportivo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Skechers Arch Fit Glide-Step Pro en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-arch-fit-glide-step-pro-hands-free-slip-in-black-charcoal/product/10037737/color/133",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Skechers Arch Fit Glide-Step Pro en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-arch-fit-glide-step-pro-hands-free-slip-in-black-charcoal/product/10037737/color/133",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Skechers Arch Fit Glide-Step Pro en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-arch-fit-glide-step-pro-hands-free-slip-in-black-charcoal/product/10037737/color/133",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "skechers-skech-flex-4-0-azul",
+      "nombre": "Skechers Skech-Flex 4.0 Azul Hombre",
+      "descripcion": "El Skech-Flex 4.0 de Skechers en azul es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "skechers",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "KN-SKECHERS-10074163",
+      "sku": "KN-SKECHERS-10074163-42",
+      "color": "Azul",
+      "talla": "42",
+      "codigoBarras": "7701007416352",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 271000,
+        "precioVenta": 437900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 19,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "liviano",
+        "deportivo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Skechers Skech-Flex 4.0 en azul, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-skech-flex-4-0-hands-free-slip-in-navy-orange/product/10074163/color/1416",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Skechers Skech-Flex 4.0 en azul, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-skech-flex-4-0-hands-free-slip-in-navy-orange/product/10074163/color/1416",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Skechers Skech-Flex 4.0 en azul, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-skech-flex-4-0-hands-free-slip-in-navy-orange/product/10074163/color/1416",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "skechers-meteor-lights-krendox-nino-negro",
+      "nombre": "Skechers Meteor-Lights Krendox Negro Nino",
+      "descripcion": "Calzado deportivo Skechers Meteor-Lights Krendox en negro para ninos: liviano, con buen agarre y pensado para acompanarlos en el colegio y el deporte.",
+      "marca": "skechers",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "referencia": "KN-SKECHERS-9977169",
+      "sku": "KN-SKECHERS-9977169-32",
+      "color": "Negro",
+      "talla": "32",
+      "codigoBarras": "7700997716953",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 152000,
+        "precioVenta": 244900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 25,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "colegio",
+        "comodo",
+        "con-luces"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Skechers Meteor-Lights Krendox en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-kids-skechers-meteor-lights-krendox-401495l-little-kid-big-kid-black-blue/product/9977169/color/2557",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Skechers Meteor-Lights Krendox en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-kids-skechers-meteor-lights-krendox-401495l-little-kid-big-kid-black-blue/product/9977169/color/2557",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Skechers Meteor-Lights Krendox en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/skechers-kids-skechers-meteor-lights-krendox-401495l-little-kid-big-kid-black-blue/product/9977169/color/2557",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "crocs-classic-clog-naranja",
+      "nombre": "Crocs Classic Clog Naranja Unisex",
+      "descripcion": "El Classic Clog de Crocs en naranja es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "crocs",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-CROCS-7153812",
+      "sku": "KN-CROCS-7153812-40",
+      "color": "Naranja",
+      "talla": "40",
+      "codigoBarras": "7700715381254",
+      "unidadMedida": "PAR",
+      "destacado": true,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 167000,
+        "precioVenta": 269900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 18,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "clasico",
+        "comodo",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zueco Crocs Classic Clog en naranja, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/crocs-classic-clog-utility-orange/product/7153812/color/250360",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zueco Crocs Classic Clog en naranja, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/crocs-classic-clog-utility-orange/product/7153812/color/250360",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zueco Crocs Classic Clog en naranja, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/crocs-classic-clog-utility-orange/product/7153812/color/250360",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "crocs-classic-lined-clog-negro",
+      "nombre": "Crocs Classic Lined Clog Negro Unisex",
+      "descripcion": "El Classic Lined Clog de Crocs en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "crocs",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "referencia": "KN-CROCS-8729173",
+      "sku": "KN-CROCS-8729173-41",
+      "color": "Negro",
+      "talla": "41",
+      "codigoBarras": "7700872917355",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 154000,
+        "precioVenta": 248900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 29,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "invierno"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zueco Crocs Classic Lined Clog en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/crocs-classic-lined-clog-black-black/product/8729173/color/183092",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zueco Crocs Classic Lined Clog en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/crocs-classic-lined-clog-black-black/product/8729173/color/183092",
+          "rol": "lateral"
+        }
+      ]
+    },
+    {
+      "slug": "crocs-classic-clog-nino-cafe",
+      "nombre": "Crocs Classic Clog Cafe Nino",
+      "descripcion": "El Classic Clog de Crocs en cafe para los mas pequenos: comodo, resistente y facil de poner. Perfecto para el colegio y el juego diario.",
+      "marca": "crocs",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "referencia": "KN-CROCS-9613082",
+      "sku": "KN-CROCS-9613082-31",
+      "color": "Cafe",
+      "talla": "31",
+      "codigoBarras": "7700961308256",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 141000,
+        "precioVenta": 227900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 13,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "comodo",
+        "colegio"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zueco Crocs Classic Clog en cafe, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/crocs-kids-classic-clogs-little-kid-big-kid-espresso/product/9613082/color/359",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zueco Crocs Classic Clog en cafe, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/crocs-kids-classic-clogs-little-kid-big-kid-espresso/product/9613082/color/359",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zueco Crocs Classic Clog en cafe, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/crocs-kids-classic-clogs-little-kid-big-kid-espresso/product/9613082/color/359",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "under-armour-assert-11-negro",
+      "nombre": "Under Armour Charged Assert 11 Negro Hombre",
+      "descripcion": "El Charged Assert 11 de Under Armour en negro es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "under-armour",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "referencia": "KN-UNDER-ARMOUR-10013988",
+      "sku": "KN-UNDER-ARMOUR-10013988-42",
+      "color": "Negro",
+      "talla": "42",
+      "codigoBarras": "7701001398857",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 232000,
+        "precioVenta": 374900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 19,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "deportivo",
+        "comodo",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Under Armour Charged Assert 11 en negro, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-assert-11-black-black-white/product/10013988/color/552963",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Under Armour Charged Assert 11 en negro, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-assert-11-black-black-white/product/10013988/color/552963",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Under Armour Charged Assert 11 en negro, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-assert-11-black-black-white/product/10013988/color/552963",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "under-armour-surge-5-gris",
+      "nombre": "Under Armour Surge 5 Gris Hombre",
+      "descripcion": "El Surge 5 de Under Armour en gris es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "under-armour",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "referencia": "KN-UNDER-ARMOUR-10048680",
+      "sku": "KN-UNDER-ARMOUR-10048680-42",
+      "color": "Gris",
+      "talla": "42",
+      "codigoBarras": "7701004868058",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 206000,
+        "precioVenta": 332900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 11,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "liviano"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Under Armour Surge 5 en gris, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-surge-5-running-shoes-castlerock-white-black/product/10048680/color/312719",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Under Armour Surge 5 en gris, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-surge-5-running-shoes-castlerock-white-black/product/10048680/color/312719",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Under Armour Surge 5 en gris, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-surge-5-running-shoes-castlerock-white-black/product/10048680/color/312719",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "under-armour-charged-pursuit-4-rosa-mujer",
+      "nombre": "Under Armour Charged Pursuit 4 Rosa Mujer",
+      "descripcion": "El Charged Pursuit 4 de Under Armour en rosa es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "under-armour",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "referencia": "KN-UNDER-ARMOUR-9978769",
+      "sku": "KN-UNDER-ARMOUR-9978769-37",
+      "color": "Rosa",
+      "talla": "37",
+      "codigoBarras": "7700997876959",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 182000,
+        "precioVenta": 292900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 25,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Under Armour Charged Pursuit 4 en rosa, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-pursuit-4-prime-pink-pink-elixir-white/product/9978769/color/1064376",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Under Armour Charged Pursuit 4 en rosa, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-pursuit-4-prime-pink-pink-elixir-white/product/9978769/color/1064376",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Under Armour Charged Pursuit 4 en rosa, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-pursuit-4-prime-pink-pink-elixir-white/product/9978769/color/1064376",
+          "rol": "frente"
+        }
+      ]
+    },
+    {
+      "slug": "under-armour-charged-rogue-5-blanco-mujer",
+      "nombre": "Under Armour Charged Rogue 5 Blanco Mujer",
+      "descripcion": "El Charged Rogue 5 de Under Armour en blanco es una silueta clasica de uso diario: perfil versatil, lineas limpias y comodidad para todo el dia. Ideal para combinar con jeans, joggers o shorts.",
+      "marca": "under-armour",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "referencia": "KN-UNDER-ARMOUR-9978770",
+      "sku": "KN-UNDER-ARMOUR-9978770-37",
+      "color": "Blanco",
+      "talla": "37",
+      "codigoBarras": "7700997877060",
+      "unidadMedida": "PAR",
+      "destacado": false,
+      "activo": true,
+      "categoriaIVA": "IVA 19%",
+      "precio": {
+        "precioCompra": 224000,
+        "precioVenta": 360900,
+        "precioAdicional": 0
+      },
+      "inventario": {
+        "stock": 26,
+        "stockMinimo": 3,
+        "ubicacionBodega": "BODEGA_PRINCIPAL",
+        "garantiaMeses": 3
+      },
+      "etiquetas": [
+        "running",
+        "liviano",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "archivo": "01-principal.jpg",
+          "alt": "Zapatilla Under Armour Charged Rogue 5 en blanco, vista principal sobre fondo blanco",
+          "esPrincipal": true,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-rogue-5-white-white-white/product/9978770/color/5078",
+          "rol": "principal"
+        },
+        {
+          "archivo": "02-lateral.jpg",
+          "alt": "Zapatilla Under Armour Charged Rogue 5 en blanco, vista lateral sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-rogue-5-white-white-white/product/9978770/color/5078",
+          "rol": "lateral"
+        },
+        {
+          "archivo": "03-frente.jpg",
+          "alt": "Zapatilla Under Armour Charged Rogue 5 en blanco, vista adicional sobre fondo blanco",
+          "esPrincipal": false,
+          "fuente": "retailer",
+          "origen": "https://www.zappos.com/p/under-armour-charged-rogue-5-white-white-white/product/9978770/color/5078",
+          "rol": "frente"
+        }
+      ]
+    }
+  ]
+}

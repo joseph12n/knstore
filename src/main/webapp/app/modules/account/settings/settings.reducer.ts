@@ -52,7 +52,7 @@ export const SettingsSlice = createSlice({
         state.loading = false;
         state.updateSuccess = true;
         state.updateFailure = false;
-        state.successMessage = 'Settings saved!';
+        state.successMessage = 'Configuración guardada correctamente.';
       });
   },
 });

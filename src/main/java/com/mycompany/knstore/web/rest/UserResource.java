@@ -1,9 +1,7 @@
 package com.mycompany.knstore.web.rest;
 
 import com.mycompany.knstore.config.Constants;
-import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.domain.User;
-import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.UserRepository;
 import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.service.MailService;
@@ -21,6 +19,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -88,18 +87,10 @@ public class UserResource {
 
     private final MailService mailService;
 
-    private final CuentaRepository cuentaRepository;
-
-    public UserResource(
-        UserService userService,
-        UserRepository userRepository,
-        MailService mailService,
-        CuentaRepository cuentaRepository
-    ) {
+    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
-        this.cuentaRepository = cuentaRepository;
     }
 
     /**
@@ -127,7 +118,6 @@ public class UserResource {
             throw new EmailAlreadyUsedException();
         } else {
             User newUser = userService.createUser(userDTO, userDTO.getPassword());
-            createCuentaForUserIfMissing(newUser);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/admin/users/" + newUser.getLogin()))
                 .headers(
@@ -162,7 +152,15 @@ public class UserResource {
         if (existingUser.isPresent() && (!existingUser.orElseThrow().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
-        Optional<AdminUserDTO> updatedUser = userService.updateUser(userDTO);
+        Optional<AdminUserDTO> updatedUser;
+        try {
+            updatedUser = userService.updateUser(userDTO);
+        } catch (DuplicateKeyException e) {
+            if (e.getMessage() != null && e.getMessage().contains("unique_user_login")) {
+                throw new LoginAlreadyUsedException();
+            }
+            throw new EmailAlreadyUsedException();
+        }
 
         return ResponseUtil.wrapOrNotFound(
             updatedUser,
@@ -201,7 +199,7 @@ public class UserResource {
     @GetMapping("/users/{login}")
     public ResponseEntity<AdminUserDTO> getUser(@PathVariable("login") @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         LOG.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
+        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login.toLowerCase()).map(AdminUserDTO::new));
     }
 
     /**
@@ -213,27 +211,9 @@ public class UserResource {
     @DeleteMapping("/users/{login}")
     public ResponseEntity<Void> deleteUser(@PathVariable("login") @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         LOG.debug("REST request to delete User: {}", login);
-        userService.deleteUser(login);
+        userService.deleteUser(login.toLowerCase());
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
             .build();
-    }
-
-    private void createCuentaForUserIfMissing(User user) {
-        if (user == null || user.getId() == null) {
-            return;
-        }
-        cuentaRepository.findOneByUserId(user.getId()).ifPresentOrElse(
-            cuenta -> LOG.debug("Cuenta already exists for user {}", user.getLogin()),
-            () -> {
-                Cuenta cuenta = new Cuenta();
-                cuenta.setPrimerNombre(org.apache.commons.lang3.StringUtils.defaultString(user.getFirstName(), user.getLogin()));
-                cuenta.setPrimerApellido(org.apache.commons.lang3.StringUtils.defaultString(user.getLastName(), "-"));
-                cuenta.setActivo(true);
-                cuenta.setUser(user);
-                cuentaRepository.save(cuenta);
-                LOG.debug("Created Cuenta for user {}", user.getLogin());
-            }
-        );
     }
 }

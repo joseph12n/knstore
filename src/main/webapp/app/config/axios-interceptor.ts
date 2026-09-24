@@ -8,10 +8,24 @@ const TIMEOUT = 1 * 60 * 1000;
 axios.defaults.timeout = TIMEOUT;
 axios.defaults.baseURL = SERVER_API_URL;
 
+export const isTokenExpired = (token: string): boolean => {
+  try {
+    const payload = token.split('.')[1];
+    if (!payload) {
+      return false;
+    }
+    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(normalized), char => char.charCodeAt(0))));
+    return typeof decoded.exp === 'number' && decoded.exp * 1000 <= Date.now();
+  } catch {
+    return false;
+  }
+};
+
 const setupAxiosInterceptors = onUnauthenticated => {
   const onRequestSuccess = config => {
     const token = Storage.local.get(AUTHENTICATION_TOKEN_KEY) || Storage.session.get(AUTHENTICATION_TOKEN_KEY);
-    if (token) {
+    if (token && !isTokenExpired(token)) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

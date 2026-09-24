@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "direccion")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Direccion implements Serializable {
+public class Direccion extends AbstractAuditingEntity<String> {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -24,30 +24,53 @@ public class Direccion implements Serializable {
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = ".*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ].*", message = "La dirección debe contener al menos una letra")
     @Field("direccion")
     private String direccion;
 
     @Size(max = 100)
+    @Pattern(regexp = "^$|^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("barrio")
     private String barrio;
 
     @Size(max = 100)
+    @Pattern(regexp = "^$|^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("localidad")
     private String localidad;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("municipio")
     private String municipio;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("departamento")
     private String departamento;
 
     @NotNull
     @Field("activo")
     private Boolean activo;
+
+    @NotNull
+    @Size(max = 100)
+    @Pattern(regexp = "^[0-9]{7,15}$")
+    @Field("telefono_contacto")
+    private String telefonoContacto;
+
+    @NotNull
+    @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
+    @Field("destinatario")
+    private String destinatario;
+
+    @NotNull
+    @Size(max = 20)
+    @Pattern(regexp = "^[0-9]{1,20}$")
+    @Field("codigo_postal")
+    private String codigoPostal;
 
     @DBRef
     @Field("cuenta")
@@ -150,6 +173,45 @@ public class Direccion implements Serializable {
         this.activo = activo;
     }
 
+    public String getTelefonoContacto() {
+        return this.telefonoContacto;
+    }
+
+    public Direccion telefonoContacto(String telefonoContacto) {
+        this.setTelefonoContacto(telefonoContacto);
+        return this;
+    }
+
+    public void setTelefonoContacto(String telefonoContacto) {
+        this.telefonoContacto = telefonoContacto;
+    }
+
+    public String getDestinatario() {
+        return this.destinatario;
+    }
+
+    public Direccion destinatario(String destinatario) {
+        this.setDestinatario(destinatario);
+        return this;
+    }
+
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
+    }
+
+    public String getCodigoPostal() {
+        return this.codigoPostal;
+    }
+
+    public Direccion codigoPostal(String codigoPostal) {
+        this.setCodigoPostal(codigoPostal);
+        return this;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
+    }
+
     public Cuenta getCuenta() {
         return this.cuenta;
     }
@@ -212,6 +274,9 @@ public class Direccion implements Serializable {
             ", municipio='" + getMunicipio() + "'" +
             ", departamento='" + getDepartamento() + "'" +
             ", activo='" + getActivo() + "'" +
+            ", telefonoContacto='" + getTelefonoContacto() + "'" +
+            ", destinatario='" + getDestinatario() + "'" +
+            ", codigoPostal='" + getCodigoPostal() + "'" +
             "}";
     }
 }

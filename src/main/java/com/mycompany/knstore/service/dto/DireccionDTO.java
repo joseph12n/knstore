@@ -14,24 +14,44 @@ public class DireccionDTO implements Serializable {
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = ".*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ].*", message = "La dirección debe contener al menos una letra")
     private String direccion;
 
     @Size(max = 100)
+    @Pattern(regexp = "^$|^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String barrio;
 
     @Size(max = 100)
+    @Pattern(regexp = "^$|^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String localidad;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String municipio;
 
     @NotNull
     @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String departamento;
 
     @NotNull
     private Boolean activo;
+
+    @NotNull
+    @Size(max = 100)
+    @Pattern(regexp = "^[0-9]{7,15}$")
+    private String telefonoContacto;
+
+    @NotNull
+    @Size(max = 100)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
+    private String destinatario;
+
+    @NotNull
+    @Size(max = 20)
+    @Pattern(regexp = "^[0-9]{1,20}$")
+    private String codigoPostal;
 
     @NotNull
     private CuentaDTO cuenta;
@@ -92,6 +112,30 @@ public class DireccionDTO implements Serializable {
         this.activo = activo;
     }
 
+    public String getTelefonoContacto() {
+        return telefonoContacto;
+    }
+
+    public void setTelefonoContacto(String telefonoContacto) {
+        this.telefonoContacto = telefonoContacto;
+    }
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
+    }
+
+    public String getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
+    }
+
     public CuentaDTO getCuenta() {
         return cuenta;
     }
@@ -132,6 +176,9 @@ public class DireccionDTO implements Serializable {
             ", municipio='" + getMunicipio() + "'" +
             ", departamento='" + getDepartamento() + "'" +
             ", activo='" + getActivo() + "'" +
+            ", telefonoContacto='" + getTelefonoContacto() + "'" +
+            ", destinatario='" + getDestinatario() + "'" +
+            ", codigoPostal='" + getCodigoPostal() + "'" +
             ", cuenta=" + getCuenta() +
             "}";
     }

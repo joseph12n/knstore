@@ -1,0 +1,1308 @@
+{
+  "generado": "2026-09-23T22:41:47",
+  "fuente": "zappos.com",
+  "metodo": [
+    "1) Descarga de la variante 1000x1000 del CDN (m.media-amazon.com) con scripts/scraper-zapatos.js.",
+    "2) Hojas de contacto etiquetadas con ImageMagick (montage 4x4, 380px) para las 179 imagenes.",
+    "3) Lectura individual a resolucion completa de las imagenes dudosas o atipicas (color/forma).",
+    "4) Verificacion de dimensiones y peso (identify)."
+  ],
+  "criterios": [
+    "Solo el zapato: sin personas, pies calzados, manos, ropa ni fondos urbanos.",
+    "Sin marcas de agua, texto promocional ni collages.",
+    "Toma profesional: producto centrado, fondo blanco/claro uniforme, buena luz, encuadre completo.",
+    "El titulo del producto acompana a la foto por construccion (mismo objeto de producto del retailer)."
+  ],
+  "spotCheckFullRes": [
+    "adidas-ultraboost-1-0-rosa-mujer/01-principal.jpg",
+    "new-balance-fresh-foam-x-880-v15-gris/01-principal.jpg",
+    "new-balance-327-gris-menta-mujer/01-principal.jpg",
+    "puma-rebound-layup-mid-nino-azul/01-principal.jpg",
+    "skechers-meteor-lights-krendox-nino-negro/01-principal.jpg"
+  ],
+  "ajustesPorQA": [
+    {
+      "slug": "adidas-ultraboost-1-0-rosa-mujer",
+      "cambio": "color \"Blanco\" -> \"Rosa Claro\" y slug renombrado: la foto es rosa palido (Wonder Quartz)."
+    },
+    {
+      "slug": "new-balance-fresh-foam-x-880-v15-gris",
+      "cambio": "color \"Negro\" -> \"Gris\" y slug renombrado: la foto es gris con detalles oscuros."
+    },
+    {
+      "slug": "new-balance-327-gris-menta-mujer",
+      "cambio": "color \"Gris\" -> \"Gris Menta\" y slug renombrado: la foto es gris con verde menta."
+    },
+    {
+      "slug": "nike-vomero-18-amarillo",
+      "cambio": "color \"Amarillo\" -> \"Amarillo Volt\": la foto es blanca con acentos volt."
+    },
+    {
+      "slug": "vans-sk8-hi-wide-negro",
+      "cambio": "Se reemplazo el candidato SK8-HI clasico (solo 1 angulo) por SK8-Hi Wide (8 angulos) para cumplir 2-4 imagenes."
+    }
+  ],
+  "resumen": {
+    "imagenesTotales": 179,
+    "aprobadas": 179,
+    "rechazadas": 0,
+    "rechazosPorMotivo": {},
+    "productosCandidatos": 811,
+    "productosSeleccionados": 60
+  },
+  "imagenes": [
+    {
+      "slug": "nike-court-vision-low-next-nature-blanco",
+      "archivo": "contenido/imagenes/nike-court-vision-low-next-nature-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-court-vision-low-next-nature-blanco",
+      "archivo": "contenido/imagenes/nike-court-vision-low-next-nature-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-court-vision-low-next-nature-blanco",
+      "archivo": "contenido/imagenes/nike-court-vision-low-next-nature-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-monarch-iv-blanco",
+      "archivo": "contenido/imagenes/nike-air-monarch-iv-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-monarch-iv-blanco",
+      "archivo": "contenido/imagenes/nike-air-monarch-iv-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-monarch-iv-blanco",
+      "archivo": "contenido/imagenes/nike-air-monarch-iv-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-vomero-18-amarillo",
+      "archivo": "contenido/imagenes/nike-vomero-18-amarillo/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-vomero-18-amarillo",
+      "archivo": "contenido/imagenes/nike-vomero-18-amarillo/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-vomero-18-amarillo",
+      "archivo": "contenido/imagenes/nike-vomero-18-amarillo/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-metcon-10-blanco",
+      "archivo": "contenido/imagenes/nike-metcon-10-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-metcon-10-blanco",
+      "archivo": "contenido/imagenes/nike-metcon-10-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-metcon-10-blanco",
+      "archivo": "contenido/imagenes/nike-metcon-10-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-max-270-negro",
+      "archivo": "contenido/imagenes/nike-air-max-270-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-max-270-negro",
+      "archivo": "contenido/imagenes/nike-air-max-270-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-max-270-negro",
+      "archivo": "contenido/imagenes/nike-air-max-270-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-pegasus-41-purpura-mujer",
+      "archivo": "contenido/imagenes/nike-pegasus-41-purpura-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-pegasus-41-purpura-mujer",
+      "archivo": "contenido/imagenes/nike-pegasus-41-purpura-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-pegasus-41-purpura-mujer",
+      "archivo": "contenido/imagenes/nike-pegasus-41-purpura-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-court-vision-low-mujer-cafe",
+      "archivo": "contenido/imagenes/nike-court-vision-low-mujer-cafe/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-court-vision-low-mujer-cafe",
+      "archivo": "contenido/imagenes/nike-court-vision-low-mujer-cafe/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-court-vision-low-mujer-cafe",
+      "archivo": "contenido/imagenes/nike-court-vision-low-mujer-cafe/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-run-swift-3-blanco-mujer",
+      "archivo": "contenido/imagenes/nike-run-swift-3-blanco-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-run-swift-3-blanco-mujer",
+      "archivo": "contenido/imagenes/nike-run-swift-3-blanco-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-run-swift-3-blanco-mujer",
+      "archivo": "contenido/imagenes/nike-run-swift-3-blanco-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-court-borough-low-recraft-nino-blanco",
+      "archivo": "contenido/imagenes/nike-court-borough-low-recraft-nino-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-court-borough-low-recraft-nino-blanco",
+      "archivo": "contenido/imagenes/nike-court-borough-low-recraft-nino-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-court-borough-low-recraft-nino-blanco",
+      "archivo": "contenido/imagenes/nike-court-borough-low-recraft-nino-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-max-270-nino-gris",
+      "archivo": "contenido/imagenes/nike-air-max-270-nino-gris/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-max-270-nino-gris",
+      "archivo": "contenido/imagenes/nike-air-max-270-nino-gris/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-air-max-270-nino-gris",
+      "archivo": "contenido/imagenes/nike-air-max-270-nino-gris/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-star-runner-5-nino-azul",
+      "archivo": "contenido/imagenes/nike-star-runner-5-nino-azul/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-star-runner-5-nino-azul",
+      "archivo": "contenido/imagenes/nike-star-runner-5-nino-azul/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "nike-star-runner-5-nino-azul",
+      "archivo": "contenido/imagenes/nike-star-runner-5-nino-azul/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-samba-negro-blanco",
+      "archivo": "contenido/imagenes/adidas-samba-negro-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-samba-negro-blanco",
+      "archivo": "contenido/imagenes/adidas-samba-negro-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-samba-negro-blanco",
+      "archivo": "contenido/imagenes/adidas-samba-negro-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-vl-court-3-0-borgona",
+      "archivo": "contenido/imagenes/adidas-vl-court-3-0-borgona/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-vl-court-3-0-borgona",
+      "archivo": "contenido/imagenes/adidas-vl-court-3-0-borgona/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-vl-court-3-0-borgona",
+      "archivo": "contenido/imagenes/adidas-vl-court-3-0-borgona/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-adizero-evo-sl-rojo",
+      "archivo": "contenido/imagenes/adidas-adizero-evo-sl-rojo/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-adizero-evo-sl-rojo",
+      "archivo": "contenido/imagenes/adidas-adizero-evo-sl-rojo/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-adizero-evo-sl-rojo",
+      "archivo": "contenido/imagenes/adidas-adizero-evo-sl-rojo/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-grand-court-low-blanco-mujer",
+      "archivo": "contenido/imagenes/adidas-grand-court-low-blanco-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-grand-court-low-blanco-mujer",
+      "archivo": "contenido/imagenes/adidas-grand-court-low-blanco-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-grand-court-low-blanco-mujer",
+      "archivo": "contenido/imagenes/adidas-grand-court-low-blanco-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-ultraboost-1-0-rosa-mujer",
+      "archivo": "contenido/imagenes/adidas-ultraboost-1-0-rosa-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-ultraboost-1-0-rosa-mujer",
+      "archivo": "contenido/imagenes/adidas-ultraboost-1-0-rosa-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-ultraboost-1-0-rosa-mujer",
+      "archivo": "contenido/imagenes/adidas-ultraboost-1-0-rosa-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-grand-court-3-0-nino-blanco",
+      "archivo": "contenido/imagenes/adidas-grand-court-3-0-nino-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-grand-court-3-0-nino-blanco",
+      "archivo": "contenido/imagenes/adidas-grand-court-3-0-nino-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-grand-court-3-0-nino-blanco",
+      "archivo": "contenido/imagenes/adidas-grand-court-3-0-nino-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-run-70s-2-0-nino-blanco",
+      "archivo": "contenido/imagenes/adidas-run-70s-2-0-nino-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-run-70s-2-0-nino-blanco",
+      "archivo": "contenido/imagenes/adidas-run-70s-2-0-nino-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-run-70s-2-0-nino-blanco",
+      "archivo": "contenido/imagenes/adidas-run-70s-2-0-nino-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-daily-4-0-oliva",
+      "archivo": "contenido/imagenes/adidas-daily-4-0-oliva/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-daily-4-0-oliva",
+      "archivo": "contenido/imagenes/adidas-daily-4-0-oliva/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "adidas-daily-4-0-oliva",
+      "archivo": "contenido/imagenes/adidas-daily-4-0-oliva/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-palermo-leather-blanco-mujer",
+      "archivo": "contenido/imagenes/puma-palermo-leather-blanco-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-palermo-leather-blanco-mujer",
+      "archivo": "contenido/imagenes/puma-palermo-leather-blanco-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-palermo-leather-blanco-mujer",
+      "archivo": "contenido/imagenes/puma-palermo-leather-blanco-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-palermo-azul-mujer",
+      "archivo": "contenido/imagenes/puma-palermo-azul-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-palermo-azul-mujer",
+      "archivo": "contenido/imagenes/puma-palermo-azul-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-palermo-azul-mujer",
+      "archivo": "contenido/imagenes/puma-palermo-azul-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-speedcat-plateado-mujer",
+      "archivo": "contenido/imagenes/puma-speedcat-plateado-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-speedcat-plateado-mujer",
+      "archivo": "contenido/imagenes/puma-speedcat-plateado-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-speedcat-plateado-mujer",
+      "archivo": "contenido/imagenes/puma-speedcat-plateado-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-easy-rider-vintage-rojo",
+      "archivo": "contenido/imagenes/puma-easy-rider-vintage-rojo/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-easy-rider-vintage-rojo",
+      "archivo": "contenido/imagenes/puma-easy-rider-vintage-rojo/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-easy-rider-vintage-rojo",
+      "archivo": "contenido/imagenes/puma-easy-rider-vintage-rojo/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-rebound-layup-mid-nino-azul",
+      "archivo": "contenido/imagenes/puma-rebound-layup-mid-nino-azul/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-rebound-layup-mid-nino-azul",
+      "archivo": "contenido/imagenes/puma-rebound-layup-mid-nino-azul/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "puma-rebound-layup-mid-nino-azul",
+      "archivo": "contenido/imagenes/puma-rebound-layup-mid-nino-azul/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-high-top-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-high-top-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-high-top-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-high-top-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-high-top-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-high-top-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-low-top-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-low-top-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-low-top-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-low-top-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-low-top-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-low-top-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-run-star-hike-canvas-platform-blanco",
+      "archivo": "contenido/imagenes/converse-run-star-hike-canvas-platform-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-run-star-hike-canvas-platform-blanco",
+      "archivo": "contenido/imagenes/converse-run-star-hike-canvas-platform-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-run-star-hike-canvas-platform-blanco",
+      "archivo": "contenido/imagenes/converse-run-star-hike-canvas-platform-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-high-top-platform-blanco-mujer",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-high-top-platform-blanco-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-high-top-platform-blanco-mujer",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-high-top-platform-blanco-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-high-top-platform-blanco-mujer",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-high-top-platform-blanco-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-madison-mid-top-negro-mujer",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-madison-mid-top-negro-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-madison-mid-top-negro-mujer",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-madison-mid-top-negro-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-madison-mid-top-negro-mujer",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-madison-mid-top-negro-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-core-ox-nino-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-core-ox-nino-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-core-ox-nino-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-core-ox-nino-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "converse-chuck-taylor-all-star-core-ox-nino-negro",
+      "archivo": "contenido/imagenes/converse-chuck-taylor-all-star-core-ox-nino-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-old-skool-negro-blanco",
+      "archivo": "contenido/imagenes/vans-old-skool-negro-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-old-skool-negro-blanco",
+      "archivo": "contenido/imagenes/vans-old-skool-negro-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-old-skool-negro-blanco",
+      "archivo": "contenido/imagenes/vans-old-skool-negro-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-sk8-hi-wide-negro",
+      "archivo": "contenido/imagenes/vans-sk8-hi-wide-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-sk8-hi-wide-negro",
+      "archivo": "contenido/imagenes/vans-sk8-hi-wide-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-sk8-hi-wide-negro",
+      "archivo": "contenido/imagenes/vans-sk8-hi-wide-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-authentic-blanco",
+      "archivo": "contenido/imagenes/vans-authentic-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-authentic-blanco",
+      "archivo": "contenido/imagenes/vans-authentic-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-authentic-blanco",
+      "archivo": "contenido/imagenes/vans-authentic-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-classic-slip-on-checkerboard-negro",
+      "archivo": "contenido/imagenes/vans-classic-slip-on-checkerboard-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-classic-slip-on-checkerboard-negro",
+      "archivo": "contenido/imagenes/vans-classic-slip-on-checkerboard-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-classic-slip-on-checkerboard-negro",
+      "archivo": "contenido/imagenes/vans-classic-slip-on-checkerboard-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-knu-skool-nino-negro",
+      "archivo": "contenido/imagenes/vans-knu-skool-nino-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-knu-skool-nino-negro",
+      "archivo": "contenido/imagenes/vans-knu-skool-nino-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "vans-knu-skool-nino-negro",
+      "archivo": "contenido/imagenes/vans-knu-skool-nino-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-574-gris",
+      "archivo": "contenido/imagenes/new-balance-574-gris/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-574-gris",
+      "archivo": "contenido/imagenes/new-balance-574-gris/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-574-gris",
+      "archivo": "contenido/imagenes/new-balance-574-gris/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-fresh-foam-x-880-v15-gris",
+      "archivo": "contenido/imagenes/new-balance-fresh-foam-x-880-v15-gris/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-fresh-foam-x-880-v15-gris",
+      "archivo": "contenido/imagenes/new-balance-fresh-foam-x-880-v15-gris/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-fresh-foam-x-880-v15-gris",
+      "archivo": "contenido/imagenes/new-balance-fresh-foam-x-880-v15-gris/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-327-gris-menta-mujer",
+      "archivo": "contenido/imagenes/new-balance-327-gris-menta-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-327-gris-menta-mujer",
+      "archivo": "contenido/imagenes/new-balance-327-gris-menta-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-327-gris-menta-mujer",
+      "archivo": "contenido/imagenes/new-balance-327-gris-menta-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-574-core-beige-mujer",
+      "archivo": "contenido/imagenes/new-balance-574-core-beige-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-574-core-beige-mujer",
+      "archivo": "contenido/imagenes/new-balance-574-core-beige-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-574-core-beige-mujer",
+      "archivo": "contenido/imagenes/new-balance-574-core-beige-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-440-negro",
+      "archivo": "contenido/imagenes/new-balance-440-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-440-negro",
+      "archivo": "contenido/imagenes/new-balance-440-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-440-negro",
+      "archivo": "contenido/imagenes/new-balance-440-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-327-nino-azul",
+      "archivo": "contenido/imagenes/new-balance-327-nino-azul/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-327-nino-azul",
+      "archivo": "contenido/imagenes/new-balance-327-nino-azul/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "new-balance-327-nino-azul",
+      "archivo": "contenido/imagenes/new-balance-327-nino-azul/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-leather-blanco",
+      "archivo": "contenido/imagenes/reebok-classic-leather-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-leather-blanco",
+      "archivo": "contenido/imagenes/reebok-classic-leather-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-leather-blanco",
+      "archivo": "contenido/imagenes/reebok-classic-leather-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-club-c-85-vintage-blanco",
+      "archivo": "contenido/imagenes/reebok-club-c-85-vintage-blanco/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-club-c-85-vintage-blanco",
+      "archivo": "contenido/imagenes/reebok-club-c-85-vintage-blanco/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-club-c-85-vintage-blanco",
+      "archivo": "contenido/imagenes/reebok-club-c-85-vintage-blanco/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-nylon-azul-marino",
+      "archivo": "contenido/imagenes/reebok-classic-nylon-azul-marino/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-nylon-azul-marino",
+      "archivo": "contenido/imagenes/reebok-classic-nylon-azul-marino/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-nylon-azul-marino",
+      "archivo": "contenido/imagenes/reebok-classic-nylon-azul-marino/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-freestyle-hi-blanco-mujer",
+      "archivo": "contenido/imagenes/reebok-freestyle-hi-blanco-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-freestyle-hi-blanco-mujer",
+      "archivo": "contenido/imagenes/reebok-freestyle-hi-blanco-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-freestyle-hi-blanco-mujer",
+      "archivo": "contenido/imagenes/reebok-freestyle-hi-blanco-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-az-blanco-mujer",
+      "archivo": "contenido/imagenes/reebok-classic-az-blanco-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-az-blanco-mujer",
+      "archivo": "contenido/imagenes/reebok-classic-az-blanco-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-classic-az-blanco-mujer",
+      "archivo": "contenido/imagenes/reebok-classic-az-blanco-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-princess-negro-mujer",
+      "archivo": "contenido/imagenes/reebok-princess-negro-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-princess-negro-mujer",
+      "archivo": "contenido/imagenes/reebok-princess-negro-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "reebok-princess-negro-mujer",
+      "archivo": "contenido/imagenes/reebok-princess-negro-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-dlites-gris-mujer",
+      "archivo": "contenido/imagenes/skechers-dlites-gris-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-dlites-gris-mujer",
+      "archivo": "contenido/imagenes/skechers-dlites-gris-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-dlites-gris-mujer",
+      "archivo": "contenido/imagenes/skechers-dlites-gris-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-uno-glide-step-lite-blanco-mujer",
+      "archivo": "contenido/imagenes/skechers-uno-glide-step-lite-blanco-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-uno-glide-step-lite-blanco-mujer",
+      "archivo": "contenido/imagenes/skechers-uno-glide-step-lite-blanco-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-uno-glide-step-lite-blanco-mujer",
+      "archivo": "contenido/imagenes/skechers-uno-glide-step-lite-blanco-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-bobs-b-cute-negro-mujer",
+      "archivo": "contenido/imagenes/skechers-bobs-b-cute-negro-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-bobs-b-cute-negro-mujer",
+      "archivo": "contenido/imagenes/skechers-bobs-b-cute-negro-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-bobs-b-cute-negro-mujer",
+      "archivo": "contenido/imagenes/skechers-bobs-b-cute-negro-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-arch-fit-glide-step-pro-negro",
+      "archivo": "contenido/imagenes/skechers-arch-fit-glide-step-pro-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-arch-fit-glide-step-pro-negro",
+      "archivo": "contenido/imagenes/skechers-arch-fit-glide-step-pro-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-arch-fit-glide-step-pro-negro",
+      "archivo": "contenido/imagenes/skechers-arch-fit-glide-step-pro-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-skech-flex-4-0-azul",
+      "archivo": "contenido/imagenes/skechers-skech-flex-4-0-azul/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-skech-flex-4-0-azul",
+      "archivo": "contenido/imagenes/skechers-skech-flex-4-0-azul/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-skech-flex-4-0-azul",
+      "archivo": "contenido/imagenes/skechers-skech-flex-4-0-azul/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-meteor-lights-krendox-nino-negro",
+      "archivo": "contenido/imagenes/skechers-meteor-lights-krendox-nino-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-meteor-lights-krendox-nino-negro",
+      "archivo": "contenido/imagenes/skechers-meteor-lights-krendox-nino-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "skechers-meteor-lights-krendox-nino-negro",
+      "archivo": "contenido/imagenes/skechers-meteor-lights-krendox-nino-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "crocs-classic-clog-naranja",
+      "archivo": "contenido/imagenes/crocs-classic-clog-naranja/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "crocs-classic-clog-naranja",
+      "archivo": "contenido/imagenes/crocs-classic-clog-naranja/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "crocs-classic-clog-naranja",
+      "archivo": "contenido/imagenes/crocs-classic-clog-naranja/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "crocs-classic-lined-clog-negro",
+      "archivo": "contenido/imagenes/crocs-classic-lined-clog-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "crocs-classic-lined-clog-negro",
+      "archivo": "contenido/imagenes/crocs-classic-lined-clog-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "crocs-classic-clog-nino-cafe",
+      "archivo": "contenido/imagenes/crocs-classic-clog-nino-cafe/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "crocs-classic-clog-nino-cafe",
+      "archivo": "contenido/imagenes/crocs-classic-clog-nino-cafe/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "crocs-classic-clog-nino-cafe",
+      "archivo": "contenido/imagenes/crocs-classic-clog-nino-cafe/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-assert-11-negro",
+      "archivo": "contenido/imagenes/under-armour-assert-11-negro/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-assert-11-negro",
+      "archivo": "contenido/imagenes/under-armour-assert-11-negro/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-assert-11-negro",
+      "archivo": "contenido/imagenes/under-armour-assert-11-negro/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-surge-5-gris",
+      "archivo": "contenido/imagenes/under-armour-surge-5-gris/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-surge-5-gris",
+      "archivo": "contenido/imagenes/under-armour-surge-5-gris/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-surge-5-gris",
+      "archivo": "contenido/imagenes/under-armour-surge-5-gris/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-charged-pursuit-4-rosa-mujer",
+      "archivo": "contenido/imagenes/under-armour-charged-pursuit-4-rosa-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-charged-pursuit-4-rosa-mujer",
+      "archivo": "contenido/imagenes/under-armour-charged-pursuit-4-rosa-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-charged-pursuit-4-rosa-mujer",
+      "archivo": "contenido/imagenes/under-armour-charged-pursuit-4-rosa-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-charged-rogue-5-blanco-mujer",
+      "archivo": "contenido/imagenes/under-armour-charged-rogue-5-blanco-mujer/01-principal.jpg",
+      "rol": "principal",
+      "veredicto": "aprobada",
+      "motivo": "Zapato solo, fondo blanco uniforme, encuadre completo, sin personas/manos/ropa/texto. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-charged-rogue-5-blanco-mujer",
+      "archivo": "contenido/imagenes/under-armour-charged-rogue-5-blanco-mujer/02-lateral.jpg",
+      "rol": "lateral",
+      "veredicto": "aprobada",
+      "motivo": "Vista lateral del zapato solo, fondo blanco uniforme, sin personas ni elementos ajenos. Aprobada en hoja de contacto."
+    },
+    {
+      "slug": "under-armour-charged-rogue-5-blanco-mujer",
+      "archivo": "contenido/imagenes/under-armour-charged-rogue-5-blanco-mujer/03-frente.jpg",
+      "rol": "frente",
+      "veredicto": "aprobada",
+      "motivo": "Vista adicional (frente/talon) del zapato solo, fondo blanco uniforme. Aprobada en hoja de contacto."
+    }
+  ]
+}

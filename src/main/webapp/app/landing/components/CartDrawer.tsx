@@ -5,6 +5,7 @@ import { faTrash, faShoppingBag, faArrowRight } from '@fortawesome/free-solid-sv
 import { Link } from 'react-router';
 
 import { buildImageUrl, formatCOP } from 'app/landing/utils/format';
+import { FREE_SHIPPING_MESSAGE } from 'app/landing/utils/constants';
 import QuantitySelector from './QuantitySelector';
 import EmptyState from './EmptyState';
 import useCart from 'app/landing/hooks/useCart';
@@ -20,7 +21,14 @@ export const CartDrawer = ({ show, onHide }: CartDrawerProps) => {
   const itemsCount = cartItems.reduce((sum, item) => sum + item.cantidad, 0);
 
   return (
-    <Offcanvas show={show} onHide={onHide} placement="end" className="kn-cart-drawer" style={{ width: '420px', maxWidth: '100%' }}>
+    <Offcanvas
+      show={show}
+      onHide={onHide}
+      placement="end"
+      className="kn-cart-drawer"
+      container={() => document.querySelector('.storefront') ?? document.body}
+      style={{ width: '420px', maxWidth: '100%' }}
+    >
       <Offcanvas.Header className="kn-cart-drawer__header border-bottom">
         <div className="d-flex align-items-center gap-2">
           <FontAwesomeIcon icon={faShoppingBag} className="text-primary" />
@@ -58,7 +66,7 @@ export const CartDrawer = ({ show, onHide }: CartDrawerProps) => {
                     <div key={item.id} className="kn-cart-drawer__item d-flex gap-3 p-2 rounded">
                       <Link to={`/productos/${item.producto.slug}`} onClick={onHide} className="flex-shrink-0">
                         <img
-                          src={buildImageUrl(imagen?.imagenContentType, imagen?.imagen)}
+                          src={buildImageUrl(imagen?.imagenContentType, imagen?.imagen, undefined, imagen?.imagenUrl)}
                           alt={item.producto.nombre}
                           className="rounded"
                           style={{ width: '80px', height: '100px', objectFit: 'cover' }}
@@ -110,6 +118,7 @@ export const CartDrawer = ({ show, onHide }: CartDrawerProps) => {
             </div>
 
             <div className="kn-cart-drawer__footer border-top p-3">
+              <div className="text-muted small mb-2">{FREE_SHIPPING_MESSAGE}</div>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <span className="text-muted">Total estimado</span>
                 <span className="h5 fw-bold mb-0">{formatCOP(total)}</span>

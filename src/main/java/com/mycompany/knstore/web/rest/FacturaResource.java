@@ -1,8 +1,13 @@
 package com.mycompany.knstore.web.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mycompany.knstore.domain.Factura;
+import com.mycompany.knstore.domain.Pedido;
 import com.mycompany.knstore.repository.FacturaRepository;
 import com.mycompany.knstore.service.FacturaService;
 import com.mycompany.knstore.service.dto.FacturaDTO;
+import com.mycompany.knstore.service.invoice.FacturaPdfService;
+import com.mycompany.knstore.service.mapper.FacturaMapper;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +50,24 @@ public class FacturaResource {
 
     private final FacturaRepository facturaRepository;
 
-    public FacturaResource(FacturaService facturaService, FacturaRepository facturaRepository) {
+    private final FacturaPdfService facturaPdfService;
+
+    private final FacturaMapper facturaMapper;
+
+    private final ObjectMapper objectMapper;
+
+    public FacturaResource(
+        FacturaService facturaService,
+        FacturaRepository facturaRepository,
+        FacturaPdfService facturaPdfService,
+        FacturaMapper facturaMapper,
+        ObjectMapper objectMapper
+    ) {
         this.facturaService = facturaService;
         this.facturaRepository = facturaRepository;
+        this.facturaPdfService = facturaPdfService;
+        this.facturaMapper = facturaMapper;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -57,7 +78,7 @@ public class FacturaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaDto(#facturaDTO)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<FacturaDTO> createFactura(@Valid @RequestBody FacturaDTO facturaDTO) throws URISyntaxException {
         LOG.debug("REST request to save Factura : {}", facturaDTO);
         if (facturaDTO.getId() != null) {
@@ -80,9 +101,7 @@ public class FacturaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessFacturaId(#id) and @resourceAccessService.canAccessFacturaDto(#facturaDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<FacturaDTO> updateFactura(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody FacturaDTO facturaDTO
@@ -117,9 +136,7 @@ public class FacturaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessFacturaId(#id) and @resourceAccessService.canAccessFacturaDto(#facturaDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<FacturaDTO> partialUpdateFactura(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody FacturaDTO facturaDTO
@@ -173,13 +190,62 @@ public class FacturaResource {
     }
 
     /**
+     * {@code GET  /facturas/:id/download} : download the "id" factura with QR data.
+     *
+     * @param id the id of the facturaDTO to download.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the factura data as downloadable JSON.
+     */
+    @GetMapping("/{id}/download")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    public ResponseEntity<byte[]> downloadFactura(@PathVariable("id") String id) throws java.io.IOException {
+        LOG.debug("REST request to download Factura : {}", id);
+        FacturaDTO facturaDTO = facturaService
+            .findOne(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        String filename = "factura-" + (facturaDTO.getPrefijo() != null ? facturaDTO.getPrefijo() + "-" : "") + id + ".json";
+        byte[] content = objectMapper.writeValueAsBytes(facturaDTO);
+
+        return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(content);
+    }
+
+    /**
+     * {@code GET  /facturas/:id/pdf} : download the "id" factura as PDF.
+     *
+     * @param id the id of the facturaDTO to download.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the PDF content.
+     */
+    @GetMapping("/{id}/pdf")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    public ResponseEntity<byte[]> downloadFacturaPdf(@PathVariable("id") String id) {
+        LOG.debug("REST request to download Factura PDF : {}", id);
+        FacturaDTO facturaDTO = facturaService
+            .findOne(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        Factura factura = facturaMapper.toEntity(facturaDTO);
+        Pedido pedido = factura.getPago() != null ? factura.getPago().getPedido() : null;
+        byte[] content = facturaPdfService.generarPdf(factura, pedido);
+        String numero = facturaDTO.getNumero() != null ? facturaDTO.getNumero() : id;
+        String filename = numero + ".pdf";
+
+        return ResponseEntity.ok()
+            .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(content);
+    }
+
+    /**
      * {@code DELETE  /facturas/:id} : delete the "id" factura.
      *
      * @param id the id of the facturaDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessFacturaId(#id)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<Void> deleteFactura(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Factura : {}", id);
         facturaService.delete(id);

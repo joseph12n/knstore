@@ -53,6 +53,7 @@ export const SettingsPage = () => {
                 required: { value: true, message: 'Se requiere que ingrese su nombre.' },
                 minLength: { value: 1, message: 'Se requiere que su nombre tenga por lo menos 1 caracter' },
                 maxLength: { value: 50, message: 'Su nombre no puede tener más de 50 caracteres' },
+                pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
               }}
               data-cy="firstname"
             />
@@ -65,6 +66,7 @@ export const SettingsPage = () => {
                 required: { value: true, message: 'Se requiere que ingrese sus apellidos.' },
                 minLength: { value: 1, message: 'Se requiere que sus apellidos tengan por lo menos 1 caracter' },
                 maxLength: { value: 50, message: 'Sus apellidos no pueden tener más de 50 caracteres' },
+                pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
               }}
               data-cy="lastname"
             />

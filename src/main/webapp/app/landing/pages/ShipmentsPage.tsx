@@ -1,49 +1,37 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router';
 import dayjs from 'dayjs';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getEnvios } from 'app/entities/envio/envio.reducer';
-import { getEntities as getPedidos } from 'app/entities/pedido/pedido.reducer';
-import { getEntities as getCuentas } from 'app/entities/cuenta/cuenta.reducer';
+import useCuentaActual from 'app/landing/hooks/useCuentaActual';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import EmptyState from 'app/landing/components/EmptyState';
+import Pagination from 'app/landing/components/Pagination';
 import { SHIPPING_STATUS_LABELS } from 'app/landing/utils/constants';
+
+const ITEMS_PER_PAGE = 10;
 
 export const ShipmentsPage = () => {
   const dispatch = useAppDispatch();
-  const account = useAppSelector(state => state.authentication.account);
+  const { account } = useCuentaActual();
   const envios = useAppSelector(state => state.envio.entities) ?? [];
-  const pedidos = useAppSelector(state => state.pedido.entities) ?? [];
-  const cuentas = useAppSelector(state => state.cuenta.entities) ?? [];
-  const loading = useAppSelector(state => state.envio.loading || state.pedido.loading || state.cuenta.loading);
+  const totalItems = useAppSelector(state => state.envio.totalItems ?? 0);
+  const loading = useAppSelector(state => state.envio.loading);
+
+  const [activePage, setActivePage] = useState(1);
 
   useEffect(() => {
-    dispatch(getSession());
-    dispatch(getCuentas({ page: 0, size: 100, sort: 'primerNombre,asc' }));
-    dispatch(getPedidos({ page: 0, size: 100, sort: 'numeroPedido,desc' }));
-    dispatch(getEnvios({ page: 0, size: 100, sort: 'id,desc' }));
-  }, [dispatch]);
-
-  const cuentaUsuario = useMemo(() => cuentas.find(c => c.user?.login === account.login), [cuentas, account.login]);
-
-  const pedidosUsuarioIds = useMemo(
-    () => new Set(pedidos.filter(p => p.cuenta?.id === cuentaUsuario?.id).map(p => p.id)),
-    [pedidos, cuentaUsuario],
-  );
-
-  const enviosUsuario = useMemo(
-    () => envios.filter(e => e.pedido?.id && pedidosUsuarioIds.has(e.pedido.id)).sort((a, b) => (b.id || '').localeCompare(a.id || '')),
-    [envios, pedidosUsuarioIds],
-  );
+    // El backend pagina y filtra por la cuenta del cliente autenticado.
+    dispatch(getEnvios({ page: activePage - 1, size: ITEMS_PER_PAGE, sort: 'id,desc' }));
+  }, [dispatch, activePage, account.login]);
 
   if (loading) {
     return <LoadingSpinner fullScreen />;
   }
 
-  if (enviosUsuario.length === 0) {
+  if (envios.length === 0) {
     return (
       <div className="kn-fade-in">
         <h1 className="h2 fw-bold mb-4">Mis envíos</h1>
@@ -51,7 +39,7 @@ export const ShipmentsPage = () => {
           title="Aún no tienes envíos registrados"
           description="Cuando tu pedido sea despachado, podrás rastrearlo aquí."
           action={
-            <Link to="/cuenta/pedidos" className="btn btn-primary">
+            <Link to="/mi-cuenta/pedidos" className="btn btn-primary">
               Ver mis pedidos
             </Link>
           }
@@ -64,7 +52,7 @@ export const ShipmentsPage = () => {
     <div className="kn-fade-in">
       <h1 className="h2 fw-bold mb-4">Mis envíos</h1>
       <Row className="g-4">
-        {enviosUsuario.map(envio => (
+        {envios.map(envio => (
           <Col md={6} key={envio.id}>
             <Card className="h-100">
               <Card.Body>
@@ -98,7 +86,7 @@ export const ShipmentsPage = () => {
                 </Row>
 
                 <div className="d-flex gap-2">
-                  <Link to={`/cuenta/pedidos/${envio.pedido?.id}`} className="btn btn-outline-primary btn-sm flex-grow-1">
+                  <Link to={`/mi-cuenta/pedidos/${envio.pedido?.id}`} className="btn btn-outline-primary btn-sm flex-grow-1">
                     Ver pedido
                   </Link>
                   {envio.urlRastreo && (
@@ -112,6 +100,7 @@ export const ShipmentsPage = () => {
           </Col>
         ))}
       </Row>
+      <Pagination activePage={activePage} itemsPerPage={ITEMS_PER_PAGE} totalItems={totalItems} onPageChange={setActivePage} />
     </div>
   );
 };

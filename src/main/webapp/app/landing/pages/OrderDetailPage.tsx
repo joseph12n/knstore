@@ -3,9 +3,10 @@ import { useParams } from 'react-router';
 import { Badge, Button, Card, Col, Row, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getEntity as getPedido, partialUpdateEntity as partialUpdatePedido } from 'app/entities/pedido/pedido.reducer';
+import { getEntity as getPedido } from 'app/entities/pedido/pedido.reducer';
 import { getEntities as getItemsPedido } from 'app/entities/item-pedido/item-pedido.reducer';
 import { getEntities as getPagos } from 'app/entities/pago/pago.reducer';
 import { getEntities as getEnvios } from 'app/entities/envio/envio.reducer';
@@ -14,8 +15,62 @@ import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import EmptyState from 'app/landing/components/EmptyState';
 import ErrorAlert from 'app/landing/components/ErrorAlert';
 import OrderCancelModal from 'app/landing/components/OrderCancelModal';
-import { ORDER_STATUS_COLORS, ORDER_STATUS_LABELS, PAYMENT_STATUS_LABELS, SHIPPING_STATUS_LABELS } from 'app/landing/utils/constants';
+import {
+  ORDER_STATUS_COLORS,
+  ORDER_STATUS_LABELS,
+  PAYMENT_STATUS_LABELS,
+  SHIPPING_STATUS_LABELS,
+  esCancelablePedido,
+} from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
+import { downloadFacturaPdf } from 'app/landing/utils/invoice';
+import { iniciarPago } from 'app/landing/services/checkout.service';
+
+// RF-075: se permite intentar el pago solo mientras el pedido está PENDING y el
+// pago no alcanzó un estado definitivo (APROBADO/reembolsado/fallido final).
+const puedeIntentarPago = (estado: string, pago?: { estado?: string }): boolean =>
+  estado === 'PENDING' && (!pago || pago.estado === 'REJECTED' || pago.estado === 'PENDING' || pago.estado === undefined);
+
+interface OrderActionsProps {
+  canPagAhora: boolean;
+  isPaying: boolean;
+  onPagarAhora: () => void;
+  canCancel: boolean;
+  onCancel: () => void;
+  facturaId?: string;
+  isDownloadingFactura: boolean;
+  onDownloadFactura: () => void;
+}
+
+const OrderDetailActions = ({
+  canPagAhora,
+  isPaying,
+  onPagarAhora,
+  canCancel,
+  onCancel,
+  facturaId,
+  isDownloadingFactura,
+  onDownloadFactura,
+}: OrderActionsProps) => (
+  <div className="d-flex gap-2">
+    {canPagAhora && (
+      <Button variant="primary" size="sm" onClick={onPagarAhora} disabled={isPaying}>
+        {isPaying ? 'Procesando...' : 'Pagar ahora'}
+      </Button>
+    )}
+    {canCancel && (
+      <Button variant="outline-danger" size="sm" onClick={onCancel}>
+        Cancelar pedido
+      </Button>
+    )}
+    {facturaId && (
+      <Button variant="outline-primary" size="sm" onClick={onDownloadFactura} disabled={isDownloadingFactura}>
+        {isDownloadingFactura ? 'Descargando...' : 'Descargar factura'}
+      </Button>
+    )}
+  </div>
+);
 
 export const OrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,6 +86,8 @@ export const OrderDetailPage = () => {
 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isDownloadingFactura, setIsDownloadingFactura] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
 
   const loadPedido = () => {
     if (id) {
@@ -44,18 +101,48 @@ export const OrderDetailPage = () => {
 
   useEffect(loadPedido, [dispatch, id]);
 
-  const handleCancel = async () => {
+  const handleCancel = async (motivo: string) => {
     if (!id) return;
     setIsCancelling(true);
     try {
-      await dispatch(partialUpdatePedido({ id, estado: 'CANCELLED' }));
-      toast.success('Pedido cancelado correctamente');
+      await axios.post(`api/pedidos/${id}/cancelar`, { motivo });
+      toast.success(
+        pago?.estado === 'APPROVED' ? 'Pedido cancelado y reembolso solicitado correctamente' : 'Pedido cancelado correctamente',
+      );
       loadPedido();
-    } catch {
-      toast.error('No pudimos cancelar el pedido. Inténtalo de nuevo.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'No pudimos cancelar el pedido. Inténtalo de nuevo.'));
     } finally {
       setIsCancelling(false);
       setShowCancelModal(false);
+    }
+  };
+
+  const handleDownloadFactura = async () => {
+    if (!factura?.id) return;
+    setIsDownloadingFactura(true);
+    try {
+      await downloadFacturaPdf(factura.id, factura.prefijo);
+    } catch {
+      window.location.href = `api/facturas/${factura.id}/download`;
+    } finally {
+      setIsDownloadingFactura(false);
+    }
+  };
+
+  // RF-075: se permite intentar el pago nuevamente solo mientras el pedido está
+  // PENDING y el pago no alcanzó un estado definitivo (APROBADO/reembolsado/etc.).
+  const handlePagarAhora = async () => {
+    if (!id) return;
+    setIsPaying(true);
+    try {
+      await iniciarPago(id);
+      toast.success('Pago procesado correctamente.');
+      loadPedido();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'No pudimos procesar el pago. Inténtalo de nuevo.'));
+    } finally {
+      setIsPaying(false);
     }
   };
 
@@ -83,7 +170,7 @@ export const OrderDetailPage = () => {
           title="Pedido no encontrado"
           description="El pedido que buscas no existe o no tienes acceso."
           action={
-            <Link to="/cuenta/pedidos" className="btn btn-primary">
+            <Link to="/mi-cuenta/pedidos" className="btn btn-primary">
               Volver a mis pedidos
             </Link>
           }
@@ -93,11 +180,14 @@ export const OrderDetailPage = () => {
   }
 
   const estado = pedido.estado || 'Pendiente';
-  const canCancel = estado === 'PENDING';
+  // RNF-032: cancelacion visible solo dentro de la ventana de 1 hora desde la compra.
+  const canCancel = esCancelablePedido(pedido);
+  // RF-075: reintento de pago en pedidos PENDING cuyo pago no está aprobado.
+  const canPagAhora = puedeIntentarPago(estado, pago);
 
   return (
     <div className="kn-fade-in">
-      <Link to="/cuenta/pedidos" className="text-muted small d-block mb-3">
+      <Link to="/mi-cuenta/pedidos" className="text-muted small d-block mb-3">
         ← Volver a mis pedidos
       </Link>
       <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
@@ -105,19 +195,16 @@ export const OrderDetailPage = () => {
           <h1 className="h2 fw-bold mb-1">Pedido #{pedido.numeroPedido || pedido.id}</h1>
           <Badge bg={ORDER_STATUS_COLORS[estado] || 'secondary'}>{ORDER_STATUS_LABELS[estado] || estado}</Badge>
         </div>
-        <div className="d-flex gap-2">
-          {canCancel && (
-            <Button variant="outline-danger" size="sm" onClick={() => setShowCancelModal(true)}>
-              Cancelar pedido
-            </Button>
-          )}
-          {factura?.codigoQr && (
-            // TODO backend: exponer endpoint de descarga de factura con QR (RF-068).
-            <Button variant="outline-primary" size="sm">
-              Descargar factura
-            </Button>
-          )}
-        </div>
+        <OrderDetailActions
+          canPagAhora={canPagAhora}
+          isPaying={isPaying}
+          onPagarAhora={handlePagarAhora}
+          canCancel={canCancel}
+          onCancel={() => setShowCancelModal(true)}
+          facturaId={factura?.id}
+          isDownloadingFactura={isDownloadingFactura}
+          onDownloadFactura={handleDownloadFactura}
+        />
       </div>
 
       <Row className="g-4">
@@ -271,6 +358,7 @@ export const OrderDetailPage = () => {
         onConfirm={handleCancel}
         isSubmitting={isCancelling}
         numeroPedido={pedido.numeroPedido}
+        reembolsoIncluido={pago?.estado === 'APPROVED'}
       />
     </div>
   );

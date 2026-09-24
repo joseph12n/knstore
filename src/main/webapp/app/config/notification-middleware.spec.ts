@@ -11,7 +11,7 @@ import {
 } from 'app/shared/jhipster/constants';
 import { ProblemWithMessageType } from 'app/shared/jhipster/problem-details';
 
-import notificationMiddleware from './notification-middleware';
+import notificationMiddleware, { translateErrorKey } from './notification-middleware';
 
 vi.mock('react-toastify', () => ({
   toast: {
@@ -37,6 +37,15 @@ describe('Notification Middleware', () => {
       status: 201,
       statusText: 'Created',
       headers: { [MESSAGE_ALERT_HEADER_NAME]: 'foo.created', [MESSAGE_PARAM_HEADER_NAME]: 'foo' },
+    },
+  };
+
+  const HEADER_TECHNICAL_SUCCESS = {
+    type: SUCCESS_TYPE,
+    payload: {
+      status: 201,
+      statusText: 'Created',
+      headers: { [MESSAGE_ALERT_HEADER_NAME]: 'A producto is created with identifier 5' },
     },
   };
 
@@ -164,9 +173,12 @@ describe('Notification Middleware', () => {
     },
   };
 
-  const makeStore = () =>
+  const CLIENTE_STATE = { authentication: { account: { authorities: ['ROLE_CLIENTE'] } } };
+  const ADMIN_STATE = { authentication: { account: { authorities: ['ROLE_ADMIN'] } } };
+
+  const makeStore = (initialState: any = CLIENTE_STATE) =>
     configureStore({
-      reducer: (state = {}) => state,
+      reducer: (state: any = initialState) => state,
       middleware: getDefaultMiddleware => getDefaultMiddleware().concat(notificationMiddleware),
     });
 
@@ -192,6 +204,17 @@ describe('Notification Middleware', () => {
     expect(toast.success).toHaveBeenCalledWith(expect.stringContaining('foo.created'));
   });
 
+  it('should not toast technical entity success alerts for non-admin users', () => {
+    expect(store.dispatch(HEADER_TECHNICAL_SUCCESS).payload.status).toEqual(201);
+    expect(toast.success).not.toHaveBeenCalled();
+  });
+
+  it('should toast technical entity success alerts for admin users', () => {
+    store = makeStore(ADMIN_STATE);
+    expect(store.dispatch(HEADER_TECHNICAL_SUCCESS).payload.status).toEqual(201);
+    expect(toast.success).toHaveBeenCalledWith('A producto is created with identifier 5');
+  });
+
   it('should trigger an error toast message and return error', () => {
     expect(store.dispatch(DEFAULT_ERROR).error.message).toEqual('foo');
     expect(toast.error).toHaveBeenCalledWith('foo');
@@ -204,7 +227,7 @@ describe('Notification Middleware', () => {
 
   it('should trigger an error toast message and return error for 400 response code', () => {
     expect(store.dispatch(VALIDATION_ERROR).error.response.data.message).toEqual('error.validation');
-    expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('Error on field "MinField"'));
+    expect(toast.error).toHaveBeenCalledWith(expect.stringContaining('El valor del campo no cumple el formato esperado.'));
   });
 
   it('should trigger an error toast message and return error for 404 response code', () => {
@@ -246,5 +269,77 @@ describe('Notification Middleware', () => {
   it('should trigger an error toast message and return error for unknown error', () => {
     expect(store.dispatch(UNKNOWN_ERROR).error.isAxiosError).toEqual(true);
     expect(toast.error).toHaveBeenCalledWith('Unknown error!');
+  });
+
+  it('should translate backend error keys to spanish in error toast messages', () => {
+    store = makeStore(CLIENTE_STATE);
+    const BACKEND_ERROR = {
+      type: ERROR_TYPE,
+      error: {
+        isAxiosError: true,
+        response: {
+          data: {
+            message: 'error.emailexists',
+            status: 400,
+          },
+          status: 400,
+        },
+      },
+    };
+    expect(store.dispatch(BACKEND_ERROR).error.response.data.message).toEqual('error.emailexists');
+    expect(toast.error).toHaveBeenCalledWith('El correo electrónico ya está registrado.');
+  });
+
+  it('should prefer the message key over the detail for non-admin users', () => {
+    store = makeStore(CLIENTE_STATE);
+    const BACKEND_ERROR = {
+      type: ERROR_TYPE,
+      error: {
+        isAxiosError: true,
+        response: {
+          data: {
+            detail: 'Internal server detail',
+            message: 'error.emailexists',
+            status: 400,
+          },
+          status: 400,
+        },
+      },
+    };
+    expect(store.dispatch(BACKEND_ERROR).error.response.data.message).toEqual('error.emailexists');
+    expect(toast.error).toHaveBeenCalledWith('El correo electrónico ya está registrado.');
+  });
+
+  it('should prefer the technical detail over the message key for admin users', () => {
+    store = makeStore(ADMIN_STATE);
+    const BACKEND_ERROR = {
+      type: ERROR_TYPE,
+      error: {
+        isAxiosError: true,
+        response: {
+          data: {
+            detail: 'Internal server detail',
+            message: 'error.emailexists',
+            status: 400,
+          },
+          status: 400,
+        },
+      },
+    };
+    expect(store.dispatch(BACKEND_ERROR).error.response.data.message).toEqual('error.emailexists');
+    expect(toast.error).toHaveBeenCalledWith('Internal server detail');
+  });
+
+  it('should translate known backend error keys and leave unknown keys untouched', () => {
+    expect(translateErrorKey('error.emailexists')).toEqual('El correo electrónico ya está registrado.');
+    expect(translateErrorKey('error.userexists')).toEqual('El usuario ya está registrado.');
+    expect(translateErrorKey('error.login')).toEqual('El nombre de usuario ya está registrado.');
+    expect(translateErrorKey('error.validation')).toEqual('Verifica los datos del formulario.');
+    expect(translateErrorKey('error.documentoduplicado')).toEqual('El tipo y número de documento ya están registrados.');
+    expect(translateErrorKey('error.badcredentials')).toEqual('Usuario o contraseña incorrectos.');
+    expect(translateErrorKey('error.password')).toEqual('La contraseña no es válida.');
+    expect(translateErrorKey('error.idexists')).toEqual('El identificador ya está registrado.');
+    expect(translateErrorKey('foo.unknown')).toEqual('foo.unknown');
+    expect(translateErrorKey(undefined)).toBeUndefined();
   });
 });

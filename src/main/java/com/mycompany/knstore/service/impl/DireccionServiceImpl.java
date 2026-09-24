@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Direccion}.
@@ -128,6 +129,35 @@ public class DireccionServiceImpl implements DireccionService {
     public void delete(String id) {
         LOG.debug("Request to delete Direccion : {}", id);
         direccionRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public DireccionDTO setPredeterminada(String id) {
+        LOG.debug("Request to set predeterminada Direccion : {}", id);
+        Direccion direccion = direccionRepository.findById(id).orElseThrow(() -> new IllegalStateException("Direccion not found"));
+
+        if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            String cuentaId = getCurrentAccountId().orElseThrow(() -> new IllegalStateException("Current client account not found"));
+            if (direccion.getCuenta() == null || !cuentaId.equals(direccion.getCuenta().getId())) {
+                throw new IllegalStateException("Direccion does not belong to the current account");
+            }
+        }
+
+        String cuentaId = direccion.getCuenta() != null ? direccion.getCuenta().getId() : null;
+        if (cuentaId != null) {
+            List<Direccion> direccionesCuenta = direccionRepository.findByCuentaId(cuentaId);
+            for (Direccion d : direccionesCuenta) {
+                if (Boolean.TRUE.equals(d.getActivo())) {
+                    d.setActivo(false);
+                    direccionRepository.save(d);
+                }
+            }
+        }
+
+        direccion.setActivo(true);
+        direccion = direccionRepository.save(direccion);
+        return direccionMapper.toDto(direccion);
     }
 
     private Optional<String> getCurrentAccountId() {

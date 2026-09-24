@@ -7,10 +7,12 @@ import {
   faBox,
   faHome,
   faMapMarkerAlt,
+  faMoon,
   faShoppingBag,
   faShoppingCart,
   faSignInAlt,
   faSignOutAlt,
+  faSun,
   faUser,
   faCreditCard,
   faTruck,
@@ -23,6 +25,7 @@ import { ISubcategoria } from 'app/shared/model/subcategoria.model';
 import { logout } from 'app/shared/reducers/authentication';
 import { STORE_NAME } from 'app/landing/utils/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { useIsMobileView } from 'app/landing/hooks/useIsMobileView';
 import { Authority } from 'app/shared/jhipster/constants';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import SearchBox from './SearchBox';
@@ -32,9 +35,11 @@ import useCart from 'app/landing/hooks/useCart';
 interface StoreHeaderProps {
   categorias: ICategoria[];
   subcategorias: ISubcategoria[];
+  tema: 'light' | 'dark';
+  onToggleTema: () => void;
 }
 
-export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => {
+export const StoreHeader = ({ categorias, subcategorias, tema, onToggleTema }: StoreHeaderProps) => {
   const categoriasList = categorias ?? [];
   const subcategoriasList = subcategorias ?? [];
   const { count } = useCart();
@@ -46,6 +51,7 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
   const account = useAppSelector(state => state.authentication.account);
   const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
   const isAdminOrManager = hasAnyAuthority(account.authorities ?? [], [Authority.ADMIN, Authority.MANAGER]);
+  const isMobile = useIsMobileView();
 
   const cartCount = count;
 
@@ -83,6 +89,15 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
             </div>
 
             <Nav className="flex-row align-items-center gap-3">
+              <button
+                type="button"
+                className="btn btn-link p-0"
+                onClick={onToggleTema}
+                aria-label={tema === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
+                title={tema === 'dark' ? 'Modo claro' : 'Modo oscuro'}
+              >
+                <FontAwesomeIcon icon={tema === 'dark' ? faSun : faMoon} />
+              </button>
               {isAuthenticated ? (
                 <NavDropdown
                   title={
@@ -94,19 +109,19 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
                   id="account-dropdown"
                   align="end"
                 >
-                  <NavDropdown.Item as={Link as any} to="/cuenta">
+                  <NavDropdown.Item as={Link as any} to="/mi-cuenta">
                     <FontAwesomeIcon icon={faUser} className="me-2" />
                     Perfil
                   </NavDropdown.Item>
-                  <NavDropdown.Item as={Link as any} to="/cuenta/pedidos">
+                  <NavDropdown.Item as={Link as any} to="/mi-cuenta/pedidos">
                     <FontAwesomeIcon icon={faShoppingBag} className="me-2" />
                     Mis pedidos
                   </NavDropdown.Item>
-                  <NavDropdown.Item as={Link as any} to="/cuenta/direcciones">
+                  <NavDropdown.Item as={Link as any} to="/mi-cuenta/direcciones">
                     <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
                     Direcciones
                   </NavDropdown.Item>
-                  {isAdminOrManager && (
+                  {isAdminOrManager && !isMobile && (
                     <>
                       <NavDropdown.Divider />
                       <NavDropdown.Item as={Link as any} to="/admin/user-management">
@@ -210,31 +225,31 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
             {isAuthenticated && (
               <>
                 <hr className="my-2" />
-                <Nav.Link as={Link as any} to="/cuenta" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faUser} className="me-2" />
                   Mi cuenta
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/pedidos" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/pedidos" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faShoppingBag} className="me-2" />
                   Mis pedidos
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/direcciones" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/direcciones" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2" />
                   Direcciones
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/pagos" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/pagos" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faCreditCard} className="me-2" />
                   Pagos
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/envios" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/envios" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faTruck} className="me-2" />
                   Envíos
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/facturas" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/facturas" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faFileInvoice} className="me-2" />
                   Facturas
                 </Nav.Link>
-                <Nav.Link as={Link as any} to="/cuenta/seguridad" onClick={() => setShowMobileMenu(false)}>
+                <Nav.Link as={Link as any} to="/mi-cuenta/seguridad" onClick={() => setShowMobileMenu(false)}>
                   <FontAwesomeIcon icon={faLock} className="me-2" />
                   Seguridad
                 </Nav.Link>
@@ -242,7 +257,7 @@ export const StoreHeader = ({ categorias, subcategorias }: StoreHeaderProps) => 
                   <FontAwesomeIcon icon={faShoppingCart} className="me-2" />
                   Mi carrito
                 </Nav.Link>
-                {isAdminOrManager && (
+                {isAdminOrManager && !isMobile && (
                   <Nav.Link as={Link as any} to="/admin/user-management" onClick={() => setShowMobileMenu(false)}>
                     <FontAwesomeIcon icon={faBox} className="me-2" />
                     Panel administrativo

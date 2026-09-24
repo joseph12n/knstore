@@ -12,7 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Carrito;
 import com.mycompany.knstore.domain.Cuenta;
+import com.mycompany.knstore.domain.ItemCarrito;
 import com.mycompany.knstore.repository.CarritoRepository;
+import com.mycompany.knstore.repository.ItemCarritoRepository;
 import com.mycompany.knstore.service.dto.CarritoDTO;
 import com.mycompany.knstore.service.mapper.CarritoMapper;
 import java.math.BigDecimal;
@@ -33,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@WithMockUser
+@WithMockUser(roles = { "ADMIN", "MANAGER" })
 class CarritoResourceIT {
 
     private static final BigDecimal DEFAULT_SUBTOTAL = new BigDecimal(0);
@@ -50,6 +52,9 @@ class CarritoResourceIT {
 
     @Autowired
     private CarritoRepository carritoRepository;
+
+    @Autowired
+    private ItemCarritoRepository itemCarritoRepository;
 
     @Autowired
     private CarritoMapper carritoMapper;
@@ -101,6 +106,7 @@ class CarritoResourceIT {
     @AfterEach
     void cleanup() {
         if (insertedCarrito != null) {
+            itemCarritoRepository.deleteAll(itemCarritoRepository.findByCarritoId(insertedCarrito.getId()));
             carritoRepository.delete(insertedCarrito);
             insertedCarrito = null;
         }
@@ -193,6 +199,11 @@ class CarritoResourceIT {
         Carrito updatedCarrito = carritoRepository.findById(carrito.getId()).orElseThrow();
         updatedCarrito.subtotal(UPDATED_SUBTOTAL).fechaActualizacion(UPDATED_FECHA_ACTUALIZACION);
         CarritoDTO carritoDTO = carritoMapper.toDto(updatedCarrito);
+        if (carritoDTO.getCuenta() == null) {
+            com.mycompany.knstore.service.dto.CuentaDTO relDto = new com.mycompany.knstore.service.dto.CuentaDTO();
+            relDto.setId(insertedCarrito.getCuenta().getId());
+            carritoDTO.setCuenta(relDto);
+        }
 
         restCarritoMockMvc
             .perform(
@@ -389,6 +400,34 @@ class CarritoResourceIT {
 
         // Validate the database contains one less item
         assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    @Test
+    void vaciarItemsCarrito() throws Exception {
+        // Initialize the database
+        insertedCarrito = carritoRepository.save(carrito);
+
+        // Create two items for the carrito
+        ItemCarrito item1 = ItemCarritoResourceIT.createEntity();
+        item1.setId(null);
+        item1.getCarrito().setId(insertedCarrito.getId());
+        itemCarritoRepository.save(item1);
+
+        ItemCarrito item2 = ItemCarritoResourceIT.createEntity();
+        item2.setId(null);
+        item2.getCarrito().setId(insertedCarrito.getId());
+        itemCarritoRepository.save(item2);
+
+        assertThat(itemCarritoRepository.findByCarritoId(insertedCarrito.getId())).hasSize(2);
+
+        // Vaciar los items del carrito
+        restCarritoMockMvc
+            .perform(delete(ENTITY_API_URL + "/{id}/items", insertedCarrito.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        // Validate the items are deleted but the carrito still exists
+        assertThat(itemCarritoRepository.findByCarritoId(insertedCarrito.getId())).isEmpty();
+        assertThat(carritoRepository.findById(insertedCarrito.getId())).isPresent();
     }
 
     protected long getRepositoryCount() {

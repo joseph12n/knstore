@@ -7,36 +7,40 @@ public class CuentaTestSamples {
     public static Cuenta getCuentaSample1() {
         return new Cuenta()
             .id("id1")
-            .numDocumento("numDocumento1")
-            .primerNombre("primerNombre1")
-            .segundoNombre("segundoNombre1")
-            .primerApellido("primerApellido1")
-            .segundoApellido("segundoApellido1")
-            .celular("celular1")
-            .telefono("telefono1");
+            .numDocumento("1234567890")
+            .primerNombre("PrimerNombreUno")
+            .segundoNombre("SegundoNombreUno")
+            .primerApellido("PrimerApellidoUno")
+            .segundoApellido("SegundoApellidoUno")
+            .celular("3000000001")
+            .telefono("6010000001");
     }
 
     public static Cuenta getCuentaSample2() {
         return new Cuenta()
             .id("id2")
-            .numDocumento("numDocumento2")
-            .primerNombre("primerNombre2")
-            .segundoNombre("segundoNombre2")
-            .primerApellido("primerApellido2")
-            .segundoApellido("segundoApellido2")
-            .celular("celular2")
-            .telefono("telefono2");
+            .numDocumento("2234567890")
+            .primerNombre("PrimerNombreDos")
+            .segundoNombre("SegundoNombreDos")
+            .primerApellido("PrimerApellidoDos")
+            .segundoApellido("SegundoApellidoDos")
+            .celular("3000000002")
+            .telefono("6010000002");
     }
 
     public static Cuenta getCuentaRandomSampleGenerator() {
         return new Cuenta()
             .id(UUID.randomUUID().toString())
-            .numDocumento(UUID.randomUUID().toString())
-            .primerNombre(UUID.randomUUID().toString())
-            .segundoNombre(UUID.randomUUID().toString())
-            .primerApellido(UUID.randomUUID().toString())
-            .segundoApellido(UUID.randomUUID().toString())
-            .celular(UUID.randomUUID().toString())
-            .telefono(UUID.randomUUID().toString());
+            .numDocumento("1" + Integer.toUnsignedString(UUID.randomUUID().hashCode()))
+            .primerNombre(randomLetters())
+            .segundoNombre(randomLetters())
+            .primerApellido(randomLetters())
+            .segundoApellido(randomLetters())
+            .celular("3000000000")
+            .telefono("6010000000");
+    }
+
+    private static String randomLetters() {
+        return UUID.randomUUID().toString().replaceAll("[^a-zA-Z]", "");
     }
 }

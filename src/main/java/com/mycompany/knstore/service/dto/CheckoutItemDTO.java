@@ -4,10 +4,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * Item de carrito enviado en una solicitud de checkout.
+ *
+ * <p>El precio unitario no se acepta del cliente: el servidor lo resuelve
+ * siempre desde el producto en base de datos.</p>
  */
 public class CheckoutItemDTO implements Serializable {
 
@@ -17,10 +19,6 @@ public class CheckoutItemDTO implements Serializable {
     @NotNull
     @Min(value = 1)
     private Integer cantidad;
-
-    @NotNull
-    @Min(value = 0)
-    private BigDecimal precioUnitario;
 
     public String getProductoId() {
         return productoId;
@@ -36,13 +34,5 @@ public class CheckoutItemDTO implements Serializable {
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
-    }
-
-    public BigDecimal getPrecioUnitario() {
-        return precioUnitario;
-    }
-
-    public void setPrecioUnitario(BigDecimal precioUnitario) {
-        this.precioUnitario = precioUnitario;
     }
 }

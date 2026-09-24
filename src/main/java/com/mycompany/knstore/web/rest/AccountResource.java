@@ -1,8 +1,6 @@
 package com.mycompany.knstore.web.rest;
 
-import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.domain.User;
-import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.UserRepository;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.MailService;
@@ -17,6 +15,7 @@ import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,18 +41,10 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    private final CuentaRepository cuentaRepository;
-
-    public AccountResource(
-        UserRepository userRepository,
-        UserService userService,
-        MailService mailService,
-        CuentaRepository cuentaRepository
-    ) {
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
-        this.cuentaRepository = cuentaRepository;
     }
 
     /**
@@ -71,7 +62,6 @@ public class AccountResource {
             throw new InvalidPasswordException();
         }
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
-        createCuentaForUserIfMissing(user);
         mailService.sendActivationEmail(user);
     }
 
@@ -87,7 +77,6 @@ public class AccountResource {
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this activation key");
         }
-        createCuentaForUserIfMissing(user.orElseThrow());
     }
 
     /**
@@ -124,13 +113,17 @@ public class AccountResource {
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
         }
-        userService.updateUser(
-            userDTO.getFirstName(),
-            userDTO.getLastName(),
-            userDTO.getEmail(),
-            userDTO.getLangKey(),
-            userDTO.getImageUrl()
-        );
+        try {
+            userService.updateUser(
+                userDTO.getFirstName(),
+                userDTO.getLastName(),
+                userDTO.getEmail(),
+                userDTO.getLangKey(),
+                userDTO.getImageUrl()
+            );
+        } catch (DuplicateKeyException e) {
+            throw new EmailAlreadyUsedException();
+        }
     }
 
     /**
@@ -188,24 +181,6 @@ public class AccountResource {
             StringUtils.isEmpty(password) ||
             password.length() < ManagedUserVM.PASSWORD_MIN_LENGTH ||
             password.length() > ManagedUserVM.PASSWORD_MAX_LENGTH
-        );
-    }
-
-    private void createCuentaForUserIfMissing(User user) {
-        if (user == null || user.getId() == null) {
-            return;
-        }
-        cuentaRepository.findOneByUserId(user.getId()).ifPresentOrElse(
-            cuenta -> LOG.debug("Cuenta already exists for user {}", user.getLogin()),
-            () -> {
-                Cuenta cuenta = new Cuenta();
-                cuenta.setPrimerNombre(StringUtils.defaultString(user.getFirstName(), user.getLogin()));
-                cuenta.setPrimerApellido(StringUtils.defaultString(user.getLastName(), "-"));
-                cuenta.setActivo(true);
-                cuenta.setUser(user);
-                cuentaRepository.save(cuenta);
-                LOG.debug("Created Cuenta for user {}", user.getLogin());
-            }
         );
     }
 }

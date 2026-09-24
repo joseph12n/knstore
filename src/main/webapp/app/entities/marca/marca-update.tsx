@@ -84,6 +84,7 @@ export const MarcaUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                   maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
                 }}
               />

@@ -3,6 +3,11 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router';
 
 import HeroBanner from 'app/landing/components/HeroBanner';
+import BenefitsBar from 'app/landing/components/BenefitsBar';
+import BrandStrip from 'app/landing/components/BrandStrip';
+import NewsletterCta from 'app/landing/components/NewsletterCta';
+import OffersSection from 'app/landing/components/OffersSection';
+import Testimonials from 'app/landing/components/Testimonials';
 import ProductCard from 'app/landing/components/ProductCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import ErrorAlert from 'app/landing/components/ErrorAlert';
@@ -18,7 +23,8 @@ export const StoreHome = () => {
     productos: rawProductos,
     loading,
     errorMessage,
-  } = useCatalog({ page: 0, size: 12, sort: 'nombre,asc' });
+    retry,
+  } = useCatalog({ page: 0, size: 100, sort: 'nombre,asc', loadOnMount: false });
   const categorias = rawCategorias ?? [];
   const productos = rawProductos ?? [];
 
@@ -34,6 +40,14 @@ export const StoreHome = () => {
         ctaLink="/buscar"
       />
 
+      {errorMessage && productos.length === 0 && (
+        <Container className="pt-4">
+          <ErrorAlert message="No pudimos cargar los productos. Inténtalo de nuevo." onRetry={retry} />
+        </Container>
+      )}
+
+      <BenefitsBar />
+
       {/* Categorías */}
       <section className="py-5">
         <Container>
@@ -45,7 +59,10 @@ export const StoreHome = () => {
               {categorias.slice(0, 4).map(categoria => (
                 <Col key={categoria.id} xs={6} md={3}>
                   <Link to={`/categorias/${categoria.slug}`} className="text-decoration-none">
-                    <div className="position-relative overflow-hidden rounded" style={{ aspectRatio: '1/1', backgroundColor: '#f8f9fa' }}>
+                    <div
+                      className="position-relative overflow-hidden rounded"
+                      style={{ aspectRatio: '1/1', backgroundColor: 'var(--kn-color-surface)' }}
+                    >
                       {categoria.imagen ? (
                         <img
                           src={buildImageUrl(categoria.imagenContentType, categoria.imagen)}
@@ -81,9 +98,7 @@ export const StoreHome = () => {
           </div>
           {loading ? (
             <LoadingSpinner />
-          ) : errorMessage ? (
-            <ErrorAlert message="No pudimos cargar los productos. Inténtalo de nuevo." />
-          ) : destacados.length === 0 ? (
+          ) : errorMessage && productos.length === 0 ? null : destacados.length === 0 ? (
             <EmptyState title="Aún no hay productos destacados" />
           ) : (
             <Row className="g-4">
@@ -108,7 +123,7 @@ export const StoreHome = () => {
           </div>
           {loading ? (
             <LoadingSpinner />
-          ) : (
+          ) : errorMessage && productos.length === 0 ? null : (
             <Row className="g-4">
               {novedades.map(producto => (
                 <Col key={producto.id} xs={6} md={4} lg={3}>
@@ -119,6 +134,14 @@ export const StoreHome = () => {
           )}
         </Container>
       </section>
+
+      <OffersSection productos={productos} onAddToCart={onAddToCart} loading={loading} />
+
+      <BrandStrip />
+
+      <Testimonials />
+
+      <NewsletterCta />
     </div>
   );
 };
