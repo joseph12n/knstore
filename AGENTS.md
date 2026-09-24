@@ -396,12 +396,13 @@ Siempre que se pidan commits al agente, ejecutar el flujo completo (no dejar nad
 
 1. **Commit** en `knstore` (rama `main`) con Conventional Commits.
 2. **Push** a `origin` (`joseph12n/knstore`) → `main`.
-3. **Mirror**: copiar el estado exacto al repo local en `~/Documentos/2026-3311941-projects-grupo-06-knstore` (fetch del repo `knstore` + `git merge --ff-only`) y **push** a `origin` (`sena-students/2026-3311941-trimestre-5-2026-3311941-trimestre-5-documentat-joseph12n`) → `main`.
-4. **Branches unificadas:** en AMBOS repos, mantener las 6 ramas (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`) apuntadas a `main` — sin adelantos ni conflictos (push `main:<rama>` con `--force-with-lease` si la rama no es fast-forward; el contenido de ramas se incorpora a `main` vía squash).
+3. **Mirror**: copiar el estado exacto al repo local en `~/Documentos/2026-3311941-projects-grupo-06-knstore` (fetch del repo `knstore` + `git merge --ff-only`; tras una reescritura de historia, `git fetch --force` + `git reset --hard` + `push --force-with-lease`) y **push** a `origin` (`sena-students/2026-3311941-trimestre-5-2026-3311941-trimestre-5-documentat-joseph12n`) → `main`.
+4. **Ramas con historia propia (desde 2026-09-24):** `joseph`, `carrito`, `Nicolas`, `lauraG` y `santiago` conservan la obra de su autor (commits completos, sin unificar) con un `Merge branch 'main' into <rama>` al frente y el **mismo contenido que `main`**. **No** volver a apuntarlas a `main` ni aplanarlas: para integrar trabajo nuevo, commit en la rama → resumen en `main` (squash) → `git merge main` en la rama resolviendo a favor de `main`.
 
 Reglas:
 
 - `knstore` es la fuente de verdad; sena-students es espejo. Nunca editar directamente en sena-students fuera del mirror.
-- Integrar trabajo de ramas (ej. lauraG) en `main` con squash para mantener la historia organizada.
+- Integrar trabajo de ramas en `main` con squash (hitos resumidos); la rama conserva sus commits completos y se sincroniza con `git merge main`.
+- Tras una reescritura de historia: publicar `main` y las ramas con `git push --force-with-lease` y alinear el espejo con `git fetch --force` + `git reset --hard`; el contenido no cambia.
 - Antes de reiniciar una rama, respaldar el tip en `refs/backup/<fecha>/<rama>` (local a los dos repos, no se sube).
 - Credenciales: PAT del usuario guardado en `~/.git-credentials` (helper `store`, permiso 600). Si un push falla por auth, pedir la credencial al usuario, no reinventar.
