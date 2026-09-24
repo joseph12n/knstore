@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Direccion}.
@@ -131,6 +132,7 @@ public class DireccionServiceImpl implements DireccionService {
     }
 
     @Override
+    @Transactional
     public DireccionDTO setPredeterminada(String id) {
         LOG.debug("Request to set predeterminada Direccion : {}", id);
         Direccion direccion = direccionRepository.findById(id).orElseThrow(() -> new IllegalStateException("Direccion not found"));

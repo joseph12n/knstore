@@ -4,6 +4,7 @@ import com.mycompany.knstore.domain.Cuenta;
 import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.CuentaRepository;
 import com.mycompany.knstore.repository.PedidoRepository;
+import com.mycompany.knstore.security.AuthoritiesConstants;
 import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.CheckoutException;
 import com.mycompany.knstore.service.CheckoutService;
@@ -107,9 +108,7 @@ public class PedidoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessPedidoId(#id) and @resourceAccessService.canAccessPedidoDto(#pedidoDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<PedidoDTO> updatePedido(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody PedidoDTO pedidoDTO
@@ -144,9 +143,7 @@ public class PedidoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessPedidoId(#id) and @resourceAccessService.canAccessPedidoDto(#pedidoDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<PedidoDTO> partialUpdatePedido(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody PedidoDTO pedidoDTO
@@ -252,7 +249,7 @@ public class PedidoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPedidoId(#id)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<Void> deletePedido(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Pedido : {}", id);
         pedidoService.delete(id);
@@ -289,6 +286,39 @@ public class PedidoResource {
      * Request DTO for changing the estado of a pedido.
      */
     public record CambiarEstadoPedidoRequest(@NotNull EstadoPedido estado) {}
+
+    /**
+     * {@code POST  /pedidos/:id/cancelar} : cancel a pedido. Disponible para el cliente
+     * propietario del pedido (dentro de la ventana de 1 hora desde la compra, y con
+     * reembolso simbolico automatico si el pago habia sido aprobado) y para administracion.
+     * La maquina de estados y la restauracion del stock se validan en el servicio.
+     *
+     * @param id the id of the pedido.
+     * @param request motivo opcional de la cancelacion.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated pedidoDTO.
+     */
+    @PostMapping("/{id}/cancelar")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessPedidoId(#id)")
+    public ResponseEntity<PedidoDTO> cancelarPedido(
+        @PathVariable("id") String id,
+        @RequestBody(required = false) CancelarPedidoRequest request
+    ) {
+        LOG.debug("REST request to cancel Pedido : {}", id);
+        try {
+            String motivo = request != null ? request.motivo() : null;
+            PedidoDTO result = SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)
+                ? pedidoService.cancelarPedidoCliente(id, motivo)
+                : pedidoService.cambiarEstado(id, EstadoPedido.CANCELLED);
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "transicioninvalida");
+        }
+    }
+
+    /** DTO for cancel request. */
+    public record CancelarPedidoRequest(@jakarta.validation.constraints.Size(max = 500) String motivo) {}
 
     /**
      * {@code POST  /pedidos/checkout} : Procesa un checkout atómico simbólico.

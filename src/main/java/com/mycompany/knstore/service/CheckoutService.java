@@ -9,11 +9,8 @@ import com.mycompany.knstore.service.util.MoneyUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -25,16 +22,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Servicio de checkout atómico. Crea pedido, ítems, pago (simbólico), envío y factura
- * en una sola operación, además de decrementar stock y vaciar el carrito del cliente.
+ * Servicio de checkout atómico. Crea pedido, ítems, pago aprobado (simbólico),
+ * envío y factura en una sola operación, además de decrementar stock y vaciar
+ * el carrito del cliente.
  */
 @Service
 @Transactional
 public class CheckoutService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CheckoutService.class);
-
-    private static final String PEDIDO_SEQUENCE_COLLECTION = "pedido_sequence";
 
     private static final BigDecimal UMBRAL_ENVIO_GRATIS = new BigDecimal("150000");
 
@@ -55,6 +51,10 @@ public class CheckoutService {
 
     private final HistorialEstadoService historialEstadoService;
 
+    private final PagoService pagoService;
+
+    private final SecuenciaService secuenciaService;
+
     public CheckoutService(
         PedidoRepository pedidoRepository,
         ItemPedidoRepository itemPedidoRepository,
@@ -69,7 +69,9 @@ public class CheckoutService {
         MongoTemplate mongoTemplate,
         PedidoMapper pedidoMapper,
         ItemPedidoMapper itemPedidoMapper,
-        HistorialEstadoService historialEstadoService
+        HistorialEstadoService historialEstadoService,
+        PagoService pagoService,
+        SecuenciaService secuenciaService
     ) {
         this.pedidoRepository = pedidoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
@@ -85,6 +87,8 @@ public class CheckoutService {
         this.pedidoMapper = pedidoMapper;
         this.itemPedidoMapper = itemPedidoMapper;
         this.historialEstadoService = historialEstadoService;
+        this.pagoService = pagoService;
+        this.secuenciaService = secuenciaService;
     }
 
     public CheckoutPreviewDTO preview(Cuenta cuenta, CheckoutRequestDTO request) {
@@ -156,6 +160,7 @@ public class CheckoutService {
         // Crear ítems del pedido y decrementar stock de forma atómica
         for (CheckoutItemDTO item : request.getItems()) {
             Producto producto = productosMap.get(item.getProductoId());
+            BigDecimal precioVenta = precioVentaDelProducto(producto);
 
             ItemPedido itemPedido = new ItemPedido();
             itemPedido.setNombreProducto(producto.getNombre());
@@ -165,8 +170,8 @@ public class CheckoutService {
             itemPedido.setColorProducto(producto.getColor());
             itemPedido.setTallaProducto(producto.getTalla());
             itemPedido.setCantidad(item.getCantidad());
-            itemPedido.setPrecioUnitario(MoneyUtils.normalizar(item.getPrecioUnitario()));
-            itemPedido.setSubtotal(MoneyUtils.multiplicar(BigDecimal.valueOf(item.getCantidad()), item.getPrecioUnitario()));
+            itemPedido.setPrecioUnitario(precioVenta);
+            itemPedido.setSubtotal(MoneyUtils.multiplicar(BigDecimal.valueOf(item.getCantidad()), precioVenta));
 
             BigDecimal porcentajeIva =
                 producto.getCategoriaIva() != null && producto.getCategoriaIva().getPorcentaje() != null
@@ -188,7 +193,8 @@ public class CheckoutService {
             }
         }
 
-        // Crear pago inicial en estado PENDING; la pasarela lo resuelve por callback
+        // Crear pago del pedido; la pasarela simbolica lo aprueba de inmediato
+        // en la misma transaccion (APPROVED + codigo de autorizacion + factura).
         Pago pago = new Pago();
         pago.setMetodoPago(request.getMetodoPago());
         pago.setEstado(EstadoPago.PENDING);
@@ -210,11 +216,19 @@ public class CheckoutService {
         pedido.setEnvio(envio);
         pedidoRepository.save(pedido);
 
+        // Aprobacion simbolica inmediata: el pago queda APPROVED en este mismo checkout.
+        // Se ejecuta al final para no pisar la aprobacion con los guardados previos del pedido.
+        PagoDTO pagoAprobado = pagoService.iniciarPago(pedido.getId());
+        // Recargar el pedido para reflejar el estado CONFIRMED aprobado por la pasarela.
+        pedido = pedidoRepository.findById(pedido.getId()).orElseThrow();
+
         // Vaciar carrito del usuario
         vaciarCarrito(cuenta);
 
+        // RF-076: el pago aprobado viaja en el resultado del checkout (misma transaccion).
         CheckoutResultDTO result = new CheckoutResultDTO();
         result.setPedido(pedidoMapper.toDto(pedido));
+        result.setPago(pagoAprobado);
         return result;
     }
 
@@ -258,23 +272,21 @@ public class CheckoutService {
                 }
             }
 
-            // Validar precio contra el precio de venta real del producto
-            CheckoutItemDTO itemRequest = request
-                .getItems()
-                .stream()
-                .filter(i -> i.getProductoId().equals(productoId))
-                .findFirst()
-                .orElseThrow();
-            BigDecimal precioEsperado =
-                producto.getPrecio() != null && producto.getPrecio().getPrecioVenta() != null
-                    ? producto.getPrecio().getPrecioVenta()
-                    : BigDecimal.ZERO;
-            if (precioEsperado.compareTo(BigDecimal.ZERO) > 0 && itemRequest.getPrecioUnitario().compareTo(precioEsperado) != 0) {
-                throw new CheckoutException("Precio incorrecto para " + producto.getNombre());
+            // El precio de venta se resuelve siempre desde el producto en base de datos:
+            // el cliente no puede definir precios en el checkout.
+            if (precioVentaDelProducto(producto).compareTo(BigDecimal.ZERO) <= 0) {
+                throw new CheckoutException("El producto " + producto.getNombre() + " no tiene precio de venta configurado");
             }
         }
 
         return productosMap;
+    }
+
+    private BigDecimal precioVentaDelProducto(Producto producto) {
+        if (producto.getPrecio() == null || producto.getPrecio().getPrecioVenta() == null) {
+            return BigDecimal.ZERO;
+        }
+        return producto.getPrecio().getPrecioVenta();
     }
 
     private TotalesCheckout calcularTotales(CheckoutRequestDTO request, Map<String, Producto> productosMap) {
@@ -282,7 +294,7 @@ public class CheckoutService {
         BigDecimal ivaTotal = BigDecimal.ZERO;
         for (CheckoutItemDTO item : request.getItems()) {
             Producto producto = productosMap.get(item.getProductoId());
-            BigDecimal precio = item.getPrecioUnitario() != null ? item.getPrecioUnitario() : BigDecimal.ZERO;
+            BigDecimal precio = precioVentaDelProducto(producto);
             BigDecimal cantidad = BigDecimal.valueOf(item.getCantidad());
             BigDecimal itemSubtotal = MoneyUtils.multiplicar(cantidad, precio);
             subtotal = subtotal.add(itemSubtotal);
@@ -318,15 +330,6 @@ public class CheckoutService {
     }
 
     private String generarNumeroPedido() {
-        String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String sequenceKey = "PED-" + fecha;
-
-        Query query = new Query(Criteria.where("_id").is(sequenceKey));
-        Update update = new Update().inc("seq", 1);
-        FindAndModifyOptions options = new FindAndModifyOptions().upsert(true).returnNew(true);
-        Document sequence = mongoTemplate.findAndModify(query, update, options, Document.class, PEDIDO_SEQUENCE_COLLECTION);
-
-        long seq = sequence != null ? ((Number) sequence.get("seq")).longValue() : 1L;
-        return "PED-%s-%06d".formatted(fecha, seq);
+        return secuenciaService.siguientePedido();
     }
 }

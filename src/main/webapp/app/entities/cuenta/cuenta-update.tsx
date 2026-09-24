@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, Col, FormText, Row } from 'react-bootstrap';
 import { ValidatedBlobField, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { Link, useNavigate, useParams } from 'react-router';
+import dayjs from 'dayjs';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -61,8 +62,10 @@ export const CuentaUpdate = () => {
       ...values,
       user: isCliente
         ? cuentaEntity?.user || { id: account.id, login: account.login }
-        : users.find(it => it.id.toString() === values.user?.toString()),
-      tipoDocumento: tipoDocumentos.find(it => it.id.toString() === values.tipoDocumento?.toString()),
+        : (users.find(it => it.id.toString() === values.user?.toString()) ?? (!isNew ? cuentaEntity?.user : undefined)),
+      tipoDocumento:
+        tipoDocumentos.find(it => it.id.toString() === values.tipoDocumento?.toString()) ??
+        (!isNew ? cuentaEntity?.tipoDocumento : undefined),
     };
 
     if (isNew) {
@@ -107,6 +110,7 @@ export const CuentaUpdate = () => {
                 data-cy="numDocumento"
                 type="text"
                 validate={{
+                  pattern: { value: /^[0-9]+$/, message: 'Solo se permiten números.' },
                   maxLength: { value: 20, message: 'Este campo no puede superar más de 20 caracteres.' },
                 }}
               />
@@ -118,6 +122,7 @@ export const CuentaUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                   maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
                 }}
               />
@@ -128,6 +133,7 @@ export const CuentaUpdate = () => {
                 data-cy="segundoNombre"
                 type="text"
                 validate={{
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                   maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
                 }}
               />
@@ -139,6 +145,7 @@ export const CuentaUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                   maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
                 }}
               />
@@ -149,6 +156,7 @@ export const CuentaUpdate = () => {
                 data-cy="segundoApellido"
                 type="text"
                 validate={{
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                   maxLength: { value: 50, message: 'Este campo no puede superar más de 50 caracteres.' },
                 }}
               />
@@ -165,6 +173,12 @@ export const CuentaUpdate = () => {
                 name="fechaNacimiento"
                 data-cy="fechaNacimiento"
                 type="date"
+                validate={{
+                  validate: v =>
+                    !v ||
+                    (!dayjs(v).isAfter(dayjs()) && !dayjs(v).isBefore(dayjs().subtract(100, 'year'))) ||
+                    'La fecha de nacimiento no puede ser futura ni indicar más de 100 años.',
+                }}
               />
               <ValidatedField
                 label="Celular"
@@ -173,6 +187,7 @@ export const CuentaUpdate = () => {
                 data-cy="celular"
                 type="text"
                 validate={{
+                  pattern: { value: /^[0-9]{7,15}$/, message: 'Debe tener entre 7 y 15 dígitos.' },
                   maxLength: { value: 15, message: 'Este campo no puede superar más de 15 caracteres.' },
                 }}
               />
@@ -183,6 +198,7 @@ export const CuentaUpdate = () => {
                 data-cy="telefono"
                 type="text"
                 validate={{
+                  pattern: { value: /^[0-9]{7,15}$/, message: 'Debe tener entre 7 y 15 dígitos.' },
                   maxLength: { value: 15, message: 'Este campo no puede superar más de 15 caracteres.' },
                 }}
               />

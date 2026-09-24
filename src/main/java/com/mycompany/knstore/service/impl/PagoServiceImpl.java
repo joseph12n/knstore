@@ -19,18 +19,20 @@ import com.mycompany.knstore.service.invoice.FacturaPdfService;
 import com.mycompany.knstore.service.mapper.PagoMapper;
 import com.mycompany.knstore.service.payment.PaymentGateway;
 import com.mycompany.knstore.service.util.MoneyUtils;
+import com.mycompany.knstore.service.util.MongoIdUtils;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Pago}.
@@ -115,17 +117,17 @@ public class PagoServiceImpl implements PagoService {
     public Page<PagoDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Pagos");
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            // RNF-028: una consulta para los pedidos de la cuenta y una consulta
+            // en lote para sus pagos (sin N+1 ni paginacion en memoria).
             return getCurrentAccountId()
                 .map(cuentaId -> {
-                    LinkedList<PagoDTO> pagos = pedidoRepository
+                    List<String> pedidoIds = pedidoRepository
                         .findByCuentaId(cuentaId, Pageable.unpaged())
                         .getContent()
                         .stream()
-                        .flatMap(pedido -> pagoRepository.findByPedidoId(pedido.getId(), Pageable.unpaged()).getContent().stream())
-                        .map(pagoMapper::toDto)
-                        .collect(Collectors.toCollection(LinkedList::new));
-                    Page<PagoDTO> page = new PageImpl<>(pagos, pageable, pagos.size());
-                    return page;
+                        .map(Pedido::getId)
+                        .toList();
+                    return pagoRepository.findByPedidoIdIn(MongoIdUtils.toObjectIds(pedidoIds), withSort(pageable)).map(pagoMapper::toDto);
                 })
                 .orElse(Page.empty(pageable));
         }
@@ -136,20 +138,31 @@ public class PagoServiceImpl implements PagoService {
     public Optional<PagoDTO> findOne(String id) {
         LOG.debug("Request to get Pago : {}", id);
         if (SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.CLIENTE)) {
+            // RNF-028: el pago se resuelve por id y el ownership con una sola
+            // consulta del pedido (2 consultas constantes, sin recorrer listas).
             return getCurrentAccountId()
-                .flatMap(cuentaId ->
-                    pedidoRepository
-                        .findByCuentaId(cuentaId, Pageable.unpaged())
-                        .getContent()
-                        .stream()
-                        .map(pedido -> pagoRepository.findByIdAndPedidoId(id, pedido.getId()))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .findFirst()
-                )
+                .flatMap(cuentaId -> pagoRepository.findById(id).filter(pago -> pedidoPerteneceACuenta(pago.getPedido(), cuentaId)))
                 .map(pagoMapper::toDto);
         }
         return pagoRepository.findById(id).map(pagoMapper::toDto);
+    }
+
+    private boolean pedidoPerteneceACuenta(Pedido pedido, String cuentaId) {
+        if (pedido == null || pedido.getId() == null) {
+            return false;
+        }
+        return pedidoRepository.findByIdAndCuentaId(pedido.getId(), cuentaId).isPresent();
+    }
+
+    /**
+     * Si el {@link Pageable} no trae orden, se aplica un sort determinista por id
+     * descendente para que la paginacion en lote sea estable.
+     */
+    private Pageable withSort(Pageable pageable) {
+        if (pageable.getSort().isUnsorted()) {
+            return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "id"));
+        }
+        return pageable;
     }
 
     @Override
@@ -159,6 +172,7 @@ public class PagoServiceImpl implements PagoService {
     }
 
     @Override
+    @Transactional
     public PagoDTO iniciarPago(String pedidoId) {
         LOG.debug("Request to iniciar pago for pedido : {}", pedidoId);
         Pedido pedido = pedidoRepository.findById(pedidoId).orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado"));
@@ -176,17 +190,22 @@ public class PagoServiceImpl implements PagoService {
             .findByPedidoId(pedidoId, org.springframework.data.domain.Pageable.unpaged())
             .getContent()
             .stream()
-            .filter(existing -> EstadoPago.PENDING.equals(existing.getEstado()))
             .findFirst()
-            .orElseGet(() -> {
-                Pago nuevo = new Pago();
-                nuevo.setPedido(pedido);
-                nuevo.setMonto(MoneyUtils.normalizar(pedido.getTotal()));
-                nuevo.setMetodoPago(com.mycompany.knstore.domain.enumeration.MetodoPago.NEQUI);
-                nuevo.setEstado(EstadoPago.PENDING);
-                nuevo.setIntentos(0);
-                return nuevo;
-            });
+            .orElse(null);
+
+        // Idempotencia: si el pago ya quedo resuelto (APPROVED u otro estado final), no se reprocesa.
+        if (pago != null && esEstadoFinal(pago.getEstado())) {
+            return pagoMapper.toDto(pago);
+        }
+
+        if (pago == null) {
+            pago = new Pago();
+            pago.setPedido(pedido);
+            pago.setMonto(MoneyUtils.normalizar(pedido.getTotal()));
+            pago.setMetodoPago(com.mycompany.knstore.domain.enumeration.MetodoPago.NEQUI);
+            pago.setEstado(EstadoPago.PENDING);
+            pago.setIntentos(0);
+        }
 
         pago.setIntentos((pago.getIntentos() == null ? 0 : pago.getIntentos()) + 1);
         EstadoPago estadoAnterior = pago.getEstado();
@@ -210,14 +229,15 @@ public class PagoServiceImpl implements PagoService {
     }
 
     @Override
+    @Transactional
     public PagoDTO procesarCallback(String referencia, String estado, BigDecimal monto, String codigoAutorizacion) {
         LOG.debug("Request to process payment callback for referencia : {}", referencia);
         Pago pago = pagoRepository
             .findByReferenciaPasarela(referencia)
             .orElseThrow(() -> new IllegalArgumentException("Referencia de pago no encontrada"));
 
-        // Idempotencia: un pago ya resuelto no se reprocesa.
-        if (EstadoPago.APPROVED.equals(pago.getEstado()) || EstadoPago.REJECTED.equals(pago.getEstado())) {
+        // Idempotencia: un pago ya resuelto no se reprocesa ni se revierte con un callback externo.
+        if (esEstadoFinal(pago.getEstado())) {
             return pagoMapper.toDto(pago);
         }
 
@@ -227,7 +247,13 @@ public class PagoServiceImpl implements PagoService {
         );
 
         boolean montoCoherente = monto == null || monto.compareTo(pago.getMonto()) == 0;
-        boolean aprobado = "APPROVED".equals(resultado.estado()) && montoCoherente;
+        Pedido pedido = pago.getPedido();
+        boolean pedidoAprobable =
+            pedido == null ||
+            pedido.getEstado() == null ||
+            EstadoPedido.CONFIRMED.equals(pedido.getEstado()) ||
+            pedido.getEstado().puedeTransicionarA(EstadoPedido.CONFIRMED);
+        boolean aprobado = "APPROVED".equals(resultado.estado()) && montoCoherente && pedidoAprobable;
 
         if (aprobado) {
             pago.setEstado(EstadoPago.APPROVED);
@@ -236,7 +262,6 @@ public class PagoServiceImpl implements PagoService {
             pago.setFechaPago(Instant.now());
             pago = pagoRepository.save(pago);
 
-            Pedido pedido = pago.getPedido();
             if (pedido != null && !EstadoPedido.CONFIRMED.equals(pedido.getEstado())) {
                 EstadoPedido estadoPedidoAnterior = pedido.getEstado();
                 pedido.setEstado(EstadoPedido.CONFIRMED);
@@ -252,9 +277,13 @@ public class PagoServiceImpl implements PagoService {
             crearFacturaSiNoExiste(pago, pedido);
         } else {
             pago.setEstado(EstadoPago.REJECTED);
-            pago.setDescripcionRespuesta(
-                montoCoherente ? resultado.descripcion() : "Pago rechazado: el monto no coincide con el total del pedido"
-            );
+            if (!pedidoAprobable) {
+                pago.setDescripcionRespuesta("Pago rechazado: el pedido fue cancelado o devuelto y ya no puede aprobarse");
+            } else {
+                pago.setDescripcionRespuesta(
+                    montoCoherente ? resultado.descripcion() : "Pago rechazado: el monto no coincide con el total del pedido"
+                );
+            }
             pago = pagoRepository.save(pago);
         }
 
@@ -275,6 +304,7 @@ public class PagoServiceImpl implements PagoService {
     }
 
     @Override
+    @Transactional
     public PagoDTO reembolsar(String id, String motivo) {
         LOG.debug("Request to reembolsar Pago : {} - {}", id, motivo);
         Pago pago = pagoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Pago no encontrado"));
@@ -361,6 +391,14 @@ public class PagoServiceImpl implements PagoService {
         } catch (Exception e) {
             LOG.warn("No se pudo generar o enviar la factura {}: {}", factura.getNumero(), e.getMessage());
         }
+    }
+
+    /**
+     * Un pago es final solo cuando quedo APPROVED o REFUNDED. REJECTED no es
+     * terminal: el cliente puede reintentarlo con {@link #iniciarPago(String)}.
+     */
+    private boolean esEstadoFinal(EstadoPago estado) {
+        return estado == EstadoPago.APPROVED || estado == EstadoPago.REFUNDED;
     }
 
     private Optional<String> getCurrentAccountId() {

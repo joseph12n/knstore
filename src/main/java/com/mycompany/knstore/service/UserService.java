@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -113,9 +114,21 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         authorityRepository.findById(AuthoritiesConstants.CLIENTE).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
-        userRepository.save(newUser);
+        try {
+            userRepository.save(newUser);
+        } catch (DuplicateKeyException e) {
+            throwDuplicateKeyException(e);
+        }
         LOG.debug("Created Information for User: {}", newUser);
         return newUser;
+    }
+
+    private void throwDuplicateKeyException(DuplicateKeyException e) {
+        String message = e.getMessage();
+        if (message != null && message.contains("unique_user_login")) {
+            throw new UsernameAlreadyUsedException();
+        }
+        throw new EmailAlreadyUsedException();
     }
 
     private boolean removeNonActivatedUser(User existingUser) {
@@ -159,7 +172,11 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (DuplicateKeyException e) {
+            throwDuplicateKeyException(e);
+        }
         LOG.debug("Created Information for User: {}", user);
         return user;
     }

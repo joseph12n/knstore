@@ -58,7 +58,7 @@ export const CartPage = () => {
                       <td>
                         <div className="d-flex align-items-center gap-3">
                           <img
-                            src={buildImageUrl(imagen?.imagenContentType, imagen?.imagen)}
+                            src={buildImageUrl(imagen?.imagenContentType, imagen?.imagen, undefined, imagen?.imagenUrl)}
                             alt={item.producto.nombre}
                             style={{ width: '80px', height: '100px', objectFit: 'cover' }}
                             className="rounded"
@@ -109,7 +109,7 @@ export const CartPage = () => {
               return (
                 <div key={item.id} className="d-flex gap-3 border-bottom py-3">
                   <img
-                    src={buildImageUrl(imagen?.imagenContentType, imagen?.imagen)}
+                    src={buildImageUrl(imagen?.imagenContentType, imagen?.imagen, undefined, imagen?.imagenUrl)}
                     alt={item.producto.nombre}
                     style={{ width: '80px', height: '100px', objectFit: 'cover' }}
                     className="rounded"

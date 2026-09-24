@@ -34,7 +34,7 @@ import org.springframework.data.mongodb.core.query.Query;
 @ChangeUnit(id = "catalog-seed-migration", order = "003")
 public class CatalogSeedMigration {
 
-    private static final List<String> COLORES = List.of("Negro", "Blanco", "Azul", "Gris");
+    static final List<String> COLORES = List.of("Negro", "Blanco", "Azul", "Gris");
 
     private final MongoTemplate template;
 
@@ -274,19 +274,20 @@ public class CatalogSeedMigration {
         }
     }
 
-    private static String slugify(String text) {
+    static String slugify(String text) {
         return java.text.Normalizer.normalize(text, java.text.Normalizer.Form.NFD)
             .replaceAll("\\p{M}", "")
             .toLowerCase()
             .replaceAll("[^a-z0-9]+", "-")
-            .replaceAll("(^-|-$)", "");
+            .replaceAll("^-+", "")
+            .replaceAll("-+$", "");
     }
 
     private record PrecioModelo(BigDecimal precioVenta, BigDecimal precioCompra) {}
 
-    private record ModeloModelo(String marca, String categoria, String subcategoria, String nombre, String referencia) {}
+    record ModeloModelo(String marca, String categoria, String subcategoria, String nombre, String referencia) {}
 
-    private static final List<ModeloModelo> MODELOS = List.of(
+    static final List<ModeloModelo> MODELOS = List.of(
         new ModeloModelo("Nike", "Hombre", "Deportivo", "Air Max", "NIKE-AM"),
         new ModeloModelo("Nike", "Hombre", "Casual", "Court Vision", "NIKE-CV"),
         new ModeloModelo("Nike", "Hombre", "Formal", "Oxford Classic", "NIKE-OC"),

@@ -196,6 +196,81 @@ class AccountResourceIT {
     }
 
     @Test
+    void registerUserWithExistingEmailReturnsBadRequest() throws Exception {
+        // Existing activated user with the email
+        User existingUser = new User();
+        existingUser.setLogin("existing-email-user");
+        existingUser.setEmail("existing-email@example.com");
+        existingUser.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        existingUser.setActivated(true);
+        userRepository.save(existingUser);
+
+        ManagedUserVM newUser = new ManagedUserVM();
+        newUser.setLogin("new-email-user");
+        newUser.setPassword("password");
+        newUser.setFirstName("Alice");
+        newUser.setLastName("Test");
+        newUser.setEmail("existing-email@example.com");
+        newUser.setImageUrl("http://placehold.it/50x50");
+        newUser.setLangKey(Constants.DEFAULT_LANGUAGE);
+        newUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
+
+        restAccountMockMvc
+            .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(newUser)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("error.emailexists"));
+
+        assertThat(userRepository.findOneByLogin("new-email-user")).isEmpty();
+    }
+
+    @Test
+    void registerUserWithExistingLoginReturnsBadRequest() throws Exception {
+        // Existing activated user with the login
+        User existingUser = new User();
+        existingUser.setLogin("existing-login-user");
+        existingUser.setEmail("existing-login-user@example.com");
+        existingUser.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        existingUser.setActivated(true);
+        userRepository.save(existingUser);
+
+        ManagedUserVM newUser = new ManagedUserVM();
+        newUser.setLogin("existing-login-user");
+        newUser.setPassword("password");
+        newUser.setFirstName("Alice");
+        newUser.setLastName("Test");
+        newUser.setEmail("new-login-user@example.com");
+        newUser.setImageUrl("http://placehold.it/50x50");
+        newUser.setLangKey(Constants.DEFAULT_LANGUAGE);
+        newUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
+
+        restAccountMockMvc
+            .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(newUser)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value("error.userexists"));
+
+        assertThat(userRepository.findOneByEmailIgnoreCase("new-login-user@example.com")).isEmpty();
+    }
+
+    @Test
+    void registerUserWithFirstNameWithDigitsReturnsBadRequest() throws Exception {
+        ManagedUserVM newUser = new ManagedUserVM();
+        newUser.setLogin("firstname-with-digits");
+        newUser.setPassword("password");
+        newUser.setFirstName("Juan123");
+        newUser.setLastName("Test");
+        newUser.setEmail("firstname-with-digits@example.com");
+        newUser.setImageUrl("http://placehold.it/50x50");
+        newUser.setLangKey(Constants.DEFAULT_LANGUAGE);
+        newUser.setAuthorities(Set.of(AuthoritiesConstants.USER));
+
+        restAccountMockMvc
+            .perform(post("/api/register").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(newUser)))
+            .andExpect(status().isBadRequest());
+
+        assertThat(userRepository.findOneByLogin("firstname-with-digits")).isEmpty();
+    }
+
+    @Test
     void testRegisterDuplicateLogin() throws Exception {
         // First registration
         ManagedUserVM firstUser = new ManagedUserVM();

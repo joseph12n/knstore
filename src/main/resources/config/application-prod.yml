@@ -20,6 +20,14 @@ logging:
     com.mycompany.knstore: INFO
 
 management:
+  # Evita marcar el contenedor como DOWN si el SMTP falla; la facturación
+  # por correo sigue funcionando normalmente.
+  health:
+    mail:
+      enabled: false
+  # RNF-031: /management/** (incluido prometheus si se expone) queda protegido
+  # por SecurityConfiguration para ADMIN/MANAGER; en produccion el export
+  # prometheus de las metricas esta deshabilitado.
   prometheus:
     metrics:
       export:
@@ -32,10 +40,24 @@ spring:
     livereload:
       enabled: false
   mail:
-    host: localhost
-    port: 25
+    # SMTP de produccion: definir credenciales por entorno/secret (no commitear).
+    host: smtp.gmail.com
+    port: 587
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        transport:
+          protocol: smtp
   mongodb:
-    uri: mongodb://localhost:27017/knstore
+    # En Docker la app se conecta al servicio "mongodb" con replicaSet rs0
+    # (obligatorio para el checkout transaccional con transacciones reales).
+    uri: ${SPRING_MONGODB_URI:mongodb://mongodb:27017/knstore?replicaSet=rs0&retryWrites=true&directConnection=true}
   thymeleaf:
     cache: true
 
@@ -79,11 +101,13 @@ jhipster:
   security:
     authentication:
       jwt:
+        # Secreto JWT exigido por entorno; sin valor por defecto para fallar al arrancar si falta.
+        base64-secret: ${JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET}
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    base-url: http://my-server-url-to-change # Modify according to your server's URL
+    base-url: https://app.knstore.duckdns.org # dominio de la app desplegada; reemplazar si cambia
   logging:
     use-json-format: false # By default, logs are not in Json format
     logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
@@ -101,3 +125,16 @@ jhipster:
 # ===================================================================
 
 # application:
+
+# Propiedades especificas de KN-Store
+knstore:
+  seed:
+    # En produccion no se crean usuarios demo (user/manager/cliente ni admin/admin).
+    demo-users: false
+    # El catalogo real se carga por el panel admin o con scripts/seed-demo-data.js.
+    catalog: false
+  security:
+    # Credenciales del administrador inicial (solo se usan si la BD esta vacia).
+    admin-login: ${KNSTORE_SECURITY_ADMIN_LOGIN:admin}
+    admin-password: ${KNSTORE_SECURITY_ADMIN_PASSWORD:}
+    admin-email: ${KNSTORE_SECURITY_ADMIN_EMAIL:admin@localhost}
