@@ -8,12 +8,12 @@
 
 ## 1. Git — estado
 
-- Rama **main** en **`b26be02`** (`docs: registrar la re-siembra completa de produccion`), working tree limpio. `origin` (`joseph12n/knstore`) y el espejo **sena-students** están en el **mismo SHA** (`b26be02`) con las **6 ramas** (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`) apuntando a `main`.
+- Rama **main** en **`438293f`** (`docs: sincronizar agents.md y consolidar el cierre del hito de produccion`), working tree limpio. `origin` (`joseph12n/knstore`) y el espejo **sena-students** están en el **mismo SHA** (`438293f`, push `b26be02..438293f`) con las **6 ramas** (`main`, `Nicolas`, `carrito`, `joseph`, `lauraG`, `santiago`) apuntando a `main` (unificación fast-forward).
 - **Release 3.3.0 (2026-09-23):** **7 commits** `73e089f`…`77e5403` — fix del gate (`73e089f`), scraper (`dc65ed9`), catálogo v3 (`688adc6`), idempotencia/fallback (`949fe32`), bitácora (`48642a9`), bump de `app-prod.yml` (`49647e1`) y registro del release (`77e5403`) → push a `origin` + mirror, **6 ramas unificadas** y tag anotado **`v3.3.0`** sobre `77e5403` (`2bfae103`, presente en ambos repos). Tips previos de las ramas respaldados en `refs/backup/2026-09-23/` y `refs/backup/2026-09-24/` (local a los dos repos, no se suben).
 - **Fases 2c/3b/4b (2026-09-23)** — seed operacional, cascada DIVIPOLA y panel admin solo escritorio — se publicaron en el **release 3.2.0** (tag anotado sobre `15f4588`, 2026-09-23 21:05), junto con el manifiesto v2 y el host Pexels en la CSP (`f7472ca`, `888819f`, `e0fc34f`, `15ddb12`, `a591e75`).
 - Tags de release: `v3.0.0` (hardening), `v3.0.1` (precio_venta RF-072), `v3.0.3` (imágenes + CSP), `v3.1.0` (front: fixes responsive, modo oscuro, secciones, login y admin), `v3.1.1` (sidebar admin), `v3.2.0` (manifiesto v2, cascada divipola, panel solo escritorio y seed operacional), **`v3.3.0`** (contenido v3 con imágenes reales + fix de duplicación del Quality Gate).
 - Imagen publicada en Docker Hub: **`eljoseph12/knstore:3.3.0`** (= `latest`, digest `sha256:2d3b62f1cc94c4e90e0388cd257230aebe5c7240ad5394fed5fda44df0d03a75`; verificado por API el 2026-09-24 04:44 UTC).
-- **SonarCloud** (`joseph12n_knstore`): Quality Gate **OK (5/5)** con **1,1 % de duplicación en código nuevo** (umbral 3 %); análisis `b24e740b…` (rev `77e5403`, 2026-09-24T04:53Z) y `ac037261…` (rev `b26be02`, 2026-09-24T05:29Z) verificados por API pública. Auto-Scan ignora `sonar-project.properties` (ver §5).
+- **SonarCloud** (`joseph12n_knstore`): Quality Gate **OK (5/5)** con **1,1 % de duplicación en código nuevo** (umbral 3 %); análisis `b24e740b…` (rev `77e5403`, 2026-09-24T04:53Z), `ac037261…` (rev `b26be02`, 2026-09-24T05:29Z) y `b5eab6b0…` (rev `438293f`, 2026-09-24T06:04Z, el de la publicación final) verificados por API pública. Auto-Scan ignora `sonar-project.properties` (ver §5).
 
 ## 2. Calidad — todo verde
 
