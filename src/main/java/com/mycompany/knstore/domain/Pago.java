@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "pago")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Pago extends AbstractAuditingEntity<String> implements Serializable {
+public class Pago extends AbstractAuditingEntity<String> {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -58,12 +58,11 @@ public class Pago extends AbstractAuditingEntity<String> implements Serializable
     @Field("fecha_pago")
     private Instant fechaPago;
 
-    @Size(max = 500)
-    @Field("motivo_reembolso")
-    private String motivoReembolso;
-
     @Field("fecha_reembolso")
     private Instant fechaReembolso;
+
+    @Field("motivo_reembolso")
+    private String motivoReembolso;
 
     @DBRef
     @Field("pedido")
@@ -189,19 +188,6 @@ public class Pago extends AbstractAuditingEntity<String> implements Serializable
         this.fechaPago = fechaPago;
     }
 
-    public String getMotivoReembolso() {
-        return this.motivoReembolso;
-    }
-
-    public Pago motivoReembolso(String motivoReembolso) {
-        this.setMotivoReembolso(motivoReembolso);
-        return this;
-    }
-
-    public void setMotivoReembolso(String motivoReembolso) {
-        this.motivoReembolso = motivoReembolso;
-    }
-
     public Instant getFechaReembolso() {
         return this.fechaReembolso;
     }
@@ -213,6 +199,19 @@ public class Pago extends AbstractAuditingEntity<String> implements Serializable
 
     public void setFechaReembolso(Instant fechaReembolso) {
         this.fechaReembolso = fechaReembolso;
+    }
+
+    public String getMotivoReembolso() {
+        return this.motivoReembolso;
+    }
+
+    public Pago motivoReembolso(String motivoReembolso) {
+        this.setMotivoReembolso(motivoReembolso);
+        return this;
+    }
+
+    public void setMotivoReembolso(String motivoReembolso) {
+        this.motivoReembolso = motivoReembolso;
     }
 
     public Pedido getPedido() {
@@ -260,8 +259,6 @@ public class Pago extends AbstractAuditingEntity<String> implements Serializable
             ", descripcionRespuesta='" + getDescripcionRespuesta() + "'" +
             ", intentos=" + getIntentos() +
             ", fechaPago='" + getFechaPago() + "'" +
-            ", motivoReembolso='" + getMotivoReembolso() + "'" +
-            ", fechaReembolso='" + getFechaReembolso() + "'" +
             "}";
     }
 }

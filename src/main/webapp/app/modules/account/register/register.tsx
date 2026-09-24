@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Col, Row } from 'react-bootstrap';
 import { ValidatedField, ValidatedForm, isEmail } from 'react-jhipster';
-import { Link } from 'react-router';
 
 import { toast } from 'react-toastify';
 
+import { translateErrorKey } from 'app/config/notification-middleware';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
 
@@ -28,6 +28,7 @@ export const RegisterPage = () => {
   const updatePassword = event => setPassword(event.target.value);
 
   const successMessage = useAppSelector(state => state.register.successMessage);
+  const errorMessage = useAppSelector(state => state.register.errorMessage);
 
   useEffect(() => {
     if (successMessage) {
@@ -46,6 +47,11 @@ export const RegisterPage = () => {
       </Row>
       <Row className="justify-content-center">
         <Col md="8">
+          {errorMessage && (
+            <Alert variant="danger" data-cy="registerError">
+              {translateErrorKey(errorMessage)}
+            </Alert>
+          )}
           <ValidatedForm id="register-form" onSubmit={handleValidSubmit}>
             <ValidatedField
               name="username"
@@ -106,18 +112,6 @@ export const RegisterPage = () => {
               Crear la cuenta
             </Button>
           </ValidatedForm>
-          <p>&nbsp;</p>
-          <Alert variant="warning">
-            <span>Si desea </span>
-            <Link to="/login" className="alert-link">
-              iniciar sesión
-            </Link>
-            <span>
-              , puede intentar con las cuentas predeterminadas:
-              <br />- Administrador (usuario=&quot;admin&quot; y contraseña=&quot;admin&quot;) <br />- Usuario (usuario=&quot;user&quot; y
-              contraseña=&quot;user&quot;).
-            </span>
-          </Alert>
         </Col>
       </Row>
     </div>

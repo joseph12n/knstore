@@ -1,18 +1,26 @@
 package com.mycompany.knstore.service.impl;
 
+import com.mycompany.knstore.domain.Producto;
 import com.mycompany.knstore.domain.ProductoPrecio;
 import com.mycompany.knstore.repository.ProductoPrecioRepository;
 import com.mycompany.knstore.service.ProductoPrecioService;
 import com.mycompany.knstore.service.dto.ProductoPrecioDTO;
 import com.mycompany.knstore.service.mapper.ProductoPrecioMapper;
-import com.mycompany.knstore.service.util.ProductoPrecioUtils;
+import com.mycompany.knstore.service.util.MoneyUtils;
+import com.mycompany.knstore.service.util.MongoIdUtils;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,17 +35,23 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
 
     private final ProductoPrecioMapper productoPrecioMapper;
 
-    public ProductoPrecioServiceImpl(ProductoPrecioRepository productoPrecioRepository, ProductoPrecioMapper productoPrecioMapper) {
+    private final MongoTemplate mongoTemplate;
+
+    public ProductoPrecioServiceImpl(
+        ProductoPrecioRepository productoPrecioRepository,
+        ProductoPrecioMapper productoPrecioMapper,
+        MongoTemplate mongoTemplate
+    ) {
         this.productoPrecioRepository = productoPrecioRepository;
         this.productoPrecioMapper = productoPrecioMapper;
+        this.mongoTemplate = mongoTemplate;
     }
 
     @Override
     public ProductoPrecioDTO save(ProductoPrecioDTO productoPrecioDTO) {
         LOG.debug("Request to save ProductoPrecio : {}", productoPrecioDTO);
         ProductoPrecio productoPrecio = productoPrecioMapper.toEntity(productoPrecioDTO);
-        ProductoPrecioUtils.normalizeAndComputeGanancia(productoPrecio);
-        productoPrecio = productoPrecioRepository.save(productoPrecio);
+        productoPrecio = guardarConTotales(productoPrecio);
         return productoPrecioMapper.toDto(productoPrecio);
     }
 
@@ -45,8 +59,7 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
     public ProductoPrecioDTO update(ProductoPrecioDTO productoPrecioDTO) {
         LOG.debug("Request to update ProductoPrecio : {}", productoPrecioDTO);
         ProductoPrecio productoPrecio = productoPrecioMapper.toEntity(productoPrecioDTO);
-        ProductoPrecioUtils.normalizeAndComputeGanancia(productoPrecio);
-        productoPrecio = productoPrecioRepository.save(productoPrecio);
+        productoPrecio = guardarConTotales(productoPrecio);
         return productoPrecioMapper.toDto(productoPrecio);
     }
 
@@ -58,12 +71,56 @@ public class ProductoPrecioServiceImpl implements ProductoPrecioService {
             .findById(productoPrecioDTO.getId())
             .map(existingProductoPrecio -> {
                 productoPrecioMapper.partialUpdate(existingProductoPrecio, productoPrecioDTO);
-                ProductoPrecioUtils.normalizeAndComputeGanancia(existingProductoPrecio);
-
-                return existingProductoPrecio;
+                return guardarConTotales(existingProductoPrecio);
             })
-            .map(productoPrecioRepository::save)
             .map(productoPrecioMapper::toDto);
+    }
+
+    private ProductoPrecio guardarConTotales(ProductoPrecio productoPrecio) {
+        productoPrecio.setPrecioCompra(MoneyUtils.normalizar(productoPrecio.getPrecioCompra()));
+        productoPrecio.setPrecioVenta(MoneyUtils.normalizar(productoPrecio.getPrecioVenta()));
+        productoPrecio.setPrecioAdicional(MoneyUtils.normalizar(productoPrecio.getPrecioAdicional()));
+        calcularGanancia(productoPrecio);
+        ProductoPrecio guardado = productoPrecioRepository.save(productoPrecio);
+        sincronizarPrecioVentaEnProducto(guardado);
+        return guardado;
+    }
+
+    /**
+     * RF-072: mantiene el campo denormalizado {@code producto.precio_venta}
+     * sincronizado con el precio de venta del producto_precio para permitir
+     * ordenamiento server-side por precio (el DBRef no vive en el documento
+     * producto). Si el precio no trae el producto asociado (el DTO no expone la
+     * relacion inversa), se resuelve el producto que referencia este precio.
+     */
+    private void sincronizarPrecioVentaEnProducto(ProductoPrecio productoPrecio) {
+        if (productoPrecio.getPrecioVenta() == null) {
+            return;
+        }
+        BigDecimal valorNormalizado = MoneyUtils.normalizar(productoPrecio.getPrecioVenta());
+        if (productoPrecio.getProducto() != null && productoPrecio.getProducto().getId() != null) {
+            mongoTemplate.updateFirst(
+                new Query(Criteria.where("_id").is(productoPrecio.getProducto().getId())),
+                new Update().set("precio_venta", valorNormalizado),
+                Producto.class
+            );
+            return;
+        }
+        if (productoPrecio.getId() != null && ObjectId.isValid(productoPrecio.getId())) {
+            mongoTemplate.updateMulti(
+                new Query(Criteria.where("precio.$id").is(MongoIdUtils.toObjectId(productoPrecio.getId()))),
+                new Update().set("precio_venta", valorNormalizado),
+                Producto.class
+            );
+        }
+    }
+
+    private void calcularGanancia(ProductoPrecio productoPrecio) {
+        BigDecimal precioVenta = productoPrecio.getPrecioVenta();
+        BigDecimal precioCompra = productoPrecio.getPrecioCompra();
+        if (precioVenta != null && precioCompra != null) {
+            productoPrecio.setGanancia(MoneyUtils.normalizar(precioVenta.subtract(precioCompra)));
+        }
     }
 
     @Override

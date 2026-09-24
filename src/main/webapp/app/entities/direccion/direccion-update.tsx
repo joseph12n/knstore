@@ -54,12 +54,6 @@ export const DireccionUpdate = () => {
     }
   }, [direccionEntity]);
 
-  useEffect(() => {
-    if (!isCliente && isNew && !selectedCuentaId && cuentas?.length > 0) {
-      setSelectedCuentaId(cuentas[0].id);
-    }
-  }, [isCliente, isNew, selectedCuentaId, cuentas]);
-
   const resolveCuenta = value => {
     if (value == null || value === '') {
       return undefined;
@@ -71,11 +65,10 @@ export const DireccionUpdate = () => {
   };
 
   const saveEntity = values => {
-    const cuentaId = isCliente ? direccionEntity?.cuenta?.id : selectedCuentaId || values.cuenta || cuentas?.[0]?.id;
     const entity = {
       ...direccionEntity,
       ...values,
-      cuenta: resolveCuenta(cuentaId),
+      cuenta: isCliente ? resolveCuenta(direccionEntity?.cuenta?.id) : resolveCuenta(selectedCuentaId || values.cuenta),
     };
 
     if (isNew) {
@@ -117,6 +110,7 @@ export const DireccionUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
+                  pattern: { value: /.*[A-Za-zÁÉÍÓÚÜÑáéíóúüñ].*/, message: 'La dirección debe contener al menos una letra.' },
                   maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
                 }}
               />
@@ -128,6 +122,7 @@ export const DireccionUpdate = () => {
                 type="text"
                 validate={{
                   maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                 }}
               />
               <ValidatedField
@@ -138,6 +133,7 @@ export const DireccionUpdate = () => {
                 type="text"
                 validate={{
                   maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                 }}
               />
               <ValidatedField
@@ -149,6 +145,7 @@ export const DireccionUpdate = () => {
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
                   maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                 }}
               />
               <ValidatedField
@@ -160,6 +157,7 @@ export const DireccionUpdate = () => {
                 validate={{
                   required: { value: true, message: 'Este campo es obligatorio.' },
                   maxLength: { value: 100, message: 'Este campo no puede superar más de 100 caracteres.' },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                 }}
               />
               <ValidatedField label="Activo" id="direccion-activo" name="activo" data-cy="activo" check type="checkbox" />
@@ -182,9 +180,9 @@ export const DireccionUpdate = () => {
                     label="Cuenta"
                     type="select"
                     required
-                    value={selectedCuentaId || ''}
                     onChange={event => setSelectedCuentaId(event.target.value)}
                   >
+                    <option value="" key="0" />
                     {cuentas
                       ? cuentas.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>

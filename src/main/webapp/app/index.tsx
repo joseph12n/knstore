@@ -18,7 +18,17 @@ const actions = bindActionCreators({ clearAuthentication }, store.dispatch);
 setupAxiosInterceptors(() => actions.clearAuthentication('login.error.unauthorized'));
 
 loadIcons();
-registerServiceWorker();
+
+if (process.env.NODE_ENV === 'production') {
+  registerServiceWorker();
+} else if ('serviceWorker' in navigator) {
+  // En desarrollo el service worker cachea el bundle y rompe el HMR (bucle de
+  // recargas); se desregistra y se limpian las cachés para liberar al navegador.
+  navigator.serviceWorker.getRegistrations().then(registrations => registrations.forEach(registration => registration.unregister()));
+  if (window.caches) {
+    caches.keys().then(keys => keys.forEach(key => caches.delete(key)));
+  }
+}
 
 const rootEl = document.getElementById('root');
 const root = createRoot(rootEl!);

@@ -2,7 +2,25 @@
  * Constantes del storefront de cliente.
  */
 
+import dayjs from 'dayjs';
+
 export const STORE_NAME = 'Knstore';
+
+/** RNF-032: ventana para que el cliente cancele su pedido y solicite reembolso. */
+export const CANCEL_WINDOW_MINUTES = 60;
+
+const CANCELABLE_ESTADOS = ['PENDING', 'CONFIRMED', 'PROCESSING'];
+
+/** RNF-032: cancelacion visible solo dentro de la ventana de 1 hora desde la compra. */
+export const esCancelablePedido = (pedido?: { estado?: string | null; createdDate?: string | null }): boolean => {
+  if (!pedido?.estado || !CANCELABLE_ESTADOS.includes(pedido.estado)) {
+    return false;
+  }
+  if (!pedido.createdDate) {
+    return true;
+  }
+  return dayjs().diff(dayjs(pedido.createdDate), 'minute') <= CANCEL_WINDOW_MINUTES;
+};
 
 export const CATALOG_PAGE_SIZE = 24;
 
@@ -68,7 +86,7 @@ export const ORDER_STATUS_COLORS: Record<string, string> = {
 export const PAYMENT_STATUS_LABELS: Record<string, string> = {
   PENDING: 'Pendiente',
   APPROVED: 'Aprobado',
-  REJECTED: 'Rechazado',
+  REJECTED: 'No aprobado',
   REFUNDED: 'Reembolsado',
   EXPIRED: 'Expirado',
   CANCELLED: 'Cancelado',

@@ -24,7 +24,7 @@
         -->
         <maven.version>3.2.5</maven.version>
         <java.version>21</java.version>
-        <node.version>v20.19.0</node.version>
+        <node.version>v24.16.0</node.version>
         <npm.version>11.15.0</npm.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -44,7 +44,7 @@
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <jhipster-framework.version>9.1.0</jhipster-framework.version>
         <jib-maven-plugin.architecture>amd64</jib-maven-plugin.architecture>
-        <jib-maven-plugin.image>eclipse-temurin:25-jre-noble</jib-maven-plugin.image>
+        <jib-maven-plugin.image>eclipse-temurin:21.0.11_10-jre-ubi9-minimal</jib-maven-plugin.image>
         <jib-maven-plugin.version>3.5.1</jib-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -132,6 +132,21 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -264,21 +279,6 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.librepdf</groupId>
-            <artifactId>openpdf</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>core</artifactId>
-            <version>3.5.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-            <version>3.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>

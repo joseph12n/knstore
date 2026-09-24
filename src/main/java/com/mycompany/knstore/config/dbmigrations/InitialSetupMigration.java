@@ -8,9 +8,11 @@ import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackExecution;
 import java.time.Instant;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Creates the initial database setup.
@@ -20,8 +22,11 @@ public class InitialSetupMigration {
 
     private final MongoTemplate template;
 
-    public InitialSetupMigration(MongoTemplate template) {
+    private final Environment environment;
+
+    public InitialSetupMigration(MongoTemplate template, Environment environment) {
         this.template = template;
+        this.environment = environment;
     }
 
     @Execution
@@ -31,7 +36,11 @@ public class InitialSetupMigration {
         Authority adminAuthority = ensureAuthority(AuthoritiesConstants.ADMIN);
         Authority clienteAuthority = ensureAuthority(AuthoritiesConstants.CLIENTE);
 
-        addUsers(userAuthority, adminAuthority, managerAuthority, clienteAuthority);
+        if (environment.getProperty("knstore.seed.demo-users", Boolean.class, true)) {
+            addUsers(userAuthority, adminAuthority, managerAuthority, clienteAuthority);
+        } else {
+            addInitialAdmin(userAuthority, adminAuthority);
+        }
     }
 
     @RollbackExecution
@@ -56,6 +65,30 @@ public class InitialSetupMigration {
         template.save(upsertUser(createAdmin(adminAuthority, userAuthority), "admin"));
         template.save(upsertUser(createManager(managerAuthority, userAuthority), "manager"));
         template.save(upsertUser(createCliente(clienteAuthority, userAuthority), "cliente"));
+    }
+
+    private void addInitialAdmin(Authority userAuthority, Authority adminAuthority) {
+        String rawPassword = environment.getProperty("knstore.security.admin-password");
+        if (rawPassword == null || rawPassword.isBlank()) {
+            throw new IllegalStateException(
+                "Defina knstore.security.admin-password (variable KNSTORE_SECURITY_ADMIN_PASSWORD) para crear el administrador inicial"
+            );
+        }
+        String email = environment.getProperty("knstore.security.admin-email", "admin@localhost");
+        User adminUser = new User();
+        adminUser.setId("user-1");
+        adminUser.setLogin(environment.getProperty("knstore.security.admin-login", "admin"));
+        adminUser.setPassword(new BCryptPasswordEncoder().encode(rawPassword));
+        adminUser.setFirstName(environment.getProperty("knstore.security.admin-first-name", "admin"));
+        adminUser.setLastName(environment.getProperty("knstore.security.admin-last-name", "Administrator"));
+        adminUser.setEmail(email);
+        adminUser.setActivated(true);
+        adminUser.setLangKey("es");
+        adminUser.setCreatedBy(Constants.SYSTEM);
+        adminUser.setCreatedDate(Instant.now());
+        adminUser.getAuthorities().add(adminAuthority);
+        adminUser.getAuthorities().add(userAuthority);
+        template.save(upsertUser(adminUser, adminUser.getLogin()));
     }
 
     private User upsertUser(User expectedUser, String login) {

@@ -1,8 +1,7 @@
 package com.mycompany.knstore.service;
 
-import com.mycompany.knstore.service.dto.PagoCallbackRequestDTO;
 import com.mycompany.knstore.service.dto.PagoDTO;
-import com.mycompany.knstore.service.dto.PagoIniciarRequestDTO;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,12 +34,6 @@ public interface PagoService {
      */
     Optional<PagoDTO> partialUpdate(PagoDTO pagoDTO);
 
-    PagoDTO iniciarPago(PagoIniciarRequestDTO iniciarRequest);
-
-    PagoDTO procesarCallback(PagoCallbackRequestDTO callbackRequest);
-
-    PagoDTO reembolsar(String pagoId, String motivo);
-
     /**
      * Get all the pagos.
      *
@@ -71,4 +64,33 @@ public interface PagoService {
      * @return the persisted pago with its final state.
      */
     PagoDTO iniciarPago(String pedidoId);
+
+    /**
+     * Procesa un callback de la pasarela de pagos de forma idempotente.
+     *
+     * @param referencia referencia de la pasarela.
+     * @param estado estado reportado (APPROVED o REJECTED).
+     * @param monto monto pagado.
+     * @param codigoAutorizacion codigo de autorizacion (opcional).
+     * @return el pago actualizado.
+     */
+    PagoDTO procesarCallback(String referencia, String estado, BigDecimal monto, String codigoAutorizacion);
+
+    /**
+     * Consulta el estado actual de un pago por su referencia de pasarela.
+     *
+     * @param referencia referencia de la pasarela.
+     * @return el pago encontrado.
+     */
+    Optional<PagoDTO> consultarEstado(String referencia);
+
+    /**
+     * Reembolsa un pago aprobado dejando trazabilidad completa.
+     *
+     * @param id id del pago.
+     * @param motivo motivo del reembolso (obligatorio).
+     * @return el pago reembolsado.
+     * @throws IllegalStateException si el pago no esta aprobado o ya fue reembolsado.
+     */
+    PagoDTO reembolsar(String id, String motivo);
 }

@@ -76,7 +76,9 @@ public class SecurityConfiguration {
                     .requestMatchers("/management/health").permitAll()
                     .requestMatchers("/management/health/**").permitAll()
                     .requestMatchers("/management/info").permitAll()
-                    .requestMatchers("/management/prometheus").permitAll()
+                    // RNF-031: las metricas internas (prometheus, beans, etc.) son
+                    // exclusivas de ADMIN/MANAGER; el matcher generico /management/**
+                    // las protege. No se permite prometheus de forma publica.
                     .requestMatchers("/management/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.MANAGER)
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

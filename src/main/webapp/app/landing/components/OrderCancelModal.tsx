@@ -7,9 +7,17 @@ interface OrderCancelModalProps {
   onConfirm: (motivo: string) => void | Promise<void>;
   isSubmitting?: boolean;
   numeroPedido?: string;
+  reembolsoIncluido?: boolean;
 }
 
-export const OrderCancelModal = ({ show, onHide, onConfirm, isSubmitting = false, numeroPedido }: OrderCancelModalProps) => {
+export const OrderCancelModal = ({
+  show,
+  onHide,
+  onConfirm,
+  isSubmitting = false,
+  numeroPedido,
+  reembolsoIncluido = false,
+}: OrderCancelModalProps) => {
   const [motivo, setMotivo] = useState('');
 
   const handleClose = () => {
@@ -34,7 +42,10 @@ export const OrderCancelModal = ({ show, onHide, onConfirm, isSubmitting = false
           {numeroPedido ? <strong> #{numeroPedido}</strong> : ''}?
         </p>
         <p className="text-muted small">
-          Esta acción no se puede deshacer. Si ya realizaste un pago, el reembolso será gestionado por nuestro equipo.
+          Esta acción no se puede deshacer.
+          {reembolsoIncluido
+            ? ' Tu pago aprobado será reembolsado de forma simbólica; solo tienes 1 hora desde la compra para cancelar.'
+            : ' Solo tienes 1 hora desde la compra para cancelar. El reembolso será gestionado por nuestro equipo.'}
         </p>
         <Form.Group>
           <Form.Label>Motivo de la cancelación (opcional)</Form.Label>

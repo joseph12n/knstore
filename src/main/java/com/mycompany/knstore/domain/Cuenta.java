@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "cuenta")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Cuenta extends AbstractAuditingEntity<String> implements Serializable {
+public class Cuenta extends AbstractAuditingEntity<String> {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -23,39 +23,53 @@ public class Cuenta extends AbstractAuditingEntity<String> implements Serializab
     @Id
     private String id;
 
+    @NotNull
     @Size(max = 20)
+    @Pattern(regexp = "^[0-9]{1,20}$")
     @Field("num_documento")
     private String numDocumento;
 
     @NotNull
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("primer_nombre")
     private String primerNombre;
 
+    @NotNull
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("segundo_nombre")
     private String segundoNombre;
 
     @NotNull
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("primer_apellido")
     private String primerApellido;
 
+    @NotNull
     @Size(max = 50)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     @Field("segundo_apellido")
     private String segundoApellido;
 
+    @NotNull
     @Field("genero")
     private Genero genero;
 
+    @NotNull
     @Field("fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
+    @NotNull
     @Size(max = 15)
+    @Pattern(regexp = "^[0-9]{7,15}$")
     @Field("celular")
     private String celular;
 
+    @NotNull
     @Size(max = 15)
+    @Pattern(regexp = "^[0-9]{7,15}$")
     @Field("telefono")
     private String telefono;
 
@@ -73,6 +87,7 @@ public class Cuenta extends AbstractAuditingEntity<String> implements Serializab
     @Field("user")
     private User user;
 
+    @NotNull
     @DBRef
     @Field("tipoDocumento")
     private TipoDocumento tipoDocumento;
@@ -291,6 +306,14 @@ public class Cuenta extends AbstractAuditingEntity<String> implements Serializab
     public int hashCode() {
         // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
         return getClass().hashCode();
+    }
+
+    @AssertTrue(message = "La fecha de nacimiento no puede ser futura ni indicar más de 100 años")
+    public boolean isFechaNacimientoValida() {
+        return (
+            fechaNacimiento == null ||
+            (!fechaNacimiento.isAfter(LocalDate.now()) && !fechaNacimiento.isBefore(LocalDate.now().minusYears(100)))
+        );
     }
 
     // prettier-ignore

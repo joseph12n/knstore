@@ -9,7 +9,6 @@ import com.mycompany.knstore.security.SecurityUtils;
 import com.mycompany.knstore.service.ItemPedidoService;
 import com.mycompany.knstore.service.dto.ItemPedidoDTO;
 import com.mycompany.knstore.service.mapper.ItemPedidoMapper;
-import com.mycompany.knstore.service.util.MoneyUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +51,6 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     public ItemPedidoDTO save(ItemPedidoDTO itemPedidoDTO) {
         LOG.debug("Request to save ItemPedido : {}", itemPedidoDTO);
         ItemPedido itemPedido = itemPedidoMapper.toEntity(itemPedidoDTO);
-        normalizeMonetaryFields(itemPedido);
         itemPedido = itemPedidoRepository.save(itemPedido);
         return itemPedidoMapper.toDto(itemPedido);
     }
@@ -61,7 +59,6 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
     public ItemPedidoDTO update(ItemPedidoDTO itemPedidoDTO) {
         LOG.debug("Request to update ItemPedido : {}", itemPedidoDTO);
         ItemPedido itemPedido = itemPedidoMapper.toEntity(itemPedidoDTO);
-        normalizeMonetaryFields(itemPedido);
         itemPedido = itemPedidoRepository.save(itemPedido);
         return itemPedidoMapper.toDto(itemPedido);
     }
@@ -74,7 +71,6 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
             .findById(itemPedidoDTO.getId())
             .map(existingItemPedido -> {
                 itemPedidoMapper.partialUpdate(existingItemPedido, itemPedidoDTO);
-                normalizeMonetaryFields(existingItemPedido);
 
                 return existingItemPedido;
             })
@@ -135,13 +131,5 @@ public class ItemPedidoServiceImpl implements ItemPedidoService {
         return SecurityUtils.getCurrentUserId()
             .flatMap(cuentaRepository::findOneByUserId)
             .map(cuenta -> cuenta.getId());
-    }
-
-    private void normalizeMonetaryFields(ItemPedido itemPedido) {
-        itemPedido.setPrecioUnitario(MoneyUtils.normalize(itemPedido.getPrecioUnitario()));
-        itemPedido.setPorcentajeIva(MoneyUtils.normalize(itemPedido.getPorcentajeIva()));
-        itemPedido.setValorIva(MoneyUtils.normalize(itemPedido.getValorIva()));
-        itemPedido.setDescuento(MoneyUtils.normalize(itemPedido.getDescuento()));
-        itemPedido.setSubtotal(MoneyUtils.normalize(itemPedido.getSubtotal()));
     }
 }

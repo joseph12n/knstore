@@ -15,7 +15,6 @@ public interface MongoDbTestContainer {
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", mongoDbContainer::getReplicaSetUrl);
-        registry.add("spring.data.mongodb.database", () -> "knstore");
+        registry.add("spring.mongodb.uri", mongoDbContainer::getReplicaSetUrl);
     }
 }

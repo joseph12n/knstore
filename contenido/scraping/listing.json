@@ -1,0 +1,2489 @@
+{
+  "version": 1,
+  "generado": "2026-09-23T22:27:36",
+  "fuente": "zappos.com",
+  "nota": "Candidatos curados por el agente contenido-tienda. Descarga: node scripts/scraper-zapatos.js",
+  "total": 60,
+  "productos": [
+    {
+      "productId": "10020695",
+      "slug": "nike-court-vision-low-next-nature-blanco",
+      "titulo": "Court Vision Low Next Nature",
+      "nombre": "Court Vision Low Next Nature",
+      "marca": "nike",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/White/White",
+      "talla": 41,
+      "precioUSD": 76.05,
+      "pagina": "https://www.zappos.com/p/nike-court-vision-low-next-nature-white-white-white/product/10020695/color/5078",
+      "busqueda": "nike",
+      "etiquetas": [
+        "clasico",
+        "urbano",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61EHx36TGuL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61EHx36TGuL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61hK3a+d1aL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61hK3a+d1aL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61KxhTyVxIL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61KxhTyVxIL"
+        }
+      ]
+    },
+    {
+      "productId": "10020780",
+      "slug": "nike-air-monarch-iv-blanco",
+      "titulo": "Air Monarch IV",
+      "nombre": "Air Monarch IV",
+      "marca": "nike",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/Indigo Storm/Gum Light Brown",
+      "talla": 42,
+      "precioUSD": 85,
+      "pagina": "https://www.zappos.com/p/nike-air-monarch-iv-white-indigo-storm-gum-light-brown/product/10020780/color/1136462",
+      "busqueda": "nike",
+      "etiquetas": [
+        "comodo",
+        "urbano",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/610sf13p0+L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "610sf13p0+L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61wNkkKl4xL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61wNkkKl4xL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/612gpA-A+RL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "612gpA-A+RL"
+        }
+      ]
+    },
+    {
+      "productId": "10020711",
+      "slug": "nike-vomero-18-amarillo",
+      "titulo": "Vomero 18",
+      "nombre": "Vomero 18",
+      "marca": "nike",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "color": "Amarillo Volt",
+      "colorOriginal": "Yellow",
+      "styleColor": "White/Black/Volt/Barely Volt",
+      "talla": 42,
+      "precioUSD": 117.97,
+      "pagina": "https://www.zappos.com/p/nike-vomero-18-white-black-volt-barely-volt/product/10020711/color/1122253",
+      "busqueda": "nike",
+      "etiquetas": [
+        "running",
+        "nuevo",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71HKJWO0r+L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71HKJWO0r+L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/616GgH0t0fL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "616GgH0t0fL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71nCLMciK2L._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71nCLMciK2L"
+        }
+      ]
+    },
+    {
+      "productId": "10031804",
+      "slug": "nike-metcon-10-blanco",
+      "titulo": "Metcon 10",
+      "nombre": "Metcon 10",
+      "marca": "nike",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "Photon Dust/Photon Dust",
+      "talla": 41,
+      "precioUSD": 139.5,
+      "pagina": "https://www.zappos.com/p/nike-metcon-10-photon-dust-photon-dust/product/10031804/color/891890",
+      "busqueda": "nike",
+      "etiquetas": [
+        "deportivo",
+        "nuevo",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/711DHbnelrL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "711DHbnelrL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71rWwqDAcLL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71rWwqDAcLL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/717BK8mPsVL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "717BK8mPsVL"
+        }
+      ]
+    },
+    {
+      "productId": "9828744",
+      "slug": "nike-air-max-270-negro",
+      "titulo": "Air Max 270",
+      "nombre": "Air Max 270",
+      "marca": "nike",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/Anthracite/White",
+      "talla": 37,
+      "precioUSD": 123,
+      "pagina": "https://www.zappos.com/p/nike-air-max-270-black-anthracite-white/product/9828744/color/120870",
+      "busqueda": "nike",
+      "etiquetas": [
+        "clasico",
+        "mas-vendido",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/712q4hecgNL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "712q4hecgNL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71aC0tJEcKL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71aC0tJEcKL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61GdX5oNhgL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61GdX5oNhgL"
+        }
+      ]
+    },
+    {
+      "productId": "10020722",
+      "slug": "nike-pegasus-41-purpura-mujer",
+      "titulo": "Pegasus 41",
+      "nombre": "Pegasus 41",
+      "marca": "nike",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "color": "Morado",
+      "colorOriginal": "Purple",
+      "styleColor": "Violet Mist/Purple Dynasty/Bright Violet",
+      "talla": 37,
+      "precioUSD": 94.25,
+      "pagina": "https://www.zappos.com/p/nike-pegasus-41-violet-mist-purple-dynasty-bright-violet/product/10020722/color/1122246",
+      "busqueda": "nike",
+      "etiquetas": [
+        "running",
+        "comodo",
+        "nuevo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/716upOGBBlL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "716upOGBBlL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71YU7lZcx3L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71YU7lZcx3L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71mSKEshxSL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71mSKEshxSL"
+        }
+      ]
+    },
+    {
+      "productId": "10030822",
+      "slug": "nike-court-vision-low-mujer-cafe",
+      "titulo": "Court Vision Low",
+      "nombre": "Court Vision Low",
+      "marca": "nike",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Cafe",
+      "colorOriginal": "Brown",
+      "styleColor": "Sail/Sail/Cacao Wow/Coconut Milk",
+      "talla": 37,
+      "precioUSD": 67.97,
+      "pagina": "https://www.zappos.com/p/nike-court-vision-low-sail-sail-cacao-wow-coconut-milk/product/10030822/color/1123122",
+      "busqueda": "nike",
+      "etiquetas": [
+        "urbano",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71N+WQfP4mL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71N+WQfP4mL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61nJlYr7QPL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61nJlYr7QPL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71pMaeyEjGL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71pMaeyEjGL"
+        }
+      ]
+    },
+    {
+      "productId": "10025052",
+      "slug": "nike-run-swift-3-blanco-mujer",
+      "titulo": "Run Swift 3",
+      "nombre": "Run Swift 3",
+      "marca": "nike",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "Summit White/Metallic Silver",
+      "talla": 36,
+      "precioUSD": 67.97,
+      "pagina": "https://www.zappos.com/p/nike-run-swift-3-summit-white-metallic-silver/product/10025052/color/401710",
+      "busqueda": "nike",
+      "etiquetas": [
+        "running",
+        "liviano",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61LCkQV4RBL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61LCkQV4RBL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71LLqRKhI6L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71LLqRKhI6L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61CUq6NJPHL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61CUq6NJPHL"
+        }
+      ]
+    },
+    {
+      "productId": "10036724",
+      "slug": "nike-court-borough-low-recraft-nino-blanco",
+      "titulo": "Court Borough Low Recraft (Big Kid)",
+      "nombre": "Court Borough Low Recraft",
+      "marca": "nike",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/White/White",
+      "talla": 33,
+      "precioUSD": 63.99,
+      "pagina": "https://www.zappos.com/p/nike-kids-court-borough-low-recraft-big-kid-white-white-white/product/10036724/color/5078",
+      "busqueda": "nike",
+      "etiquetas": [
+        "colegio",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61k5OyFEDUL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61k5OyFEDUL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/5108ou7tw2L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "5108ou7tw2L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61U+6dhq6zL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61U+6dhq6zL"
+        }
+      ]
+    },
+    {
+      "productId": "10052359",
+      "slug": "nike-air-max-270-nino-gris",
+      "titulo": "Air Max 270 (Big Kid)",
+      "nombre": "Air Max 270",
+      "marca": "nike",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "color": "Gris",
+      "colorOriginal": "Gray",
+      "styleColor": "Wolf Grey/Racer Blue/Smoke Grey/Green Spark",
+      "talla": 32,
+      "precioUSD": 132,
+      "pagina": "https://www.zappos.com/p/nike-kids-air-max-270-big-kid-wolf-grey-racer-blue-smoke-grey-green-spark/product/10052359/color/1135571",
+      "busqueda": "nike",
+      "etiquetas": [
+        "comodo",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/81cnI+doNPL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "81cnI+doNPL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/81gSjZu+MVL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "81gSjZu+MVL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71LrZUsEU4L._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71LrZUsEU4L"
+        }
+      ]
+    },
+    {
+      "productId": "10022449",
+      "slug": "nike-star-runner-5-nino-azul",
+      "titulo": "Star Runner 5 (Big Kid)",
+      "nombre": "Star Runner 5",
+      "marca": "nike",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "color": "Azul",
+      "colorOriginal": "Blue",
+      "styleColor": "Midnight Navy/Racer Blue/Dark Slate",
+      "talla": 32,
+      "precioUSD": 65,
+      "pagina": "https://www.zappos.com/p/nike-kids-star-runner-5-big-kid-midnight-navy-racer-blue-dark-slate/product/10022449/color/1142270",
+      "busqueda": "nike",
+      "etiquetas": [
+        "colegio",
+        "comodo",
+        "liviano"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71hGbDLyAfL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71hGbDLyAfL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71cWOjcHV4L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71cWOjcHV4L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71+HvH-CyvL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71+HvH-CyvL"
+        }
+      ]
+    },
+    {
+      "productId": "9953593",
+      "slug": "adidas-samba-negro-blanco",
+      "titulo": "Samba",
+      "nombre": "Samba",
+      "marca": "adidas",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/White/Vivid Red",
+      "talla": 41,
+      "precioUSD": 94.95,
+      "pagina": "https://www.zappos.com/p/adidas-samba-black-white-vivid-red/product/9953593/color/390466",
+      "busqueda": "adidas",
+      "etiquetas": [
+        "clasico",
+        "tendencia",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71DOKYOi5TL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71DOKYOi5TL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71ra1XI5mlL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71ra1XI5mlL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71AwaPsA8HL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71AwaPsA8HL"
+        }
+      ]
+    },
+    {
+      "productId": "9916486",
+      "slug": "adidas-vl-court-3-0-borgona",
+      "titulo": "VL Court 3.0",
+      "nombre": "VL Court 3.0",
+      "marca": "adidas",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "color": "Borgona",
+      "colorOriginal": "Burgundy",
+      "styleColor": "Shadow Red/Off White/Maroon",
+      "talla": 42,
+      "precioUSD": 71.95,
+      "pagina": "https://www.zappos.com/p/adidas-vl-court-3-0-shadow-red-off-white-maroon/product/9916486/color/1117317",
+      "busqueda": "adidas",
+      "etiquetas": [
+        "urbano",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71YxEre4gML._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71YxEre4gML"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71BzHIVxlhL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71BzHIVxlhL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/81-GbI6btdL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "81-GbI6btdL"
+        }
+      ]
+    },
+    {
+      "productId": "10046273",
+      "slug": "adidas-adizero-evo-sl-rojo",
+      "titulo": "adiZero Evo SL Running Shoes",
+      "nombre": "AdiZero Evo SL",
+      "marca": "adidas",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "color": "Rojo",
+      "colorOriginal": "Red",
+      "styleColor": "Solar Turbo/Black/Carbon",
+      "talla": 42,
+      "precioUSD": 149.95,
+      "pagina": "https://www.zappos.com/p/adidas-adizero-evo-sl-running-shoes-solar-turbo-black-carbon/product/10046273/color/1130368",
+      "busqueda": "adidas",
+      "etiquetas": [
+        "running",
+        "nuevo",
+        "liviano"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71eeW6B0kML._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71eeW6B0kML"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71x4vDsctJL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71x4vDsctJL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/715d6U8xEZL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "715d6U8xEZL"
+        }
+      ]
+    },
+    {
+      "productId": "10023112",
+      "slug": "adidas-grand-court-low-blanco-mujer",
+      "titulo": "Grand Court Low Shoes",
+      "nombre": "Grand Court Low",
+      "marca": "adidas",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/Black/Gum",
+      "talla": 37,
+      "precioUSD": 74.95,
+      "pagina": "https://www.zappos.com/p/adidas-grand-court-low-shoes-white-black-gum/product/10023112/color/8287",
+      "busqueda": "adidas",
+      "etiquetas": [
+        "clasico",
+        "urbano",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71QrUx3TjyL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71QrUx3TjyL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61hB34RR0JL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61hB34RR0JL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71Sd4NNTVTL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71Sd4NNTVTL"
+        }
+      ]
+    },
+    {
+      "productId": "9816662",
+      "slug": "adidas-ultraboost-1-0-rosa-mujer",
+      "titulo": "Ultraboost 1.0",
+      "nombre": "Ultraboost 1.0",
+      "marca": "adidas",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "color": "Rosa Claro",
+      "colorOriginal": "White",
+      "styleColor": "Wonder Quartz/Wonder Quartz/White",
+      "talla": 37,
+      "precioUSD": 90,
+      "pagina": "https://www.zappos.com/p/adidas-running-ultraboost-1-0-wonder-quartz-wonder-quartz-white/product/9816662/color/1063452",
+      "busqueda": "adidas",
+      "etiquetas": [
+        "running",
+        "comodo",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61VIC9mt4sL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61VIC9mt4sL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61JKmornokL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61JKmornokL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/614DqETyNcL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "614DqETyNcL"
+        }
+      ]
+    },
+    {
+      "productId": "10023192",
+      "slug": "adidas-grand-court-3-0-nino-blanco",
+      "titulo": "Grand Court 3.0 Shoes (Little Kid)",
+      "nombre": "Grand Court 3.0",
+      "marca": "adidas",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/Iridescent/White",
+      "talla": 31,
+      "precioUSD": 50,
+      "pagina": "https://www.zappos.com/p/adidas-kids-grand-court-3-0-shoes-little-kid-white-iridescent-white/product/10023192/color/986962",
+      "busqueda": "adidas",
+      "etiquetas": [
+        "colegio",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61lQgEyZQnL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61lQgEyZQnL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61oDPUel9WL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61oDPUel9WL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61lJCJt0l+L._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61lJCJt0l+L"
+        }
+      ]
+    },
+    {
+      "productId": "10002992",
+      "slug": "adidas-run-70s-2-0-nino-blanco",
+      "titulo": "Run 70s 2.0 Shoes (Big Kid)",
+      "nombre": "Run 70s 2.0",
+      "marca": "adidas",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/Black/Grey",
+      "talla": 32,
+      "precioUSD": 39.98,
+      "pagina": "https://www.zappos.com/p/adidas-kids-run-70s-2-0-shoes-big-kid-white-black-grey/product/10002992/color/1858",
+      "busqueda": "adidas",
+      "etiquetas": [
+        "colegio",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61qnBJsatjL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61qnBJsatjL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61XtoTJm2HL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61XtoTJm2HL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61QuMkEh5tL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61QuMkEh5tL"
+        }
+      ]
+    },
+    {
+      "productId": "9954134",
+      "slug": "adidas-daily-4-0-oliva",
+      "titulo": "Daily 4.0",
+      "nombre": "Daily 4.0",
+      "marca": "adidas",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Oliva",
+      "colorOriginal": "Olive",
+      "styleColor": "Olive Strata/Shadow Olive/Gum",
+      "talla": 40,
+      "precioUSD": 65,
+      "pagina": "https://www.zappos.com/p/adidas-daily-4-0-olive-strata-shadow-olive-gum/product/9954134/color/1061713",
+      "busqueda": "adidas",
+      "etiquetas": [
+        "urbano",
+        "comodo",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71EUAGcJY8L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71EUAGcJY8L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71Y9LuMGSmL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71Y9LuMGSmL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71p615Hp6OL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71p615Hp6OL"
+        }
+      ]
+    },
+    {
+      "productId": "10044747",
+      "slug": "puma-palermo-leather-blanco-mujer",
+      "titulo": "Palermo Leather Sneakers",
+      "nombre": "Palermo Leather",
+      "marca": "puma",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "Puma White/Vapor Gray/Gum",
+      "talla": 37,
+      "precioUSD": 85,
+      "pagina": "https://www.zappos.com/p/puma-palermo-leather-sneakers-puma-white-vapor-gray-gum/product/10044747/color/1070777",
+      "busqueda": "puma",
+      "etiquetas": [
+        "tendencia",
+        "clasico",
+        "nuevo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61tJCfjGINL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61tJCfjGINL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71TsM0z2U1L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71TsM0z2U1L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61V1hZIjlLL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61V1hZIjlLL"
+        }
+      ]
+    },
+    {
+      "productId": "10016314",
+      "slug": "puma-palermo-azul-mujer",
+      "titulo": "Palermo Sneakers",
+      "nombre": "Palermo",
+      "marca": "puma",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Azul",
+      "colorOriginal": "Blue",
+      "styleColor": "Sea Illusion/Buttercream",
+      "talla": 37,
+      "precioUSD": 76.5,
+      "pagina": "https://www.zappos.com/p/puma-palermo-sneakers-sea-illusion-buttercream/product/10016314/color/1141015",
+      "busqueda": "puma",
+      "etiquetas": [
+        "urbano",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/81nV+4VfoKL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "81nV+4VfoKL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71tp5xSJV3L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71tp5xSJV3L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/8101Ewy-WBL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "8101Ewy-WBL"
+        }
+      ]
+    },
+    {
+      "productId": "10082195",
+      "slug": "puma-speedcat-plateado-mujer",
+      "titulo": "Speedcat Silver Shoes",
+      "nombre": "Speedcat",
+      "marca": "puma",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Plateado",
+      "colorOriginal": "Silver",
+      "styleColor": "Alpine Snow/Gum",
+      "talla": 36,
+      "precioUSD": 110,
+      "pagina": "https://www.zappos.com/p/puma-speedcat-silver-shoes-alpine-snow-gum/product/10082195/color/1151758",
+      "busqueda": "puma",
+      "etiquetas": [
+        "tendencia",
+        "nuevo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71XJx+20QaL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71XJx+20QaL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/711a6y274lL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "711a6y274lL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71wIWhoMuaL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71wIWhoMuaL"
+        }
+      ]
+    },
+    {
+      "productId": "10016355",
+      "slug": "puma-easy-rider-vintage-rojo",
+      "titulo": "Easy Rider Vintage Shoes",
+      "nombre": "Easy Rider Vintage",
+      "marca": "puma",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Rojo",
+      "colorOriginal": "Red",
+      "styleColor": "Puma Red/Puma White",
+      "talla": 41,
+      "precioUSD": 64.95,
+      "pagina": "https://www.zappos.com/p/puma-easy-rider-vintage-shoes-puma-red-puma-white/product/10016355/color/742580",
+      "busqueda": "puma",
+      "etiquetas": [
+        "retro",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71R+4B17B1L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71R+4B17B1L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71t5DGi+FEL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71t5DGi+FEL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71Kz7ajbiiL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71Kz7ajbiiL"
+        }
+      ]
+    },
+    {
+      "productId": "9952043",
+      "slug": "puma-rebound-layup-mid-nino-azul",
+      "titulo": "Rebound Layup Mid (Big Kid)",
+      "nombre": "Rebound Layup Mid",
+      "marca": "puma",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "color": "Azul",
+      "colorOriginal": "Blue",
+      "styleColor": "White/Fresh Water/Gold",
+      "talla": 32,
+      "precioUSD": 64.65,
+      "pagina": "https://www.zappos.com/p/puma-kids-rebound-layup-mid-big-kid-white-fresh-water-gold/product/9952043/color/1127267",
+      "busqueda": "puma",
+      "etiquetas": [
+        "deportivo",
+        "colegio"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71RJics0sLL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71RJics0sLL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71q7kd+NPmL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71q7kd+NPmL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71BsLtCdsJL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71BsLtCdsJL"
+        }
+      ]
+    },
+    {
+      "productId": "107999",
+      "slug": "converse-chuck-taylor-all-star-high-top-negro",
+      "titulo": "Chuck Taylor All Star High-Top Sneaker",
+      "nombre": "Chuck Taylor All Star High-Top",
+      "marca": "converse",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black",
+      "talla": 41,
+      "precioUSD": 65,
+      "pagina": "https://www.zappos.com/p/converse-chuck-taylor-all-star-high-top-sneaker-black/product/107999/color/3",
+      "busqueda": "converse",
+      "etiquetas": [
+        "clasico",
+        "mas-vendido",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/717lS5IAi4L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "717lS5IAi4L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61S0mPVVlML._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61S0mPVVlML"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61BAwDwTEsL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61BAwDwTEsL"
+        }
+      ]
+    },
+    {
+      "productId": "108000",
+      "slug": "converse-chuck-taylor-all-star-low-top-negro",
+      "titulo": "Chuck Taylor All Star Low Top Sneaker",
+      "nombre": "Chuck Taylor All Star Low Top",
+      "marca": "converse",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black",
+      "talla": 40,
+      "precioUSD": 60,
+      "pagina": "https://www.zappos.com/p/converse-chuck-taylor-all-star-low-top-sneaker-black/product/108000/color/3",
+      "busqueda": "converse",
+      "etiquetas": [
+        "clasico",
+        "urbano"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/613yYbfLmEL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "613yYbfLmEL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61b70eX7OJL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61b70eX7OJL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61WajlZ03uL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61WajlZ03uL"
+        }
+      ]
+    },
+    {
+      "productId": "9997037",
+      "slug": "converse-run-star-hike-canvas-platform-blanco",
+      "titulo": "Run Star Hike Canvas Platform",
+      "nombre": "Run Star Hike Canvas Platform",
+      "marca": "converse",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/Black/Gum",
+      "talla": 40,
+      "precioUSD": 99,
+      "pagina": "https://www.zappos.com/p/converse-run-star-hike-canvas-platform-white-black-gum/product/9997037/color/8287",
+      "busqueda": "converse",
+      "etiquetas": [
+        "tendencia",
+        "plataforma"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61HT0AplnXL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61HT0AplnXL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61LYcgpjKqL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61LYcgpjKqL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/615Xjxw-MPL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "615Xjxw-MPL"
+        }
+      ]
+    },
+    {
+      "productId": "9289796",
+      "slug": "converse-chuck-taylor-all-star-high-top-platform-blanco-mujer",
+      "titulo": "Chuck Taylor All Star High-Top Platform Sneaker",
+      "nombre": "Chuck Taylor All Star High-Top Platform",
+      "marca": "converse",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "Optical White",
+      "talla": 37,
+      "precioUSD": 75,
+      "pagina": "https://www.zappos.com/p/converse-chuck-taylor-all-star-high-top-platform-sneaker-optical-white/product/9289796/color/3124",
+      "busqueda": "converse",
+      "etiquetas": [
+        "plataforma",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61jUgixcfKL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61jUgixcfKL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/51uipPgI-RL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "51uipPgI-RL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/51P26am6epL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "51P26am6epL"
+        }
+      ]
+    },
+    {
+      "productId": "9152631",
+      "slug": "converse-chuck-taylor-all-star-madison-mid-top-negro-mujer",
+      "titulo": "Chuck Taylor All Star Madison Mid-Top Sneaker",
+      "nombre": "Chuck Taylor All Star Madison Mid-Top",
+      "marca": "converse",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black",
+      "talla": 37,
+      "precioUSD": 70,
+      "pagina": "https://www.zappos.com/p/converse-chuck-taylor-all-star-madison-mid-top-sneaker-black/product/9152631/color/3",
+      "busqueda": "converse",
+      "etiquetas": [
+        "comodo",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71-Ai+8ZEjL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71-Ai+8ZEjL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71kdgMVM3IL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71kdgMVM3IL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61GvLOAdZpL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61GvLOAdZpL"
+        }
+      ]
+    },
+    {
+      "productId": "7553452",
+      "slug": "converse-chuck-taylor-all-star-core-ox-nino-negro",
+      "titulo": "Chuck Taylor All Star Core Ox (Little Kid)",
+      "nombre": "Chuck Taylor All Star Core Ox",
+      "marca": "converse",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black",
+      "talla": 32,
+      "precioUSD": 35,
+      "pagina": "https://www.zappos.com/p/converse-kids-chuck-taylor-all-star-core-ox-little-kid-black/product/7553452/color/3",
+      "busqueda": "converse",
+      "etiquetas": [
+        "colegio",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/8183hVGGoiL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "8183hVGGoiL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/714tcLk77rL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "714tcLk77rL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/716Bp4feQWL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "716Bp4feQWL"
+        }
+      ]
+    },
+    {
+      "productId": "103789",
+      "slug": "vans-old-skool-negro-blanco",
+      "titulo": "Old Skool",
+      "nombre": "Old Skool",
+      "marca": "vans",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/White",
+      "talla": 41,
+      "precioUSD": 75,
+      "pagina": "https://www.zappos.com/p/vans-old-skool-black-white/product/103789/color/151",
+      "busqueda": "vans",
+      "etiquetas": [
+        "clasico",
+        "skate",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71xSWlajXGL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71xSWlajXGL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71Db1DJ8evL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71Db1DJ8evL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61YFAAcCrVL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61YFAAcCrVL"
+        }
+      ]
+    },
+    {
+      "productId": "9785327",
+      "slug": "vans-sk8-hi-wide-negro",
+      "titulo": "SK8-Hi Wide",
+      "nombre": "Sk8-Hi Wide",
+      "marca": "vans",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/True White",
+      "talla": 42,
+      "precioUSD": 80,
+      "pagina": "https://www.zappos.com/p/vans-sk8-hi-wide-black-true-white/product/9785327/color/133085",
+      "busqueda": "vans",
+      "etiquetas": [
+        "skate",
+        "clasico"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/717Cmhs6PgL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "717Cmhs6PgL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71VfT947nWL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71VfT947nWL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61r73VGDfEL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61r73VGDfEL"
+        }
+      ]
+    },
+    {
+      "productId": "103787",
+      "slug": "vans-authentic-blanco",
+      "titulo": "Authentic",
+      "nombre": "Authentic",
+      "marca": "vans",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "True White",
+      "talla": 40,
+      "precioUSD": 60,
+      "pagina": "https://www.zappos.com/p/vans-authentic-true-white/product/103787/color/38877",
+      "busqueda": "vans",
+      "etiquetas": [
+        "clasico",
+        "skate",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/6181+N8vqFL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "6181+N8vqFL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61sGXXdDViL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61sGXXdDViL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/51-w-y10GlL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "51-w-y10GlL"
+        }
+      ]
+    },
+    {
+      "productId": "7213526",
+      "slug": "vans-classic-slip-on-checkerboard-negro",
+      "titulo": "Classic Slip-On Checkerboard",
+      "nombre": "Classic Slip-On Checkerboard",
+      "marca": "vans",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black and White Checker/White (Canvas)",
+      "talla": 40,
+      "precioUSD": 60,
+      "pagina": "https://www.zappos.com/p/vans-classic-slip-on-checkerboard-black-and-white-checker-white-canvas/product/7213526/color/382554",
+      "busqueda": "vans",
+      "etiquetas": [
+        "skate",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71K93i4OFaL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71K93i4OFaL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71MAYtAQxyL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71MAYtAQxyL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61yDSmN9ySL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61yDSmN9ySL"
+        }
+      ]
+    },
+    {
+      "productId": "10037856",
+      "slug": "vans-knu-skool-nino-negro",
+      "titulo": "Knu Skool (Big Kid)",
+      "nombre": "Knu Skool",
+      "marca": "vans",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/True White",
+      "talla": 32,
+      "precioUSD": 60,
+      "pagina": "https://www.zappos.com/p/vans-kids-knu-skool-big-kid-black-true-white/product/10037856/color/133085",
+      "busqueda": "vans",
+      "etiquetas": [
+        "skate",
+        "colegio"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71ws9qEPPLL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71ws9qEPPLL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61jsjZfOfRL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61jsjZfOfRL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71CmoDShJEL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71CmoDShJEL"
+        }
+      ]
+    },
+    {
+      "productId": "9600301",
+      "slug": "new-balance-574-gris",
+      "titulo": "574 Core",
+      "nombre": "574 Core",
+      "marca": "new-balance",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "casual-hombre",
+      "color": "Gris",
+      "colorOriginal": "Gray",
+      "styleColor": "Grey/White",
+      "talla": 42,
+      "precioUSD": 99.95,
+      "pagina": "https://www.zappos.com/p/new-balance-classics-574-core-grey-white/product/9600301/color/1522",
+      "busqueda": "new balance",
+      "etiquetas": [
+        "clasico",
+        "comodo",
+        "mas-vendido"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71qsBZWfpdL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71qsBZWfpdL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71-E0vs6rBL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71-E0vs6rBL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71K0ukra5nL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71K0ukra5nL"
+        }
+      ]
+    },
+    {
+      "productId": "9982268",
+      "slug": "new-balance-fresh-foam-x-880-v15-gris",
+      "titulo": "Fresh Foam X 880 v15",
+      "nombre": "Fresh Foam X 880 v15",
+      "marca": "new-balance",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "color": "Gris",
+      "colorOriginal": "Black",
+      "styleColor": "Slate Grey/Mineral/Black",
+      "talla": 42,
+      "precioUSD": 149.95,
+      "pagina": "https://www.zappos.com/p/new-balance-fresh-foam-x-880-v15-slate-grey-mineral-black/product/9982268/color/1095052",
+      "busqueda": "new balance",
+      "etiquetas": [
+        "running",
+        "comodo",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71q8886yFSL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71q8886yFSL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71dGwxP+ZeL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71dGwxP+ZeL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71pwR5hB6qL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71pwR5hB6qL"
+        }
+      ]
+    },
+    {
+      "productId": "9448651",
+      "slug": "new-balance-327-gris-menta-mujer",
+      "titulo": "327",
+      "nombre": "327",
+      "marca": "new-balance",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Gris Menta",
+      "colorOriginal": "Gray",
+      "styleColor": "Lone Star Grey/Mint Water",
+      "talla": 37,
+      "precioUSD": 104.95,
+      "pagina": "https://www.zappos.com/p/new-balance-classics-327-lone-star-grey-mint-water/product/9448651/color/1131942",
+      "busqueda": "new balance",
+      "etiquetas": [
+        "tendencia",
+        "retro"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71cTdmiOONL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71cTdmiOONL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/81D4X18CVSL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "81D4X18CVSL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71vdl242fVL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71vdl242fVL"
+        }
+      ]
+    },
+    {
+      "productId": "9600322",
+      "slug": "new-balance-574-core-beige-mujer",
+      "titulo": "574 Core",
+      "nombre": "574 Core",
+      "marca": "new-balance",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Beige",
+      "colorOriginal": "Beige",
+      "styleColor": "Nimbus Cloud/White",
+      "talla": 37,
+      "precioUSD": 99.95,
+      "pagina": "https://www.zappos.com/p/new-balance-classics-574-core-nimbus-cloud-white/product/9600322/color/680862",
+      "busqueda": "new balance",
+      "etiquetas": [
+        "clasico",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71SlQL9I6DL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71SlQL9I6DL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71DDk1jrYML._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71DDk1jrYML"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61SwEHNLcFL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61SwEHNLcFL"
+        }
+      ]
+    },
+    {
+      "productId": "9717885",
+      "slug": "new-balance-440-negro",
+      "titulo": "440",
+      "nombre": "440",
+      "marca": "new-balance",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "skate",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/Gum 1",
+      "talla": 41,
+      "precioUSD": 54.6,
+      "pagina": "https://www.zappos.com/p/new-balance-numeric-440-black-gum-1/product/9717885/color/419450",
+      "busqueda": "new balance",
+      "etiquetas": [
+        "skate",
+        "urbano"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71m1B5nskOL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71m1B5nskOL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71gjG2R-tYL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71gjG2R-tYL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61u5pLNEhZL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61u5pLNEhZL"
+        }
+      ]
+    },
+    {
+      "productId": "9982714",
+      "slug": "new-balance-327-nino-azul",
+      "titulo": "327 (Big Kid)",
+      "nombre": "327",
+      "marca": "new-balance",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "color": "Azul",
+      "colorOriginal": "Blue",
+      "styleColor": "Analog Blue/Heron Blue",
+      "talla": 32,
+      "precioUSD": 79.99,
+      "pagina": "https://www.zappos.com/p/new-balance-kids-327-big-kid-analog-blue-heron-blue/product/9982714/color/1132444",
+      "busqueda": "new balance",
+      "etiquetas": [
+        "colegio",
+        "retro"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/718BHze93-L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "718BHze93-L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/715FiOzODJL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "715FiOzODJL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71RW4I2U6YL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71RW4I2U6YL"
+        }
+      ]
+    },
+    {
+      "productId": "9399589",
+      "slug": "reebok-classic-leather-blanco",
+      "titulo": "Classic Leather",
+      "nombre": "Classic Leather",
+      "marca": "reebok",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/Pure Grey 1",
+      "talla": 40,
+      "precioUSD": 84.95,
+      "pagina": "https://www.zappos.com/p/reebok-lifestyle-classic-leather-white-pure-grey-1/product/9399589/color/947950",
+      "busqueda": "reebok",
+      "etiquetas": [
+        "clasico",
+        "mas-vendido",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/614RI1+dJ7L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "614RI1+dJ7L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/510q7WTj7GL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "510q7WTj7GL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61anbuOSBhL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61anbuOSBhL"
+        }
+      ]
+    },
+    {
+      "productId": "8798702",
+      "slug": "reebok-club-c-85-vintage-blanco",
+      "titulo": "Club C 85 Vintage",
+      "nombre": "Club C 85 Vintage",
+      "marca": "reebok",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "Int/White/Navy",
+      "talla": 41,
+      "precioUSD": 84.95,
+      "pagina": "https://www.zappos.com/p/reebok-lifestyle-club-c-85-vintage-int-white-navy/product/8798702/color/657971",
+      "busqueda": "reebok",
+      "etiquetas": [
+        "clasico",
+        "urbano"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61xjMoDjOpL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61xjMoDjOpL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61vvLd3WfWL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61vvLd3WfWL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71ziCQqA3VL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71ziCQqA3VL"
+        }
+      ]
+    },
+    {
+      "productId": "7231285",
+      "slug": "reebok-classic-nylon-azul-marino",
+      "titulo": "Classic Nylon",
+      "nombre": "Classic Nylon",
+      "marca": "reebok",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Azul Marino",
+      "colorOriginal": "Navy",
+      "styleColor": "Vector Navy/White",
+      "talla": 41,
+      "precioUSD": 64.99,
+      "pagina": "https://www.zappos.com/p/reebok-lifestyle-classic-nylon-vector-navy-white/product/7231285/color/870037",
+      "busqueda": "reebok",
+      "etiquetas": [
+        "retro",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71Y-AEv95PL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71Y-AEv95PL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/719kIFadt6L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "719kIFadt6L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71Y0ufvgFUL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71Y0ufvgFUL"
+        }
+      ]
+    },
+    {
+      "productId": "110552",
+      "slug": "reebok-freestyle-hi-blanco-mujer",
+      "titulo": "Freestyle Hi",
+      "nombre": "Freestyle Hi",
+      "marca": "reebok",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "Footwear White/Blue/Gum",
+      "talla": 37,
+      "precioUSD": 79.95,
+      "pagina": "https://www.zappos.com/p/reebok-lifestyle-freestyle-hi-footwear-white-blue-gum/product/110552/color/1121065",
+      "busqueda": "reebok",
+      "etiquetas": [
+        "clasico",
+        "tendencia"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61qn9k7QdcL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61qn9k7QdcL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71Njsh3XfLL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71Njsh3XfLL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61or2EXdyFL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61or2EXdyFL"
+        }
+      ]
+    },
+    {
+      "productId": "9985932",
+      "slug": "reebok-classic-az-blanco-mujer",
+      "titulo": "Classic AZ",
+      "nombre": "Classic AZ",
+      "marca": "reebok",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "Chalk/Chalk/Grey",
+      "talla": 36,
+      "precioUSD": 64.99,
+      "pagina": "https://www.zappos.com/p/reebok-lifestyle-classic-az-chalk-chalk-grey/product/9985932/color/1097143",
+      "busqueda": "reebok",
+      "etiquetas": [
+        "clasico",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61m5arcu0YL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61m5arcu0YL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61QzfANo-dL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61QzfANo-dL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71pSaOpWczL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71pSaOpWczL"
+        }
+      ]
+    },
+    {
+      "productId": "10014138",
+      "slug": "reebok-princess-negro-mujer",
+      "titulo": "Princess",
+      "nombre": "Princess",
+      "marca": "reebok",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/Gum",
+      "talla": 37,
+      "precioUSD": 49.99,
+      "pagina": "https://www.zappos.com/p/reebok-lifestyle-princess-black-gum/product/10014138/color/4830",
+      "busqueda": "reebok",
+      "etiquetas": [
+        "clasico",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61wVZ6nMXrL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61wVZ6nMXrL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61eH1-bCshL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61eH1-bCshL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61yWRfbiD9L._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61yWRfbiD9L"
+        }
+      ]
+    },
+    {
+      "productId": "10036937",
+      "slug": "skechers-dlites-gris-mujer",
+      "titulo": "D'lites-popular Vote",
+      "nombre": "D'Lites",
+      "marca": "skechers",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Gris",
+      "colorOriginal": "Gray",
+      "styleColor": "Grey",
+      "talla": 37,
+      "precioUSD": 68,
+      "pagina": "https://www.zappos.com/p/skechers-dlites-popular-vote-grey/product/10036937/color/401",
+      "busqueda": "skechers",
+      "etiquetas": [
+        "comodo",
+        "mas-vendido",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71hOKgdvsIL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71hOKgdvsIL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71x6OWxha-L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71x6OWxha-L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/712XM4okSoL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "712XM4okSoL"
+        }
+      ]
+    },
+    {
+      "productId": "10069284",
+      "slug": "skechers-uno-glide-step-lite-blanco-mujer",
+      "titulo": "Uno Glide Step - Lite",
+      "nombre": "Uno Glide Step Lite",
+      "marca": "skechers",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White",
+      "talla": 37,
+      "precioUSD": 79.99,
+      "pagina": "https://www.zappos.com/p/skechers-uno-glide-step-lite-white/product/10069284/color/14",
+      "busqueda": "skechers",
+      "etiquetas": [
+        "comodo",
+        "urbano"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71C-Oy356aL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71C-Oy356aL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71sOu5uGpKL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71sOu5uGpKL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/719DEiyLYIL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "719DEiyLYIL"
+        }
+      ]
+    },
+    {
+      "productId": "9301245",
+      "slug": "skechers-bobs-b-cute-negro-mujer",
+      "titulo": "Bobs B Cute",
+      "nombre": "Bobs B Cute",
+      "marca": "skechers",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "casual-mujer",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black",
+      "talla": 36,
+      "precioUSD": 51.76,
+      "pagina": "https://www.zappos.com/p/bobs-from-skechers-bobs-b-cute-black/product/9301245/color/3",
+      "busqueda": "skechers",
+      "etiquetas": [
+        "comodo",
+        "liviano"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61u8WS5NOaL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61u8WS5NOaL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71W7-pzVH2L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71W7-pzVH2L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61e35bZpIgL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61e35bZpIgL"
+        }
+      ]
+    },
+    {
+      "productId": "10037737",
+      "slug": "skechers-arch-fit-glide-step-pro-negro",
+      "titulo": "Arch Fit Glide-Step Pro Hands Free Slip-In",
+      "nombre": "Arch Fit Glide-Step Pro",
+      "marca": "skechers",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/Charcoal",
+      "talla": 42,
+      "precioUSD": 110,
+      "pagina": "https://www.zappos.com/p/skechers-arch-fit-glide-step-pro-hands-free-slip-in-black-charcoal/product/10037737/color/133",
+      "busqueda": "skechers",
+      "etiquetas": [
+        "comodo",
+        "deportivo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71Ni7MWj5DL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71Ni7MWj5DL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71ncUtsNwxL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71ncUtsNwxL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71jXk0fcxhL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71jXk0fcxhL"
+        }
+      ]
+    },
+    {
+      "productId": "10074163",
+      "slug": "skechers-skech-flex-4-0-azul",
+      "titulo": "Skech-Flex 4.0 Hands-Free Slip-In",
+      "nombre": "Skech-Flex 4.0",
+      "marca": "skechers",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "color": "Azul",
+      "colorOriginal": "Blue",
+      "styleColor": "Navy/Orange",
+      "talla": 42,
+      "precioUSD": 90,
+      "pagina": "https://www.zappos.com/p/skechers-skech-flex-4-0-hands-free-slip-in-navy-orange/product/10074163/color/1416",
+      "busqueda": "skechers",
+      "etiquetas": [
+        "comodo",
+        "liviano",
+        "deportivo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/81qeDso4U4L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "81qeDso4U4L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/81ZOYDv3AvL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "81ZOYDv3AvL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/81QM9wL0N5L._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "81QM9wL0N5L"
+        }
+      ]
+    },
+    {
+      "productId": "9977169",
+      "slug": "skechers-meteor-lights-krendox-nino-negro",
+      "titulo": "Skechers Meteor-Lights-Krendox 401495L (Little Kid/Big Kid)",
+      "nombre": "Meteor-Lights Krendox",
+      "marca": "skechers",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "deportivo-nino",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/Blue",
+      "talla": 32,
+      "precioUSD": 44,
+      "pagina": "https://www.zappos.com/p/skechers-kids-skechers-meteor-lights-krendox-401495l-little-kid-big-kid-black-blue/product/9977169/color/2557",
+      "busqueda": "skechers",
+      "etiquetas": [
+        "colegio",
+        "comodo",
+        "con-luces"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71EZc2QnHRL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71EZc2QnHRL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/711izgzPj-L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "711izgzPj-L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71LuGht0AxL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71LuGht0AxL"
+        }
+      ]
+    },
+    {
+      "productId": "7153812",
+      "slug": "crocs-classic-clog-naranja",
+      "titulo": "Classic Clog",
+      "nombre": "Classic Clog",
+      "marca": "crocs",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Naranja",
+      "colorOriginal": "Orange",
+      "styleColor": "Utility Orange",
+      "talla": 40,
+      "precioUSD": 49.99,
+      "pagina": "https://www.zappos.com/p/crocs-classic-clog-utility-orange/product/7153812/color/250360",
+      "busqueda": "crocs",
+      "etiquetas": [
+        "clasico",
+        "comodo",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61l4PWbKO7L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61l4PWbKO7L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61HeKJF1uCL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61HeKJF1uCL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61ZfCKAqd+L._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61ZfCKAqd+L"
+        }
+      ]
+    },
+    {
+      "productId": "8729173",
+      "slug": "crocs-classic-lined-clog-negro",
+      "titulo": "Classic Lined Clog",
+      "nombre": "Classic Lined Clog",
+      "marca": "crocs",
+      "genero": "unisex",
+      "categoria": "unisex",
+      "subcategoria": "casual",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/Black",
+      "talla": 41,
+      "precioUSD": 44.99,
+      "pagina": "https://www.zappos.com/p/crocs-classic-lined-clog-black-black/product/8729173/color/183092",
+      "busqueda": "crocs",
+      "etiquetas": [
+        "comodo",
+        "invierno"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71zyGHw7rvL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71zyGHw7rvL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61wwANE7j4L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61wwANE7j4L"
+        }
+      ]
+    },
+    {
+      "productId": "9613082",
+      "slug": "crocs-classic-clog-nino-cafe",
+      "titulo": "Classic Clogs (Little Kid/Big Kid)",
+      "nombre": "Classic Clog",
+      "marca": "crocs",
+      "genero": "nino",
+      "categoria": "nino",
+      "subcategoria": "casual-nino",
+      "color": "Cafe",
+      "colorOriginal": "Brown",
+      "styleColor": "Espresso",
+      "talla": 31,
+      "precioUSD": 39.95,
+      "pagina": "https://www.zappos.com/p/crocs-kids-classic-clogs-little-kid-big-kid-espresso/product/9613082/color/359",
+      "busqueda": "crocs",
+      "etiquetas": [
+        "comodo",
+        "colegio"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/713aKHJuotL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "713aKHJuotL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/714c6SF3nVL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "714c6SF3nVL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/614ysTT3cbL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "614ysTT3cbL"
+        }
+      ]
+    },
+    {
+      "productId": "10013988",
+      "slug": "under-armour-assert-11-negro",
+      "titulo": "Charged Assert 11",
+      "nombre": "Charged Assert 11",
+      "marca": "under-armour",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "deportivo-hombre",
+      "color": "Negro",
+      "colorOriginal": "Black",
+      "styleColor": "Black/Black/White",
+      "talla": 42,
+      "precioUSD": 75,
+      "pagina": "https://www.zappos.com/p/under-armour-charged-assert-11-black-black-white/product/10013988/color/552963",
+      "busqueda": "under armour",
+      "etiquetas": [
+        "deportivo",
+        "comodo",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71wEz-A8U4L._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71wEz-A8U4L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71XL1gmve2L._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71XL1gmve2L"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71h+6D-hChL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71h+6D-hChL"
+        }
+      ]
+    },
+    {
+      "productId": "10048680",
+      "slug": "under-armour-surge-5-gris",
+      "titulo": "Surge 5 Running Shoes",
+      "nombre": "Surge 5",
+      "marca": "under-armour",
+      "genero": "hombre",
+      "categoria": "hombre",
+      "subcategoria": "running-hombre",
+      "color": "Gris",
+      "colorOriginal": "Gray",
+      "styleColor": "Castlerock/White/Black",
+      "talla": 42,
+      "precioUSD": 65,
+      "pagina": "https://www.zappos.com/p/under-armour-surge-5-running-shoes-castlerock-white-black/product/10048680/color/312719",
+      "busqueda": "under armour",
+      "etiquetas": [
+        "running",
+        "liviano"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/8170P-qu1wL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "8170P-qu1wL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/81LLD3sWLCL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "81LLD3sWLCL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/81GJJVhjtVL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "81GJJVhjtVL"
+        }
+      ]
+    },
+    {
+      "productId": "9978769",
+      "slug": "under-armour-charged-pursuit-4-rosa-mujer",
+      "titulo": "Charged Pursuit 4",
+      "nombre": "Charged Pursuit 4",
+      "marca": "under-armour",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "color": "Rosa",
+      "colorOriginal": "Pink",
+      "styleColor": "Prime Pink/Pink Elixir/White",
+      "talla": 37,
+      "precioUSD": 55.48,
+      "pagina": "https://www.zappos.com/p/under-armour-charged-pursuit-4-prime-pink-pink-elixir-white/product/9978769/color/1064376",
+      "busqueda": "under armour",
+      "etiquetas": [
+        "running",
+        "comodo"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/71zHCt883WL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "71zHCt883WL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71ZZKl8tGML._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "71ZZKl8tGML"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/71uNyRCTOdL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "71uNyRCTOdL"
+        }
+      ]
+    },
+    {
+      "productId": "9978770",
+      "slug": "under-armour-charged-rogue-5-blanco-mujer",
+      "titulo": "Charged Rogue 5",
+      "nombre": "Charged Rogue 5",
+      "marca": "under-armour",
+      "genero": "mujer",
+      "categoria": "mujer",
+      "subcategoria": "running-mujer",
+      "color": "Blanco",
+      "colorOriginal": "White",
+      "styleColor": "White/White/White",
+      "talla": 37,
+      "precioUSD": 71.74,
+      "pagina": "https://www.zappos.com/p/under-armour-charged-rogue-5-white-white-white/product/9978770/color/5078",
+      "busqueda": "under armour",
+      "etiquetas": [
+        "running",
+        "liviano",
+        "envio-gratis"
+      ],
+      "imagenes": [
+        {
+          "url": "https://m.media-amazon.com/images/I/61OQ8khcOrL._AC_SR1000,1000_.jpg",
+          "archivo": "01-principal.jpg",
+          "rol": "principal",
+          "imageId": "61OQ8khcOrL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61P51DItRHL._AC_SR1000,1000_.jpg",
+          "archivo": "02-lateral.jpg",
+          "rol": "lateral",
+          "imageId": "61P51DItRHL"
+        },
+        {
+          "url": "https://m.media-amazon.com/images/I/61fvEIhqNjL._AC_SR1000,1000_.jpg",
+          "archivo": "03-frente.jpg",
+          "rol": "frente",
+          "imageId": "61fvEIhqNjL"
+        }
+      ]
+    }
+  ]
+}

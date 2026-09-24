@@ -1,71 +1,49 @@
 package com.mycompany.knstore.service.payment;
 
-import com.mycompany.knstore.domain.Pago;
-import com.mycompany.knstore.domain.Pedido;
-import com.mycompany.knstore.domain.enumeration.EstadoPago;
-import com.mycompany.knstore.domain.enumeration.MetodoPago;
-import com.mycompany.knstore.service.dto.PagoCallbackRequestDTO;
-import com.mycompany.knstore.service.util.MoneyUtils;
 import java.math.BigDecimal;
-import java.util.Locale;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-@ConditionalOnProperty(prefix = "knstore.payment.gateway", name = "type", havingValue = "simulated", matchIfMissing = true)
+/**
+ * Pasarela simulada para desarrollo y pruebas. Aprueba siempre los pagos de
+ * forma simbolica: genera la referencia y resuelve cualquier callback como
+ * APPROVED con codigo de autorizacion. La pasarela real futura sera otra
+ * implementacion de {@link PaymentGateway}.
+ */
+@Component
+@ConditionalOnProperty(name = "knstore.payment.gateway.type", havingValue = "simulated", matchIfMissing = true)
 public class SimulatedPaymentGateway implements PaymentGateway {
 
-    private final EstadoPago defaultCallbackResult;
+    private static final Logger LOG = LoggerFactory.getLogger(SimulatedPaymentGateway.class);
 
-    public SimulatedPaymentGateway(@Value("${knstore.payment.gateway.simulated-result:APPROVED}") String defaultCallbackResult) {
-        this.defaultCallbackResult = parseSupportedStatus(defaultCallbackResult, EstadoPago.APPROVED);
+    @Override
+    public String iniciarPago(BigDecimal monto) {
+        String referencia = "SIM-" + UUID.randomUUID().toString().substring(0, 12).toUpperCase();
+        LOG.debug("Pasarela simulada: pago iniciado con referencia {}", referencia);
+        return referencia;
     }
 
     @Override
-    public PaymentGatewayInitResult iniciarPago(Pedido pedido, MetodoPago metodoPago) {
-        String referencia = "SIM-" + UUID.randomUUID().toString().replace("-", "").substring(0, 16).toUpperCase(Locale.ROOT);
-        return new PaymentGatewayInitResult(referencia, "Pago iniciado en pasarela simulada");
+    public String consultarEstado(String referencia) {
+        LOG.debug("Pasarela simulada: consultando estado de {}", referencia);
+        return "APPROVED";
     }
 
     @Override
-    public PaymentGatewayStatusResult consultarEstado(String referenciaPasarela) {
-        return new PaymentGatewayStatusResult(referenciaPasarela, defaultCallbackResult, null, null, "Consulta simulada de estado");
+    public ResultadoCallback procesarCallback(CallbackPayload payload) {
+        String codigo =
+            payload.codigoAutorizacion() != null
+                ? payload.codigoAutorizacion()
+                : "AUT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        LOG.debug("Pasarela simulada: callback resuelto como APPROVED");
+        return new ResultadoCallback("APPROVED", codigo, "Pago aprobado por la pasarela");
     }
 
     @Override
-    public PaymentGatewayStatusResult procesarCallback(PagoCallbackRequestDTO callbackRequest) {
-        EstadoPago resolvedStatus =
-            callbackRequest.getEstado() != null
-                ? parseSupportedStatus(callbackRequest.getEstado().name(), defaultCallbackResult)
-                : defaultCallbackResult;
-
-        return new PaymentGatewayStatusResult(
-            callbackRequest.getReferenciaPasarela(),
-            resolvedStatus,
-            MoneyUtils.normalizeOrZero(callbackRequest.getMonto()),
-            callbackRequest.getCodigoAutorizacion(),
-            callbackRequest.getDescripcionRespuesta() != null ? callbackRequest.getDescripcionRespuesta() : "Callback simulado procesado"
-        );
-    }
-
-    @Override
-    public PaymentGatewayRefundResult reembolsar(Pago pago, String motivo) {
-        return new PaymentGatewayRefundResult(pago.getReferenciaPasarela(), "Reembolso simulado: " + motivo);
-    }
-
-    private EstadoPago parseSupportedStatus(String rawStatus, EstadoPago fallback) {
-        EstadoPago parsed;
-        try {
-            parsed = EstadoPago.valueOf(rawStatus.toUpperCase(Locale.ROOT));
-        } catch (Exception ex) {
-            return fallback;
-        }
-
-        if (parsed == EstadoPago.APPROVED || parsed == EstadoPago.REJECTED) {
-            return parsed;
-        }
-        return fallback;
+    public void reembolsar(String referencia, BigDecimal monto, String motivo) {
+        LOG.debug("Pasarela simulada: reembolso de {} por {} solicitado ({})", referencia, monto, motivo);
     }
 }

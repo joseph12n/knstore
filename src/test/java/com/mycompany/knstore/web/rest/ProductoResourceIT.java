@@ -12,13 +12,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.knstore.IntegrationTest;
 import com.mycompany.knstore.domain.Categoria;
 import com.mycompany.knstore.domain.Producto;
+import com.mycompany.knstore.domain.ProductoImagen;
 import com.mycompany.knstore.domain.Subcategoria;
 import com.mycompany.knstore.repository.CategoriaRepository;
+import com.mycompany.knstore.repository.ProductoImagenRepository;
 import com.mycompany.knstore.repository.ProductoRepository;
 import com.mycompany.knstore.repository.SubcategoriaRepository;
 import com.mycompany.knstore.service.ProductoService;
 import com.mycompany.knstore.service.dto.ProductoDTO;
 import com.mycompany.knstore.service.mapper.ProductoMapper;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -85,6 +88,9 @@ class ProductoResourceIT {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private ProductoImagenRepository productoImagenRepository;
 
     @Autowired
     private CategoriaRepository categoriaRepository;
@@ -331,6 +337,79 @@ class ProductoResourceIT {
             .andExpect(jsonPath("$.[*].activo").value(hasItem(DEFAULT_ACTIVO)));
     }
 
+    @Test
+    void getAllProductosPorIdsDevuelveLosProductosPedidos() throws Exception {
+        // Initialize the database
+        insertedProducto = productoRepository.save(producto);
+
+        Producto segundoProducto = createEntity();
+        segundoProducto.setNombre("Producto B");
+        segundoProducto.setSlug("producto-b");
+        segundoProducto.setSku("sku-b");
+        segundoProducto = productoRepository.save(segundoProducto);
+
+        restProductoMockMvc
+            .perform(get(ENTITY_API_URL + "/por-ids").param("ids", producto.getId() + "," + segundoProducto.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(producto.getId())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(segundoProducto.getId())))
+            .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE)))
+            .andExpect(jsonPath("$.[*].nombre").value(hasItem("Producto B")));
+
+        productoRepository.delete(segundoProducto);
+    }
+
+    @Test
+    void getAllProductosPorIdsConMasDe200IdsDevuelveBadRequest() throws Exception {
+        String ids = java.util.stream.IntStream.range(0, 201)
+            .mapToObj(i -> "p-" + i)
+            .collect(java.util.stream.Collectors.joining(","));
+
+        restProductoMockMvc.perform(get(ENTITY_API_URL + "/por-ids").param("ids", ids)).andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(getRepositoryCount());
+    }
+
+    @Test
+    void getAllProductosOrdenaPorPrecioVentaAscendente() throws Exception {
+        // Se limpia la coleccion para validar el orden de forma determinista (RNF-072).
+        productoRepository.deleteAll();
+
+        Producto productoBarato = createEntity();
+        productoBarato.setNombre("Producto Barato");
+        productoBarato.setSlug("producto-barato");
+        productoBarato.setSku("sku-barato");
+        productoBarato.setPrecioVenta(new BigDecimal("10000.00"));
+        productoBarato = productoRepository.save(productoBarato);
+
+        Producto productoMedio = createEntity();
+        productoMedio.setNombre("Producto Medio");
+        productoMedio.setSlug("producto-medio");
+        productoMedio.setSku("sku-medio");
+        productoMedio.setPrecioVenta(new BigDecimal("20000.00"));
+        productoMedio = productoRepository.save(productoMedio);
+
+        Producto productoCostoso = createEntity();
+        productoCostoso.setNombre("Producto Costoso");
+        productoCostoso.setSlug("producto-costoso");
+        productoCostoso.setSku("sku-costoso");
+        productoCostoso.setPrecioVenta(new BigDecimal("30000.00"));
+        productoCostoso = productoRepository.save(productoCostoso);
+
+        restProductoMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=precioVenta,asc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[0].id").value(productoBarato.getId()))
+            .andExpect(jsonPath("$.[1].id").value(productoMedio.getId()))
+            .andExpect(jsonPath("$.[2].id").value(productoCostoso.getId()));
+
+        insertedProducto = productoBarato;
+        productoRepository.delete(productoMedio);
+        productoRepository.delete(productoCostoso);
+    }
+
     @SuppressWarnings({ "unchecked" })
     void getAllProductosWithEagerRelationshipsIsEnabled() throws Exception {
         when(productoServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
@@ -376,6 +455,35 @@ class ProductoResourceIT {
     void getNonExistingProducto() throws Exception {
         // Get the producto
         restProductoMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getProductoBySlugDevuelveImagenesVinculadas() throws Exception {
+        Producto productoConImagen = ProductoResourceIT.createEntity();
+        productoConImagen.setId(null);
+        productoConImagen.setNombre("Producto con imagen");
+        productoConImagen.setSlug("producto-imagen-" + UUID.randomUUID());
+        productoConImagen.setSku("SKU-" + UUID.randomUUID());
+        productoConImagen = productoRepository.save(productoConImagen);
+
+        String imagenUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80";
+        ProductoImagen imagen = new ProductoImagen();
+        imagen.setImagenUrl(imagenUrl);
+        imagen.setImagenContentType("image/jpeg");
+        imagen.setImagenAlt("Imagen de prueba");
+        imagen.setEsPrincipal(true);
+        imagen.setProducto(productoConImagen);
+        ProductoImagen imagenGuardada = productoImagenRepository.save(imagen);
+
+        try {
+            restProductoMockMvc
+                .perform(get(ENTITY_API_URL + "/slug/{slug}", productoConImagen.getSlug()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.imagenes[0].imagenUrl").value(imagenUrl));
+        } finally {
+            productoImagenRepository.delete(imagenGuardada);
+            productoRepository.delete(productoConImagen);
+        }
     }
 
     @Test

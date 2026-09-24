@@ -18,8 +18,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Enlaces */
-  a {
+  /* Enlaces (no aplica a enlaces estilizados como botones) */
+  a:not(.btn):not(.nav-link):not(.dropdown-item) {
     color: var(--kn-color-text);
     text-decoration: none;
     transition: color var(--kn-transition-fast);
@@ -29,6 +29,35 @@
       color: var(--kn-color-accent);
       text-decoration: none;
     }
+  }
+
+  /* Affordance de hover consistente en ambos temas: ningún componente debe
+     caer en colores oscuros de Bootstrap sobre fondos oscuros. */
+  .nav-link {
+    color: var(--kn-color-text);
+  }
+
+  .dropdown-item {
+    color: var(--kn-color-text);
+  }
+
+  .btn-link {
+    color: var(--kn-color-text);
+  }
+
+  .nav-link:hover,
+  .nav-link:focus,
+  .dropdown-item:hover,
+  .dropdown-item:focus,
+  .list-group-item-action:hover,
+  .list-group-item-action:focus,
+  .page-link:hover,
+  .page-link:focus,
+  .btn-link:hover,
+  .btn-link:focus,
+  footer a:hover,
+  footer a:focus {
+    color: var(--kn-color-accent);
   }
 
   /* Títulos */
@@ -110,6 +139,10 @@
   }
 
   /* Botones primarios */
+  .btn {
+    background-image: none;
+  }
+
   .btn-primary {
     --bs-btn-color: var(--kn-color-text-inverse);
     --bs-btn-bg: var(--kn-color-primary);
@@ -123,11 +156,25 @@
     --bs-btn-disabled-color: var(--kn-color-text-inverse);
     --bs-btn-disabled-bg: var(--kn-color-text-muted);
     --bs-btn-disabled-border-color: var(--kn-color-text-muted);
+    background-color: var(--kn-color-primary);
+    border-color: var(--kn-color-primary);
     border-radius: var(--kn-border-radius-pill);
     font-weight: var(--kn-font-weight-semibold);
     text-transform: uppercase;
     letter-spacing: 0.025em;
     padding: var(--kn-space-3) var(--kn-space-6);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--kn-color-secondary);
+      border-color: var(--kn-color-secondary);
+    }
+
+    &:disabled {
+      background-color: var(--kn-color-text-muted);
+      border-color: var(--kn-color-text-muted);
+    }
   }
 
   /* Botones de acento */
@@ -141,8 +188,17 @@
     --bs-btn-active-color: var(--kn-color-text-inverse);
     --bs-btn-active-bg: var(--kn-color-accent-hover);
     --bs-btn-active-border-color: var(--kn-color-accent-hover);
+    background-color: var(--kn-color-accent);
+    border-color: var(--kn-color-accent);
     border-radius: var(--kn-border-radius-pill);
     font-weight: var(--kn-font-weight-semibold);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--kn-color-accent-hover);
+      border-color: var(--kn-color-accent-hover);
+    }
   }
 
   /* Botones outline */
@@ -289,6 +345,82 @@
   transition:
     opacity var(--kn-transition-base),
     transform var(--kn-transition-base);
+}
+
+/* ==========================================================================
+   Header del storefront: los dropdowns deben flotar siempre
+   ==========================================================================
+   Bootstrap 5 vuelve `static` a los `.dropdown-menu` dentro del navbar en
+   <992px (porque asume un collapse); nuestro navbar no colapsa, así que el
+   menú se insertaba en el flujo y rompía la barra. Se restaura el flotado.
+   ========================================================================== */
+.storefront .storefront-header .dropdown-menu {
+  position: absolute;
+  max-width: calc(100vw - 1.5rem);
+}
+
+/* ==========================================================================
+   Banner de newsletter: conserva el contraste en claro y oscuro
+   ========================================================================== */
+.storefront .kn-newsletter {
+  background-color: var(--kn-color-primary);
+  color: var(--kn-color-text-inverse);
+
+  h3,
+  p {
+    color: var(--kn-color-text-inverse);
+  }
+
+  p {
+    opacity: 0.85;
+  }
+}
+
+/* ==========================================================================
+   Tarjeta de producto: precio + CTA responsivos (container queries)
+   ==========================================================================
+   En tarjetas angostas (2 columnas a 360px) el precio y el botón se apilan
+   para evitar superposición; el botón no hereda el padding grande del tema.
+   ========================================================================== */
+.storefront .kn-product-card {
+  container-type: inline-size;
+
+  .kn-product-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--kn-space-2);
+    min-width: 0;
+  }
+
+  .kn-product-card__price {
+    font-size: 1.05rem;
+    font-weight: var(--kn-font-weight-bold);
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .kn-product-card__add {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.78rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    border-radius: var(--kn-border-radius-pill);
+  }
+
+  @container (max-width: 240px) {
+    .kn-product-card__footer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .kn-product-card__add {
+      width: 100%;
+    }
+  }
 }
 
 /* Focus visible accesible */
@@ -440,4 +572,8 @@
   .min-width-0 {
     min-width: 0;
   }
+}
+
+.storefront[data-theme='dark'] .kn-cart-drawer .btn-close {
+  filter: invert(1) grayscale(100%);
 }

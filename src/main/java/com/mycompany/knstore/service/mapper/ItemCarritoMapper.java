@@ -20,6 +20,8 @@ public interface ItemCarritoMapper extends EntityMapper<ItemCarritoDTO, ItemCarr
     @Named("carritoId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "subtotal", source = "subtotal")
+    @Mapping(target = "fechaActualizacion", source = "fechaActualizacion")
     CarritoDTO toDtoCarritoId(Carrito carrito);
 
     @Named("productoNombre")

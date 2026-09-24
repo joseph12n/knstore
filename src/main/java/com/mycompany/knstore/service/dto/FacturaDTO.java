@@ -18,8 +18,7 @@ public class FacturaDTO implements Serializable {
     @Size(max = 10)
     private String prefijo;
 
-    @Size(max = 20)
-    private String numeroFactura;
+    private String numero;
 
     @Size(max = 96)
     private String cufe;
@@ -74,12 +73,12 @@ public class FacturaDTO implements Serializable {
         this.prefijo = prefijo;
     }
 
-    public String getNumeroFactura() {
-        return numeroFactura;
+    public String getNumero() {
+        return numero;
     }
 
-    public void setNumeroFactura(String numeroFactura) {
-        this.numeroFactura = numeroFactura;
+    public void setNumero(String numero) {
+        this.numero = numero;
     }
 
     public String getCufe() {
@@ -213,7 +212,6 @@ public class FacturaDTO implements Serializable {
         return "FacturaDTO{" +
             "id='" + getId() + "'" +
             ", prefijo='" + getPrefijo() + "'" +
-            ", numeroFactura='" + getNumeroFactura() + "'" +
             ", cufe='" + getCufe() + "'" +
             ", subtotal=" + getSubtotal() +
             ", descuentos=" + getDescuentos() +

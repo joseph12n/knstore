@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true
-  },
-  "include": ["src/main/webapp/**/*.ts", "src/main/webapp/**/*.tsx", "vite.config.ts", "vitest.config.ts", "eslint.config.ts"],
-  "exclude": ["node_modules", "target"]
-}

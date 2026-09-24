@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { Button, Col, Collapse, Container, Form, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,8 +16,18 @@ import useDebounce from 'app/landing/hooks/useDebounce';
 import useCart from 'app/landing/hooks/useCart';
 import { IProductoStorefront } from 'app/landing/model/storefront.model';
 import { CATALOG_PAGE_SIZE } from 'app/landing/utils/constants';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
 
 const SEARCH_PAGE_SIZE = CATALOG_PAGE_SIZE;
+
+// RF-072: la ordenacion es server-side; cada opcion del dropdown mapea al
+// parametro sort que soporta GET /api/productos/search.
+const SEARCH_SORTS: Record<string, string> = {
+  relevance: 'nombre,asc',
+  priceAsc: 'precioVenta,asc',
+  priceDesc: 'precioVenta,desc',
+  nameAsc: 'nombre,asc',
+};
 
 export const SearchPage = () => {
   const { addItem: onAddToCart } = useCart();
@@ -30,6 +40,7 @@ export const SearchPage = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
 
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -56,7 +67,8 @@ export const SearchPage = () => {
     marcas: rawMarcas,
     loading: catalogLoading,
     errorMessage: catalogErrorMessage,
-  } = useCatalog({ page: 0, size: 100, sort: 'nombre,asc' });
+    retry: retryCatalog,
+  } = useCatalog({ page: 0, size: 100, sort: 'nombre,asc', loadOnMount: false });
   const categorias = rawCategorias ?? [];
   const marcas = rawMarcas ?? [];
 
@@ -65,50 +77,50 @@ export const SearchPage = () => {
   }, [debouncedQuery]);
 
   useEffect(() => {
+    const controller = new AbortController();
     const loadSearchResults = async () => {
       setLoading(true);
       setError(null);
       try {
         const page = activePage - 1;
-        const requestUrl = `api/productos/search?q=${encodeURIComponent(debouncedQuery.trim())}&page=${page}&size=${SEARCH_PAGE_SIZE}&sort=nombre,asc`;
-        const response = await axios.get<IProductoStorefront[]>(requestUrl);
+        const filters = [
+          selectedCategory ? `&categoriaId=${encodeURIComponent(selectedCategory)}` : '',
+          selectedBrand ? `&marcaId=${encodeURIComponent(selectedBrand)}` : '',
+        ].join('');
+        const requestUrl = `api/productos/search?q=${encodeURIComponent(debouncedQuery.trim())}&page=${page}&size=${SEARCH_PAGE_SIZE}&sort=${SEARCH_SORTS[sortBy]}${filters}`;
+        const response = await axios.get<IProductoStorefront[]>(requestUrl, { signal: controller.signal });
         setSearchResults(response.data.map(p => ({ ...p, imagenes: p.imagenes ?? [] })));
         setTotalItems(parseInt(response.headers['x-total-count'] || `${response.data.length}`, 10));
-      } catch (err: any) {
-        const message = err?.response?.data?.message || err?.message || 'Error desconocido';
-        setError(`No pudimos realizar la búsqueda: ${message}`);
+      } catch (axiosError) {
+        if (axios.isCancel(axiosError)) {
+          return;
+        }
+        setError(`No pudimos realizar la búsqueda: ${getApiErrorMessage(axiosError)}`);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
     loadSearchResults();
-  }, [debouncedQuery, activePage]);
+    return () => controller.abort();
+  }, [debouncedQuery, activePage, retryKey, selectedCategory, selectedBrand, sortBy]);
 
-  const resultados = useMemo(() => {
-    let list = [...searchResults];
-
-    if (selectedCategory) {
-      list = list.filter(p => p.categoria?.id === selectedCategory || p.subcategoria?.id === selectedCategory);
-    }
-
-    if (selectedBrand) {
-      list = list.filter(p => p.marca?.id === selectedBrand);
-    }
-
-    if (sortBy === 'priceAsc') {
-      list.sort((a, b) => (a.precio?.precioVenta || 0) - (b.precio?.precioVenta || 0));
-    } else if (sortBy === 'priceDesc') {
-      list.sort((a, b) => (b.precio?.precioVenta || 0) - (a.precio?.precioVenta || 0));
-    } else if (sortBy === 'nameAsc') {
-      list.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
-    }
-
-    return list;
-  }, [searchResults, selectedCategory, selectedBrand, sortBy]);
+  const resultados = searchResults;
 
   const isLoading = loading || catalogLoading;
-  const hasError = error || catalogErrorMessage;
+  const hasError = (error || catalogErrorMessage) && searchResults.length === 0;
+
+  const handleRetry = () => {
+    if (error) {
+      setActivePage(1);
+      setRetryKey(key => key + 1);
+    }
+    if (catalogErrorMessage) {
+      retryCatalog();
+    }
+  };
 
   return (
     <Container className="py-4 kn-fade-in">
@@ -180,7 +192,10 @@ export const SearchPage = () => {
           {isLoading ? (
             <LoadingSpinner />
           ) : hasError ? (
-            <ErrorAlert message={error || catalogErrorMessage || 'No pudimos cargar los productos. Inténtalo de nuevo.'} />
+            <ErrorAlert
+              message={error || catalogErrorMessage || 'No pudimos cargar los productos. Inténtalo de nuevo.'}
+              onRetry={handleRetry}
+            />
           ) : resultados.length === 0 ? (
             <EmptyState title="No encontramos resultados" description="Intenta con otros términos o ajusta los filtros." />
           ) : (

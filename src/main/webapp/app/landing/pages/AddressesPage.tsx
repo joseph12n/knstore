@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Modal, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
@@ -15,7 +15,7 @@ import {
 import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
 import { IDireccion } from 'app/shared/model/direccion.model';
 import AddressCard from 'app/landing/components/AddressCard';
-import AddressForm from 'app/landing/components/AddressForm';
+import AddressForm, { AddressFormData } from 'app/landing/components/AddressForm';
 import DeleteConfirmModal from 'app/landing/components/DeleteConfirmModal';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 
@@ -44,17 +44,28 @@ export const AddressesPage = () => {
     };
   }, [dispatch, account.login]);
 
-  useEffect(() => {
-    if (!loading && cuenta === undefined) {
-      toast.info('Completa tu perfil para poder gestionar direcciones.');
-      navigate('/mi-cuenta/perfil');
-    }
-  }, [loading, cuenta, navigate]);
-
   const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
+  const nombreCompleto = useMemo(
+    () => [cuenta?.primerNombre, cuenta?.segundoNombre, cuenta?.primerApellido, cuenta?.segundoApellido].filter(Boolean).join(' ').trim(),
+    [cuenta],
+  );
+
   const handleOpenForm = (direccion?: IDireccion) => {
-    setEditingAddress(direccion);
+    if (!cuenta?.id) {
+      toast.info('Primero completa tu perfil para poder registrar direcciones.');
+      navigate('/mi-cuenta/perfil/editar');
+      return;
+    }
+    // Autocompletar con los datos del perfil al registrar una direccion nueva.
+    if (!direccion) {
+      setEditingAddress({
+        destinatario: nombreCompleto || '',
+        telefonoContacto: cuenta?.celular || '',
+      } as IDireccion);
+    } else {
+      setEditingAddress(direccion);
+    }
     setShowForm(true);
   };
 
@@ -63,9 +74,9 @@ export const AddressesPage = () => {
     setEditingAddress(undefined);
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: AddressFormData) => {
     if (!cuenta?.id) {
-      toast.error('No se encontró tu perfil de cliente.');
+      toast.error('Primero debes completar tu perfil para registrar direcciones.');
       return;
     }
 
@@ -133,6 +144,18 @@ export const AddressesPage = () => {
         ← Volver a mi cuenta
       </Link>
 
+      {!cuenta?.id && (
+        <Alert variant="warning" className="d-flex justify-content-between align-items-center">
+          <div className="me-3">
+            <strong>Perfil incompleto.</strong> Puedes guardar direcciones, pero te recomendamos completar tu perfil para disfrutar de toda
+            la experiencia.
+          </div>
+          <Button variant="outline-primary" size="sm" className="flex-shrink-0" onClick={() => navigate('/mi-cuenta/perfil/editar')}>
+            Completar perfil
+          </Button>
+        </Alert>
+      )}
+
       {loading ? (
         <LoadingSpinner fullScreen />
       ) : direccionesUsuario.length === 0 ? (
@@ -158,7 +181,7 @@ export const AddressesPage = () => {
         </Row>
       )}
 
-      <Modal show={showForm} onHide={handleCloseForm} size="lg" centered>
+      <Modal show={showForm} onHide={handleCloseForm} size="lg" centered scrollable unmountOnExit>
         <Modal.Header closeButton>
           <Modal.Title className="fw-bold">{editingAddress ? 'Editar dirección' : 'Nueva dirección'}</Modal.Title>
         </Modal.Header>

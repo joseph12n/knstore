@@ -147,6 +147,7 @@ export const UserManagementUpdate = () => {
                     value: 50,
                     message: 'Este campo no puede superar más de 50 caracteres.',
                   },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                 }}
               />
               <ValidatedField
@@ -159,6 +160,7 @@ export const UserManagementUpdate = () => {
                     value: 50,
                     message: 'Este campo no puede superar más de 50 caracteres.',
                   },
+                  pattern: { value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/, message: 'Solo se permiten letras.' },
                 }}
               />
               <FormText>This field cannot be longer than 50 characters.</FormText>

@@ -15,10 +15,12 @@ public class TipoDocumentoDTO implements Serializable {
 
     @NotNull
     @Size(max = 10)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String sigla;
 
     @NotNull
     @Size(max = 60)
+    @Pattern(regexp = "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$", message = "Solo se permiten letras")
     private String nombreTipo;
 
     @NotNull

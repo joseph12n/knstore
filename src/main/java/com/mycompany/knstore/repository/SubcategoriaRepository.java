@@ -1,6 +1,7 @@
 package com.mycompany.knstore.repository;
 
 import com.mycompany.knstore.domain.Subcategoria;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -22,4 +23,6 @@ public interface SubcategoriaRepository extends MongoRepository<Subcategoria, St
 
     @Query("{'id': ?0}")
     Optional<Subcategoria> findOneWithEagerRelationships(String id);
+
+    List<Subcategoria> findByIdIn(Collection<String> ids);
 }

@@ -20,6 +20,7 @@ import { saveAccountSettings, reset as resetSettings } from 'app/modules/account
 import { ICuenta } from 'app/shared/model/cuenta.model';
 import { Genero } from 'app/shared/model/enumerations/genero.model';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
 
 interface ProfileFormData {
   primerNombre: string;
@@ -116,8 +117,11 @@ export const ProfilePage = () => {
     try {
       const tipoDocumento = data.tipoDocumentoId ? { id: data.tipoDocumentoId } : null;
 
+      // RF-073: se envian solo los campos editables del formulario. El `user`
+      // no se incluye: el BACKEND lo preserva si llega nulo (anticipo
+      // mass-assignment) y el email no es editable desde aqui.
       const payload: ICuenta = {
-        ...cuenta,
+        id: cuenta?.id,
         primerNombre: data.primerNombre,
         segundoNombre: data.segundoNombre || undefined,
         primerApellido: data.primerApellido,
@@ -129,7 +133,6 @@ export const ProfilePage = () => {
         telefono: data.telefono || undefined,
         activo: true,
         tipoDocumento,
-        user: { id: account.id, login: account.login },
       };
 
       if (imageFile) {
@@ -138,9 +141,10 @@ export const ProfilePage = () => {
       }
 
       if (cuenta?.id) {
-        await dispatch(updateCuenta({ ...payload, id: cuenta.id }));
+        await dispatch(updateCuenta(payload)).unwrap();
       } else {
-        await dispatch(createCuenta(payload));
+        // En creacion el backend exige conocer el usuario y el tipo de documento.
+        await dispatch(createCuenta({ ...payload, user: { id: account.id, login: account.login } })).unwrap();
       }
 
       dispatch(
@@ -151,10 +155,16 @@ export const ProfilePage = () => {
         }),
       );
 
+      // Refresca la cuenta en el store para que la vista de solo lectura y la
+      // cabecera del panel muestren los datos recien guardados.
+      if (account.login) {
+        dispatch(getCuentaByLogin(account.login));
+      }
+
       toast.success('Perfil actualizado correctamente.');
       navigate('/mi-cuenta/perfil');
-    } catch {
-      toast.error('No pudimos actualizar tu perfil. Inténtalo de nuevo.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'No pudimos actualizar tu perfil. Inténtalo de nuevo.'));
     } finally {
       setIsSubmitting(false);
     }
@@ -171,8 +181,10 @@ export const ProfilePage = () => {
       <Card>
         <Card.Body className="p-4">
           <div className="d-flex align-items-center gap-3 mb-4">
-            <div
-              className="rounded-circle d-flex align-items-center justify-content-center position-relative flex-shrink-0"
+            <button
+              type="button"
+              aria-label="Cambiar foto de perfil"
+              className="rounded-circle d-flex align-items-center justify-content-center position-relative flex-shrink-0 border-0 p-0"
               style={{
                 width: '80px',
                 height: '80px',
@@ -197,7 +209,7 @@ export const ProfilePage = () => {
               >
                 <FontAwesomeIcon icon={faCamera} size="xs" />
               </div>
-            </div>
+            </button>
             <div>
               <h5 className="fw-bold mb-0">
                 {cuenta?.primerNombre || account.firstName} {cuenta?.primerApellido || account.lastName}
@@ -216,15 +228,32 @@ export const ProfilePage = () => {
                   <Form.Control
                     type="text"
                     isInvalid={!!errors.primerNombre}
-                    {...register('primerNombre', { required: 'El primer nombre es obligatorio.' })}
+                    {...register('primerNombre', {
+                      required: 'El primer nombre es obligatorio.',
+                      pattern: {
+                        value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                        message: 'Solo se permiten letras.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.primerNombre?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Segundo nombre</Form.Label>
-                  <Form.Control type="text" {...register('segundoNombre')} />
+                  <Form.Label>Segundo nombre *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    isInvalid={!!errors.segundoNombre}
+                    {...register('segundoNombre', {
+                      required: 'El segundo nombre es obligatorio.',
+                      pattern: {
+                        value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                        message: 'Solo se permiten letras.',
+                      },
+                    })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.segundoNombre?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
@@ -233,21 +262,41 @@ export const ProfilePage = () => {
                   <Form.Control
                     type="text"
                     isInvalid={!!errors.primerApellido}
-                    {...register('primerApellido', { required: 'El primer apellido es obligatorio.' })}
+                    {...register('primerApellido', {
+                      required: 'El primer apellido es obligatorio.',
+                      pattern: {
+                        value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                        message: 'Solo se permiten letras.',
+                      },
+                    })}
                   />
                   <Form.Control.Feedback type="invalid">{errors.primerApellido?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Segundo apellido</Form.Label>
-                  <Form.Control type="text" {...register('segundoApellido')} />
+                  <Form.Label>Segundo apellido *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    isInvalid={!!errors.segundoApellido}
+                    {...register('segundoApellido', {
+                      required: 'El segundo apellido es obligatorio.',
+                      pattern: {
+                        value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/,
+                        message: 'Solo se permiten letras.',
+                      },
+                    })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.segundoApellido?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Tipo de documento</Form.Label>
-                  <Form.Select {...register('tipoDocumentoId')}>
+                  <Form.Select
+                    isInvalid={!!errors.tipoDocumentoId}
+                    {...register('tipoDocumentoId', { required: 'El tipo de documento es obligatorio.' })}
+                  >
                     <option value="">Selecciona...</option>
                     {tiposDocumento.map(tipo => (
                       <option key={tipo.id} value={tipo.id}>
@@ -255,18 +304,30 @@ export const ProfilePage = () => {
                       </option>
                     ))}
                   </Form.Select>
+                  <Form.Control.Feedback type="invalid">{errors.tipoDocumentoId?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Número de documento</Form.Label>
-                  <Form.Control type="text" {...register('numDocumento')} />
+                  <Form.Control
+                    type="text"
+                    isInvalid={!!errors.numDocumento}
+                    {...register('numDocumento', {
+                      required: 'El número de documento es obligatorio.',
+                      pattern: {
+                        value: /^[0-9]+$/,
+                        message: 'Solo se permiten números.',
+                      },
+                    })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.numDocumento?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Género</Form.Label>
-                  <Form.Select {...register('genero')}>
+                  <Form.Select isInvalid={!!errors.genero} {...register('genero', { required: 'El género es obligatorio.' })}>
                     <option value="">Selecciona...</option>
                     {Object.entries(Genero).map(([key, label]) => (
                       <option key={key} value={key}>
@@ -274,12 +335,26 @@ export const ProfilePage = () => {
                       </option>
                     ))}
                   </Form.Select>
+                  <Form.Control.Feedback type="invalid">{errors.genero?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Fecha de nacimiento</Form.Label>
-                  <Form.Control type="date" {...register('fechaNacimiento')} />
+                  <Form.Control
+                    type="date"
+                    min={dayjs().subtract(100, 'year').format('YYYY-MM-DD')}
+                    max={dayjs().format('YYYY-MM-DD')}
+                    isInvalid={!!errors.fechaNacimiento}
+                    {...register('fechaNacimiento', {
+                      required: 'La fecha de nacimiento es obligatoria.',
+                      validate: v =>
+                        !v ||
+                        (!dayjs(v).isAfter(dayjs()) && !dayjs(v).isBefore(dayjs().subtract(100, 'year'))) ||
+                        'La fecha de nacimiento no puede ser futura ni indicar más de 100 años.',
+                    })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.fechaNacimiento?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
@@ -287,7 +362,18 @@ export const ProfilePage = () => {
                   <Form.Label>
                     <FontAwesomeIcon icon={faPhone} className="me-1" /> Celular
                   </Form.Label>
-                  <Form.Control type="tel" {...register('celular')} />
+                  <Form.Control
+                    type="tel"
+                    isInvalid={!!errors.celular}
+                    {...register('celular', {
+                      required: 'El celular es obligatorio.',
+                      pattern: {
+                        value: /^[0-9]{7,15}$/,
+                        message: 'Debe tener entre 7 y 15 dígitos.',
+                      },
+                    })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.celular?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">
@@ -295,7 +381,18 @@ export const ProfilePage = () => {
                   <Form.Label>
                     <FontAwesomeIcon icon={faPhone} className="me-1" /> Teléfono
                   </Form.Label>
-                  <Form.Control type="tel" {...register('telefono')} />
+                  <Form.Control
+                    type="tel"
+                    isInvalid={!!errors.telefono}
+                    {...register('telefono', {
+                      required: 'El teléfono es obligatorio.',
+                      pattern: {
+                        value: /^[0-9]{7,15}$/,
+                        message: 'Debe tener entre 7 y 15 dígitos.',
+                      },
+                    })}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.telefono?.message}</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col md={6} className="mb-3">

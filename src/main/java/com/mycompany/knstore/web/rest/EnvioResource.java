@@ -1,23 +1,15 @@
 package com.mycompany.knstore.web.rest;
 
-import com.mycompany.knstore.domain.Envio;
 import com.mycompany.knstore.domain.enumeration.EstadoEnvio;
-import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.repository.EnvioRepository;
 import com.mycompany.knstore.service.EnvioService;
-import com.mycompany.knstore.service.HistorialEstadoService;
-import com.mycompany.knstore.service.PedidoService;
 import com.mycompany.knstore.service.dto.EnvioDTO;
-import com.mycompany.knstore.service.dto.EnvioDevolucionRequestDTO;
-import com.mycompany.knstore.service.dto.EnvioEstadoUpdateRequestDTO;
-import com.mycompany.knstore.service.dto.EnvioTrackingRequestDTO;
-import com.mycompany.knstore.service.dto.PedidoDTO;
 import com.mycompany.knstore.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,20 +46,9 @@ public class EnvioResource {
 
     private final EnvioRepository envioRepository;
 
-    private final PedidoService pedidoService;
-
-    private final HistorialEstadoService historialEstadoService;
-
-    public EnvioResource(
-        EnvioService envioService,
-        EnvioRepository envioRepository,
-        PedidoService pedidoService,
-        HistorialEstadoService historialEstadoService
-    ) {
+    public EnvioResource(EnvioService envioService, EnvioRepository envioRepository) {
         this.envioService = envioService;
         this.envioRepository = envioRepository;
-        this.pedidoService = pedidoService;
-        this.historialEstadoService = historialEstadoService;
     }
 
     /**
@@ -78,7 +59,7 @@ public class EnvioResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessEnvioDto(#envioDTO)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<EnvioDTO> createEnvio(@Valid @RequestBody EnvioDTO envioDTO) throws URISyntaxException {
         LOG.debug("REST request to save Envio : {}", envioDTO);
         if (envioDTO.getId() != null) {
@@ -101,9 +82,7 @@ public class EnvioResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessEnvioId(#id) and @resourceAccessService.canAccessEnvioDto(#envioDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<EnvioDTO> updateEnvio(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody EnvioDTO envioDTO
@@ -138,9 +117,7 @@ public class EnvioResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    @PreAuthorize(
-        "hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or (@resourceAccessService.canAccessEnvioId(#id) and @resourceAccessService.canAccessEnvioDto(#envioDTO))"
-    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<EnvioDTO> partialUpdateEnvio(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody EnvioDTO envioDTO
@@ -179,15 +156,6 @@ public class EnvioResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    @GetMapping("/pendientes")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
-    public ResponseEntity<List<EnvioDTO>> getEnviosPendientes(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        LOG.debug("REST request to get a page of pending Envios");
-        Page<EnvioDTO> page = envioService.findPendientesAdmin(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
     /**
      * {@code GET  /envios/:id} : get the "id" envio.
      *
@@ -202,118 +170,6 @@ public class EnvioResource {
         return ResponseUtil.wrapOrNotFound(envioDTO);
     }
 
-    @PostMapping("/{id}/tracking")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
-    public ResponseEntity<EnvioDTO> asignarTracking(@PathVariable("id") String id, @Valid @RequestBody EnvioTrackingRequestDTO request) {
-        LOG.debug("REST request to assign tracking for Envio : {}", id);
-        try {
-            Optional<EnvioDTO> result = envioService.asignarNumeroRastreo(
-                id,
-                request.getNumeroRastreo(),
-                request.getTransportadora(),
-                request.getUrlRastreo()
-            );
-            return ResponseUtil.wrapOrNotFound(result, HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, id));
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestAlertException(ex.getMessage(), ENTITY_NAME, "trackinginvalido");
-        }
-    }
-
-    @PostMapping("/{id}/estado")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
-    public ResponseEntity<EnvioDTO> actualizarEstadoEnvio(
-        @PathVariable("id") String id,
-        @Valid @RequestBody EnvioEstadoUpdateRequestDTO request
-    ) {
-        LOG.debug("REST request to actualizar estado Envio {} -> {}", id, request.getEstado());
-        Envio envioActual = envioRepository
-            .findById(id)
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
-
-        if (Objects.equals(envioActual.getEstado(), request.getEstado())) {
-            throw new BadRequestAlertException("El envio ya se encuentra en el estado solicitado", ENTITY_NAME, "estadoigual");
-        }
-
-        EnvioDTO patch = new EnvioDTO();
-        patch.setId(id);
-        patch.setEstado(request.getEstado());
-        if (request.getObservacion() != null && !request.getObservacion().isBlank()) {
-            patch.setObservaciones(request.getObservacion().trim());
-        }
-        if (EstadoEnvio.DELIVERED.equals(request.getEstado())) {
-            patch.setFechaEntrega(Instant.now());
-        }
-
-        EnvioDTO actualizado = envioService
-            .partialUpdate(patch)
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
-
-        historialEstadoService.registrarCambioEstado(
-            "Envio",
-            id,
-            "estado",
-            envioActual.getEstado() != null ? envioActual.getEstado().name() : null,
-            request.getEstado().name()
-        );
-
-        if (request.getObservacion() != null && !request.getObservacion().isBlank()) {
-            historialEstadoService.registrarCambioEstado("Envio", id, "observacionEstado", null, request.getObservacion().trim());
-        }
-
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, actualizado.getId()))
-            .body(actualizado);
-    }
-
-    @PostMapping("/{id}/devolucion")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
-    public ResponseEntity<EnvioDTO> registrarDevolucionEnvio(
-        @PathVariable("id") String id,
-        @Valid @RequestBody EnvioDevolucionRequestDTO request
-    ) {
-        LOG.debug("REST request to registrar devolucion Envio {}", id);
-        Envio envioActual = envioRepository
-            .findById(id)
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
-
-        if (EstadoEnvio.RETURNED.equals(envioActual.getEstado())) {
-            throw new BadRequestAlertException("El envio ya fue marcado como devuelto", ENTITY_NAME, "devolucionduplicada");
-        }
-
-        EnvioDTO patch = new EnvioDTO();
-        patch.setId(id);
-        patch.setEstado(EstadoEnvio.RETURNED);
-        patch.setObservaciones(request.getMotivo().trim());
-        EnvioDTO actualizado = envioService
-            .partialUpdate(patch)
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
-
-        historialEstadoService.registrarCambioEstado(
-            "Envio",
-            id,
-            "estado",
-            envioActual.getEstado() != null ? envioActual.getEstado().name() : null,
-            EstadoEnvio.RETURNED.name()
-        );
-        historialEstadoService.registrarCambioEstado("Envio", id, "motivoDevolucion", null, request.getMotivo().trim());
-
-        if (
-            envioActual.getPedido() != null &&
-            envioActual.getPedido().getId() != null &&
-            (EstadoPedido.SHIPPED.equals(envioActual.getPedido().getEstado()) ||
-                EstadoPedido.DELIVERED.equals(envioActual.getPedido().getEstado()))
-        ) {
-            PedidoDTO pedidoPatch = new PedidoDTO();
-            pedidoPatch.setId(envioActual.getPedido().getId());
-            pedidoPatch.setEstado(EstadoPedido.RETURNED);
-            pedidoService.partialUpdate(pedidoPatch);
-        }
-
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, actualizado.getId()))
-            .body(actualizado);
-    }
-
     /**
      * {@code DELETE  /envios/:id} : delete the "id" envio.
      *
@@ -321,7 +177,7 @@ public class EnvioResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessEnvioId(#id)")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
     public ResponseEntity<Void> deleteEnvio(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Envio : {}", id);
         envioService.delete(id);
@@ -329,4 +185,94 @@ public class EnvioResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id))
             .build();
     }
+
+    /**
+     * {@code PATCH  /envios/:id/tracking} : assign transportadora and numeroRastreo to an envio.
+     *
+     * @param id the id of the envio.
+     * @param request the tracking data.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated envioDTO.
+     */
+    @PatchMapping("/{id}/tracking")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<EnvioDTO> asignarTracking(@PathVariable("id") String id, @Valid @RequestBody AsignarTrackingRequest request) {
+        LOG.debug("REST request to assign tracking to Envio : {}", id);
+        try {
+            EnvioDTO result = envioService.asignarTracking(id, request.transportadora(), request.numeroRastreo());
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "envioinvalido");
+        }
+    }
+
+    /**
+     * {@code PATCH  /envios/:id/estado} : change the estado of an envio (admin operation).
+     *
+     * @param id the id of the envio.
+     * @param request the new estado.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated envioDTO.
+     */
+    @PatchMapping("/{id}/estado")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<EnvioDTO> cambiarEstadoEnvio(
+        @PathVariable("id") String id,
+        @Valid @RequestBody CambiarEstadoEnvioRequest request
+    ) {
+        LOG.debug("REST request to change estado of Envio : {} -> {}", id, request.estado());
+        try {
+            EnvioDTO result = envioService.cambiarEstado(id, request.estado());
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "transicioninvalida");
+        }
+    }
+
+    /**
+     * {@code PATCH  /envios/:id/devolucion} : mark an envio as returned (admin operation).
+     *
+     * @param id the id of the envio.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated envioDTO.
+     */
+    @PatchMapping("/{id}/devolucion")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<EnvioDTO> marcarDevolucion(@PathVariable("id") String id) {
+        LOG.debug("REST request to mark Envio as devuelto : {}", id);
+        try {
+            EnvioDTO result = envioService.marcarDevolucion(id);
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "envioinvalido");
+        }
+    }
+
+    /**
+     * {@code GET  /envios/pendientes} : get the page of pending Envios (logistics tray).
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Envios in body.
+     */
+    @GetMapping("/pendientes")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER')")
+    public ResponseEntity<List<EnvioDTO>> getEnviosPendientes(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get pending Envios");
+        Page<EnvioDTO> page = envioService.findAllPendientes(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * Request DTO for assigning tracking data to an envio.
+     */
+    public record AsignarTrackingRequest(@NotBlank String transportadora, @NotBlank String numeroRastreo) {}
+
+    /**
+     * Request DTO for changing the estado of an envio.
+     */
+    public record CambiarEstadoEnvioRequest(@NotNull EstadoEnvio estado) {}
 }

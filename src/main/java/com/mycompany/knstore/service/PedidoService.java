@@ -1,5 +1,6 @@
 package com.mycompany.knstore.service;
 
+import com.mycompany.knstore.domain.enumeration.EstadoPedido;
 import com.mycompany.knstore.service.dto.PedidoDTO;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,29 @@ public interface PedidoService {
      * @return the entity.
      */
     Optional<PedidoDTO> findOne(String id);
+
+    /**
+     * Cambia el estado de un pedido validando la maquina de estados
+     * (PENDING » CONFIRMED » SHIPPED » DELIVERED; CANCELLED solo desde PENDING o CONFIRMED).
+     *
+     * @param id id del pedido.
+     * @param nuevoEstado estado destino.
+     * @return el pedido actualizado.
+     * @throws IllegalStateException si la transicion no es valida.
+     */
+    PedidoDTO cambiarEstado(String id, EstadoPedido nuevoEstado);
+
+    /**
+     * Cancela un pedido como CLIENTE dentro de la ventana de 1 hora desde la compra
+     * (RNF-032) y, si el pago habia sido aprobado, solicita el reembolso simbolico
+     * de forma atomica con la cancelacion.
+     *
+     * @param id id del pedido.
+     * @param motivo motivo opcional de la cancelacion (se usa como motivo del reembolso).
+     * @return el pedido actualizado.
+     * @throws IllegalStateException si el plazo vencio o la transicion no es valida.
+     */
+    PedidoDTO cancelarPedidoCliente(String id, String motivo);
 
     /**
      * Delete the "id" pedido.

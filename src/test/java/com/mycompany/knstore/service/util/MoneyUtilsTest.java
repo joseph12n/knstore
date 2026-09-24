@@ -8,18 +8,28 @@ import org.junit.jupiter.api.Test;
 class MoneyUtilsTest {
 
     @Test
-    void normalizeRoundsHalfUpToTwoDecimals() {
-        assertThat(MoneyUtils.normalize(new BigDecimal("10.125"))).isEqualByComparingTo(new BigDecimal("10.13"));
-        assertThat(MoneyUtils.normalize(new BigDecimal("10.124"))).isEqualByComparingTo(new BigDecimal("10.12"));
+    void normalizarMantieneNulo() {
+        assertThat(MoneyUtils.normalizar(null)).isNull();
     }
 
     @Test
-    void normalizeReturnsNullForNullInput() {
-        assertThat(MoneyUtils.normalize(null)).isNull();
+    void normalizarRecortaA2DecimalesConHalfUp() {
+        assertThat(MoneyUtils.normalizar(new BigDecimal("123.456"))).isEqualByComparingTo(new BigDecimal("123.46"));
+        assertThat(MoneyUtils.normalizar(new BigDecimal("123.454"))).isEqualByComparingTo(new BigDecimal("123.45"));
+        assertThat(MoneyUtils.normalizar(new BigDecimal("1000"))).isEqualByComparingTo(new BigDecimal("1000.00"));
+        assertThat(MoneyUtils.normalizar(new BigDecimal("1000")).scale()).isEqualTo(2);
     }
 
     @Test
-    void normalizeOrZeroReturnsZeroWhenNull() {
-        assertThat(MoneyUtils.normalizeOrZero(null)).isEqualByComparingTo(new BigDecimal("0.00"));
+    void multiplicarNormalizaElResultado() {
+        BigDecimal resultado = MoneyUtils.multiplicar(new BigDecimal("3"), new BigDecimal("120000.005"));
+        assertThat(resultado).isEqualByComparingTo(new BigDecimal("360000.02"));
+        assertThat(resultado.scale()).isEqualTo(2);
+    }
+
+    @Test
+    void multiplicarConNulosDevuelveCero() {
+        assertThat(MoneyUtils.multiplicar(null, new BigDecimal("100"))).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(MoneyUtils.multiplicar(new BigDecimal("2"), null)).isEqualByComparingTo(BigDecimal.ZERO);
     }
 }

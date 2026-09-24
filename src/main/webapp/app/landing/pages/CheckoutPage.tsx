@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
@@ -8,30 +8,43 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getEntities as getDireccions } from 'app/entities/direccion/direccion.reducer';
 import { getCuentaByLogin, reset as resetCuenta } from 'app/entities/cuenta/cuenta.reducer';
-import { CHECKOUT_STEPS, PAYMENT_METHODS, SHIPPING_METHODS, FREE_SHIPPING_MESSAGE } from 'app/landing/utils/constants';
+import {
+  CHECKOUT_STEPS,
+  FREE_SHIPPING_MESSAGE,
+  FREE_SHIPPING_THRESHOLD,
+  PAYMENT_METHODS,
+  SHIPPING_METHODS,
+} from 'app/landing/utils/constants';
 import { formatCOP } from 'app/landing/utils/format';
-import { calculateIva, calculateShipping, calculateSubtotal, calculateTotal } from 'app/landing/utils/checkout';
 import CheckoutStepper from 'app/landing/components/CheckoutStepper';
 import AddressCard from 'app/landing/components/AddressCard';
 import LoadingSpinner from 'app/landing/components/LoadingSpinner';
 import useCart from 'app/landing/hooks/useCart';
+import useCuentaActual from 'app/landing/hooks/useCuentaActual';
+import { buildCheckoutPayload, checkout, getPreview, iniciarPago, CheckoutPreview } from 'app/landing/services/checkout.service';
+import { getApiErrorMessage } from 'app/landing/utils/apiError';
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { items, clearCart: onCheckoutComplete } = useCart();
-
+  const { items, refresh: onCheckoutComplete } = useCart();
+  const { account, cuenta } = useCuentaActual();
   const [step, setStep] = useState(0);
   const [selectedDireccionId, setSelectedDireccionId] = useState('');
   const [selectedEnvio, setSelectedEnvio] = useState('ESTANDAR');
   const [selectedPago, setSelectedPago] = useState('NEQUI');
   const [notas, setNotas] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<CheckoutPreview | null>(null);
 
-  const account = useAppSelector(state => state.authentication.account);
+  const notasRef = useRef('');
+  notasRef.current = notas;
+  const previewRequestRef = useRef(0);
+
   const direcciones = useAppSelector(state => state.direccion.entities) ?? [];
-  const cuenta = useAppSelector(state => state.cuenta.entity);
-  const loadingDirecciones = useAppSelector(state => state.direccion.loading || state.cuenta.loading);
+  const loadingDirecciones = useAppSelector(state => state.direccion.loading);
 
   useEffect(() => {
     dispatch(getSession());
@@ -39,7 +52,6 @@ export const CheckoutPage = () => {
     if (account.login) {
       dispatch(getCuentaByLogin(account.login));
     }
-
     return () => {
       dispatch(resetCuenta());
     };
@@ -54,10 +66,8 @@ export const CheckoutPage = () => {
 
   const direccionesUsuario = useMemo(() => direcciones.filter(d => d.cuenta?.id === cuenta?.id), [direcciones, cuenta]);
 
-  const subtotal = calculateSubtotal(items);
-  const costoEnvio = useMemo(() => calculateShipping(subtotal, selectedEnvio), [subtotal, selectedEnvio]);
-  const iva = useMemo(() => calculateIva(subtotal), [subtotal]);
-  const total = calculateTotal(subtotal, costoEnvio, iva);
+  const subtotalCarrito = useMemo(() => items.reduce((sum, item) => sum + item.precioUnitario * item.cantidad, 0), [items]);
+  const envioGratis = (preview?.subtotal ?? subtotalCarrito) >= FREE_SHIPPING_THRESHOLD;
 
   useEffect(() => {
     const defaultAddress = direccionesUsuario.find(d => d.activo) || direccionesUsuario[0];
@@ -65,6 +75,43 @@ export const CheckoutPage = () => {
       setSelectedDireccionId(defaultAddress.id!);
     }
   }, [direccionesUsuario, selectedDireccionId]);
+
+  useEffect(() => {
+    if (!cuenta || !selectedDireccionId || items.length === 0) {
+      return;
+    }
+
+    // AbortController + token de request: descarta respuestas fuera de orden
+    // y cancela el request anterior al cambiar la seleccion.
+    const controller = new AbortController();
+    const requestId = ++previewRequestRef.current;
+
+    const loadPreview = async () => {
+      setPreviewLoading(true);
+      setPreviewError(null);
+      try {
+        const payload = buildCheckoutPayload(items, selectedDireccionId, selectedPago, selectedEnvio, notasRef.current);
+        const data = await getPreview(payload, controller.signal);
+        if (requestId !== previewRequestRef.current) {
+          return;
+        }
+        setPreview(data);
+      } catch (error) {
+        if (axios.isCancel(error) || requestId !== previewRequestRef.current) {
+          return;
+        }
+        setPreviewError(`No pudimos calcular los totales: ${getApiErrorMessage(error)}`);
+      } finally {
+        if (requestId === previewRequestRef.current) {
+          setPreviewLoading(false);
+        }
+      }
+    };
+
+    void loadPreview();
+    return () => controller.abort();
+    // notas se lee via ref para no disparar un preview por cada tecla escrita.
+  }, [selectedDireccionId, selectedEnvio, selectedPago, items, cuenta]);
 
   if (items.length === 0) {
     return (
@@ -95,7 +142,6 @@ export const CheckoutPage = () => {
       toast.error('Selecciona una dirección de envío.');
       return;
     }
-
     setStep(prev => Math.min(prev + 1, CHECKOUT_STEPS.length - 1));
   };
 
@@ -110,29 +156,37 @@ export const CheckoutPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post<{ pedido: { id?: string } }>('api/pedidos/checkout', {
-        direccionId: selectedDireccionId,
-        metodoPago: selectedPago,
-        tipoServicioEnvio: selectedEnvio,
-        notasCliente: notas,
-        items: items.map(item => ({
-          productoId: item.producto.id,
-          cantidad: item.cantidad,
-          precioUnitario: item.precioUnitario,
-        })),
-      });
+      const payload = buildCheckoutPayload(items, selectedDireccionId, selectedPago, selectedEnvio, notasRef.current);
+      const result = await checkout(payload);
+      const pedidoCreado = result.pedido;
 
-      const pedidoCreado = response.data?.pedido;
       if (!pedidoCreado?.id) {
         throw new Error('No se pudo crear el pedido');
       }
 
-      toast.success('¡Pedido creado exitosamente!');
-      onCheckoutComplete();
-      navigate(`/mi-cuenta/pedidos/${pedidoCreado.id}`);
-    } catch (error: any) {
-      const message = error?.response?.data?.message || error?.message || 'Error desconocido';
-      toast.error(`No pudimos procesar tu pedido: ${message}`);
+      // RF-076: el pago nace dentro del checkout (pasarela simulada), así que ya
+      // no hace falta una segunda llamada. Si el servidor aún no devuelve el pago,
+      // se usa iniciarPago solo como compatibilidad.
+      let pago = result.pago;
+      if (!pago) {
+        pago = await iniciarPago(pedidoCreado.id);
+      }
+
+      // El backend ya vacio el carrito del servidor al crear el pedido:
+      // se sincroniza el carrito local en ambas ramas para evitar duplicados.
+      await onCheckoutComplete();
+
+      if (pago.estado === 'APPROVED') {
+        toast.success('¡Pago aprobado y pedido creado exitosamente!');
+        navigate(`/mi-cuenta/pedidos/${pedidoCreado.id}`);
+      } else {
+        // Defensa: con la pasarela simulada el pago siempre queda APPROVED. Esta rama
+        // quedara como gestion de rechazos para la pasarela real futura.
+        toast.error(pago.descripcionRespuesta || 'El pago no pudo ser aprobado.');
+        navigate(`/mi-cuenta/pedidos/${pedidoCreado.id}`);
+      }
+    } catch (error) {
+      toast.error(`No pudimos procesar tu pedido: ${getApiErrorMessage(error)}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -174,7 +228,11 @@ export const CheckoutPage = () => {
         return (
           <div>
             <h5 className="fw-bold mb-3">Método de envío</h5>
-            <p className="text-muted small mb-3">{FREE_SHIPPING_MESSAGE}</p>
+            {envioGratis ? (
+              <div className="alert alert-success py-2 small mb-3">Tu pedido supera el umbral: el envío es gratis en cualquier método.</div>
+            ) : (
+              <p className="text-muted small mb-3">{FREE_SHIPPING_MESSAGE}</p>
+            )}
             <Row className="g-3">
               {SHIPPING_METHODS.map(method => (
                 <Col md={6} key={method.key}>
@@ -196,7 +254,18 @@ export const CheckoutPage = () => {
                           />
                           <p className="text-muted small mb-0 mt-1">{method.description}</p>
                         </div>
-                        <span className="fw-bold">{method.cost === 0 ? 'Gratis' : formatCOP(method.cost)}</span>
+                        <span className="fw-bold">
+                          {envioGratis ? (
+                            <>
+                              {method.cost > 0 && <s className="text-muted small me-1">{formatCOP(method.cost)}</s>}
+                              Gratis
+                            </>
+                          ) : method.cost === 0 ? (
+                            'Gratis'
+                          ) : (
+                            formatCOP(method.cost)
+                          )}
+                        </span>
                       </div>
                     </Card.Body>
                   </Card>
@@ -247,37 +316,45 @@ export const CheckoutPage = () => {
         return (
           <div>
             <h5 className="fw-bold mb-3">Confirmación</h5>
-            <Card className="mb-3">
-              <Card.Body>
-                <h6 className="fw-bold">Resumen</h6>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Subtotal</span>
-                  <span>{formatCOP(subtotal)}</span>
-                </div>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
-                  <span>{costoEnvio === 0 ? 'Gratis' : formatCOP(costoEnvio)}</span>
-                </div>
-                <div className="d-flex justify-content-between mb-1">
-                  <span>IVA (19%)</span>
-                  <span>{formatCOP(iva)}</span>
-                </div>
-                <hr />
-                <div className="d-flex justify-content-between">
-                  <span className="fw-bold">Total a pagar</span>
-                  <span className="h4 fw-bold">{formatCOP(total)}</span>
-                </div>
-                <div className="mt-3 small text-muted">
-                  <div>
-                    <strong>Método de pago:</strong> {PAYMENT_METHODS.find(p => p.key === selectedPago)?.label}
+            {previewLoading || !preview ? (
+              <LoadingSpinner />
+            ) : previewError ? (
+              <div className="alert alert-danger">{previewError}</div>
+            ) : (
+              <Card className="mb-3">
+                <Card.Body>
+                  <h6 className="fw-bold">Resumen</h6>
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>Subtotal</span>
+                    <span>{formatCOP(preview.subtotal)}</span>
                   </div>
-                  <div>
-                    <strong>Dirección:</strong> {direccionesUsuario.find(d => d.id === selectedDireccionId)?.direccion}
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>Envío ({SHIPPING_METHODS.find(s => s.key === selectedEnvio)?.label})</span>
+                    <span>{preview.envio === 0 ? 'Gratis' : formatCOP(preview.envio)}</span>
                   </div>
-                </div>
-              </Card.Body>
-            </Card>
-            <p className="small text-muted">Al confirmar, se creará tu pedido con el método de envío y pago seleccionados.</p>
+                  <div className="d-flex justify-content-between mb-1">
+                    <span>IVA</span>
+                    <span>{formatCOP(preview.iva)}</span>
+                  </div>
+                  <hr />
+                  <div className="d-flex justify-content-between">
+                    <span className="fw-bold">Total a pagar</span>
+                    <span className="h4 fw-bold">{formatCOP(preview.total)}</span>
+                  </div>
+                  <div className="mt-3 small text-muted">
+                    <div>
+                      <strong>Método de pago:</strong> {PAYMENT_METHODS.find(p => p.key === selectedPago)?.label}
+                    </div>
+                    <div>
+                      <strong>Dirección:</strong> {direccionesUsuario.find(d => d.id === selectedDireccionId)?.direccion}
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+            )}
+            <p className="small text-muted">
+              Al confirmar, se procesará tu pago con la pasarela y se creará tu pedido con envío y factura.
+            </p>
           </div>
         );
       default:
@@ -300,7 +377,7 @@ export const CheckoutPage = () => {
               Continuar
             </Button>
           ) : (
-            <Button variant="accent" onClick={handleSubmit} disabled={isSubmitting}>
+            <Button variant="accent" onClick={handleSubmit} disabled={isSubmitting || previewLoading || !preview || !!previewError}>
               {isSubmitting ? 'Procesando...' : 'Confirmar pedido'}
             </Button>
           )}

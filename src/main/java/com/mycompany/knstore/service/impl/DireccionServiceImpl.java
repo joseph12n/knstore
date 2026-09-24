@@ -11,7 +11,6 @@ import com.mycompany.knstore.service.dto.DireccionDTO;
 import com.mycompany.knstore.service.mapper.DireccionMapper;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -20,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.mycompany.knstore.domain.Direccion}.
@@ -125,33 +125,6 @@ public class DireccionServiceImpl implements DireccionService {
         return direccionRepository.findById(id).map(direccionMapper::toDto);
     }
 
-    public Optional<DireccionDTO> marcarPredeterminada(String id) {
-        LOG.debug("Request to set default Direccion : {}", id);
-
-        return direccionRepository
-            .findById(id)
-            .map(direccionObjetivo -> {
-                if (direccionObjetivo.getCuenta() == null || direccionObjetivo.getCuenta().getId() == null) {
-                    throw new IllegalArgumentException("La dirección no tiene cuenta asociada");
-                }
-
-                String cuentaId = direccionObjetivo.getCuenta().getId();
-                List<Direccion> direccionesCuenta = direccionRepository.findByCuentaId(cuentaId, Pageable.unpaged()).getContent();
-
-                for (Direccion direccion : direccionesCuenta) {
-                    boolean debeSerActiva = Objects.equals(direccion.getId(), id);
-                    if (!Objects.equals(Boolean.TRUE.equals(direccion.getActivo()), debeSerActiva)) {
-                        direccion.setActivo(debeSerActiva);
-                        direccionRepository.save(direccion);
-                    }
-                }
-
-                direccionObjetivo.setActivo(true);
-                return direccionObjetivo;
-            })
-            .map(direccionMapper::toDto);
-    }
-
     @Override
     public void delete(String id) {
         LOG.debug("Request to delete Direccion : {}", id);
@@ -159,6 +132,7 @@ public class DireccionServiceImpl implements DireccionService {
     }
 
     @Override
+    @Transactional
     public DireccionDTO setPredeterminada(String id) {
         LOG.debug("Request to set predeterminada Direccion : {}", id);
         Direccion direccion = direccionRepository.findById(id).orElseThrow(() -> new IllegalStateException("Direccion not found"));

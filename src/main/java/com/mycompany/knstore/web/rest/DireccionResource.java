@@ -177,10 +177,14 @@ public class DireccionResource {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessDireccionId(#id)")
     public ResponseEntity<DireccionDTO> setPredeterminada(@PathVariable("id") String id) {
         LOG.debug("REST request to set Direccion predeterminada : {}", id);
-        DireccionDTO result = direccionService.setPredeterminada(id);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
-            .body(result);
+        try {
+            DireccionDTO result = direccionService.setPredeterminada(id);
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, result.getId()))
+                .body(result);
+        } catch (IllegalStateException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "direccioninvalida");
+        }
     }
 
     /**
@@ -195,14 +199,6 @@ public class DireccionResource {
         LOG.debug("REST request to get Direccion : {}", id);
         Optional<DireccionDTO> direccionDTO = direccionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(direccionDTO);
-    }
-
-    @PostMapping("/{id}/predeterminada")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER') or @resourceAccessService.canAccessDireccionId(#id)")
-    public ResponseEntity<DireccionDTO> marcarDireccionPredeterminada(@PathVariable("id") String id) {
-        LOG.debug("REST request to mark Direccion as default : {}", id);
-        Optional<DireccionDTO> direccionDTO = Optional.of(direccionService.setPredeterminada(id));
-        return ResponseUtil.wrapOrNotFound(direccionDTO, HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, id));
     }
 
     /**
