@@ -12,6 +12,8 @@ import com.mycompany.knstore.repository.*;
 import com.mycompany.knstore.service.ProductoService;
 import com.mycompany.knstore.service.dto.ProductoDTO;
 import com.mycompany.knstore.service.mapper.ProductoMapper;
+import com.mycompany.knstore.service.util.MoneyUtils;
+import com.mycompany.knstore.service.util.MongoIdUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -32,6 +35,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -93,6 +97,7 @@ public class ProductoServiceImpl implements ProductoService {
         LOG.debug("Request to save Producto : {}", productoDTO);
         Producto producto = productoMapper.toEntity(productoDTO);
         producto = productoRepository.save(producto);
+        sincronizarPrecioVentaDenormalizado(producto);
         return productoMapper.toDto(producto);
     }
 
@@ -101,6 +106,7 @@ public class ProductoServiceImpl implements ProductoService {
         LOG.debug("Request to update Producto : {}", productoDTO);
         Producto producto = productoMapper.toEntity(productoDTO);
         producto = productoRepository.save(producto);
+        sincronizarPrecioVentaDenormalizado(producto);
         return productoMapper.toDto(producto);
     }
 
@@ -116,7 +122,32 @@ public class ProductoServiceImpl implements ProductoService {
                 return existingProducto;
             })
             .map(productoRepository::save)
+            .map(producto -> {
+                sincronizarPrecioVentaDenormalizado(producto);
+                return producto;
+            })
             .map(productoMapper::toDto);
+    }
+
+    /**
+     * RF-072: persiste el precio de venta denormalizado ({@code precio_venta})
+     * a partir del {@code producto_precio} referenciado, para que el orden y
+     * los filtros por precio funcionen del lado del servidor.
+     */
+    private void sincronizarPrecioVentaDenormalizado(Producto producto) {
+        if (producto.getId() == null || producto.getPrecio() == null || producto.getPrecio().getId() == null) {
+            return;
+        }
+        productoPrecioRepository
+            .findById(producto.getPrecio().getId())
+            .filter(precio -> precio.getPrecioVenta() != null)
+            .ifPresent(precio ->
+                mongoTemplate.updateFirst(
+                    Query.query(Criteria.where("_id").is(producto.getId())),
+                    new Update().set("precio_venta", MoneyUtils.normalizar(precio.getPrecioVenta())),
+                    Producto.class
+                )
+            );
     }
 
     @Override
@@ -304,15 +335,18 @@ public class ProductoServiceImpl implements ProductoService {
 
     /**
      * Carga las imagenes de un lote de productos con una sola consulta
-     * {@code findByProductoIdIn} y las agrupa por producto (RNF-028).
+     * {@code findByProductoIdIn} y las agrupa por producto (RNF-028). Los ids se
+     * convierten a {@code ObjectId} porque el {@code @DBRef} guarda {@code $id}
+     * como ObjectId (ver {@code MongoIdUtils}).
      */
     private void cargarImagenesEnLote(List<Producto> productos) {
         List<String> ids = idsDe(productos, Producto::getId);
-        if (ids.isEmpty()) {
+        Collection<ObjectId> objectIds = MongoIdUtils.toObjectIds(ids);
+        if (objectIds.isEmpty()) {
             return;
         }
         Map<String, List<ProductoImagen>> imagenesPorProducto = productoImagenRepository
-            .findByProductoIdIn(ids)
+            .findByProductoIdIn(objectIds)
             .stream()
             .filter(imagen -> imagen.getProducto() != null && imagen.getProducto().getId() != null)
             .collect(Collectors.groupingBy(imagen -> imagen.getProducto().getId()));

@@ -1,0 +1,55 @@
+# Compose de producción para KN-Store (EC2 + Nginx Proxy Manager).
+#
+# Uso en el servidor:
+#   cp .env.example .env    # completar secretos (NO se commitea)
+#   docker compose -f app-prod.yml pull
+#   docker compose -f app-prod.yml up -d
+#
+# Notas:
+# - La app corre con perfil prod (sin api-docs, sin prometheus, sin seed demo).
+# - MongoDB se levanta con replica set rs0 porque el checkout usa transacciones reales.
+# - El puerto 8080 se publica para que Nginx Proxy Manager pueda hacer el proxy;
+#   el Security Group de la EC2 debe exponer solo 80/443 a Internet.
+name: knstore
+services:
+  app:
+    image: eljoseph12/knstore:3.3.0
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DOCKER_COMPOSE_ENABLED=false
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    networks:
+      - knstore
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080; printf \"GET
+          /management/health HTTP/1.0\\r\\nHost: localhost\\r\\n\\r\\n\" >&3;
+          grep -q \"\\\"status\\\":\\\"UP\\\"\" <&3'"
+      interval: 10s
+      timeout: 5s
+      retries: 40
+    depends_on:
+      mongodb:
+        condition: service_healthy
+  mongodb:
+    extends:
+      file: ./mongodb-replicaset.yml
+      service: mongodb
+  mongodb-init:
+    extends:
+      file: ./mongodb-replicaset.yml
+      service: mongodb-init
+networks:
+  knstore:
+    name: knstore
+volumes:
+  knstore-mongodb-data:
+    name: knstore-mongodb-data
+  knstore-mongodb-config:
+    name: knstore-mongodb-config

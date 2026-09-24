@@ -39,6 +39,7 @@ import com.mycompany.knstore.repository.ProductoInventarioRepository;
 import com.mycompany.knstore.repository.ProductoPrecioRepository;
 import com.mycompany.knstore.repository.ProductoRepository;
 import com.mycompany.knstore.service.dto.CheckoutItemDTO;
+import com.mycompany.knstore.service.dto.CheckoutPreviewDTO;
 import com.mycompany.knstore.service.dto.CheckoutRequestDTO;
 import com.mycompany.knstore.service.dto.CheckoutResultDTO;
 import java.math.BigDecimal;
@@ -320,6 +321,33 @@ class CheckoutServiceIT {
 
         assertThat(productoInventarioRepository.findById(inventario.getId()).orElseThrow().getStock()).isEqualTo(9);
         assertThat(itemCarritoRepository.findByCarritoId(carrito.getId())).isEmpty();
+    }
+
+    @Test
+    void envioEsGratisCuandoElSubtotalAlcanzaElUmbral() {
+        CheckoutPreviewDTO preview = checkoutService.preview(cuenta, requestDeCompra(2));
+
+        assertThat(preview.getEnvio()).isEqualByComparingTo(new BigDecimal("0.00"));
+        assertThat(preview.getTotal()).isEqualByComparingTo(preview.getSubtotal().add(preview.getIva()));
+
+        CheckoutResultDTO result = checkoutService.checkout(cuenta, requestDeCompra(2));
+
+        assertThat(result.getPedido().getCostoEnvio()).isEqualByComparingTo(new BigDecimal("0.00"));
+        assertThat(result.getPago().getMonto()).isEqualByComparingTo(result.getPedido().getTotal());
+
+        Envio envio = envioRepository
+            .findByPedidoId(result.getPedido().getId(), org.springframework.data.domain.Pageable.unpaged())
+            .getContent()
+            .get(0);
+        assertThat(envio.getCostoEnvio()).isEqualByComparingTo(new BigDecimal("0.00"));
+    }
+
+    @Test
+    void envioEstandarSeCobraCuandoElSubtotalEsMenorAlUmbral() {
+        CheckoutPreviewDTO preview = checkoutService.preview(cuenta, requestDeCompra(1));
+
+        assertThat(preview.getEnvio()).isEqualByComparingTo(new BigDecimal("9900.00"));
+        assertThat(preview.getTotal()).isEqualByComparingTo(preview.getSubtotal().add(preview.getIva()).add(new BigDecimal("9900.00")));
     }
 
     @Test

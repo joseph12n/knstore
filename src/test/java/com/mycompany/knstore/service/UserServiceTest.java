@@ -176,8 +176,8 @@ class UserServiceTest {
         Optional<User> result = service.activateRegistration("clave-123");
 
         assertThat(result).isPresent();
-        assertThat(result.get().isActivated()).isTrue();
-        assertThat(result.get().getActivationKey()).isNull();
+        assertThat(result.orElseThrow().isActivated()).isTrue();
+        assertThat(result.orElseThrow().getActivationKey()).isNull();
         verify(userRepository).save(usuario);
     }
 
@@ -204,9 +204,9 @@ class UserServiceTest {
         Optional<User> result = service.completePasswordReset("Nueva123!", "reset-123");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getPassword()).isEqualTo("nueva-codificada");
-        assertThat(result.get().getResetKey()).isNull();
-        assertThat(result.get().getResetDate()).isNull();
+        assertThat(result.orElseThrow().getPassword()).isEqualTo("nueva-codificada");
+        assertThat(result.orElseThrow().getResetKey()).isNull();
+        assertThat(result.orElseThrow().getResetDate()).isNull();
         verify(userRepository).save(usuario);
     }
 
@@ -236,8 +236,8 @@ class UserServiceTest {
         Optional<User> result = service.requestPasswordReset("joseph@knstore.com");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getResetKey()).isNotBlank();
-        assertThat(result.get().getResetDate()).isNotNull();
+        assertThat(result.orElseThrow().getResetKey()).isNotBlank();
+        assertThat(result.orElseThrow().getResetDate()).isNotNull();
     }
 
     @Test
@@ -316,10 +316,10 @@ class UserServiceTest {
         Optional<AdminUserDTO> result = service.updateUser(dto);
 
         assertThat(result).isPresent();
-        assertThat(result.get().getLogin()).isEqualTo("nuevo.login");
-        assertThat(result.get().getEmail()).isEqualTo("nuevo@knstore.com");
-        assertThat(result.get().isActivated()).isTrue();
-        assertThat(result.get().getAuthorities()).containsExactly(AuthoritiesConstants.ADMIN);
+        assertThat(result.orElseThrow().getLogin()).isEqualTo("nuevo.login");
+        assertThat(result.orElseThrow().getEmail()).isEqualTo("nuevo@knstore.com");
+        assertThat(result.orElseThrow().isActivated()).isTrue();
+        assertThat(result.orElseThrow().getAuthorities()).containsExactly(AuthoritiesConstants.ADMIN);
         assertThat(usuario.getAuthorities()).extracting(Authority::getName).containsExactly(AuthoritiesConstants.ADMIN);
         verify(userRepository).save(usuario);
     }

@@ -115,7 +115,7 @@ class CarritoServiceImplTest {
         Optional<CarritoDTO> resultado = service.partialUpdate(dto);
 
         assertThat(resultado).isPresent();
-        assertThat(resultado.get().getSubtotal()).isEqualByComparingTo("200");
+        assertThat(resultado.orElseThrow().getSubtotal()).isEqualByComparingTo("200");
         ArgumentCaptor<Carrito> captor = ArgumentCaptor.forClass(Carrito.class);
         verify(carritoRepository).save(captor.capture());
         assertThat(captor.getValue().getFechaActualizacion()).isEqualTo(ANTES);
@@ -183,7 +183,7 @@ class CarritoServiceImplTest {
             Optional<CarritoDTO> resultado = service.findOne("car-1");
 
             assertThat(resultado).isPresent();
-            assertThat(resultado.get().getId()).isEqualTo("car-1");
+            assertThat(resultado.orElseThrow().getId()).isEqualTo("car-1");
         }
     }
 
@@ -213,7 +213,7 @@ class CarritoServiceImplTest {
             Optional<CarritoDTO> resultado = service.findOne("car-1");
 
             assertThat(resultado).isPresent();
-            assertThat(resultado.get().getId()).isEqualTo("car-1");
+            assertThat(resultado.orElseThrow().getId()).isEqualTo("car-1");
             verify(carritoRepository, never()).findByIdAndCuentaId(any(String.class), any(String.class));
         }
     }

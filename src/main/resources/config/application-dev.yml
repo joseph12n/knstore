@@ -31,12 +31,12 @@ spring:
     serialization:
       indent-output: true
   mail:
-    # SMTP de Gmail para pruebas de envio real (contraseña de aplicacion).
-    # Se puede sobrescribir con SPRING_MAIL_USERNAME / SPRING_MAIL_PASSWORD.
+    # SMTP de Gmail para pruebas de envio real.
+    # La credencial (app password) se define por variable de entorno SPRING_MAIL_PASSWORD, nunca en el repo.
     host: smtp.gmail.com
     port: 587
     username: ${SPRING_MAIL_USERNAME:knstorecheckout@gmail.com}
-    password: ${SPRING_MAIL_PASSWORD:ktjpalnmzmavwwzo}
+    password: ${SPRING_MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
@@ -113,3 +113,4 @@ jhipster:
 knstore:
   seed:
     catalog: true
+    demo-users: true

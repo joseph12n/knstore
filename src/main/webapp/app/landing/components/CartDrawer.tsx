@@ -21,7 +21,14 @@ export const CartDrawer = ({ show, onHide }: CartDrawerProps) => {
   const itemsCount = cartItems.reduce((sum, item) => sum + item.cantidad, 0);
 
   return (
-    <Offcanvas show={show} onHide={onHide} placement="end" className="kn-cart-drawer" style={{ width: '420px', maxWidth: '100%' }}>
+    <Offcanvas
+      show={show}
+      onHide={onHide}
+      placement="end"
+      className="kn-cart-drawer"
+      container={() => document.querySelector('.storefront') ?? document.body}
+      style={{ width: '420px', maxWidth: '100%' }}
+    >
       <Offcanvas.Header className="kn-cart-drawer__header border-bottom">
         <div className="d-flex align-items-center gap-2">
           <FontAwesomeIcon icon={faShoppingBag} className="text-primary" />

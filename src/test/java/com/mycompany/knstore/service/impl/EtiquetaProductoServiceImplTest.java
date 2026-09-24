@@ -100,9 +100,9 @@ class EtiquetaProductoServiceImplTest {
         Optional<EtiquetaProductoDTO> result = service.partialUpdate(cambios);
 
         assertThat(result).isPresent();
-        assertThat(result.get().getEtiqueta()).isEqualTo("liquidacion");
-        assertThat(result.get().getProducto().getId()).isEqualTo("prod-1");
-        assertThat(result.get().getProducto().getNombre()).isEqualTo("Tenis Air Max");
+        assertThat(result.orElseThrow().getEtiqueta()).isEqualTo("liquidacion");
+        assertThat(result.orElseThrow().getProducto().getId()).isEqualTo("prod-1");
+        assertThat(result.orElseThrow().getProducto().getNombre()).isEqualTo("Tenis Air Max");
     }
 
     @Test
@@ -133,10 +133,10 @@ class EtiquetaProductoServiceImplTest {
         Optional<EtiquetaProductoDTO> result = service.findOne("etq-1");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getId()).isEqualTo("etq-1");
-        assertThat(result.get().getEtiqueta()).isEqualTo("oferta");
-        assertThat(result.get().getProducto().getId()).isEqualTo("prod-1");
-        assertThat(result.get().getProducto().getNombre()).isEqualTo("Tenis Air Max");
+        assertThat(result.orElseThrow().getId()).isEqualTo("etq-1");
+        assertThat(result.orElseThrow().getEtiqueta()).isEqualTo("oferta");
+        assertThat(result.orElseThrow().getProducto().getId()).isEqualTo("prod-1");
+        assertThat(result.orElseThrow().getProducto().getNombre()).isEqualTo("Tenis Air Max");
         verify(etiquetaProductoRepository).findOneWithEagerRelationships("etq-1");
     }
 

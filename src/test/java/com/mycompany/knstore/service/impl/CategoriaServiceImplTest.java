@@ -95,10 +95,10 @@ class CategoriaServiceImplTest {
         Optional<CategoriaDTO> result = service.partialUpdate(cambios);
 
         assertThat(result).isPresent();
-        assertThat(result.get().getDescripcion()).isEqualTo("Descripcion nueva");
-        assertThat(result.get().getNombre()).isEqualTo("Deportivos");
-        assertThat(result.get().getSlug()).isEqualTo("deportivos");
-        assertThat(result.get().getActivo()).isTrue();
+        assertThat(result.orElseThrow().getDescripcion()).isEqualTo("Descripcion nueva");
+        assertThat(result.orElseThrow().getNombre()).isEqualTo("Deportivos");
+        assertThat(result.orElseThrow().getSlug()).isEqualTo("deportivos");
+        assertThat(result.orElseThrow().getActivo()).isTrue();
     }
 
     @Test
@@ -127,9 +127,9 @@ class CategoriaServiceImplTest {
         Optional<CategoriaDTO> result = service.findOne("cat-1");
 
         assertThat(result).isPresent();
-        assertThat(result.get().getId()).isEqualTo("cat-1");
-        assertThat(result.get().getNombre()).isEqualTo("Deportivos");
-        assertThat(result.get().getActivo()).isTrue();
+        assertThat(result.orElseThrow().getId()).isEqualTo("cat-1");
+        assertThat(result.orElseThrow().getNombre()).isEqualTo("Deportivos");
+        assertThat(result.orElseThrow().getActivo()).isTrue();
     }
 
     @Test
